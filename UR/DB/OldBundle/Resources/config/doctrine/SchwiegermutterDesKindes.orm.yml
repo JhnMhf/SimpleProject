@@ -1,0 +1,57 @@
+UR\DB\OldBundle\Entity\SchwiegermutterDesKindes:
+    type: entity
+    table: schwiegermutter_des_kindes
+    indexes:
+        ehelich:
+            columns:
+                - ehelich
+        name:
+            columns:
+                - name
+        vornamen:
+            columns:
+                - vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        order4:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        ehelich:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

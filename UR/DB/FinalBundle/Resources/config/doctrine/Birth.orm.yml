@@ -1,0 +1,75 @@
+UR\DB\FinalBundle\Entity\Birth:
+    type: entity
+    table: birth
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        originCountryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: origin_countryID
+        originTerritoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: origin_territoryID
+        originLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: origin_locationID
+        birthCountryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_countryID
+        birthLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_locationID
+        birthDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_dateID
+        birthTerritoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_territoryID
+        baptismDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: baptism_dateID
+        baptismLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: baptism_locationID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

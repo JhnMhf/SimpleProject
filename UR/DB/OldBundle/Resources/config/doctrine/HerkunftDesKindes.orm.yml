@@ -1,0 +1,98 @@
+UR\DB\OldBundle\Entity\HerkunftDesKindes:
+    type: entity
+    table: herkunft_des_kindes
+    indexes:
+        geburtsort:
+            columns:
+                - geburtsort
+        geboren:
+            columns:
+                - geboren
+        taufort:
+            columns:
+                - taufort
+        getauft:
+            columns:
+                - getauft
+        belegt:
+            columns:
+                - belegt
+        geburtsterritorium:
+            columns:
+                - geburtsterritorium
+        kommentar:
+            columns:
+                - kommentar
+        geburtsland:
+            columns:
+                - geburtsland
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        taufort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        getauft:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

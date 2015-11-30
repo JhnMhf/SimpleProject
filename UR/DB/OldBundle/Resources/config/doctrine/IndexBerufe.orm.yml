@@ -1,0 +1,26 @@
+UR\DB\OldBundle\Entity\IndexBerufe:
+    type: entity
+    table: index_berufe
+    indexes:
+        beruf:
+            columns:
+                - beruf
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+                default: '0'
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        beruf:
+            type: text
+            nullable: true
+            length: null
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

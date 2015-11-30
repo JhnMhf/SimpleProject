@@ -1,0 +1,40 @@
+UR\DB\FinalBundle\Entity\IsParentInLaw:
+    type: entity
+    table: is_parent_in_law
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        childInLawid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: child_in_lawID
+        parentInLawid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: parent_in_lawID
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

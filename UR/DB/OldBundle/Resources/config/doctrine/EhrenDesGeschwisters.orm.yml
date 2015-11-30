@@ -1,0 +1,40 @@
+UR\DB\OldBundle\Entity\EhrenDesGeschwisters:
+    type: entity
+    table: ehren_des_geschwisters
+    indexes:
+        land:
+            columns:
+                - land
+        ehren:
+            columns:
+                - ehren
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ehren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

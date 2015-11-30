@@ -1,0 +1,140 @@
+UR\DB\OldBundle\Entity\Schwiegermutter:
+    type: entity
+    table: schwiegermutter
+    indexes:
+        name:
+            columns:
+                - name
+        vornamen:
+            columns:
+                - vornamen
+        geboren:
+            columns:
+                - geboren
+        gestorben:
+            columns:
+                - gestorben
+        beruf:
+            columns:
+                - beruf
+        herkunftsort:
+            columns:
+                - herkunftsort
+        ehelich:
+            columns:
+                - ehelich
+        stand:
+            columns:
+                - stand
+        nation:
+            columns:
+                - nation
+        kommentar:
+            columns:
+                - kommentar
+        geburtsort:
+            columns:
+                - geburtsort
+        todesort:
+            columns:
+                - todesort
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ehelich:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        nation:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

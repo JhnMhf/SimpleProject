@@ -1,0 +1,95 @@
+UR\DB\OldBundle\Entity\LebenswegDesGeschwisters:
+    type: entity
+    table: lebensweg_des_geschwisters
+    indexes:
+        stammland:
+            columns:
+                - stammland
+        belegt:
+            columns:
+                - belegt
+        ort:
+            columns:
+                - ort
+        beruf:
+            columns:
+                - beruf
+        von-ab:
+            columns:
+                - von-ab
+        bis:
+            columns:
+                - bis
+        territorium:
+            columns:
+                - territorium
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        stammland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        territorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

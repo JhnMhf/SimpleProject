@@ -1,0 +1,54 @@
+UR\DB\OldBundle\Entity\Quelle:
+    type: entity
+    table: quelle
+    indexes:
+        bezeichnung:
+            columns:
+                - bezeichnung
+        fundstelle:
+            columns:
+                - fundstelle
+        bemerkung:
+            columns:
+                - bemerkung
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        bezeichnung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        fundstelle:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bemerkung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

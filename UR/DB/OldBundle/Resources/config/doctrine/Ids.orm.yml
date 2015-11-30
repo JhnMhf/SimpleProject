@@ -1,0 +1,42 @@
+UR\DB\OldBundle\Entity\Ids:
+    type: entity
+    table: ids
+    indexes:
+        oid:
+            columns:
+                - oid
+        kontrolle:
+            columns:
+                - kontrolle
+        vollständig:
+            columns:
+                - vollständig
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        oid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+        kontrolle:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vollständig:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

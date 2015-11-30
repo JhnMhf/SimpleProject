@@ -1,0 +1,75 @@
+UR\DB\FinalBundle\Entity\Rank:
+    type: entity
+    table: rank
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        rankOrder:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: rank_order
+        label:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        class:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        countryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: countryID
+        territoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: territoryID
+        locationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: locationID
+        fromDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: from_dateID
+        toDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: to_dateID
+        provenDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: proven_dateID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

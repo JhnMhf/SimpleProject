@@ -1,0 +1,70 @@
+UR\DB\FinalBundle\Entity\Death:
+    type: entity
+    table: death
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        deathLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: death_locationID
+        deathDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: death_dateID
+        deathCountryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: death_countryID
+        causeOfDeath:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: cause_of_death
+        territoryOfDeathid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: territory_of_deathID
+        graveyard:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        funeralLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: funeral_locationID
+        funeralDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: funeral_dateID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

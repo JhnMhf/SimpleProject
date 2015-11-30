@@ -1,0 +1,47 @@
+UR\DB\NewBundle\Entity\IsChild:
+    type: entity
+    table: is_child
+    uniqueConstraints:
+        childID:
+            columns:
+                - childID
+                - parentID
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+        childid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: childID
+        parentid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: parentID
+    fields:
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

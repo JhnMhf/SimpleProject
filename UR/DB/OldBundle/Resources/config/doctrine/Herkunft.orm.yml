@@ -1,0 +1,108 @@
+UR\DB\OldBundle\Entity\Herkunft:
+    type: entity
+    table: herkunft
+    indexes:
+        geburtsort:
+            columns:
+                - geburtsort
+        geboren:
+            columns:
+                - geboren
+        geburtsterritorium:
+            columns:
+                - geburtsterritorium
+        taufort:
+            columns:
+                - taufort
+        getauft:
+            columns:
+                - getauft
+        herkunftsort:
+            columns:
+                - herkunftsort
+        geburtsland:
+            columns:
+                - geburtsland
+        herkunftsterritorium:
+            columns:
+                - herkunftsterritorium
+        kommentar:
+            columns:
+                - kommentar
+        herkunftsland:
+            columns:
+                - herkunftsland
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        taufort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        getauft:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

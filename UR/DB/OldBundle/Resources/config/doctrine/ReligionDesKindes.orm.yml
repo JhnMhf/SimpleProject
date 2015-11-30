@@ -1,0 +1,44 @@
+UR\DB\OldBundle\Entity\ReligionDesKindes:
+    type: entity
+    table: religion_des_kindes
+    indexes:
+        konfession:
+            columns:
+                - konfession
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        konfession:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

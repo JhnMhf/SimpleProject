@@ -1,0 +1,40 @@
+UR\DB\FinalBundle\Entity\Source:
+    type: entity
+    table: source
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        label:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        placeOfDiscovery:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: place_of_discovery
+        remark:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+        comment:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

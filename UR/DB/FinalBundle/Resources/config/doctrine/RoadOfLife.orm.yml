@@ -1,0 +1,81 @@
+UR\DB\FinalBundle\Entity\RoadOfLife:
+    type: entity
+    table: road_of_life
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        roadOfLifeOrder:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: road_of_life_order
+        originCountryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: origin_countryID
+        originTerritoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: origin_territoryID
+        jobid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: jobID
+        countryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: countryID
+        territoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: territoryID
+        locationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: locationID
+        fromDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: from_dateID
+        toDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: to_dateID
+        provenDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: proven_dateID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,26 @@
+UR\DB\OldBundle\Entity\IndexNamen:
+    type: entity
+    table: index_namen
+    indexes:
+        namen:
+            columns:
+                - namen
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+                default: '0'
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        namen:
+            type: text
+            nullable: true
+            length: null
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

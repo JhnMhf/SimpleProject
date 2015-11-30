@@ -1,0 +1,47 @@
+UR\DB\NewBundle\Entity\IsSibling:
+    type: entity
+    table: is_sibling
+    uniqueConstraints:
+        sibling_oneID:
+            columns:
+                - sibling_oneID
+                - sibling_twoID
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+        siblingOneid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: sibling_oneID
+        siblingTwoid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: sibling_twoID
+    fields:
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

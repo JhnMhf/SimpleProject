@@ -1,0 +1,40 @@
+UR\DB\FinalBundle\Entity\IsChild:
+    type: entity
+    table: is_child
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        childid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: childID
+        parentid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: parentID
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

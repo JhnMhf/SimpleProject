@@ -1,0 +1,107 @@
+UR\DB\OldBundle\Entity\TodDesKindes:
+    type: entity
+    table: tod_des_kindes
+    indexes:
+        todesort:
+            columns:
+                - todesort
+        todesterritorium:
+            columns:
+                - todesterritorium
+        gestorben:
+            columns:
+                - gestorben
+        begräbnisort:
+            columns:
+                - begräbnisort
+        todesursache:
+            columns:
+                - todesursache
+        friedhof:
+            columns:
+                - friedhof
+        begraben:
+            columns:
+                - begraben
+        kommentar:
+            columns:
+                - kommentar
+        todesland:
+            columns:
+                - todesland
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        begräbnisort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesursache:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        friedhof:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        begraben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

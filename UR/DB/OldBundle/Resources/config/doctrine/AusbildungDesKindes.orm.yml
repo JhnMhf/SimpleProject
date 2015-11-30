@@ -1,0 +1,117 @@
+UR\DB\OldBundle\Entity\AusbildungDesKindes:
+    type: entity
+    table: ausbildung_des_kindes
+    indexes:
+        land:
+            columns:
+                - land
+        ausbildung:
+            columns:
+                - ausbildung
+        bildungsabschluss:
+            columns:
+                - bildungsabschluss
+        ort:
+            columns:
+                - ort
+        belegt:
+            columns:
+                - belegt
+        von-ab:
+            columns:
+                - von-ab
+        bis:
+            columns:
+                - bis
+        bildungsabschlussdatum:
+            columns:
+                - bildungsabschlussdatum
+        bildungsabschlussort:
+            columns:
+                - bildungsabschlussort
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ausbildung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bildungsabschluss:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bildungsabschlussdatum:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bildungsabschlussort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

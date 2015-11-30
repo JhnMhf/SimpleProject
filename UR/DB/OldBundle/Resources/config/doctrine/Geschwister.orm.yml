@@ -1,0 +1,83 @@
+UR\DB\OldBundle\Entity\Geschwister:
+    type: entity
+    table: geschwister
+    indexes:
+        kommentar:
+            columns:
+                - kommentar
+        geschlecht:
+            columns:
+                - geschlecht
+        name:
+            columns:
+                - name
+        vornamen:
+            columns:
+                - vornamen
+        rufnamen:
+            columns:
+                - rufnamen
+        geschwister_id-nr:
+            columns:
+                - geschwister_id-nr
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        geschwisterIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: geschwister_id-nr
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geschlecht:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        rufnamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

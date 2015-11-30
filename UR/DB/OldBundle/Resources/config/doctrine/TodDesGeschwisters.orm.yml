@@ -1,0 +1,76 @@
+UR\DB\OldBundle\Entity\TodDesGeschwisters:
+    type: entity
+    table: tod_des_geschwisters
+    indexes:
+        begräbnisort:
+            columns:
+                - begräbnisort
+        gestorben:
+            columns:
+                - gestorben
+        todesort:
+            columns:
+                - todesort
+        friedhof:
+            columns:
+                - friedhof
+        kommentar:
+            columns:
+                - kommentar
+        todesursache:
+            columns:
+                - todesursache
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        begräbnisort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        friedhof:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesursache:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

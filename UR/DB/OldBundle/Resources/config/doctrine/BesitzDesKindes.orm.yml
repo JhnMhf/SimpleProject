@@ -1,0 +1,81 @@
+UR\DB\OldBundle\Entity\BesitzDesKindes:
+    type: entity
+    table: besitz_des_kindes
+    indexes:
+        land:
+            columns:
+                - land
+        belegt:
+            columns:
+                - belegt
+        besitz:
+            columns:
+                - besitz
+        ort:
+            columns:
+                - ort
+        territorium:
+            columns:
+                - territorium
+        von-ab:
+            columns:
+                - von-ab
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        besitz:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        territorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+    lifecycleCallbacks: {  }

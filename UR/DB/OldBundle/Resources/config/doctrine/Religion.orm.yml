@@ -1,0 +1,64 @@
+UR\DB\OldBundle\Entity\Religion:
+    type: entity
+    table: religion
+    indexes:
+        konfession:
+            columns:
+                - konfession
+        belegt:
+            columns:
+                - belegt
+        von-ab:
+            columns:
+                - von-ab
+        konversion:
+            columns:
+                - konversion
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        konfession:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        konversion:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,27 @@
+UR\DB\NewBundle\Entity\Baptism:
+    type: entity
+    table: baptism
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        baptismDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: baptism_dateID
+        baptismLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: baptism_locationID
+    lifecycleCallbacks: {  }

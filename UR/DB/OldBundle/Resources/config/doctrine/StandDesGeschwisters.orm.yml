@@ -1,0 +1,50 @@
+UR\DB\OldBundle\Entity\StandDesGeschwisters:
+    type: entity
+    table: stand_des_geschwisters
+    indexes:
+        land:
+            columns:
+                - land
+        stand:
+            columns:
+                - stand
+        von-ab:
+            columns:
+                - von-ab
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+    lifecycleCallbacks: {  }

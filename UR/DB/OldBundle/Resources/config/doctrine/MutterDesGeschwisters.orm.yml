@@ -1,0 +1,67 @@
+UR\DB\OldBundle\Entity\MutterDesGeschwisters:
+    type: entity
+    table: mutter_des_geschwisters
+    indexes:
+        ehelich:
+            columns:
+                - ehelich
+        vornamen:
+            columns:
+                - vornamen
+        name:
+            columns:
+                - name
+        geboren:
+            columns:
+                - geboren
+        gestorben:
+            columns:
+                - gestorben
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        ehelich:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

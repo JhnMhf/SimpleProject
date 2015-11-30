@@ -1,0 +1,53 @@
+UR\DB\NewBundle\Entity\IsGrandparent:
+    type: entity
+    table: is_grandparent
+    uniqueConstraints:
+        grand_parentID:
+            columns:
+                - grand_parentID
+                - grand_childID
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+        grandParentid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: grand_parentID
+        grandChildid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: grand_childID
+    fields:
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        isPaternal:
+            type: boolean
+            nullable: false
+            options:
+                comment: 'mütterlicherseits und väterlicherseits!'
+            column: is_paternal
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,8 @@
+services:
+#    new.example:
+#        class: UR\DB\NewBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+    migrate_data.service:
+        class: UR\DB\NewBundle\Utils\MigrateData
+        arguments: 
+           container: "@service_container"

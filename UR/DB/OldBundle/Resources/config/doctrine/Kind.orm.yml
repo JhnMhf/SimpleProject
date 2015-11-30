@@ -1,0 +1,105 @@
+UR\DB\OldBundle\Entity\Kind:
+    type: entity
+    table: kind
+    indexes:
+        geschlecht:
+            columns:
+                - geschlecht
+        vornamen:
+            columns:
+                - vornamen
+        name:
+            columns:
+                - name
+        rufnamen:
+            columns:
+                - rufnamen
+        kommentar:
+            columns:
+                - kommentar
+        geboren:
+            columns:
+                - geboren
+        geburtsort:
+            columns:
+                - geburtsort
+        kind_id-nr:
+            columns:
+                - kind_id-nr
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        kindIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: kind_id-nr
+        geschlecht:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rufnamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

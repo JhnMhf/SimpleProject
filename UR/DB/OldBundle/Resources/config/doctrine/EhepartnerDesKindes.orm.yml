@@ -1,0 +1,271 @@
+UR\DB\OldBundle\Entity\EhepartnerDesKindes:
+    type: entity
+    table: ehepartner_des_kindes
+    indexes:
+        name:
+            columns:
+                - name
+        hochzeitstag:
+            columns:
+                - hochzeitstag
+        hochzeitsort:
+            columns:
+                - hochzeitsort
+        vornamen:
+            columns:
+                - vornamen
+        herkunftsort:
+            columns:
+                - herkunftsort
+        verheiratet:
+            columns:
+                - verheiratet
+        beruf:
+            columns:
+                - beruf
+        geboren:
+            columns:
+                - geboren
+        kommentar:
+            columns:
+                - kommentar
+        auflösung:
+            columns:
+                - auflösung
+        gelöst:
+            columns:
+                - gelöst
+        todesort:
+            columns:
+                - todesort
+        gestorben:
+            columns:
+                - gestorben
+        aufgebot:
+            columns:
+                - aufgebot
+        rang:
+            columns:
+                - rang
+        stand:
+            columns:
+                - stand
+        geburtsort:
+            columns:
+                - geburtsort
+        nation:
+            columns:
+                - nation
+        bildungsabschluss:
+            columns:
+                - bildungsabschluss
+        friedhof:
+            columns:
+                - friedhof
+        herkunftsterritorium:
+            columns:
+                - herkunftsterritorium
+        rufnamen:
+            columns:
+                - rufnamen
+        geburtsterritorium:
+            columns:
+                - geburtsterritorium
+        begräbnisort:
+            columns:
+                - begräbnisort
+        besitz:
+            columns:
+                - besitz
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+        kindespartner_id-nr:
+            columns:
+                - kindespartner_id-nr
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitstag:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        hochzeitsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        verheiratet:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        auflösung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gelöst:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        aufgebot:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        nation:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bildungsabschluss:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        friedhof:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kindespartnerIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: kindespartner_id-nr
+        herkunftsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rufnamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        begräbnisort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        besitz:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

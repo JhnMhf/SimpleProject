@@ -1,0 +1,100 @@
+UR\DB\FinalBundle\Entity\Wedding:
+    type: entity
+    table: wedding
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        weddingOrder:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: wedding_order
+        husbandId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: husband_ID
+        wifeId:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: wife_ID
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        weddingDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: wedding_dateID
+        weddingLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: wedding_locationID
+        weddingTerritoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: wedding_territoryID
+        bannsDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                comment: '== Aufgebot'
+            column: banns_dateID
+        breakupReason:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+                comment: '== Auflösung'
+            column: breakup_reason
+        breakupDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                comment: '== gelöst'
+            column: breakup_dateID
+        marriageComment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: marriage_comment
+        beforeAfter:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: before_after
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

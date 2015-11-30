@@ -1,0 +1,96 @@
+UR\DB\FinalBundle\Entity\Person:
+    type: entity
+    table: person
+    uniqueConstraints:
+        ID_OLD:
+            columns:
+                - OID
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        oid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: OID
+        firstName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: first_name
+        patronym:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        lastName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: last_name
+        foreName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: fore_name
+        birthName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: birth_name
+        gender:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: '0 = undefined, 1 = male, 2 = female'
+                default: '0'
+        birthid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birthID
+        deathid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: deathID
+        religionid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: religionID
+        originalNationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: original_nationID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

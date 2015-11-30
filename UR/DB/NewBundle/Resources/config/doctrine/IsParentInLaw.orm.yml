@@ -1,0 +1,47 @@
+UR\DB\NewBundle\Entity\IsParentInLaw:
+    type: entity
+    table: is_parent_in_law
+    uniqueConstraints:
+        child_in_lawID:
+            columns:
+                - child_in_lawID
+                - parent_in_lawID
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+        childInLawid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: child_in_lawID
+        parentInLawid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            id: true
+            column: parent_in_lawID
+    fields:
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

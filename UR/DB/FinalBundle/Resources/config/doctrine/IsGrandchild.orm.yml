@@ -1,0 +1,40 @@
+UR\DB\FinalBundle\Entity\IsGrandchild:
+    type: entity
+    table: is_grandchild
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        grandParentid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: grand_parentID
+        grandChildid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: grand_childID
+        relationType:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: relation_type
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

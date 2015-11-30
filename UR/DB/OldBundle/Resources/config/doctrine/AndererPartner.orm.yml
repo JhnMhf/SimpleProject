@@ -1,0 +1,259 @@
+UR\DB\OldBundle\Entity\AndererPartner:
+    type: entity
+    table: anderer_partner
+    indexes:
+        vorher-nachher:
+            columns:
+                - vorher-nachher
+        auflösung:
+            columns:
+                - auflösung
+        name:
+            columns:
+                - name
+        stand:
+            columns:
+                - stand
+        gelöst:
+            columns:
+                - gelöst
+        verheiratet:
+            columns:
+                - verheiratet
+        hochzeitstag:
+            columns:
+                - hochzeitstag
+        bildungsabschluss:
+            columns:
+                - bildungsabschluss
+        vornamen:
+            columns:
+                - vornamen
+        gestorben:
+            columns:
+                - gestorben
+        beruf:
+            columns:
+                - beruf
+        rang:
+            columns:
+                - rang
+        hochzeitsort:
+            columns:
+                - hochzeitsort
+        herkunftsort:
+            columns:
+                - herkunftsort
+        geboren:
+            columns:
+                - geboren
+        kommentar:
+            columns:
+                - kommentar
+        todesort:
+            columns:
+                - todesort
+        aufgebot:
+            columns:
+                - aufgebot
+        ehren:
+            columns:
+                - ehren
+        besitz:
+            columns:
+                - besitz
+        geburtsort:
+            columns:
+                - geburtsort
+        friedhof:
+            columns:
+                - friedhof
+        herkunftsterritorium:
+            columns:
+                - herkunftsterritorium
+        konfession:
+            columns:
+                - konfession
+        partnerpartner_id-nr:
+            columns:
+                - partnerpartner_id-nr
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        vorherNachher:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: vorher-nachher
+        auflösung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gelöst:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        verheiratet:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitstag:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bildungsabschluss:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        partnerpartnerIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: partnerpartner_id-nr
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        aufgebot:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ehren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        besitz:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        friedhof:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        herkunftsterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        konfession:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

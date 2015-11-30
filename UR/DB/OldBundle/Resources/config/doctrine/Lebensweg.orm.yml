@@ -1,0 +1,109 @@
+UR\DB\OldBundle\Entity\Lebensweg:
+    type: entity
+    table: lebensweg
+    indexes:
+        stammland:
+            columns:
+                - stammland
+        von-ab:
+            columns:
+                - von-ab
+        beruf:
+            columns:
+                - beruf
+        ort:
+            columns:
+                - ort
+        bis:
+            columns:
+                - bis
+        belegt:
+            columns:
+                - belegt
+        territorium:
+            columns:
+                - territorium
+        stammterritorium:
+            columns:
+                - stammterritorium
+        land:
+            columns:
+                - land
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        stammland:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        territorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stammterritorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

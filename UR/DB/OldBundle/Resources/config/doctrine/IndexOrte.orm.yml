@@ -1,0 +1,40 @@
+UR\DB\OldBundle\Entity\IndexOrte:
+    type: entity
+    table: index_orte
+    indexes:
+        orte:
+            columns:
+                - orte
+                - territorien
+                - land
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+                default: '0'
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        orte:
+            type: text
+            nullable: true
+            length: null
+            options:
+                fixed: false
+        territorien:
+            type: text
+            nullable: true
+            length: null
+            options:
+                fixed: false
+        land:
+            type: text
+            nullable: true
+            length: null
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

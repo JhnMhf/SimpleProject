@@ -1,0 +1,45 @@
+UR\DB\FinalBundle\Entity\Date:
+    type: entity
+    table: date
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        day:
+            type: string
+            nullable: true
+            length: 20
+            options:
+                fixed: false
+        month:
+            type: string
+            nullable: true
+            length: 20
+            options:
+                fixed: false
+        year:
+            type: string
+            nullable: true
+            length: 20
+            options:
+                fixed: false
+        weekday:
+            type: string
+            nullable: true
+            length: 20
+            options:
+                fixed: false
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

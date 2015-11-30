@@ -1,0 +1,39 @@
+UR\DB\NewBundle\Entity\Residence:
+    type: entity
+    table: residence
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        residenceLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: residence_locationID
+        residenceTerritoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: residence_territoryID
+        residenceOrder:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+            column: residence_order
+        residenceCountryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: residence_countryID
+    lifecycleCallbacks: {  }

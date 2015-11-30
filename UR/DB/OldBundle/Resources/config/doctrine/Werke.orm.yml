@@ -1,0 +1,91 @@
+UR\DB\OldBundle\Entity\Werke:
+    type: entity
+    table: werke
+    indexes:
+        land:
+            columns:
+                - land
+        werke:
+            columns:
+                - werke
+        ort:
+            columns:
+                - ort
+        von-ab:
+            columns:
+                - von-ab
+        bis:
+            columns:
+                - bis
+        belegt:
+            columns:
+                - belegt
+        kommentar:
+            columns:
+                - kommentar
+        territorium:
+            columns:
+                - territorium
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        werke:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        territorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,101 @@
+UR\DB\OldBundle\Entity\Person:
+    type: entity
+    table: person
+    indexes:
+        geschlecht:
+            columns:
+                - geschlecht
+        name:
+            columns:
+                - name
+        vornamen:
+            columns:
+                - vornamen
+        berufsklasse:
+            columns:
+                - berufsklasse
+        rufnamen:
+            columns:
+                - rufnamen
+        geburtsname:
+            columns:
+                - geburtsname
+        kommentar:
+            columns:
+                - kommentar
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+        ursp_nation:
+            columns:
+                - ursp_nation
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        geschlecht:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: russ_vornamen
+        urspNation:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: ursp_nation
+        berufsklasse:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        rufnamen:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        geburtsname:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

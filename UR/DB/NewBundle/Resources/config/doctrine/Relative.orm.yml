@@ -1,0 +1,163 @@
+UR\DB\NewBundle\Entity\Relative:
+    type: entity
+    table: relative
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        firstName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: first_name
+        patronym:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        lastName:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: last_name
+        foreName:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: fore_name
+        birthName:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_name
+        gender:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: '0 = undefined, 1 = male, 2 = female'
+                default: '0'
+        birthid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: birthID
+        deathid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: deathID
+        religionid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: religionID
+        originalNationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: original_nationID
+        baptismid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: baptismID
+        worksid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: worksID
+        weddingid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: weddingID
+        statusid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: statusID
+        sourceid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: sourceID
+        roadOfLiveid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: road_of_liveID
+        rankid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: rankID
+        propertyid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: propertyID
+        honourid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: honourID
+        educationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: educationID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        bornInMarriage:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: born_in_marriage
+        jobClassid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: job_classID
+        residenceid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: residenceID
+    lifecycleCallbacks: {  }

@@ -1,0 +1,32 @@
+UR\DB\OldBundle\Entity\VaterDesGeschwisters:
+    type: entity
+    table: 'vater des geschwisters'
+    indexes:
+        geschwistervater_id-nr:
+            columns:
+                - geschwistervater_id-nr
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        geschwistervaterIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: geschwistervater_id-nr
+    lifecycleCallbacks: {  }

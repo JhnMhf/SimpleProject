@@ -1,0 +1,63 @@
+UR\DB\FinalBundle\Entity\Works:
+    type: entity
+    table: works
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        label:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        countryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: countryID
+        locationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: locationID
+        fromDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: from_dateID
+        toDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: to_dateID
+        territoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: territoryID
+        provenDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: proven_dateID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

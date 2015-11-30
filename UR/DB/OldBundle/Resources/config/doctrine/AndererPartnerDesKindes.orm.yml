@@ -1,0 +1,148 @@
+UR\DB\OldBundle\Entity\AndererPartnerDesKindes:
+    type: entity
+    table: anderer_partner_des_kindes
+    indexes:
+        name:
+            columns:
+                - name
+        vorher-nachher:
+            columns:
+                - vorher-nachher
+        auflösung:
+            columns:
+                - auflösung
+        vornamen:
+            columns:
+                - vornamen
+        rang:
+            columns:
+                - rang
+        hochzeitsort:
+            columns:
+                - hochzeitsort
+        hochzeitstag:
+            columns:
+                - hochzeitstag
+        geburtsort:
+            columns:
+                - geburtsort
+        geboren:
+            columns:
+                - geboren
+        todesort:
+            columns:
+                - todesort
+        gestorben:
+            columns:
+                - gestorben
+        verheiratet:
+            columns:
+                - verheiratet
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        order4:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vorherNachher:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: vorher-nachher
+        auflösung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitstag:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geburtsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        todesort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        verheiratet:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

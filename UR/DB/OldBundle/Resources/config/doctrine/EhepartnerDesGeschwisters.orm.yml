@@ -1,0 +1,223 @@
+UR\DB\OldBundle\Entity\EhepartnerDesGeschwisters:
+    type: entity
+    table: ehepartner_des_geschwisters
+    indexes:
+        hochzeitsort:
+            columns:
+                - hochzeitsort
+        hochzeitstag:
+            columns:
+                - hochzeitstag
+        vornamen:
+            columns:
+                - vornamen
+        name:
+            columns:
+                - name
+        verheiratet:
+            columns:
+                - verheiratet
+        stand:
+            columns:
+                - stand
+        beruf:
+            columns:
+                - beruf
+        kommentar:
+            columns:
+                - kommentar
+        bildungsabschluss:
+            columns:
+                - bildungsabschluss
+        geboren:
+            columns:
+                - geboren
+        gestorben:
+            columns:
+                - gestorben
+        ehren:
+            columns:
+                - ehren
+        rang:
+            columns:
+                - rang
+        begraben:
+            columns:
+                - begraben
+        begräbnisort:
+            columns:
+                - begräbnisort
+        vorher-nachher:
+            columns:
+                - vorher-nachher
+        herkunftsort:
+            columns:
+                - herkunftsort
+        auflösung:
+            columns:
+                - auflösung
+        konfession:
+            columns:
+                - konfession
+        friedhof:
+            columns:
+                - friedhof
+        geschwisterpartner_id-nr:
+            columns:
+                - geschwisterpartner_id-nr
+        russ_vornamen:
+            columns:
+                - russ_vornamen
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        hochzeitsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitstag:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        verheiratet:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geschwisterpartnerIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: geschwisterpartner_id-nr
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        russVornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: russ_vornamen
+        bildungsabschluss:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        geboren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ehren:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        begraben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        begräbnisort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vorherNachher:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: vorher-nachher
+        herkunftsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        auflösung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        konfession:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        friedhof:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,99 @@
+UR\DB\OldBundle\Entity\RangDesKindes:
+    type: entity
+    table: rang_des_kindes
+    indexes:
+        land:
+            columns:
+                - land
+        rang:
+            columns:
+                - rang
+        belegt:
+            columns:
+                - belegt
+        von-ab:
+            columns:
+                - von-ab
+        ort:
+            columns:
+                - ort
+        kommentar:
+            columns:
+                - kommentar
+        rangklasse:
+            columns:
+                - rangklasse
+        bis:
+            columns:
+                - bis
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        order3:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rangklasse:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

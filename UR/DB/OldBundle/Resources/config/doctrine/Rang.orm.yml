@@ -1,0 +1,100 @@
+UR\DB\OldBundle\Entity\Rang:
+    type: entity
+    table: rang
+    indexes:
+        land:
+            columns:
+                - land
+        von-ab:
+            columns:
+                - von-ab
+        rang:
+            columns:
+                - rang
+        rangklasse:
+            columns:
+                - rangklasse
+        belegt:
+            columns:
+                - belegt
+        ort:
+            columns:
+                - ort
+        bis:
+            columns:
+                - bis
+        territorium:
+            columns:
+                - territorium
+        kommentar:
+            columns:
+                - kommentar
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        land:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vonAb:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: von-ab
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rangklasse:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        ort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        bis:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        territorium:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

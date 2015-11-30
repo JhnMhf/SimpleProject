@@ -1,0 +1,88 @@
+UR\DB\FinalBundle\Entity\Education:
+    type: entity
+    table: education
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        educationOrder:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: education_order
+        label:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        countryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: countryID
+        territoryid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: territoryID
+        locationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: locationID
+        fromDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: from_dateID
+        toDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: to_dateID
+        provenDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: proven_dateID
+        graduationLabel:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: graduation_label
+        graduationDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: graduation_dateID
+        graduationLocationid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: graduation_locationID
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

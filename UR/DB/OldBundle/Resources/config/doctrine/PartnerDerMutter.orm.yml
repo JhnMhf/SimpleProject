@@ -1,0 +1,140 @@
+UR\DB\OldBundle\Entity\PartnerDerMutter:
+    type: entity
+    table: partner_der_mutter
+    indexes:
+        name:
+            columns:
+                - name
+        auflösung:
+            columns:
+                - auflösung
+        vorher-nachher:
+            columns:
+                - vorher-nachher
+        verheiratet:
+            columns:
+                - verheiratet
+        gelöst:
+            columns:
+                - gelöst
+        hochzeitstag:
+            columns:
+                - hochzeitstag
+        rang:
+            columns:
+                - rang
+        belegt:
+            columns:
+                - belegt
+        vornamen:
+            columns:
+                - vornamen
+        hochzeitsort:
+            columns:
+                - hochzeitsort
+        beruf:
+            columns:
+                - beruf
+        kommentar:
+            columns:
+                - kommentar
+        stand:
+            columns:
+                - stand
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        auflösung:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vorherNachher:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: vorher-nachher
+        verheiratet:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gelöst:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitstag:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        rang:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        belegt:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        hochzeitsort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        stand:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

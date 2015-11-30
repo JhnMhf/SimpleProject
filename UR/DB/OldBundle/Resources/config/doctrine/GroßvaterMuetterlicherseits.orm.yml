@@ -1,0 +1,92 @@
+UR\DB\OldBundle\Entity\GroßvaterMuetterlicherseits:
+    type: entity
+    table: großvater_muetterlicherseits
+    indexes:
+        name:
+            columns:
+                - name
+        beruf:
+            columns:
+                - beruf
+        wohnort:
+            columns:
+                - wohnort
+        vornamen:
+            columns:
+                - vornamen
+        nation:
+            columns:
+                - nation
+        gestorben:
+            columns:
+                - gestorben
+        mütterl_großvater_id-nr:
+            columns:
+                - mütterl_großvater_id-nr
+    id:
+        order:
+            type: boolean
+            nullable: false
+            id: true
+        order2:
+            type: boolean
+            nullable: false
+            id: true
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: true
+            id: true
+            column: ID
+    fields:
+        name:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        beruf:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        wohnort:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        vornamen:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        mütterlGroßvaterIdNr:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+            column: mütterl_großvater_id-nr
+        nation:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        gestorben:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+        kommentar:
+            type: text
+            nullable: true
+            length: 16777215
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

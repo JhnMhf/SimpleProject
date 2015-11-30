@@ -1,0 +1,52 @@
+UR\DB\NewBundle\Entity\Religion:
+    type: entity
+    table: religion
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        comment:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        religionOrder:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+            column: religion_order
+        provenDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: proven_dateID
+        fromDateid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: from_dateID
+        changeOfReligion:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: change_of_religion
+    lifecycleCallbacks: {  }
