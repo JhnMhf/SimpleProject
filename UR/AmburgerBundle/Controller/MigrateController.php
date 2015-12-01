@@ -26,7 +26,9 @@ class MigrateController extends Controller
 
         $deathId = $this->migrateDeath($ID, $oldDBManager);
 
-        $birthId = null;
+        $birthId = $this->migrateBirth($ID, $oldDBManager);
+
+        $baptismId = $this->migrateBaptism($ID, $oldDBManager);
 
         $religionId = null;
 
@@ -44,7 +46,7 @@ class MigrateController extends Controller
 
 
 
-        $newPersonId = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $birthId, $deathId, $religionId, $originalNationid, $person->getKommentar());
+        $newPersonId = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $birthId, $deathId, $religionId, $originalNationid, $person->getKommentar(), $baptismId);
 
 
 
@@ -64,5 +66,26 @@ class MigrateController extends Controller
         return $newTodId;
     }
 
+    private function migrateBirth($oldPersonID, $oldDBManager){
 
+        $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
+
+        //if necessary get more informations from other tables
+
+        $newBirthId = $this->get("migrate_data.service")->migrateBirth($birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
+
+        return $newBirthId;
+    }
+
+
+    private function migrateBaptism($oldPersonID, $oldDBManager){
+
+        $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
+
+        //if necessary get more informations from other tables
+
+        $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
+
+        return $newBaptismId;
+    }
 }

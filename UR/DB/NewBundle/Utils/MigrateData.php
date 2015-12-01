@@ -3,6 +3,8 @@
 namespace UR\DB\NewBundle\Utils;
 
 use UR\DB\NewBundle\Entity\Person;
+use UR\DB\NewBundle\Entity\Baptism;
+use UR\DB\NewBundle\Entity\Birth;
 use UR\DB\NewBundle\Entity\Death;
 use UR\DB\NewBundle\Entity\Location;
 use UR\DB\NewBundle\Entity\Country;
@@ -196,27 +198,46 @@ class MigrateData
 
     /* end helper method */
 
-    public function migrateBirth($originCountryid, $originTerritoryid, $originLocationid, $birthCountryid, $birthLocationid, $birthDateid, $birthTerritoryid, $baptismDateid, $baptismLocationid, $comment){
+    public function migrateBirth($originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
         //insert into new data
         $newDBManager = $this->get('doctrine')->getManager('new');
 
         $newBirth = new Birth();
 
-        $newBirth->setOriginCountryid($originCountryid);
-        $newBirth->setOriginTerritoryid($originTerritoryid);
-        $newBirth->setOriginLocationid($originLocationid);
-        $newBirth->setBirthCountryid($birthCountryid);
-        $newBirth->setBirthLocationid($birthLocationid);
-        $newBirth->setBirthDateid($birthDateid);
-        $newBirth->setBirthTerritoryid($birthTerritoryid);
-        $newBirth->setBaptismDateid($baptismDateid);
-        $newBirth->setBaptismLocationid($baptismLocationid);
+        $newBirth->setOriginCountryid($this->getCountryId($originCountry));
+        $newBirth->setOriginTerritoryid($this->getTerritoryId($originTerritory));
+        $newBirth->setOriginLocationid($this->getLocationId($originLocation));
+        $newBirth->setBirthCountryid($this->getCountryId($birthCountry));
+        $newBirth->setBirthLocationid($this->getLocationId($birthLocation));
+        $newBirth->setBirthTerritoryid($this->getTerritoryId($birthTerritory));
         $newBirth->setComment($comment);
+
+        $birthRepository = $newDBManager->getRepository("NewBundle:Birth");
+
+        $birthRepository->setBirthDates($newBirth, $this->getDate($birthDate));
         
         $newDBManager->persist($newBirth);
         $newDBManager->flush();
 
         return $newBirth->getId();
+    }
+
+    public function migrateBaptism($baptismDate, $baptismLocation){
+        //insert into new data
+        $newDBManager = $this->get('doctrine')->getManager('new');
+
+        $newBaptism = new Baptism();
+        $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
+
+
+        $baptismRepository = $newDBManager->getRepository("NewBundle:Baptism");
+
+        $baptismRepository->setBaptismDates($newBaptism, $this->getDate($baptismDate));
+        
+        $newDBManager->persist($newBaptism);
+        $newDBManager->flush();
+
+        return $newBaptism->getId();
     }
 
     public function migrateCountry($name, $comment){
@@ -453,7 +474,7 @@ class MigrateData
         return $newNation->getId();
     }
 
-    public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $birthid, $deathid, $religionid, $originalNationid, $comment){
+    public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $birthid, $deathid, $religionid, $originalNationid, $comment, $baptismId){
         //insert into new data
         $newDBManager = $this->get('doctrine')->getManager('new');
 
@@ -471,6 +492,8 @@ class MigrateData
         $newPerson->setReligionid($religionid);
         $newPerson->setOriginalNationid($originalNationid);
         $newPerson->setComment($comment);
+
+        $newPerson->setBaptismid($baptismId);
         
         $newDBManager->persist($newPerson);
         $newDBManager->flush();

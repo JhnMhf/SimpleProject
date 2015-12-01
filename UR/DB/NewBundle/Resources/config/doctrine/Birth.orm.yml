@@ -1,5 +1,6 @@
 UR\DB\NewBundle\Entity\Birth:
     type: entity
+    repositoryClass: UR\DB\NewBundle\Entity\BirthRepository
     table: birth
     id:
         id:
@@ -43,10 +44,11 @@ UR\DB\NewBundle\Entity\Birth:
                 unsigned: false
             column: birth_locationID
         birthDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: birth_dateID
         birthTerritoryid:
             type: integer

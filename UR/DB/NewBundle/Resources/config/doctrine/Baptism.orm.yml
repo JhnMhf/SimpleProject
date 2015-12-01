@@ -1,5 +1,6 @@
 UR\DB\NewBundle\Entity\Baptism:
     type: entity
+    repositoryClass: UR\DB\NewBundle\Entity\BaptismRepository
     table: baptism
     id:
         id:
@@ -13,10 +14,11 @@ UR\DB\NewBundle\Entity\Baptism:
                 strategy: IDENTITY
     fields:
         baptismDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: baptism_dateID
         baptismLocationid:
             type: integer

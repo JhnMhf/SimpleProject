@@ -2,13 +2,6 @@ UR\DB\NewBundle\Entity\Wedding:
     type: entity
     table: wedding
     id:
-        weddingOrder:
-            type: boolean
-            nullable: false
-            options:
-                default: '1'
-            id: true
-            column: wedding_order
         id:
             type: integer
             nullable: false
@@ -16,13 +9,19 @@ UR\DB\NewBundle\Entity\Wedding:
                 unsigned: false
             id: true
             column: ID
+    fields:
+        weddingOrder:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+            column: wedding_order
         husbandId:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: husband_ID
         wifeId:
             type: integer
@@ -30,9 +29,7 @@ UR\DB\NewBundle\Entity\Wedding:
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: wife_ID
-    fields:
         relationType:
             type: string
             nullable: true
@@ -100,4 +97,7 @@ UR\DB\NewBundle\Entity\Wedding:
             length: 65535
             options:
                 fixed: false
+    uniqueConstraints:
+        wedding_order:
+            columns: wedding_order,husband_ID,wife_ID
     lifecycleCallbacks: {  }

@@ -19,9 +19,6 @@ class DeathRepository extends EntityRepository
 		$newDateString = implode(",", $uniqueArray);
 
         $deathObj->setDeathDateId($newDateString);
-
-        //$this->persist($deathObj);
-        //$this->flush();
 	}
    
     public function addDeathDate($deathObj, $dateId){
@@ -41,9 +38,6 @@ class DeathRepository extends EntityRepository
         $currentDateString .= ",".$dateId;
 
         $deathObj->setDeathDateId($currentDateString);
-
-        //$this->persist($deathObj);
-        //$this->flush();
     }
 
     public function removeDeathDate($deathObj, $dateId){
@@ -68,8 +62,6 @@ class DeathRepository extends EntityRepository
 
         $deathObj->setDeathDateId($newDateString);
 
-        //$this->persist($deathObj);
-        //$this->flush();
     }
 
 
@@ -80,9 +72,6 @@ class DeathRepository extends EntityRepository
 		$newDateString = implode(",", $uniqueArray);
 
         $deathObj->setFuneralDateId($newDateString);
-
-        //$this->persist($deathObj);
-        //$this->flush();
 	}
    
     public function addFuneralDate($deathObj, $dateId){
@@ -102,9 +91,6 @@ class DeathRepository extends EntityRepository
         $currentDateString .= ",".$dateId;
 
         $deathObj->setFuneralDateId($currentDateString);
-
-        //$this->persist($deathObj);
-        //$this->flush();
     }
 
     public function removeFuneralDate($deathObj, $dateId){
@@ -128,9 +114,6 @@ class DeathRepository extends EntityRepository
         $newDateString = implode(",", $newIdArray);
 
         $deathObj->setFuneralDateId($newDateString);
-
-        //$this->persist($deathObj);
-        //$this->flush();
     }
 
 }
