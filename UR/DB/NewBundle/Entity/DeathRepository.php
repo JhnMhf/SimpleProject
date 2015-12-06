@@ -13,7 +13,6 @@ use UR\DB\NewBundle\Entity\Date;
 class DeathRepository extends EntityRepository
 {
 	public function setDeathDates($deathObj, $dateIdArray){
-
 		$uniqueArray = array_unique($dateIdArray);
 
 		$newDateString = implode(",", $uniqueArray);

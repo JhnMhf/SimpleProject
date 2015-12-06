@@ -16,6 +16,10 @@ use UR\DB\NewBundle\Entity\Date;
 class MigrateData
 {
 
+    //http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy/26972181#26972181
+    //private $DATE_REGEX = "/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/";
+    private $DATE_REGEX = "/^(\D*)(0?[1-9]|[12][0-9]|3[01])[\.\-](0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
+
     private $container;
 
 	public function __construct($container)
@@ -162,38 +166,95 @@ class MigrateData
 
     //returns 0-many date objects
     public function getDate($dateString, $comment = null){
-        $dateIdArray = [];
+        $newDatesArray = [];
 
         if($dateString == "" || $dateString == null){
-            return $dateIdArray;
+            return $newDatesArray;
         }
 
         // check if jobClass exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
+        $datesArray = $this->extractDatesArray($dateString);
+
+        for($i = 0; $i < count($datesArray); $i++){
+            $currDateString = $datesArray[$i];
+
+            $newDate = $this->createRealDateFromString($currDateString);
+            $newDatesArray[] = $newDate;
+            $newDBManager->persist($newDate);
+        }
+
+        //first flush to get ids later
+        $newDBManager->flush();
+
+        //now collect ids for the calling method
+        $dateIdArray = [];
+
+        for($i = 0; $i < count($newDatesArray); $i++){
+            $dateId = $newDatesArray[$i]->getId();
+            $dateIdArray[] = $dateId;
+        }
+
+        return $dateIdArray;
+    }
+
+    private function extractDatesArray($dateString){
+        $datesArray = [];
+
+        //add more special cases!
+        if(strpos($dateString, ";")){
+            $datesArray = explode(";", $dateString);
+        }else {
+            //when only one exists?
+            $datesArray[] = $dateString;
+        }
+
+        return $datesArray;
+    }
+
+
+    //31.12.1793-1.1.1796   
+    // for things like this return array with dates?? but how to persist between?
+    //OLD DB ID => 204
+    //adapt regex to 0.0.0000 
+    private function createRealDateFromString($dateString){
+        echo "real date: ".$dateString;
+
+        $dateString = trim($dateString);
+
+        preg_match($this->DATE_REGEX, $dateString, $date);
+
+        print_r($date);
+
         // if it does not exist, create it and return the new value
         $newDate = new Date();
 
-        $newDate->setComment("what you want? ".$dateString);
+        if(count($date) > 0){
+            //found date, do the right things...
+            $newDate->setDay($date[2]);
+            $newDate->setMonth($date[3]);
+            $newDate->setYear($date[4]);
 
-        // Todo write code for it
-        
-        $newDBManager->persist($newDate);
+            $commentString = "";
 
-        // if it does not exist, create it and return the new value
-        $newDate2 = new Date();
+            if($date[1] != ""){
+                $commentString .= trim($date[1]);
+            }
 
-        $newDate2->setComment("YOU again? ".$dateString);
+            if($date[5] != ""){
+                $commentString .= trim($date[5]);
+            }
 
-        // Todo write code for it
-        
-        $newDBManager->persist($newDate2);
-        $newDBManager->flush();
+            if($commentString != ""){
+                $newDate->setComment($commentString);
+            }
 
-        $dateIdArray[] = $newDate->getId();
-        $dateIdArray[] = $newDate2->getId();
+        }else{
+            $newDate->setComment("ERROR: " . $dateString);
+        }
 
-        return $dateIdArray;
+        return $newDate;
     }
 
     /* end helper method */

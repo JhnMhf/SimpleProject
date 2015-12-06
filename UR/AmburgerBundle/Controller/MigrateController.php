@@ -24,11 +24,11 @@ class MigrateController extends Controller
         $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($ID);
 
 
-        $deathId = $this->migrateDeath($ID, $oldDBManager);
+        $deathId = $this->migrateDeathController($ID, $oldDBManager);
 
-        $birthId = $this->migrateBirth($ID, $oldDBManager);
+        $birthId = $this->migrateBirthController($ID, $oldDBManager);
 
-        $baptismId = $this->migrateBaptism($ID, $oldDBManager);
+        $baptismId = $this->migrateBaptismController($ID, $oldDBManager);
 
         $religionId = null;
 
@@ -55,7 +55,7 @@ class MigrateController extends Controller
         );
     }
 
-    private function migrateDeath($oldPersonID, $oldDBManager){
+    private function migrateDeathController($oldPersonID, $oldDBManager){
 
         $tod = $oldDBManager->getRepository('OldBundle:Tod')->findOneById($oldPersonID);
 
@@ -66,7 +66,7 @@ class MigrateController extends Controller
         return $newTodId;
     }
 
-    private function migrateBirth($oldPersonID, $oldDBManager){
+    private function migrateBirthController($oldPersonID, $oldDBManager){
 
         $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
 
@@ -78,7 +78,7 @@ class MigrateController extends Controller
     }
 
 
-    private function migrateBaptism($oldPersonID, $oldDBManager){
+    private function migrateBaptismController($oldPersonID, $oldDBManager){
 
         $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
 
