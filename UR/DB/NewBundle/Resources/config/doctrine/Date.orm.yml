@@ -42,4 +42,16 @@ UR\DB\NewBundle\Entity\Date:
             length: 65535
             options:
                 fixed: false
+        beforeDate:
+            type: boolean
+            nullable: false
+            options:
+                default: 0
+            column: before_date
+        afterDate:
+            type: boolean
+            nullable: false
+            options:
+                default: 0
+            column: after_date
     lifecycleCallbacks: {  }

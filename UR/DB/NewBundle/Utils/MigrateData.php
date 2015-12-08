@@ -18,7 +18,7 @@ class MigrateData
 
     //http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy/26972181#26972181
     //private $DATE_REGEX = "/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/";
-    private $DATE_REGEX = "/^(\D*)(0?[1-9]|[12][0-9]|3[01])[\.\-](0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
+    private $DATE_REGEX = "/^(\D*)(0|0?[1-9]|[12][0-9]|3[01])[\.\-](0|0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
 
     private $container;
 
@@ -217,7 +217,6 @@ class MigrateData
     //31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
-    //adapt regex to 0.0.0000 
     private function createRealDateFromString($dateString){
         echo "real date: ".$dateString;
 
@@ -231,6 +230,11 @@ class MigrateData
         $newDate = new Date();
 
         if(count($date) > 0){
+            if(strpos($date[1], "- im Original")){
+                $newDate->setComment($date[0]);
+                return $newDate;
+            }
+
             //found date, do the right things...
             $newDate->setDay($date[2]);
             $newDate->setMonth($date[3]);
@@ -239,11 +243,22 @@ class MigrateData
             $commentString = "";
 
             if($date[1] != ""){
-                $commentString .= trim($date[1]);
+                if($date[1] == "-"){
+                    $newDate->setBeforeDate(1);
+                } else{
+                    $commentString .= trim($date[1]);
+                }
             }
 
             if($date[5] != ""){
-                $commentString .= trim($date[5]);
+                if($date[5] == "-"){
+                    $newDate->setAfterDate(1);
+                } else if(substr($date[5],0,1) == "-"){
+                    $newDate->setAfterDate(1);
+                     $commentString .= trim(substr($date[5],1));
+                } else{
+                    $commentString .= trim($date[5]);
+                }
             }
 
             if($commentString != ""){

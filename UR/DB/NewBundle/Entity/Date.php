@@ -167,4 +167,149 @@ class Date
     {
         return $this->comment;
     }
+    /**
+     * @var boolean
+     */
+    private $until = 0;
+
+    /**
+     * @var boolean
+     */
+    private $after = 0;
+
+
+    /**
+     * Set until
+     *
+     * @param boolean $until
+     *
+     * @return Date
+     */
+    public function setUntil($until)
+    {
+        $this->until = $until;
+
+        return $this;
+    }
+
+    /**
+     * Get until
+     *
+     * @return boolean
+     */
+    public function getUntil()
+    {
+        return $this->until;
+    }
+
+    /**
+     * Set after
+     *
+     * @param boolean $after
+     *
+     * @return Date
+     */
+    public function setAfter($after)
+    {
+        $this->after = $after;
+
+        return $this;
+    }
+
+    /**
+     * Get after
+     *
+     * @return boolean
+     */
+    public function getAfter()
+    {
+        return $this->after;
+    }
+    /**
+     * @var boolean
+     */
+    private $before = 0;
+
+
+    /**
+     * Set before
+     *
+     * @param boolean $before
+     *
+     * @return Date
+     */
+    public function setBefore($before)
+    {
+        $this->before = $before;
+
+        return $this;
+    }
+
+    /**
+     * Get before
+     *
+     * @return boolean
+     */
+    public function getBefore()
+    {
+        return $this->before;
+    }
+    /**
+     * @var boolean
+     */
+    private $beforeDate = 0;
+
+    /**
+     * @var boolean
+     */
+    private $afterDate = 0;
+
+
+    /**
+     * Set beforeDate
+     *
+     * @param boolean $beforeDate
+     *
+     * @return Date
+     */
+    public function setBeforeDate($beforeDate)
+    {
+        $this->beforeDate = $beforeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get beforeDate
+     *
+     * @return boolean
+     */
+    public function getBeforeDate()
+    {
+        return $this->beforeDate;
+    }
+
+    /**
+     * Set afterDate
+     *
+     * @param boolean $afterDate
+     *
+     * @return Date
+     */
+    public function setAfterDate($afterDate)
+    {
+        $this->afterDate = $afterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get afterDate
+     *
+     * @return boolean
+     */
+    public function getAfterDate()
+    {
+        return $this->afterDate;
+    }
 }
