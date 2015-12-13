@@ -4,6 +4,8 @@ namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\Query\ResultSetMapping;
+
 use UR\DB\OldDBBundle\Entity\Person;
 use UR\DB\NewDBBundle\Utils\MigrateData;
 
@@ -30,7 +32,7 @@ class MigrateController extends Controller
 
         $baptismId = $this->migrateBaptismController($ID, $oldDBManager);
 
-        $religionId = null;
+        $religionId = $this->migrateReligionController($ID, $oldDBManager);
 
         $originalNationid = null;
 
@@ -87,5 +89,57 @@ class MigrateController extends Controller
         $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
 
         return $newBaptismId;
+    }
+
+        private function migrateReligionController($oldPersonID, $oldDBManager){
+
+        //find by id because there can be multiple religion for one person
+        //$religions = $oldDBManager->getRepository('OldBundle:Religion')->findById($oldPersonID);
+        $religions = $this->getReligionDataWithNativeQuery($oldPersonID, $oldDBManager);
+
+        //if necessary get more informations from other tables
+
+        $religionIDString = "";
+
+        for($i = 0; $i < count($religions); $i++){
+            $oldReligion = $religions[$i];
+            $newReligionID = $this->get("migrate_data.service")->migrateReligion($oldReligion->getKonfession(), $oldReligion->getOrder(), $oldReligion->getKonversion(), $oldReligion->getBelegt(), $oldReligion->getVonAb(), $oldReligion->getKommentar());
+
+            if($i != 0){
+                $religionIDString .= ",";
+            }
+
+            $religionIDString .= $newReligionID;
+        }
+
+
+        return $religionIDString;
+    }
+
+    /*
+        Documentation:
+        http://forum.symfony-project.org/forum/23/topic/37872.html
+
+        https://stackoverflow.com/questions/3325012/execute-raw-sql-using-doctrine-2
+
+        http://doctrine-orm.readthedocs.org/projects/doctrine-orm/en/latest/reference/native-sql.html
+    */
+
+    private function getReligionDataWithNativeQuery($oldPersonID, $oldDBManager){
+        $resultMap = new ResultSetMapping;
+        $resultMap->addEntityResult('OldBundle:Religion', '');
+        $resultMap->addEntityResult('OldBundle:Religion', 'r');
+        $resultMap->addFieldResult('r', 'ID', 'id');
+        $resultMap->addFieldResult('r', 'order', 'order');
+        $resultMap->addFieldResult('r', 'von-ab', 'vonAb');
+        $resultMap->addFieldResult('r', 'konfession', 'konfession');
+        $resultMap->addFieldResult('r', 'konversion', 'konversion');
+        $resultMap->addFieldResult('r', 'belegt', 'belegt');
+        $resultMap->addFieldResult('r', 'kommentar', 'kommentar');
+
+        $query = $oldDBManager->createNativeQuery('SELECT ID, `order`, `von-ab`, konfession, konversion, belegt, kommentar FROM `religion` WHERE ID=:personID', $resultMap);
+        $query->setParameter('personID', $oldPersonID);
+
+        return $query->getResult();
     }
 }

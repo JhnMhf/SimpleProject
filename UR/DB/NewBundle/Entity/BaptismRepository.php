@@ -14,11 +14,13 @@ class BaptismRepository extends EntityRepository
 {
 	public function setBaptismDates($baptismObj, $dateIdArray){
 
-		$uniqueArray = array_unique($dateIdArray);
+        if($dateIdArray != null){
+            $uniqueArray = array_unique($dateIdArray);
 
-		$newDateString = implode(",", $uniqueArray);
+            $newDateString = implode(",", $uniqueArray);
 
-        $baptismObj->setBaptismDateId($newDateString);
+            $baptismObj->setBaptismDateId($newDateString);
+        }
 	}
    
     public function addBaptismDate($baptismObj, $dateId){

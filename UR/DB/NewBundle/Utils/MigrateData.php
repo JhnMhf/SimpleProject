@@ -12,6 +12,7 @@ use UR\DB\NewBundle\Entity\Territory;
 use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Date;
+use UR\DB\NewBundle\Entity\Religion;
 
 class MigrateData
 {
@@ -169,7 +170,7 @@ class MigrateData
         $newDatesArray = [];
 
         if($dateString == "" || $dateString == null){
-            return $newDatesArray;
+            return null;
         }
 
         // check if jobClass exists
@@ -636,14 +637,27 @@ class MigrateData
         return $newRelative->getId();
     }
 
-    public function migrateReligion($name, $comment){
+    public function migrateReligion($name, $religionOrder, $change_of_religion, $provenDateId, $fromDateId, $comment){
         //insert into new data
         $newDBManager = $this->get('doctrine')->getManager('new');
 
         $newReligion = new Religion();
 
         $newReligion->setName($name);
+        $newReligion->setReligionOrder($religionOrder);
+        $newReligion->setChangeOfReligion($change_of_religion);
         $newReligion->setComment($comment);
+
+        $newReligion->setProvenDateid($this->getDate($provenDateId));
+        $newReligion->setFromDateId($this->getDate($fromDateId));
+
+        /*
+
+        $birthRepository = $newDBManager->getRepository("NewBundle:Religion");
+
+        $birthRepository->setBirthDates($newBirth, $this->getDate($birthDate));
+
+        */
         
         $newDBManager->persist($newReligion);
         $newDBManager->flush();

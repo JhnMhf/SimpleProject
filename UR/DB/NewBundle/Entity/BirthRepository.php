@@ -14,11 +14,13 @@ class BirthRepository extends EntityRepository
 {
 	public function setBirthDates($birthObj, $dateIdArray){
 
-		$uniqueArray = array_unique($dateIdArray);
+        if($dateIdArray != null){
+    		$uniqueArray = array_unique($dateIdArray);
 
-		$newDateString = implode(",", $uniqueArray);
+    		$newDateString = implode(",", $uniqueArray);
 
-        $birthObj->setBirthDateId($newDateString);
+            $birthObj->setBirthDateId($newDateString);
+        }
 	}
    
     public function addBirthDate($birthObj, $dateId){
