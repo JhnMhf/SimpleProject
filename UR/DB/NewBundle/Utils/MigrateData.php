@@ -197,7 +197,14 @@ class MigrateData
             $dateIdArray[] = $dateId;
         }
 
-        return $dateIdArray;
+        return $this->createStringFromIdArray($dateIdArray);
+    }
+
+    private function createStringFromIdArray($idArray){
+
+        $uniqueArray = array_unique($idArray);
+
+        return implode(",", $uniqueArray);
     }
 
     private function extractDatesArray($dateString){
@@ -219,13 +226,13 @@ class MigrateData
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
     private function createRealDateFromString($dateString){
-        echo "real date: ".$dateString;
+        //echo "real date: ".$dateString;
 
         $dateString = trim($dateString);
 
         preg_match($this->DATE_REGEX, $dateString, $date);
 
-        print_r($date);
+        //print_r($date);
 
         // if it does not exist, create it and return the new value
         $newDate = new Date();
@@ -273,6 +280,19 @@ class MigrateData
         return $newDate;
     }
 
+
+    private function getGender($genderString){
+        //undefined = 0, male = 1, female = 2
+
+        if($genderString == "männlich"){
+            return 1;
+        }else if($genderString == "weiblich"){
+            return 2;
+        }
+
+        return 0;
+    }
+
     /* end helper method */
 
     public function migrateBirth($originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
@@ -289,9 +309,8 @@ class MigrateData
         $newBirth->setBirthTerritoryid($this->getTerritoryId($birthTerritory));
         $newBirth->setComment($comment);
 
-        $birthRepository = $newDBManager->getRepository("NewBundle:Birth");
+        $newBirth->setBirthDateId($this->getDate($birthDate));
 
-        $birthRepository->setBirthDates($newBirth, $this->getDate($birthDate));
         
         $newDBManager->persist($newBirth);
         $newDBManager->flush();
@@ -305,11 +324,7 @@ class MigrateData
 
         $newBaptism = new Baptism();
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
-
-
-        $baptismRepository = $newDBManager->getRepository("NewBundle:Baptism");
-
-        $baptismRepository->setBaptismDates($newBaptism, $this->getDate($baptismDate));
+        $newBaptism->setBaptismDateId($this->getDate($baptismDate));
         
         $newDBManager->persist($newBaptism);
         $newDBManager->flush();
@@ -363,11 +378,8 @@ class MigrateData
         $newDeath->setGraveyard($graveyard);
         $newDeath->setFuneralLocationid($this->getLocationId($funeralLocation));
         $newDeath->setComment($comment);
-
-        $deathRepository = $newDBManager->getRepository("NewBundle:Death");
-
-        $deathRepository->setDeathDates($newDeath, $this->getDate($deathDate));
-        $deathRepository->setFuneralDates($newDeath, $this->getDate($funeralDate));
+        $newDeath->setDeathDateId($this->getDate($deathDate));
+        $newDeath->setFuneralDateId($this->getDate($funeralDate));
         
         $newDBManager->persist($newDeath);
         $newDBManager->flush();
@@ -563,7 +575,7 @@ class MigrateData
         $newPerson->setLastName($lastName);
         $newPerson->setForeName($foreName);
         $newPerson->setBirthName($birthName);
-        $newPerson->setGender($gender);
+        $newPerson->setGender($this->getGender($gender));
         $newPerson->setBirthid($birthid);
         $newPerson->setDeathid($deathid);
         $newPerson->setReligionid($religionid);
@@ -650,14 +662,6 @@ class MigrateData
 
         $newReligion->setProvenDateid($this->getDate($provenDateId));
         $newReligion->setFromDateId($this->getDate($fromDateId));
-
-        /*
-
-        $birthRepository = $newDBManager->getRepository("NewBundle:Religion");
-
-        $birthRepository->setBirthDates($newBirth, $this->getDate($birthDate));
-
-        */
         
         $newDBManager->persist($newReligion);
         $newDBManager->flush();

@@ -76,10 +76,11 @@ UR\DB\NewBundle\Entity\Person:
                 unsigned: false
             column: deathID
         religionid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: religionID
         originalNationid:
             type: integer
@@ -113,52 +114,60 @@ UR\DB\NewBundle\Entity\Person:
                 unsigned: false
             column: worksID
         weddingid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: weddingID
         statusid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: statusID
         sourceid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: sourceID
         roadOfLiveid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: road_of_liveID
         rankid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: rankID
         propertyid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: propertyID
         honourid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: honourID
         educationid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: educationID
         control:
             type: text
@@ -173,15 +182,17 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 fixed: false
         jobClassid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: job_classID
         residenceid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: residenceID
     lifecycleCallbacks: {  }

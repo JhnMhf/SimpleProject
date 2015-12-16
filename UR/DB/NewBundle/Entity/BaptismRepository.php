@@ -12,16 +12,6 @@ use UR\DB\NewBundle\Entity\Date;
  */
 class BaptismRepository extends EntityRepository
 {
-	public function setBaptismDates($baptismObj, $dateIdArray){
-
-        if($dateIdArray != null){
-            $uniqueArray = array_unique($dateIdArray);
-
-            $newDateString = implode(",", $uniqueArray);
-
-            $baptismObj->setBaptismDateId($newDateString);
-        }
-	}
    
     public function addBaptismDate($baptismObj, $dateId){
         $currentDateString = $baptismObj->getBaptismDateId();

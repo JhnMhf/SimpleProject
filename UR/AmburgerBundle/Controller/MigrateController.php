@@ -92,7 +92,6 @@ class MigrateController extends Controller
     }
 
         private function migrateReligionController($oldPersonID, $oldDBManager){
-
         //find by id because there can be multiple religion for one person
         //$religions = $oldDBManager->getRepository('OldBundle:Religion')->findById($oldPersonID);
         $religions = $this->getReligionDataWithNativeQuery($oldPersonID, $oldDBManager);
@@ -103,7 +102,7 @@ class MigrateController extends Controller
 
         for($i = 0; $i < count($religions); $i++){
             $oldReligion = $religions[$i];
-            $newReligionID = $this->get("migrate_data.service")->migrateReligion($oldReligion->getKonfession(), $oldReligion->getOrder(), $oldReligion->getKonversion(), $oldReligion->getBelegt(), $oldReligion->getVonAb(), $oldReligion->getKommentar());
+            $newReligionID = $this->get("migrate_data.service")->migrateReligion($oldReligion["konfession"], $oldReligion["order"], $oldReligion["konversion"], $oldReligion["belegt"], $oldReligion["von-ab"], $oldReligion["kommentar"]);
 
             if($i != 0){
                 $religionIDString .= ",";
@@ -123,10 +122,26 @@ class MigrateController extends Controller
         https://stackoverflow.com/questions/3325012/execute-raw-sql-using-doctrine-2
 
         http://doctrine-orm.readthedocs.org/projects/doctrine-orm/en/latest/reference/native-sql.html
+
+        http://stackoverflow.com/questions/11823980/can-i-use-prepare-statement-in-doctrine-orm
+
+        http://www.doctrine-project.org/api/dbal/2.3/class-Doctrine.DBAL.Statement.html
     */
 
     private function getReligionDataWithNativeQuery($oldPersonID, $oldDBManager){
-        $resultMap = new ResultSetMapping;
+        $sql = "SELECT ID, `order`, `von-ab`, konfession, konversion, belegt, kommentar FROM `religion` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+
+
+        /*$resultMap = new ResultSetMapping;
+
+
         $resultMap->addEntityResult('OldBundle:Religion', '');
         $resultMap->addEntityResult('OldBundle:Religion', 'r');
         $resultMap->addFieldResult('r', 'ID', 'id');
@@ -140,6 +155,6 @@ class MigrateController extends Controller
         $query = $oldDBManager->createNativeQuery('SELECT ID, `order`, `von-ab`, konfession, konversion, belegt, kommentar FROM `religion` WHERE ID=:personID', $resultMap);
         $query->setParameter('personID', $oldPersonID);
 
-        return $query->getResult();
+        return $query->getArrayResult();*/
     }
 }

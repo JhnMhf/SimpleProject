@@ -12,15 +12,6 @@ use UR\DB\NewBundle\Entity\Date;
  */
 class DeathRepository extends EntityRepository
 {
-	public function setDeathDates($deathObj, $dateIdArray){
-        if($dateIdArray != null){
-    		$uniqueArray = array_unique($dateIdArray);
-
-    		$newDateString = implode(",", $uniqueArray);
-
-            $deathObj->setDeathDateId($newDateString);
-        }
-	}
    
     public function addDeathDate($deathObj, $dateId){
         $currentDateString = $deathObj->getDeathDateId();
@@ -64,17 +55,6 @@ class DeathRepository extends EntityRepository
         $deathObj->setDeathDateId($newDateString);
 
     }
-
-
-    public function setFuneralDates($deathObj, $dateIdArray){
-        if($dateIdArray != null){
-    		$uniqueArray = array_unique($dateIdArray);
-
-    		$newDateString = implode(",", $uniqueArray);
-
-            $deathObj->setFuneralDateId($newDateString);
-        }
-	}
    
     public function addFuneralDate($deathObj, $dateId){
         $currentDateString = $deathObj->getFuneralDateId();

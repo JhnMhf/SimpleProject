@@ -31,16 +31,18 @@ UR\DB\NewBundle\Entity\Religion:
                 default: '1'
             column: religion_order
         provenDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: proven_dateID
         fromDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: from_dateID
         changeOfReligion:
             type: text

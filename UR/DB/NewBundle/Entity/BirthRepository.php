@@ -12,16 +12,6 @@ use UR\DB\NewBundle\Entity\Date;
  */
 class BirthRepository extends EntityRepository
 {
-	public function setBirthDates($birthObj, $dateIdArray){
-
-        if($dateIdArray != null){
-    		$uniqueArray = array_unique($dateIdArray);
-
-    		$newDateString = implode(",", $uniqueArray);
-
-            $birthObj->setBirthDateId($newDateString);
-        }
-	}
    
     public function addBirthDate($birthObj, $dateId){
         $currentDateString = $birthObj->getBirthDateId();
