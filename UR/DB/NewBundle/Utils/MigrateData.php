@@ -23,10 +23,12 @@ class MigrateData
     private $DATE_REGEX = "/^(\D*)(0|0?[1-9]|[12][0-9]|3[01])[\.\-](0|0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
 
     private $container;
+    private $newDBManager;
 
 	public function __construct($container)
     {
         $this->container = $container;
+        $this->newDBManager = $this->get('doctrine')->getManager('new');
     }
 
     private function get($identifier){
@@ -43,16 +45,14 @@ class MigrateData
         }
 
         // check if country exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         if($comment == null || $comment == ""){
-            $country = $newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
+            $country = $this->newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
 
             if($country != null){
                 return $country->getId();
             }
         }else{
-            $country = $newDBManager->getRepository('NewBundle:Country')->findOneBy(array('name' => $countryName, 'comment' => $comment));
+            $country = $this->newDBManager->getRepository('NewBundle:Country')->findOneBy(array('name' => $countryName, 'comment' => $comment));
 
             if($country != null){
                 return $country->getId();
@@ -65,8 +65,8 @@ class MigrateData
         $newCountry->setName($countryName);
         $newCountry->setComment($comment);
         
-        $newDBManager->persist($newCountry);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newCountry);
+        $this->newDBManager->flush();
 
         return $newCountry->getId();
     }
@@ -77,18 +77,14 @@ class MigrateData
         }
 
         // check if territory exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
-
-
         if($comment == null || $comment == ""){
-            $territory = $newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
+            $territory = $this->newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
 
             if($territory != null){
                 return $territory->getId();
             }
         }else{
-            $territory = $newDBManager->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territoryName, 'comment' => $comment));
+            $territory = $this->newDBManager->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territoryName, 'comment' => $comment));
 
             if($territory != null){
                 return $territory->getId();
@@ -101,8 +97,8 @@ class MigrateData
         $newTerritory->setName($territoryName);
         $newTerritory->setComment($comment);
         
-        $newDBManager->persist($newTerritory);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newTerritory);
+        $this->newDBManager->flush();
 
         return $newTerritory->getId();
     }
@@ -113,17 +109,15 @@ class MigrateData
         }
 
         // check if location exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         if($comment == null || $comment == ""){
-            $location = $newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
+            $location = $this->newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
 
             if($location != null){
                 return $location->getId();
             }
 
         }else{
-            $location = $newDBManager->getRepository('NewBundle:Location')->findOneBy(array('name' => $locationName, 'comment' => $comment));
+            $location = $this->newDBManager->getRepository('NewBundle:Location')->findOneBy(array('name' => $locationName, 'comment' => $comment));
 
             if($location != null){
                 return $location->getId(); 
@@ -136,8 +130,8 @@ class MigrateData
         $newLocation->setName($locationName);
         $newLocation->setComment($comment);
         
-        $newDBManager->persist($newLocation);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newLocation);
+        $this->newDBManager->flush();
 
         return $newLocation->getId();
     }
@@ -148,16 +142,14 @@ class MigrateData
         }
 
         // check if location exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         if($comment == null || $comment == ""){
-            $nation = $newDBManager->getRepository('NewBundle:Nation')->findOneByName($nationName);
+            $nation = $this->newDBManager->getRepository('NewBundle:Nation')->findOneByName($nationName);
 
             if($nation != null){
                 return $nation->getId(); 
             }
         }else{
-            $nation = $newDBManager->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nationName, 'comment' => $comment));
+            $nation = $this->newDBManager->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nationName, 'comment' => $comment));
 
             if($nation != null){
                 return $nation->getId(); 
@@ -170,8 +162,8 @@ class MigrateData
         $newNation->setName($nationName);
         $newNation->setComment($comment);
         
-        $newDBManager->persist($newNation);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newNation);
+        $this->newDBManager->flush();
 
         return $newNation->getId();
     }
@@ -182,16 +174,14 @@ class MigrateData
         }
 
         // check if job exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         if($comment == null || $comment == ""){
-            $job = $newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
+            $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
 
             if($job != null){
                 return $job->getId();
             }
         }else{
-            $job = $newDBManager->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
+            $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
 
             if($job != null){
                 return $job->getId();
@@ -204,8 +194,8 @@ class MigrateData
         $newJob->setLabel($jobLabel);
         $newJob->setComment($comment);
         
-        $newDBManager->persist($newJob);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newJob);
+        $this->newDBManager->flush();
 
         return $newJob->getId();
     }
@@ -216,16 +206,14 @@ class MigrateData
         }
 
         // check if jobClass exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         if($comment == null || $comment == ""){
-            $jobClass = $newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
+            $jobClass = $this->newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
 
             if($jobClass != null){
                 return $jobClass->getId();
             }
         }else{
-            $jobClass = $newDBManager->getRepository('NewBundle:JobClass')->findOneBy(array('label' => $jobClassLabel, 'comment' => $comment));
+            $jobClass = $this->newDBManager->getRepository('NewBundle:JobClass')->findOneBy(array('label' => $jobClassLabel, 'comment' => $comment));
 
             if($jobClass != null){
                 return $jobClass->getId();
@@ -237,8 +225,8 @@ class MigrateData
 
         $newJobClass->setLabel($jobClassLabel);
         
-        $newDBManager->persist($newJobClass);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newJobClass);
+        $this->newDBManager->flush();
 
         return $newJobClass->getId();
     }
@@ -252,8 +240,6 @@ class MigrateData
         }
 
         // check if date exists
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $datesArray = $this->extractDatesArray($dateString);
 
         for($i = 0; $i < count($datesArray); $i++){
@@ -261,11 +247,11 @@ class MigrateData
 
             $newDate = $this->createRealDateFromString($currDateString);
             $newDatesArray[] = $newDate;
-            $newDBManager->persist($newDate);
+            $this->newDBManager->persist($newDate);
         }
 
         //first flush to get ids later
-        $newDBManager->flush();
+        $this->newDBManager->flush();
 
         //now collect ids for the calling method
         $dateIdArray = [];
@@ -376,8 +362,6 @@ class MigrateData
 
     public function migrateBirth($originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newBirth = new Birth();
 
         $newBirth->setOriginCountryid($this->getCountryId($originCountry));
@@ -391,45 +375,39 @@ class MigrateData
         $newBirth->setBirthDateId($this->getDate($birthDate));
 
         
-        $newDBManager->persist($newBirth);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newBirth);
+        $this->newDBManager->flush();
 
         return $newBirth->getId();
     }
 
     public function migrateBaptism($baptismDate, $baptismLocation){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newBaptism = new Baptism();
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
         $newBaptism->setBaptismDateId($this->getDate($baptismDate));
         
-        $newDBManager->persist($newBaptism);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newBaptism);
+        $this->newDBManager->flush();
 
         return $newBaptism->getId();
     }
 
     public function migrateCountry($name, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newCountry = new Country();
 
         $newCountry->setName($name);
         $newCountry->setComment($comment);
         
-        $newDBManager->persist($newCountry);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newCountry);
+        $this->newDBManager->flush();
 
         return $newCountry->getId();
     }
 
     public function migrateDate($day, $month, $year, $weekday, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newDate = new Date();
 
         $newDate->setDay($day);
@@ -438,16 +416,14 @@ class MigrateData
         $newDate->setWeekday($weekday);
         $newDate->setComment($comment);
         
-        $newDBManager->persist($newDate);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newDate);
+        $this->newDBManager->flush();
 
         return $newDate->getId();
     }
 
     public function migrateDeath($deathLocation, $deathDate, $deathCountry, $causeOfDeath, $territoryOfDeath, $graveyard, $funeralLocation, $funeralDate, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newDeath = new Death();
 
         $newDeath->setDeathLocationid($this->getLocationId($deathLocation));
@@ -460,16 +436,14 @@ class MigrateData
         $newDeath->setDeathDateId($this->getDate($deathDate));
         $newDeath->setFuneralDateId($this->getDate($funeralDate));
         
-        $newDBManager->persist($newDeath);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newDeath);
+        $this->newDBManager->flush();
 
         return $newDeath->getId();
     }
 
     public function migrateEducation($educationOrder, $label, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $graduationLabel, $graduationDateid, $graduationLocationid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newEducation = new Education();
 
         $newEducation->setEducationOrder($educationOrder);
@@ -485,16 +459,14 @@ class MigrateData
         $newEducation->setGraduationLocationid($graduationLocationid);
         $newEducation->setComment($comment);
         
-        $newDBManager->persist($newEducation);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newEducation);
+        $this->newDBManager->flush();
 
         return $newEducation->getId();
     }
 
     public function migrateHonour($honourOrder, $label, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newHonour = new Honour();
 
         $newHonour->setHonourOrder($honourOrder);
@@ -507,122 +479,106 @@ class MigrateData
         $newHonour->setProvenDateid($provenDateid);
         $newHonour->setComment($comment);
         
-        $newDBManager->persist($newHonour);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newHonour);
+        $this->newDBManager->flush();
 
         return $newHonour->getId();
     }
 
     public function migrateIsChild(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsChild = new IsChild();
 
         //$newIsChild->;
         
-        $newDBManager->persist($newIsChild);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsChild);
+        $this->newDBManager->flush();
 
         return $newIsChild->getId();
     }
 
     public function migrateIsGrandchild(){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsGrandchild = new IsGrandchild();
 
         //$newIsGrandchild->;
         
-        $newDBManager->persist($newIsGrandchild);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsGrandchild);
+        $this->newDBManager->flush();
 
         return $newIsGrandchild->getId();
     }
 
     public function migrateIsGrandparent(){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsGrandparent = new IsGrandparent();
 
         //$newIsGrandparent->;
         
-        $newDBManager->persist($newIsGrandparent);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsGrandparent);
+        $this->newDBManager->flush();
 
         return $newIsGrandparent->getId();
     }
 
     public function migrateIsParent(){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsParent = new IsParent();
 
         //$newIsParent->;
         
-        $newDBManager->persist($newIsParent);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsParent);
+        $this->newDBManager->flush();
 
         return $newIsParent->getId();
     }
 
     public function migrateIsParentInLaw(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsParentInLaw = new IsParentInLaw();
 
         //$newIsParentInLaw->;
         
-        $newDBManager->persist($newIsParentInLaw);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsParentInLaw);
+        $this->newDBManager->flush();
 
         return $newIsParentInLaw->getId();
     }
 
     public function migrateIsSibling(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newIsSibling = new IsSibling();
 
         //$newIsSibling->;
         
-        $newDBManager->persist($newIsSibling);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newIsSibling);
+        $this->newDBManager->flush();
 
         return $newIsSibling->getId();
     }
 
     public function migrateJob($label, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newJob = new Job();
 
         $newJob->setLabel($label);
         $newJob->setComment($comment);
         
-        $newDBManager->persist($newJob);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newJob);
+        $this->newDBManager->flush();
 
         return $newJob->getId();
     }
 
     public function migrateLocation($name, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newLocation = new Location();
 
         $newLocation->setName($name);
         $newLocation->setComment($comment);
         
-        $newDBManager->persist($newLocation);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newLocation);
+        $this->newDBManager->flush();
 
         return $newLocation->getId();
     }
@@ -649,8 +605,6 @@ class MigrateData
     //residenceID
     public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $birthid, $deathid, $religionid, $originalNationid, $comment, $baptismId){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newPerson = new Person();
 
         $newPerson->setOid($oid);
@@ -668,16 +622,14 @@ class MigrateData
 
         $newPerson->setBaptismid($baptismId);
         
-        $newDBManager->persist($newPerson);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newPerson);
+        $this->newDBManager->flush();
 
         return $newPerson->getId();
     }
 
     public function migrateProperty($propertyOrder, $description, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newProperty = new Property();
 
         $newProperty->setPropertyOrder($propertyOrder);
@@ -690,16 +642,14 @@ class MigrateData
         $newProperty->setProvenDateid($provenDateid);
         $newProperty->setComment($comment);
         
-        $newDBManager->persist($newProperty);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newProperty);
+        $this->newDBManager->flush();
 
         return $newProperty->getId();
     }
 
     public function migrateRank($rankOrder, $label, $class, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newRank = new Rank();
 
         $newRank->setRankOrder($rankOrder);
@@ -713,30 +663,26 @@ class MigrateData
         $newRank->setProvenDateid($provenDateid);
         $newRank->setComment($comment);
         
-        $newDBManager->persist($newRank);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newRank);
+        $this->newDBManager->flush();
 
         return $newRank->getId();
     }
 
     public function migrateRelative(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newRelative = new Relative();
 
         //$newRelative->;
         
-        $newDBManager->persist($newRelative);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newRelative);
+        $this->newDBManager->flush();
 
         return $newRelative->getId();
     }
 
     public function migrateReligion($name, $religionOrder, $change_of_religion, $provenDateId, $fromDateId, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newReligion = new Religion();
 
         $newReligion->setName($name);
@@ -747,16 +693,14 @@ class MigrateData
         $newReligion->setProvenDateid($this->getDate($provenDateId));
         $newReligion->setFromDateId($this->getDate($fromDateId));
         
-        $newDBManager->persist($newReligion);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newReligion);
+        $this->newDBManager->flush();
 
         return $newReligion->getId();
     }
 
     public function migrateRoadOfLife($roadOfLifeOrder, $originCountryid, $originTerritoryid, $jobid, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newRoadOfLife = new RoadOfLife();
 
         $newRoadOfLife->setRoadOfLifeOrder($roadOfLifeOrder);
@@ -771,16 +715,14 @@ class MigrateData
         $newRoadOfLife->setProvenDateid($provenDateid);
         $newRoadOfLife->setComment($comment);
         
-        $newDBManager->persist($newRoadOfLife);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newRoadOfLife);
+        $this->newDBManager->flush();
 
         return $newRoadOfLife->getId();
     }
 
     public function migrateSource($label, $placeOfDiscovery, $remark, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newSource = new Source();
 
         $newSource->setLabel($label);
@@ -788,16 +730,14 @@ class MigrateData
         $newSource->setRemark($remark);
         $newSource->setComment($comment);
         
-        $newDBManager->persist($newSource);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newSource);
+        $this->newDBManager->flush();
 
         return $newSource->getId();
     }
 
     public function migrateStatus($statusOrder, $label, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newStatus = new Status();
 
         $newStatus->setStatusOrder($statusOrder);
@@ -810,31 +750,27 @@ class MigrateData
         $newStatus->setProvenDateid($provenDateid);
         $newStatus->setComment($comment);
         
-        $newDBManager->persist($newStatus);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newStatus);
+        $this->newDBManager->flush();
 
         return $newStatus->getId();
     }
 
     public function migrateTerritory($name, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newTerritory = new Territory();
 
         $newTerritory->setName($name);
         $newTerritory->setComment($comment);
         
-        $newDBManager->persist($newTerritory);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newTerritory);
+        $this->newDBManager->flush();
 
         return $newTerritory->getId();
     }
 
     public function migrateWedding($weddingOrder, $husbandId, $wifeId, $relationType, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newWedding = new Wedding();
 
         $newWedding->setWeddingOrder($weddingOrder);
@@ -851,16 +787,14 @@ class MigrateData
         $newWedding->setBeforeAfter($beforeAfter);
         $newWedding->setComment($comment);
         
-        $newDBManager->persist($newWedding);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newWedding);
+        $this->newDBManager->flush();
 
         return $newWedding->getId();
     }
 
     public function migrateWorks($label, $countryid, $locationid, $fromDateid, $toDateid, $territoryid, $provenDateid, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
         $newWorks = new Works();
 
         $newWorks->setLabel($label);
@@ -872,8 +806,8 @@ class MigrateData
         $newWorks->setProvenDateid($provenDateid);
         $newWorks->setComment($comment);
         
-        $newDBManager->persist($newWorks);
-        $newDBManager->flush();
+        $this->newDBManager->persist($newWorks);
+        $this->newDBManager->flush();
 
         return $newWorks->getId();
     }
