@@ -395,15 +395,7 @@ class MigrateData
 
     public function migrateCountry($name, $comment){
         //insert into new data
-        $newCountry = new Country();
-
-        $newCountry->setName($name);
-        $newCountry->setComment($comment);
-        
-        $this->newDBManager->persist($newCountry);
-        $this->newDBManager->flush();
-
-        return $newCountry->getId();
+        return $this->getCountryId($name, $comment);
     }
 
     public function migrateDate($day, $month, $year, $weekday, $comment){
@@ -559,28 +551,12 @@ class MigrateData
 
     public function migrateJob($label, $comment){
         //insert into new data
-        $newJob = new Job();
-
-        $newJob->setLabel($label);
-        $newJob->setComment($comment);
-        
-        $this->newDBManager->persist($newJob);
-        $this->newDBManager->flush();
-
-        return $newJob->getId();
+        return $this->getJobId($label, $comment);
     }
 
     public function migrateLocation($name, $comment){
         //insert into new data
-        $newLocation = new Location();
-
-        $newLocation->setName($name);
-        $newLocation->setComment($comment);
-        
-        $this->newDBManager->persist($newLocation);
-        $this->newDBManager->flush();
-
-        return $newLocation->getId();
+        return $this->getLocationId($name, $comment);
     }
 
     public function migrateNation($name, $comment){
@@ -758,15 +734,7 @@ class MigrateData
 
     public function migrateTerritory($name, $comment){
         //insert into new data
-        $newTerritory = new Territory();
-
-        $newTerritory->setName($name);
-        $newTerritory->setComment($comment);
-        
-        $this->newDBManager->persist($newTerritory);
-        $this->newDBManager->flush();
-
-        return $newTerritory->getId();
+        return $this->getTerritoryId($name, $comment);
     }
 
     public function migrateWedding($weddingOrder, $husbandId, $wifeId, $relationType, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment){
