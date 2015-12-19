@@ -34,7 +34,7 @@ class MigrateController extends Controller
 
         $religionId = $this->migrateReligionController($ID, $oldDBManager);
 
-        $originalNationid = null;
+        $originalNationid = $this->migrateOriginalNation($person);
 
         
         /*
@@ -62,10 +62,13 @@ class MigrateController extends Controller
         $tod = $oldDBManager->getRepository('OldBundle:Tod')->findOneById($oldPersonID);
 
         //if necessary get more informations from other tables
+        if(!is_null($tod)){
+            $newTodId = $this->get("migrate_data.service")->migrateDeath($tod->getTodesort(), $tod->getGestorben(), $tod->getTodesland(), $tod->getTodesursache(), $tod->getTodesterritorium(), $tod->getFriedhof(), $tod->getBegräbnisort(), $tod->getBegraben(), $tod->getKommentar());
 
-        $newTodId = $this->get("migrate_data.service")->migrateDeath($tod->getTodesort(), $tod->getGestorben(), $tod->getTodesland(), $tod->getTodesursache(), $tod->getTodesterritorium(), $tod->getFriedhof(), $tod->getBegräbnisort(), $tod->getBegraben(), $tod->getKommentar());
+            return $newTodId;
+        }
 
-        return $newTodId;
+        return null;
     }
 
     private function migrateBirthController($oldPersonID, $oldDBManager){
@@ -74,9 +77,14 @@ class MigrateController extends Controller
 
         //if necessary get more informations from other tables
 
-        $newBirthId = $this->get("migrate_data.service")->migrateBirth($birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
 
-        return $newBirthId;
+        if(!is_null($birth)){
+            $newBirthId = $this->get("migrate_data.service")->migrateBirth($birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
+
+            return $newBirthId;
+        }
+
+        return null;
     }
 
 
@@ -85,10 +93,13 @@ class MigrateController extends Controller
         $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
 
         //if necessary get more informations from other tables
+        if(!is_null($birth)){
+                    $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
 
-        $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
+            return $newBaptismId;
+        }
 
-        return $newBaptismId;
+        return null;
     }
 
         private function migrateReligionController($oldPersonID, $oldDBManager){
@@ -156,5 +167,14 @@ class MigrateController extends Controller
         $query->setParameter('personID', $oldPersonID);
 
         return $query->getArrayResult();*/
+    }
+
+    private function migrateOriginalNation($person){
+
+        if(!is_null($person->getUrspNation())){
+            return $this->get("migrate_data.service")->migrateNation($person->getUrspNation(), "");
+        }
+
+        return null;
     }
 }

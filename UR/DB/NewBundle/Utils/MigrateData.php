@@ -13,6 +13,7 @@ use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Date;
 use UR\DB\NewBundle\Entity\Religion;
+use UR\DB\NewBundle\Entity\Nation;
 
 class MigrateData
 {
@@ -44,10 +45,18 @@ class MigrateData
         // check if country exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
-        $country = $newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
+        if($comment == null || $comment == ""){
+            $country = $newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
 
-        if($country != null){
-            return $country->getId();
+            if($country != null){
+                return $country->getId();
+            }
+        }else{
+            $country = $newDBManager->getRepository('NewBundle:Country')->findOneBy(array('name' => $countryName, 'comment' => $comment));
+
+            if($country != null){
+                return $country->getId();
+            }
         }
 
         // if it does not exist, create it and return the new value
@@ -70,10 +79,20 @@ class MigrateData
         // check if territory exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
-        $territory = $newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
 
-        if($territory != null){
-            return $territory->getId();
+
+        if($comment == null || $comment == ""){
+            $territory = $newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
+
+            if($territory != null){
+                return $territory->getId();
+            }
+        }else{
+            $territory = $newDBManager->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territoryName, 'comment' => $comment));
+
+            if($territory != null){
+                return $territory->getId();
+            }
         }
 
         // if it does not exist, create it and return the new value
@@ -96,10 +115,19 @@ class MigrateData
         // check if location exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
-        $location = $newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
+        if($comment == null || $comment == ""){
+            $location = $newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
 
-        if($location != null){
-            return $location->getId();
+            if($location != null){
+                return $location->getId();
+            }
+
+        }else{
+            $location = $newDBManager->getRepository('NewBundle:Location')->findOneBy(array('name' => $locationName, 'comment' => $comment));
+
+            if($location != null){
+                return $location->getId(); 
+            }
         }
 
         // if it does not exist, create it and return the new value
@@ -114,6 +142,40 @@ class MigrateData
         return $newLocation->getId();
     }
 
+    public function getNationId($nationName, $comment = null){
+        if($nationName == "" || $nationName == null){
+            return null;
+        }
+
+        // check if location exists
+        $newDBManager = $this->get('doctrine')->getManager('new');
+
+        if($comment == null || $comment == ""){
+            $nation = $newDBManager->getRepository('NewBundle:Nation')->findOneByName($nationName);
+
+            if($nation != null){
+                return $nation->getId(); 
+            }
+        }else{
+            $nation = $newDBManager->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nationName, 'comment' => $comment));
+
+            if($nation != null){
+                return $nation->getId(); 
+            }
+        }
+
+        // if it does not exist, create it and return the new value
+        $newNation = new Nation();
+
+        $newNation->setName($nationName);
+        $newNation->setComment($comment);
+        
+        $newDBManager->persist($newNation);
+        $newDBManager->flush();
+
+        return $newNation->getId();
+    }
+
     public function getJobId($jobLabel, $comment = null){
         if($jobLabel == "" || $jobLabel == null){
             return null;
@@ -122,10 +184,18 @@ class MigrateData
         // check if job exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
-        $job = $newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
+        if($comment == null || $comment == ""){
+            $job = $newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
 
-        if($job != null){
-            return $job->getId();
+            if($job != null){
+                return $job->getId();
+            }
+        }else{
+            $job = $newDBManager->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
+
+            if($job != null){
+                return $job->getId();
+            }
         }
 
         // if it does not exist, create it and return the new value
@@ -148,10 +218,18 @@ class MigrateData
         // check if jobClass exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
-        $jobClass = $newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
+        if($comment == null || $comment == ""){
+            $jobClass = $newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
 
-        if($jobClass != null){
-            return $jobClass->getId();
+            if($jobClass != null){
+                return $jobClass->getId();
+            }
+        }else{
+            $jobClass = $newDBManager->getRepository('NewBundle:JobClass')->findOneBy(array('label' => $jobClassLabel, 'comment' => $comment));
+
+            if($jobClass != null){
+                return $jobClass->getId();
+            }
         }
 
         // if it does not exist, create it and return the new value
@@ -173,7 +251,7 @@ class MigrateData
             return null;
         }
 
-        // check if jobClass exists
+        // check if date exists
         $newDBManager = $this->get('doctrine')->getManager('new');
 
         $datesArray = $this->extractDatesArray($dateString);
@@ -222,6 +300,7 @@ class MigrateData
     }
 
 
+    //@ToDO:
     //31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
@@ -234,7 +313,7 @@ class MigrateData
 
         //print_r($date);
 
-        // if it does not exist, create it and return the new value
+        // create a date object
         $newDate = new Date();
 
         if(count($date) > 0){
@@ -550,19 +629,24 @@ class MigrateData
 
     public function migrateNation($name, $comment){
         //insert into new data
-        $newDBManager = $this->get('doctrine')->getManager('new');
-
-        $newNation = new Nation();
-
-        $newNation->setName($name);
-        $newNation->setComment($comment);
-        
-        $newDBManager->persist($newNation);
-        $newDBManager->flush();
-
-        return $newNation->getId();
+        return $this->getNationId($name, $comment);
     }
 
+    //add additional stuff?
+    //born_in_marriage
+    //worksID
+    //weddingID
+    //statusID
+    //sourceID
+    //road_of_liveID
+    //rankID
+    //propertyID
+    //honourID
+    //educationID
+    //control
+    //complete
+    //job_classID
+    //residenceID
     public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $birthid, $deathid, $religionid, $originalNationid, $comment, $baptismId){
         //insert into new data
         $newDBManager = $this->get('doctrine')->getManager('new');
