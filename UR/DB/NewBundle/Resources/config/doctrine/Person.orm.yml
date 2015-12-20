@@ -108,10 +108,11 @@ UR\DB\NewBundle\Entity\Person:
                 unsigned: false
             column: baptismID
         worksid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: worksID
         weddingid:
             type: string

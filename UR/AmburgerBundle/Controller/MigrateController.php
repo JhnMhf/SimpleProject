@@ -36,15 +36,14 @@ class MigrateController extends Controller
         $this->migrateReligionController($newPerson, $ID, $oldDBManager);
 
         $this->migrateOriginalNation($newPerson, $person);
-        
-        /*
-        $newQuelleId = $this->get("migrate_data.service")->migrateQuelle($quelle->getBezeichnung(), $quelle->getFundstelle(), $quelle->getBemerkung(), $quelle->getKommentar());
 
-        $newWerkeId = $this->get("migrate_data.service")->migrateWerke($werke->getKommentar());
-        //Werke hat kein Label in der alten DB???????
+        $this->migrateSource($newPerson, $ID, $oldDBManager);
 
-        $newId = $this->get("migrate_data.service")->migrate($->(), $->getKommentar());
-        */
+        $this->migrateWorks($newPerson, $ID, $oldDBManager);
+
+        $this->migrateDataFromIndexID($newPerson, $ID, $oldDBManager);
+
+        //save newPerson to database (only as safety measure)
 
         $this->get("migrate_data.service")->savePerson($newPerson);
 
@@ -59,7 +58,9 @@ class MigrateController extends Controller
 
         //if necessary get more informations from other tables
         if(!is_null($tod)){
-            $newTodId = $this->get("migrate_data.service")->migrateDeath($newPerson, $tod->getTodesort(), $tod->getGestorben(), $tod->getTodesland(), $tod->getTodesursache(), $tod->getTodesterritorium(), $tod->getFriedhof(), $tod->getBegräbnisort(), $tod->getBegraben(), $tod->getKommentar());
+            $newTodId = $this->get("migrate_data.service")->migrateDeath($tod->getTodesort(), $tod->getGestorben(), $tod->getTodesland(), $tod->getTodesursache(), $tod->getTodesterritorium(), $tod->getFriedhof(), $tod->getBegräbnisort(), $tod->getBegraben(), $tod->getKommentar());
+        
+            $newPerson->setDeathid($newTodId);
         }
     }
 
@@ -71,7 +72,10 @@ class MigrateController extends Controller
 
 
         if(!is_null($birth)){
-            $newBirthId = $this->get("migrate_data.service")->migrateBirth($newPerson, $birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
+            $newBirthId = $this->get("migrate_data.service")->migrateBirth($birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
+            
+
+            $newPerson->setBirthid($newBirthId);
         }
     }
 
@@ -82,7 +86,9 @@ class MigrateController extends Controller
 
         //if necessary get more informations from other tables
         if(!is_null($birth) && (!is_null($birth->getGetauft()) || !is_null($birth->getTaufort()))){
-            $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($newPerson, $birth->getGetauft(),$birth->getTaufort());
+            $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
+
+            $newPerson->setBaptismid($newBirthId);
         }
     }
 
@@ -91,22 +97,22 @@ class MigrateController extends Controller
         //$religions = $oldDBManager->getRepository('OldBundle:Religion')->findById($oldPersonID);
         $religions = $this->getReligionDataWithNativeQuery($oldPersonID, $oldDBManager);
 
-        //if necessary get more informations from other tables
+        if(count($religions) > 0){
+            $religionIDString = "";
 
-        $religionIDString = "";
+            for($i = 0; $i < count($religions); $i++){
+                $oldReligion = $religions[$i];
+                $newReligionID = $this->get("migrate_data.service")->migrateReligion($oldReligion["konfession"], $oldReligion["order"], $oldReligion["konversion"], $oldReligion["belegt"], $oldReligion["von-ab"], $oldReligion["kommentar"]);
 
-        for($i = 0; $i < count($religions); $i++){
-            $oldReligion = $religions[$i];
-            $newReligionID = $this->get("migrate_data.service")->migrateReligion($oldReligion["konfession"], $oldReligion["order"], $oldReligion["konversion"], $oldReligion["belegt"], $oldReligion["von-ab"], $oldReligion["kommentar"]);
+                if($i != 0){
+                    $religionIDString .= ",";
+                }
 
-            if($i != 0){
-                $religionIDString .= ",";
+                $religionIDString .= $newReligionID;
             }
 
-            $religionIDString .= $newReligionID;
+            $newPerson->setReligionid($religionIDString);
         }
-
-        $newPerson->setReligionid($religionIDString);
     }
 
     /*
@@ -155,7 +161,83 @@ class MigrateController extends Controller
     private function migrateOriginalNation($newPerson, $person){
 
         if(!is_null($person->getUrspNation())){
-            $this->get("migrate_data.service")->migrateOriginalNation($newPerson, $person->getUrspNation(), "");
+            $nationId = $this->get("migrate_data.service")->migrateNation($person->getUrspNation(), "");
+
+            $newPerson->setOriginalNationid($nationId);
         }
+    }
+
+    private function migrateSource($newPerson, $oldPersonID, $oldDBManager){
+
+        $sources = $this->getSourcesWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($sources) > 0){
+            $sourceIDString = "";
+
+            for($i = 0; $i < count($sources); $i++){
+                $quelle = $sources[$i];
+                $sourceID = $this->get("migrate_data.service")->migrateSource($quelle["order"], $quelle["bezeichnung"], $quelle["fundstelle"], $quelle["bemerkung"],$quelle["kommentar"]);
+
+                if($i != 0){
+                    $sourceIDString .= ",";
+                }
+
+                $sourceIDString .= $sourceID;
+            }
+
+            $newPerson->setSourceid($sourceIDString);
+        }
+    }
+
+    private function getSourcesWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, bezeichnung, fundstelle, bemerkung, kommentar FROM `quelle` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateWorks($newPerson, $oldPersonID, $oldDBManager){
+
+        $works = $this->getWorksWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($works) > 0){
+            $worksIDString = "";
+
+            for($i = 0; $i < count($works); $i++){
+                $work = $works[$i];
+                $workID = $this->get("migrate_data.service")->migrateWork($work['werke'],$work['order'],$work['land'],$work['ort'],$work['von-ab'],$work['bis'],$work['territorium'],$work['belegt'],$work['kommentar']);
+
+                if($i != 0){
+                    $worksIDString .= ",";
+                }
+
+                $worksIDString .= $workID;
+            }
+
+            $newPerson->setWorksID($worksIDString);
+        }
+    }
+
+    private function getWorksWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT `ID`, `order`, `land`, `werke`, `ort`, `von-ab`, `bis`, `belegt`, `kommentar`, `territorium` FROM `werke` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateDataFromIndexID($newPerson, $oldPersonID, $oldDBManager){
+
+        $idData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($oldPersonID);
+
+        $newPerson->setComplete($idData->getVollständig());
+        $newPerson->setControl($idData->getKontrolle());
     }
 }

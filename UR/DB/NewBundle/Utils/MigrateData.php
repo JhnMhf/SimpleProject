@@ -14,6 +14,9 @@ use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Date;
 use UR\DB\NewBundle\Entity\Religion;
 use UR\DB\NewBundle\Entity\Nation;
+use UR\DB\NewBundle\Entity\Source;
+use UR\DB\NewBundle\Entity\Works;
+
 
 class MigrateData
 {
@@ -360,7 +363,7 @@ class MigrateData
 
     /* end helper method */
 
-    public function migrateBirth($person, $originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
+    public function migrateBirth($originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
         //insert into new data
         $newBirth = new Birth();
 
@@ -374,31 +377,19 @@ class MigrateData
 
         $newBirth->setBirthDateId($this->getDate($birthDate));
 
-        
         $this->newDBManager->persist($newBirth);
-        $this->newDBManager->flush();
-        
-
-        $person->setBirthid($newBirth->getId());
-
-        $this->newDBManager->persist($person);
         $this->newDBManager->flush();
 
         return $newBirth->getId();
     }
 
-    public function migrateBaptism($person, $baptismDate, $baptismLocation){
+    public function migrateBaptism($baptismDate, $baptismLocation){
         //insert into new data
         $newBaptism = new Baptism();
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
         $newBaptism->setBaptismDateId($this->getDate($baptismDate));
         
         $this->newDBManager->persist($newBaptism);
-        $this->newDBManager->flush();
-
-        $person->setBaptismid($newBaptism->getId());
-
-        $this->newDBManager->persist($person);
         $this->newDBManager->flush();
 
         return $newBaptism->getId();
@@ -425,7 +416,7 @@ class MigrateData
         return $newDate->getId();
     }
 
-    public function migrateDeath($person, $deathLocation, $deathDate, $deathCountry, $causeOfDeath, $territoryOfDeath, $graveyard, $funeralLocation, $funeralDate, $comment){
+    public function migrateDeath($deathLocation, $deathDate, $deathCountry, $causeOfDeath, $territoryOfDeath, $graveyard, $funeralLocation, $funeralDate, $comment){
         //insert into new data
         $newDeath = new Death();
 
@@ -440,11 +431,6 @@ class MigrateData
         $newDeath->setFuneralDateId($this->getDate($funeralDate));
         
         $this->newDBManager->persist($newDeath);
-        $this->newDBManager->flush();
-
-        $person->setDeathid($newDeath->getId());
-
-        $this->newDBManager->persist($person);
         $this->newDBManager->flush();
 
         return $newDeath->getId();
@@ -580,24 +566,10 @@ class MigrateData
         return $this->getNationId($name, $comment);
     }
 
-    public function migrateOriginalNation($person, $name, $comment){
-        //insert into new data
-        $nationId = $this->getNationId($name, $comment);
-
-        $person->setOriginalNationid($nationId);
-
-        $this->newDBManager->persist($person);
-        $this->newDBManager->flush();
-
-        return $nationId;
-    }
-
     //add additional stuff?
     //born_in_marriage
-    //worksID
     //weddingID
     //statusID
-    //sourceID
     //road_of_liveID
     //rankID
     //propertyID
@@ -719,10 +691,11 @@ class MigrateData
         return $newRoadOfLife->getId();
     }
 
-    public function migrateSource($label, $placeOfDiscovery, $remark, $comment){
+    public function migrateSource($sourceOrder, $label, $placeOfDiscovery, $remark, $comment){
         //insert into new data
         $newSource = new Source();
 
+        $newSource->setSourceOrder($sourceOrder);
         $newSource->setLabel($label);
         $newSource->setPlaceOfDiscovery($placeOfDiscovery);
         $newSource->setRemark($remark);
@@ -783,17 +756,18 @@ class MigrateData
         return $newWedding->getId();
     }
 
-    public function migrateWorks($label, $countryid, $locationid, $fromDateid, $toDateid, $territoryid, $provenDateid, $comment){
+    public function migrateWork($label, $works_order, $country, $location, $fromDate, $toDate, $territory, $provenDate, $comment){
         //insert into new data
         $newWorks = new Works();
 
         $newWorks->setLabel($label);
-        $newWorks->setCountryid($countryid);
-        $newWorks->setLocationid($locationid);
-        $newWorks->setFromDateid($fromDateid);
-        $newWorks->setToDateid($toDateid);
-        $newWorks->setTerritoryid($territoryid);
-        $newWorks->setProvenDateid($provenDateid);
+        $newWorks->setWorksOrder($works_order);
+        $newWorks->setCountryid($this->getCountryId($country));
+        $newWorks->setLocationid($this->getLocationId($location));
+        $newWorks->setFromDateid($this->getDate($fromDate));
+        $newWorks->setToDateid($this->getDate($toDate));
+        $newWorks->setTerritoryid($this->getTerritoryId($territory));
+        $newWorks->setProvenDateid($this->getDate($provenDate));
         $newWorks->setComment($comment);
         
         $this->newDBManager->persist($newWorks);
