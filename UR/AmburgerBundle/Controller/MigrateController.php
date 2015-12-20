@@ -46,6 +46,8 @@ class MigrateController extends Controller
         $newId = $this->get("migrate_data.service")->migrate($->(), $->getKommentar());
         */
 
+        $this->get("migrate_data.service")->savePerson($newPerson);
+
         return new Response(
             'Migrated Database entry: '.$newPerson->getId()
         );
@@ -79,7 +81,7 @@ class MigrateController extends Controller
         $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
 
         //if necessary get more informations from other tables
-        if(!is_null($birth)){
+        if(!is_null($birth) && (!is_null($birth->getGetauft()) || !is_null($birth->getTaufort()))){
             $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($newPerson, $birth->getGetauft(),$birth->getTaufort());
         }
     }

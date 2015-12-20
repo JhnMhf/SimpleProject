@@ -802,4 +802,9 @@ class MigrateData
         return $newWorks->getId();
     }
 
+    public function savePerson($person){
+        $this->newDBManager->persist($person);
+        $this->newDBManager->flush();
+    }
+
 }
