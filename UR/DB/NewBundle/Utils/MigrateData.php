@@ -360,7 +360,7 @@ class MigrateData
 
     /* end helper method */
 
-    public function migrateBirth($originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
+    public function migrateBirth($person, $originCountry, $originTerritory, $originLocation, $birthCountry, $birthLocation, $birthDate, $birthTerritory, $comment){
         //insert into new data
         $newBirth = new Birth();
 
@@ -377,17 +377,28 @@ class MigrateData
         
         $this->newDBManager->persist($newBirth);
         $this->newDBManager->flush();
+        
+
+        $person->setBirthid($newBirth->getId());
+
+        $this->newDBManager->persist($person);
+        $this->newDBManager->flush();
 
         return $newBirth->getId();
     }
 
-    public function migrateBaptism($baptismDate, $baptismLocation){
+    public function migrateBaptism($person, $baptismDate, $baptismLocation){
         //insert into new data
         $newBaptism = new Baptism();
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
         $newBaptism->setBaptismDateId($this->getDate($baptismDate));
         
         $this->newDBManager->persist($newBaptism);
+        $this->newDBManager->flush();
+
+        $person->setBaptismid($newBaptism->getId());
+
+        $this->newDBManager->persist($person);
         $this->newDBManager->flush();
 
         return $newBaptism->getId();
@@ -414,7 +425,7 @@ class MigrateData
         return $newDate->getId();
     }
 
-    public function migrateDeath($deathLocation, $deathDate, $deathCountry, $causeOfDeath, $territoryOfDeath, $graveyard, $funeralLocation, $funeralDate, $comment){
+    public function migrateDeath($person, $deathLocation, $deathDate, $deathCountry, $causeOfDeath, $territoryOfDeath, $graveyard, $funeralLocation, $funeralDate, $comment){
         //insert into new data
         $newDeath = new Death();
 
@@ -429,6 +440,11 @@ class MigrateData
         $newDeath->setFuneralDateId($this->getDate($funeralDate));
         
         $this->newDBManager->persist($newDeath);
+        $this->newDBManager->flush();
+
+        $person->setDeathid($newDeath->getId());
+
+        $this->newDBManager->persist($person);
         $this->newDBManager->flush();
 
         return $newDeath->getId();
@@ -564,6 +580,18 @@ class MigrateData
         return $this->getNationId($name, $comment);
     }
 
+    public function migrateOriginalNation($person, $name, $comment){
+        //insert into new data
+        $nationId = $this->getNationId($name, $comment);
+
+        $person->setOriginalNationid($nationId);
+
+        $this->newDBManager->persist($person);
+        $this->newDBManager->flush();
+
+        return $nationId;
+    }
+
     //add additional stuff?
     //born_in_marriage
     //worksID
@@ -579,7 +607,7 @@ class MigrateData
     //complete
     //job_classID
     //residenceID
-    public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $birthid, $deathid, $religionid, $originalNationid, $comment, $baptismId){
+    public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $comment){
         //insert into new data
         $newPerson = new Person();
 
@@ -590,18 +618,12 @@ class MigrateData
         $newPerson->setForeName($foreName);
         $newPerson->setBirthName($birthName);
         $newPerson->setGender($this->getGender($gender));
-        $newPerson->setBirthid($birthid);
-        $newPerson->setDeathid($deathid);
-        $newPerson->setReligionid($religionid);
-        $newPerson->setOriginalNationid($originalNationid);
         $newPerson->setComment($comment);
 
-        $newPerson->setBaptismid($baptismId);
-        
         $this->newDBManager->persist($newPerson);
         $this->newDBManager->flush();
 
-        return $newPerson->getId();
+        return $newPerson;
     }
 
     public function migrateProperty($propertyOrder, $description, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
