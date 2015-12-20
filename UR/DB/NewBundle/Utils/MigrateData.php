@@ -16,6 +16,7 @@ use UR\DB\NewBundle\Entity\Religion;
 use UR\DB\NewBundle\Entity\Nation;
 use UR\DB\NewBundle\Entity\Source;
 use UR\DB\NewBundle\Entity\Works;
+use UR\DB\NewBundle\Entity\Honour;
 
 
 class MigrateData
@@ -459,18 +460,18 @@ class MigrateData
         return $newEducation->getId();
     }
 
-    public function migrateHonour($honourOrder, $label, $countryid, $territoryid, $locationid, $fromDateid, $toDateid, $provenDateid, $comment){
+    public function migrateHonour($honourOrder, $label, $country, $territory, $location, $fromDate, $toDate, $provenDate, $comment){
         //insert into new data
         $newHonour = new Honour();
 
         $newHonour->setHonourOrder($honourOrder);
         $newHonour->setLabel($label);
-        $newHonour->setCountryid($countryid);
-        $newHonour->setTerritoryid($territoryid);
-        $newHonour->setLocationid($locationid);
-        $newHonour->setFromDateid($fromDateid);
-        $newHonour->setToDateid($toDateid);
-        $newHonour->setProvenDateid($provenDateid);
+        $newHonour->setCountryid($this->getCountryId($country));
+        $newHonour->setTerritoryid($this->getTerritoryId($territory));
+        $newHonour->setLocationid($this->getLocationId($location));
+        $newHonour->setFromDateid($this->getDate($fromDate));
+        $newHonour->setToDateid($this->getDate($toDate));
+        $newHonour->setProvenDateid($this->getDate($provenDate));
         $newHonour->setComment($comment);
         
         $this->newDBManager->persist($newHonour);
@@ -575,8 +576,6 @@ class MigrateData
     //propertyID
     //honourID
     //educationID
-    //control
-    //complete
     //job_classID
     //residenceID
     public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $comment){

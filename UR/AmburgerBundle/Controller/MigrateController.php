@@ -27,6 +27,8 @@ class MigrateController extends Controller
 
         $newPerson = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getKommentar());
 
+        $this->migrateDataFromIndexID($newPerson, $ID, $oldDBManager);
+
         $this->migrateBirthController($newPerson, $ID, $oldDBManager);
 
         $this->migrateBaptismController($newPerson, $ID, $oldDBManager);
@@ -41,9 +43,10 @@ class MigrateController extends Controller
 
         $this->migrateWorks($newPerson, $ID, $oldDBManager);
 
-        $this->migrateDataFromIndexID($newPerson, $ID, $oldDBManager);
+        $this->migrateHonour($newPerson, $ID, $oldDBManager);
 
-        //save newPerson to database (only as safety measure)
+
+        //save updated newPerson to database
 
         $this->get("migrate_data.service")->savePerson($newPerson);
 
@@ -239,5 +242,40 @@ class MigrateController extends Controller
 
         $newPerson->setComplete($idData->getVollständig());
         $newPerson->setControl($idData->getKontrolle());
+    }
+
+    private function migrateHonour($newPerson, $oldPersonID, $oldDBManager){
+
+        $honours = $this->getHonourWithNativeQuery($oldPersonID, $oldDBManager);
+
+        print_r($honours);
+
+        if(count($honours) > 0){
+            $honoursIDString = "";
+
+            for($i = 0; $i < count($honours); $i++){
+                $honour = $honours[$i];
+                $honourID = $this->get("migrate_data.service")->migrateHonour($honour["order"],$honour["ehren"],$honour["land"],$honour["territorium"],$honour["ort"],$honour["von-ab"],$honour["bis"],$honour["belegt"],$honour["kommentar"]);
+
+                if($i != 0){
+                    $honoursIDString .= ",";
+                }
+
+                $honoursIDString .= $honourID;
+            }
+
+            $newPerson->setHonourID($honoursIDString);
+        }
+    }
+
+    private function getHonourWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, ort, territorium, land, ehren, `von-ab`, bis, belegt, kommentar FROM `ehren` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
     }
 }
