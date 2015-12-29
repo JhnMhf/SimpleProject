@@ -43,22 +43,25 @@ UR\DB\NewBundle\Entity\Status:
                 unsigned: false
             column: locationID
         fromDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: from_dateID
         toDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: to_dateID
         provenDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: proven_dateID
         comment:
             type: text

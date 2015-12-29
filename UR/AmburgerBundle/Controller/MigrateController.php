@@ -25,7 +25,7 @@ class MigrateController extends Controller
 
         $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($ID);
 
-        $newPerson = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getKommentar());
+        $newPerson = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getBerufsklasse(), $person->getKommentar());
 
         $this->migrateDataFromIndexID($newPerson, $ID, $oldDBManager);
 
@@ -44,6 +44,16 @@ class MigrateController extends Controller
         $this->migrateWorks($newPerson, $ID, $oldDBManager);
 
         $this->migrateHonour($newPerson, $ID, $oldDBManager);
+
+        $this->migrateProperty($newPerson, $ID, $oldDBManager);
+
+        $this->migrateRank($newPerson, $ID, $oldDBManager);
+
+        $this->migrateEducation($newPerson, $ID, $oldDBManager);
+
+        $this->migrateStatus($newPerson, $ID, $oldDBManager);
+
+        $this->migrateRoadOfLife($newPerson, $ID, $oldDBManager);
 
 
         //save updated newPerson to database
@@ -221,7 +231,7 @@ class MigrateController extends Controller
                 $worksIDString .= $workID;
             }
 
-            $newPerson->setWorksID($worksIDString);
+            $newPerson->setWorksid($worksIDString);
         }
     }
 
@@ -248,8 +258,6 @@ class MigrateController extends Controller
 
         $honours = $this->getHonourWithNativeQuery($oldPersonID, $oldDBManager);
 
-        print_r($honours);
-
         if(count($honours) > 0){
             $honoursIDString = "";
 
@@ -264,12 +272,178 @@ class MigrateController extends Controller
                 $honoursIDString .= $honourID;
             }
 
-            $newPerson->setHonourID($honoursIDString);
+            $newPerson->setHonourid($honoursIDString);
         }
     }
 
     private function getHonourWithNativeQuery($oldPersonID, $oldDBManager){
         $sql = "SELECT ID, `order`, ort, territorium, land, ehren, `von-ab`, bis, belegt, kommentar FROM `ehren` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateProperty($newPerson, $oldPersonID, $oldDBManager){
+
+        $properties = $this->getPropertyWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($properties) > 0){
+            $propertiesIDString = "";
+
+            for($i = 0; $i < count($properties); $i++){
+                $property = $properties[$i];
+                $propertyID = $this->get("migrate_data.service")->migrateProperty($property["order"],$property["besitz"],$property["land"],$property["territorium"],$property["ort"],$property["von-ab"],$property["bis"],$property["belegt"],$property["kommentar"]);
+
+                if($i != 0){
+                    $propertiesIDString .= ",";
+                }
+
+                $propertiesIDString .= $propertyID;
+            }
+
+            $newPerson->setPropertyid($propertiesIDString);
+        }
+    }
+
+    private function getPropertyWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, land, ort, territorium, besitz, `von-ab`, bis, belegt, kommentar FROM `besitz` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateRank($newPerson, $oldPersonID, $oldDBManager){
+
+        $ranks = $this->getRankWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($ranks) > 0){
+            $ranksIDString = "";
+
+            for($i = 0; $i < count($ranks); $i++){
+                $rank = $ranks[$i];
+                $rankID = $this->get("migrate_data.service")->migrateRank($rank["order"],$rank["rang"],$rank["rangklasse"],$rank["land"],$rank["territorium"],$rank["ort"],$rank["von-ab"],$rank["bis"],$rank["belegt"],$rank["kommentar"]);
+
+                if($i != 0){
+                    $ranksIDString .= ",";
+                }
+
+                $ranksIDString .= $rankID;
+            }
+
+            $newPerson->setRankid($ranksIDString);
+        }
+    }
+
+    private function getRankWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, ort, territorium, land, `von-ab`, bis, rang, rangklasse, belegt, kommentar FROM `rang` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+
+    private function migrateEducation($newPerson, $oldPersonID, $oldDBManager){
+
+        $educations = $this->getEducationWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($educations) > 0){
+            $educationIDString = "";
+
+            for($i = 0; $i < count($educations); $i++){
+                $education = $educations[$i];
+                $educationID = $this->get("migrate_data.service")->migrateEducation($education["order"],$education["ausbildung"],$education["land"],$education["territorium"],$education["ort"],$education["von-ab"],$education["bis"],$education["belegt"],$education["bildungsabschluss"],$education["bildungsabschlussdatum"],$education["bildungsabschlussort"],$education["kommentar"]);
+
+                if($i != 0){
+                    $educationIDString .= ",";
+                }
+
+                $educationIDString .= $educationID;
+            }
+
+            $newPerson->setEducationid($educationIDString);
+        }
+    }
+
+    private function getEducationWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, ort, land, territorium, ausbildung, bildungsabschluss, bildungsabschlussdatum, bildungsabschlussort, `von-ab`, bis, belegt, kommentar FROM `ausbildung` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateStatus($newPerson, $oldPersonID, $oldDBManager){
+
+        $stati = $this->getStatusWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($stati) > 0){
+            $statiIDString = "";
+
+            for($i = 0; $i < count($stati); $i++){
+                $status = $stati[$i];
+                $statusID = $this->get("migrate_data.service")->migrateStatus($status["order"],$status["stand"],$status["land"],$status["territorium"],$status["ort"],$status["von-ab"],$status["bis"],$status["belegt"],$status["kommentar"]);
+
+                if($i != 0){
+                    $statiIDString .= ",";
+                }
+
+                $statiIDString .= $statusID;
+            }
+
+            $newPerson->setStatusid($statiIDString);
+        }
+    }
+
+    private function getStatusWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, ort, territorium, land, `von-ab`, bis, stand, belegt, kommentar FROM `stand`  WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateRoadOfLife($newPerson, $oldPersonID, $oldDBManager){
+
+        $roadOfLive = $this->getRoadOfLifeWithNativeQuery($oldPersonID, $oldDBManager);
+
+        if(count($roadOfLive) > 0){
+            $roadOfLiveIDString = "";
+
+            for($i = 0; $i < count($roadOfLive); $i++){
+                $step = $roadOfLive[$i];
+                $stepID = $this->get("migrate_data.service")->migrateRoadOfLife($step["order"],$step["stammland"],$step["stammterritorium"],$step["beruf"],$step["land"], $step["territorium"],$step["ort"],$step["von-ab"],$step["bis"],$step["belegt"],$step["kommentar"]);
+
+                if($i != 0){
+                    $roadOfLiveIDString .= ",";
+                }
+
+                $roadOfLiveIDString .= $stepID;
+            }
+
+            $newPerson->setRoadOfLiveid($roadOfLiveIDString);
+        }
+    }
+
+    private function getRoadOfLifeWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, ort, territorium, land, stammterritorium, stammland, `von-ab`, bis, beruf, belegt, kommentar FROM `lebensweg` WHERE ID=:personID";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);

@@ -38,10 +38,11 @@ UR\DB\NewBundle\Entity\Wedding:
                 fixed: false
             column: relation_type
         weddingDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: wedding_dateID
         weddingLocationid:
             type: integer
@@ -56,10 +57,11 @@ UR\DB\NewBundle\Entity\Wedding:
                 unsigned: false
             column: wedding_territoryID
         bannsDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
                 comment: '== Aufgebot'
             column: banns_dateID
         breakupReason:
@@ -71,10 +73,11 @@ UR\DB\NewBundle\Entity\Wedding:
                 comment: '== Auflösung'
             column: breakup_reason
         breakupDateid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
                 comment: '== gelöst'
             column: breakup_dateID
         marriageComment:
