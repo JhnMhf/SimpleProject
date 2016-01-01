@@ -25,7 +25,9 @@ class MigrateController extends Controller
 
         $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($ID);
 
-        $newPerson = $this->get("migrate_data.service")->migratePerson($IDData->getOid(), $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getBerufsklasse(), $person->getKommentar());
+        $OID = $IDData->getOid();
+
+        $newPerson = $this->get("migrate_data.service")->migratePerson($OID, $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getBerufsklasse(), $person->getKommentar());
 
         $this->migrateDataFromIndexID($newPerson, $ID, $oldDBManager);
 
@@ -59,6 +61,8 @@ class MigrateController extends Controller
         //save updated newPerson to database
 
         $this->get("migrate_data.service")->savePerson($newPerson);
+
+        $this->migrateGrandmothers($newPerson, $ID, $oldDBManager);
 
         return new Response(
             'Migrated Database entry: '.$newPerson->getId()
@@ -101,7 +105,7 @@ class MigrateController extends Controller
         if(!is_null($birth) && (!is_null($birth->getGetauft()) || !is_null($birth->getTaufort()))){
             $newBaptismId = $this->get("migrate_data.service")->migrateBaptism($birth->getGetauft(),$birth->getTaufort());
 
-            $newPerson->setBaptismid($newBirthId);
+            $newPerson->setBaptismid($newBaptismId);
         }
     }
 
@@ -451,5 +455,25 @@ class MigrateController extends Controller
 
 
         return $stmt->fetchAll();
+    }
+
+
+    private function migrateGrandmothers($newPerson, $oldPersonID, $oldDBManager){
+
+        //non paternal
+        $grandmothers = $oldDBManager->getRepository('OldBundle:GroßmutterMuetterlicherseits')->findById($oldPersonID);
+
+        for($i = 0; $i < count($grandmothers); $i++){
+            $oldGrandmother = $grandmothers[$i];
+
+            //$firstName, $patronym, $lastName, $gender, $nation, $comment
+            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation(), null);
+
+            //insert additional data
+
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), false, "dem sei groaßmudda", null);
+        }
+
+        //paternal
     }
 }

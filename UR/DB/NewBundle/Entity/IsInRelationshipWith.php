@@ -3,9 +3,9 @@
 namespace UR\DB\NewBundle\Entity;
 
 /**
- * IsGrandchild
+ * IsInRelationshipWith
  */
-class IsGrandchild
+class IsInRelationshipWith
 {
     /**
      * @var integer
@@ -15,12 +15,12 @@ class IsGrandchild
     /**
      * @var integer
      */
-    private $grandParentid;
+    private $firstPartnerID = '0';
 
     /**
      * @var integer
      */
-    private $grandChildid;
+    private $secondPartnerID = '0';
 
     /**
      * @var string
@@ -34,6 +34,20 @@ class IsGrandchild
 
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return IsInRelationshipWith
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -44,51 +58,51 @@ class IsGrandchild
     }
 
     /**
-     * Set grandParentid
+     * Set firstPartnerID
      *
-     * @param integer $grandParentid
+     * @param integer $firstPartnerID
      *
-     * @return IsGrandchild
+     * @return IsInRelationshipWith
      */
-    public function setGrandParentid($grandParentid)
+    public function setFirstPartnerID($firstPartnerID)
     {
-        $this->grandParentid = $grandParentid;
+        $this->firstPartnerID = $firstPartnerID;
 
         return $this;
     }
 
     /**
-     * Get grandParentid
+     * Get firstPartnerID
      *
      * @return integer
      */
-    public function getGrandParentid()
+    public function getFirstPartnerID()
     {
-        return $this->grandParentid;
+        return $this->firstPartnerID;
     }
 
     /**
-     * Set grandChildid
+     * Set secondPartnerID
      *
-     * @param integer $grandChildid
+     * @param integer $secondPartnerID
      *
-     * @return IsGrandchild
+     * @return IsInRelationshipWith
      */
-    public function setGrandChildid($grandChildid)
+    public function setSecondPartnerID($secondPartnerID)
     {
-        $this->grandChildid = $grandChildid;
+        $this->secondPartnerID = $secondPartnerID;
 
         return $this;
     }
 
     /**
-     * Get grandChildid
+     * Get secondPartnerID
      *
      * @return integer
      */
-    public function getGrandChildid()
+    public function getSecondPartnerID()
     {
-        return $this->grandChildid;
+        return $this->secondPartnerID;
     }
 
     /**
@@ -96,7 +110,7 @@ class IsGrandchild
      *
      * @param string $relationType
      *
-     * @return IsGrandchild
+     * @return IsInRelationshipWith
      */
     public function setRelationType($relationType)
     {
@@ -120,7 +134,7 @@ class IsGrandchild
      *
      * @param string $comment
      *
-     * @return IsGrandchild
+     * @return IsInRelationshipWith
      */
     public function setComment($comment)
     {
@@ -137,19 +151,5 @@ class IsGrandchild
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsGrandchild
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

@@ -15,12 +15,12 @@ class IsSibling
     /**
      * @var integer
      */
-    private $siblingOneid;
+    private $siblingOneid = '0';
 
     /**
      * @var integer
      */
-    private $siblingTwoid;
+    private $siblingTwoid = '0';
 
     /**
      * @var string
@@ -32,6 +32,20 @@ class IsSibling
      */
     private $comment;
 
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return IsSibling
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get id
@@ -137,19 +151,5 @@ class IsSibling
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsSibling
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

@@ -1,6 +1,5 @@
 UR\DB\NewBundle\Entity\Birth:
     type: entity
-    repositoryClass: UR\DB\NewBundle\Entity\BirthRepository
     table: birth
     id:
         id:

@@ -13,9 +13,9 @@ class RoadOfLife
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $roadOfLifeOrder;
+    private $roadOfLifeOrder = '1';
 
     /**
      * @var integer
@@ -81,7 +81,7 @@ class RoadOfLife
     /**
      * Set roadOfLifeOrder
      *
-     * @param integer $roadOfLifeOrder
+     * @param boolean $roadOfLifeOrder
      *
      * @return RoadOfLife
      */
@@ -95,7 +95,7 @@ class RoadOfLife
     /**
      * Get roadOfLifeOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getRoadOfLifeOrder()
     {

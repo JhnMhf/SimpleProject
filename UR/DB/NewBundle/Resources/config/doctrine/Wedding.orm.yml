@@ -1,6 +1,12 @@
 UR\DB\NewBundle\Entity\Wedding:
     type: entity
     table: wedding
+    uniqueConstraints:
+        wedding_order:
+            columns:
+                - wedding_order
+                - husband_ID
+                - wife_ID
     id:
         id:
             type: integer
@@ -9,6 +15,8 @@ UR\DB\NewBundle\Entity\Wedding:
                 unsigned: false
             id: true
             column: ID
+            generator:
+                strategy: IDENTITY
     fields:
         weddingOrder:
             type: boolean
@@ -100,7 +108,4 @@ UR\DB\NewBundle\Entity\Wedding:
             length: 65535
             options:
                 fixed: false
-    uniqueConstraints:
-        wedding_order:
-            columns: wedding_order,husband_ID,wife_ID
     lifecycleCallbacks: {  }

@@ -18,6 +18,11 @@ class Source
     private $label;
 
     /**
+     * @var boolean
+     */
+    private $sourceOrder = '1';
+
+    /**
      * @var string
      */
     private $placeOfDiscovery;
@@ -65,6 +70,30 @@ class Source
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * Set sourceOrder
+     *
+     * @param boolean $sourceOrder
+     *
+     * @return Source
+     */
+    public function setSourceOrder($sourceOrder)
+    {
+        $this->sourceOrder = $sourceOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get sourceOrder
+     *
+     * @return boolean
+     */
+    public function getSourceOrder()
+    {
+        return $this->sourceOrder;
     }
 
     /**
@@ -137,34 +166,5 @@ class Source
     public function getComment()
     {
         return $this->comment;
-    }
-    /**
-     * @var boolean
-     */
-    private $sourceOrder = '1';
-
-
-    /**
-     * Set sourceOrder
-     *
-     * @param boolean $sourceOrder
-     *
-     * @return Source
-     */
-    public function setSourceOrder($sourceOrder)
-    {
-        $this->sourceOrder = $sourceOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get sourceOrder
-     *
-     * @return boolean
-     */
-    public function getSourceOrder()
-    {
-        return $this->sourceOrder;
     }
 }

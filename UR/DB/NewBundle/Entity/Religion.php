@@ -22,6 +22,26 @@ class Religion
      */
     private $comment;
 
+    /**
+     * @var boolean
+     */
+    private $religionOrder = '1';
+
+    /**
+     * @var string
+     */
+    private $provenDateid;
+
+    /**
+     * @var string
+     */
+    private $fromDateid;
+
+    /**
+     * @var string
+     */
+    private $changeOfReligion;
+
 
     /**
      * Get id
@@ -80,26 +100,6 @@ class Religion
     {
         return $this->comment;
     }
-    /**
-     * @var boolean
-     */
-    private $religionOrder = '1';
-
-    /**
-     * @var integer
-     */
-    private $provenDateid;
-
-    /**
-     * @var integer
-     */
-    private $fromDateid;
-
-    /**
-     * @var string
-     */
-    private $changeOfReligion;
-
 
     /**
      * Set religionOrder
@@ -128,7 +128,7 @@ class Religion
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Religion
      */
@@ -142,7 +142,7 @@ class Religion
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {
@@ -152,7 +152,7 @@ class Religion
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Religion
      */
@@ -166,7 +166,7 @@ class Religion
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {

@@ -60,12 +60,77 @@ class Relative
     /**
      * @var integer
      */
-    private $originalNationid;
+    private $nationid;
+
+    /**
+     * @var integer
+     */
+    private $baptismid;
+
+    /**
+     * @var integer
+     */
+    private $worksid;
+
+    /**
+     * @var integer
+     */
+    private $weddingid;
+
+    /**
+     * @var integer
+     */
+    private $statusid;
+
+    /**
+     * @var integer
+     */
+    private $sourceid;
+
+    /**
+     * @var integer
+     */
+    private $roadOfLiveid;
+
+    /**
+     * @var integer
+     */
+    private $rankid;
+
+    /**
+     * @var integer
+     */
+    private $propertyid;
+
+    /**
+     * @var integer
+     */
+    private $honourid;
+
+    /**
+     * @var integer
+     */
+    private $educationid;
 
     /**
      * @var string
      */
     private $comment;
+
+    /**
+     * @var string
+     */
+    private $bornInMarriage;
+
+    /**
+     * @var integer
+     */
+    private $jobClassid;
+
+    /**
+     * @var integer
+     */
+    private $residenceid;
 
 
     /**
@@ -295,117 +360,28 @@ class Relative
     }
 
     /**
-     * Set originalNationid
+     * Set nationid
      *
-     * @param integer $originalNationid
+     * @param integer $nationid
      *
      * @return Relative
      */
-    public function setOriginalNationid($originalNationid)
+    public function setNationid($nationid)
     {
-        $this->originalNationid = $originalNationid;
+        $this->nationid = $nationid;
 
         return $this;
     }
 
     /**
-     * Get originalNationid
+     * Get nationid
      *
      * @return integer
      */
-    public function getOriginalNationid()
+    public function getNationid()
     {
-        return $this->originalNationid;
+        return $this->nationid;
     }
-
-    /**
-     * Set comment
-     *
-     * @param string $comment
-     *
-     * @return Relative
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get comment
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-    /**
-     * @var integer
-     */
-    private $baptismid;
-
-    /**
-     * @var integer
-     */
-    private $worksid;
-
-    /**
-     * @var integer
-     */
-    private $weddingid;
-
-    /**
-     * @var integer
-     */
-    private $statusid;
-
-    /**
-     * @var integer
-     */
-    private $sourceid;
-
-    /**
-     * @var integer
-     */
-    private $roadOfLiveid;
-
-    /**
-     * @var integer
-     */
-    private $rankid;
-
-    /**
-     * @var integer
-     */
-    private $propertyid;
-
-    /**
-     * @var integer
-     */
-    private $honourid;
-
-    /**
-     * @var integer
-     */
-    private $educationid;
-
-    /**
-     * @var string
-     */
-    private $bornInMarriage;
-
-    /**
-     * @var integer
-     */
-    private $jobClassid;
-
-    /**
-     * @var integer
-     */
-    private $residenceid;
-
 
     /**
      * Set baptismid
@@ -645,6 +621,30 @@ class Relative
     public function getEducationid()
     {
         return $this->educationid;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param string $comment
+     *
+     * @return Relative
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 
     /**

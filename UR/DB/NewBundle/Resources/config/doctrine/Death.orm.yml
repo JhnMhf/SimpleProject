@@ -1,6 +1,5 @@
 UR\DB\NewBundle\Entity\Death:
     type: entity
-    repositoryClass: UR\DB\NewBundle\Entity\DeathRepository
     table: death
     id:
         id:
@@ -56,14 +55,14 @@ UR\DB\NewBundle\Entity\Death:
             length: 65535
             options:
                 fixed: false
-        deathDateId:
+        deathDateid:
             type: string
             nullable: true
             length: 200
             options:
                 fixed: false
             column: death_dateId
-        funeralDateId:
+        funeralDateid:
             type: string
             nullable: true
             length: 200

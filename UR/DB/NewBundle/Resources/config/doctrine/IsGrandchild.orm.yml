@@ -4,8 +4,8 @@ UR\DB\NewBundle\Entity\IsGrandchild:
     uniqueConstraints:
         grand_parentID:
             columns:
-                - grand_parentID
-                - grand_childID
+                - grandparentID
+                - grandchildID
     id:
         id:
             type: integer
@@ -14,23 +14,23 @@ UR\DB\NewBundle\Entity\IsGrandchild:
                 unsigned: false
             id: true
             column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
         grandParentid:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
-            column: grand_parentID
+            column: grandparentID
         grandChildid:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
-            column: grand_childID
-    fields:
+            column: grandchildID
         relationType:
             type: string
             nullable: true

@@ -28,12 +28,12 @@ class Works
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
@@ -43,7 +43,7 @@ class Works
     private $territoryid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -51,6 +51,11 @@ class Works
      * @var string
      */
     private $comment;
+
+    /**
+     * @var boolean
+     */
+    private $worksOrder = '1';
 
 
     /**
@@ -138,7 +143,7 @@ class Works
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Works
      */
@@ -152,7 +157,7 @@ class Works
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -162,7 +167,7 @@ class Works
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Works
      */
@@ -176,7 +181,7 @@ class Works
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -210,7 +215,7 @@ class Works
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Works
      */
@@ -224,7 +229,7 @@ class Works
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {
@@ -254,11 +259,6 @@ class Works
     {
         return $this->comment;
     }
-    /**
-     * @var boolean
-     */
-    private $worksOrder = '1';
-
 
     /**
      * Set worksOrder

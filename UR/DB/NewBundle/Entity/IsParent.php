@@ -15,12 +15,12 @@ class IsParent
     /**
      * @var integer
      */
-    private $childid;
+    private $childid = '0';
 
     /**
      * @var integer
      */
-    private $parentid;
+    private $parentid = '0';
 
     /**
      * @var string
@@ -32,6 +32,20 @@ class IsParent
      */
     private $comment;
 
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return IsParent
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get id
@@ -138,18 +152,10 @@ class IsParent
     {
         return $this->comment;
     }
-
     /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsParent
+     * @var integer
      */
-    public function setId($id)
-    {
-        $this->id = $id;
+    private $childID = '0';
 
-        return $this;
-    }
+
 }

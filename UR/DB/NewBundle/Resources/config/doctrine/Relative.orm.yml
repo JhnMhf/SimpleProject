@@ -69,12 +69,12 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 unsigned: false
             column: religionID
-        originalNationid:
+        nationid:
             type: integer
             nullable: true
             options:
                 unsigned: false
-            column: original_nationID
+            column: nationID
         baptismid:
             type: integer
             nullable: true

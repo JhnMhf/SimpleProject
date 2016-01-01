@@ -14,13 +14,15 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
                 unsigned: false
             id: true
             column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
         childInLawid:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: child_in_lawID
         parentInLawid:
             type: integer
@@ -28,9 +30,7 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: parent_in_lawID
-    fields:
         relationType:
             type: string
             nullable: true

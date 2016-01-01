@@ -1,11 +1,11 @@
-UR\DB\NewBundle\Entity\IsParent:
+UR\DB\NewBundle\Entity\IsInRelationshipWith:
     type: entity
-    table: is_parent
+    table: is_in_relationship_with
     uniqueConstraints:
-        childID:
+        first_partnerID:
             columns:
-                - childID
-                - parentID
+                - first_partnerID
+                - second_partnerID
     id:
         id:
             type: integer
@@ -17,20 +17,20 @@ UR\DB\NewBundle\Entity\IsParent:
             generator:
                 strategy: IDENTITY
     fields:
-        childID:
+        firstPartnerID:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            column: childID
-        parentid:
+            column: first_partnerID
+        secondPartnerID:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            column: parentID
+            column: second_partnerID
         relationType:
             type: string
             nullable: true

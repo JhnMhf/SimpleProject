@@ -15,12 +15,12 @@ class IsGrandchild
     /**
      * @var integer
      */
-    private $grandParentid;
+    private $grandParentid = '0';
 
     /**
      * @var integer
      */
-    private $grandChildid;
+    private $grandChildid = '0';
 
     /**
      * @var string
@@ -32,6 +32,20 @@ class IsGrandchild
      */
     private $comment;
 
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return IsGrandchild
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get id
@@ -137,19 +151,5 @@ class IsGrandchild
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsGrandchild
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

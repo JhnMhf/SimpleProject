@@ -13,19 +13,19 @@ class Wedding
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $weddingOrder;
+    private $weddingOrder = '1';
 
     /**
      * @var integer
      */
-    private $husbandId;
+    private $husbandId = '0';
 
     /**
      * @var integer
      */
-    private $wifeId;
+    private $wifeId = '0';
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class Wedding
     private $relationType;
 
     /**
-     * @var integer
+     * @var string
      */
     private $weddingDateid;
 
@@ -48,7 +48,7 @@ class Wedding
     private $weddingTerritoryid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $bannsDateid;
 
@@ -58,7 +58,7 @@ class Wedding
     private $breakupReason;
 
     /**
-     * @var integer
+     * @var string
      */
     private $breakupDateid;
 
@@ -91,7 +91,7 @@ class Wedding
     /**
      * Set weddingOrder
      *
-     * @param integer $weddingOrder
+     * @param boolean $weddingOrder
      *
      * @return Wedding
      */
@@ -105,7 +105,7 @@ class Wedding
     /**
      * Get weddingOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getWeddingOrder()
     {
@@ -187,7 +187,7 @@ class Wedding
     /**
      * Set weddingDateid
      *
-     * @param integer $weddingDateid
+     * @param string $weddingDateid
      *
      * @return Wedding
      */
@@ -201,7 +201,7 @@ class Wedding
     /**
      * Get weddingDateid
      *
-     * @return integer
+     * @return string
      */
     public function getWeddingDateid()
     {
@@ -259,7 +259,7 @@ class Wedding
     /**
      * Set bannsDateid
      *
-     * @param integer $bannsDateid
+     * @param string $bannsDateid
      *
      * @return Wedding
      */
@@ -273,7 +273,7 @@ class Wedding
     /**
      * Get bannsDateid
      *
-     * @return integer
+     * @return string
      */
     public function getBannsDateid()
     {
@@ -307,7 +307,7 @@ class Wedding
     /**
      * Set breakupDateid
      *
-     * @param integer $breakupDateid
+     * @param string $breakupDateid
      *
      * @return Wedding
      */
@@ -321,7 +321,7 @@ class Wedding
     /**
      * Get breakupDateid
      *
-     * @return integer
+     * @return string
      */
     public function getBreakupDateid()
     {
@@ -398,19 +398,5 @@ class Wedding
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return Wedding
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

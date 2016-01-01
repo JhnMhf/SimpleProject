@@ -13,9 +13,9 @@ class Rank
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $rankOrder;
+    private $rankOrder = '1';
 
     /**
      * @var string
@@ -43,17 +43,17 @@ class Rank
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -76,7 +76,7 @@ class Rank
     /**
      * Set rankOrder
      *
-     * @param integer $rankOrder
+     * @param boolean $rankOrder
      *
      * @return Rank
      */
@@ -90,7 +90,7 @@ class Rank
     /**
      * Get rankOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getRankOrder()
     {
@@ -220,7 +220,7 @@ class Rank
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Rank
      */
@@ -234,7 +234,7 @@ class Rank
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -244,7 +244,7 @@ class Rank
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Rank
      */
@@ -258,7 +258,7 @@ class Rank
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -268,7 +268,7 @@ class Rank
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Rank
      */
@@ -282,7 +282,7 @@ class Rank
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {

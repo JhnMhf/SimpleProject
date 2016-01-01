@@ -13,9 +13,9 @@ class Status
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $statusOrder;
+    private $statusOrder = '1';
 
     /**
      * @var string
@@ -38,17 +38,17 @@ class Status
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -71,7 +71,7 @@ class Status
     /**
      * Set statusOrder
      *
-     * @param integer $statusOrder
+     * @param boolean $statusOrder
      *
      * @return Status
      */
@@ -85,7 +85,7 @@ class Status
     /**
      * Get statusOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getStatusOrder()
     {
@@ -191,7 +191,7 @@ class Status
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Status
      */
@@ -205,7 +205,7 @@ class Status
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -215,7 +215,7 @@ class Status
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Status
      */
@@ -229,7 +229,7 @@ class Status
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -239,7 +239,7 @@ class Status
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Status
      */
@@ -253,7 +253,7 @@ class Status
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {

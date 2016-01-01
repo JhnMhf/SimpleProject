@@ -13,9 +13,9 @@ class Education
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $educationOrder;
+    private $educationOrder = '1';
 
     /**
      * @var string
@@ -38,17 +38,17 @@ class Education
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -58,7 +58,7 @@ class Education
     private $graduationLabel;
 
     /**
-     * @var integer
+     * @var string
      */
     private $graduationDateid;
 
@@ -86,7 +86,7 @@ class Education
     /**
      * Set educationOrder
      *
-     * @param integer $educationOrder
+     * @param boolean $educationOrder
      *
      * @return Education
      */
@@ -100,7 +100,7 @@ class Education
     /**
      * Get educationOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getEducationOrder()
     {
@@ -206,7 +206,7 @@ class Education
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Education
      */
@@ -220,7 +220,7 @@ class Education
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -230,7 +230,7 @@ class Education
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Education
      */
@@ -244,7 +244,7 @@ class Education
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -254,7 +254,7 @@ class Education
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Education
      */
@@ -268,7 +268,7 @@ class Education
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {
@@ -302,7 +302,7 @@ class Education
     /**
      * Set graduationDateid
      *
-     * @param integer $graduationDateid
+     * @param string $graduationDateid
      *
      * @return Education
      */
@@ -316,7 +316,7 @@ class Education
     /**
      * Get graduationDateid
      *
-     * @return integer
+     * @return string
      */
     public function getGraduationDateid()
     {

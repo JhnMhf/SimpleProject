@@ -38,7 +38,7 @@ class Birth
     private $birthLocationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $birthDateid;
 
@@ -46,16 +46,6 @@ class Birth
      * @var integer
      */
     private $birthTerritoryid;
-
-    /**
-     * @var integer
-     */
-    private $baptismDateid;
-
-    /**
-     * @var integer
-     */
-    private $baptismLocationid;
 
     /**
      * @var string
@@ -196,7 +186,7 @@ class Birth
     /**
      * Set birthDateid
      *
-     * @param integer $birthDateid
+     * @param string $birthDateid
      *
      * @return Birth
      */
@@ -210,7 +200,7 @@ class Birth
     /**
      * Get birthDateid
      *
-     * @return integer
+     * @return string
      */
     public function getBirthDateid()
     {
@@ -239,54 +229,6 @@ class Birth
     public function getBirthTerritoryid()
     {
         return $this->birthTerritoryid;
-    }
-
-    /**
-     * Set baptismDateid
-     *
-     * @param integer $baptismDateid
-     *
-     * @return Birth
-     */
-    public function setBaptismDateid($baptismDateid)
-    {
-        $this->baptismDateid = $baptismDateid;
-
-        return $this;
-    }
-
-    /**
-     * Get baptismDateid
-     *
-     * @return integer
-     */
-    public function getBaptismDateid()
-    {
-        return $this->baptismDateid;
-    }
-
-    /**
-     * Set baptismLocationid
-     *
-     * @param integer $baptismLocationid
-     *
-     * @return Birth
-     */
-    public function setBaptismLocationid($baptismLocationid)
-    {
-        $this->baptismLocationid = $baptismLocationid;
-
-        return $this;
-    }
-
-    /**
-     * Get baptismLocationid
-     *
-     * @return integer
-     */
-    public function getBaptismLocationid()
-    {
-        return $this->baptismLocationid;
     }
 
     /**

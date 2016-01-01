@@ -15,12 +15,12 @@ class IsParentInLaw
     /**
      * @var integer
      */
-    private $childInLawid;
+    private $childInLawid = '0';
 
     /**
      * @var integer
      */
-    private $parentInLawid;
+    private $parentInLawid = '0';
 
     /**
      * @var string
@@ -32,6 +32,20 @@ class IsParentInLaw
      */
     private $comment;
 
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return IsParentInLaw
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get id
@@ -137,19 +151,5 @@ class IsParentInLaw
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsParentInLaw
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 }

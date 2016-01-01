@@ -1,6 +1,5 @@
 UR\DB\NewBundle\Entity\Baptism:
     type: entity
-    repositoryClass: UR\DB\NewBundle\Entity\BaptismRepository
     table: baptism
     id:
         id:

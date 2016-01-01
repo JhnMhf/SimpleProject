@@ -13,9 +13,9 @@ class Honour
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $honourOrder;
+    private $honourOrder = '1';
 
     /**
      * @var string
@@ -38,17 +38,17 @@ class Honour
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -71,7 +71,7 @@ class Honour
     /**
      * Set honourOrder
      *
-     * @param integer $honourOrder
+     * @param boolean $honourOrder
      *
      * @return Honour
      */
@@ -85,7 +85,7 @@ class Honour
     /**
      * Get honourOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getHonourOrder()
     {
@@ -191,7 +191,7 @@ class Honour
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Honour
      */
@@ -205,7 +205,7 @@ class Honour
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -215,7 +215,7 @@ class Honour
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Honour
      */
@@ -229,7 +229,7 @@ class Honour
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -239,7 +239,7 @@ class Honour
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Honour
      */
@@ -253,7 +253,7 @@ class Honour
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {

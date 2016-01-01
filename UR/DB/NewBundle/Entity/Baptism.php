@@ -13,7 +13,7 @@ class Baptism
     private $id;
 
     /**
-     * @var integer
+     * @var string
      */
     private $baptismDateid;
 
@@ -36,7 +36,7 @@ class Baptism
     /**
      * Set baptismDateid
      *
-     * @param integer $baptismDateid
+     * @param string $baptismDateid
      *
      * @return Baptism
      */
@@ -50,7 +50,7 @@ class Baptism
     /**
      * Get baptismDateid
      *
-     * @return integer
+     * @return string
      */
     public function getBaptismDateid()
     {

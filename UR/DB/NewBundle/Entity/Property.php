@@ -13,14 +13,14 @@ class Property
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      */
-    private $propertyOrder;
+    private $propertyOrder = '1';
 
     /**
      * @var string
      */
-    private $description;
+    private $label;
 
     /**
      * @var integer
@@ -38,17 +38,17 @@ class Property
     private $locationid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $fromDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $toDateid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $provenDateid;
 
@@ -71,7 +71,7 @@ class Property
     /**
      * Set propertyOrder
      *
-     * @param integer $propertyOrder
+     * @param boolean $propertyOrder
      *
      * @return Property
      */
@@ -85,7 +85,7 @@ class Property
     /**
      * Get propertyOrder
      *
-     * @return integer
+     * @return boolean
      */
     public function getPropertyOrder()
     {
@@ -93,27 +93,27 @@ class Property
     }
 
     /**
-     * Set description
+     * Set label
      *
-     * @param string $description
+     * @param string $label
      *
      * @return Property
      */
-    public function setDescription($description)
+    public function setLabel($label)
     {
-        $this->description = $description;
+        $this->label = $label;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get label
      *
      * @return string
      */
-    public function getDescription()
+    public function getLabel()
     {
-        return $this->description;
+        return $this->label;
     }
 
     /**
@@ -191,7 +191,7 @@ class Property
     /**
      * Set fromDateid
      *
-     * @param integer $fromDateid
+     * @param string $fromDateid
      *
      * @return Property
      */
@@ -205,7 +205,7 @@ class Property
     /**
      * Get fromDateid
      *
-     * @return integer
+     * @return string
      */
     public function getFromDateid()
     {
@@ -215,7 +215,7 @@ class Property
     /**
      * Set toDateid
      *
-     * @param integer $toDateid
+     * @param string $toDateid
      *
      * @return Property
      */
@@ -229,7 +229,7 @@ class Property
     /**
      * Get toDateid
      *
-     * @return integer
+     * @return string
      */
     public function getToDateid()
     {
@@ -239,7 +239,7 @@ class Property
     /**
      * Set provenDateid
      *
-     * @param integer $provenDateid
+     * @param string $provenDateid
      *
      * @return Property
      */
@@ -253,7 +253,7 @@ class Property
     /**
      * Get provenDateid
      *
-     * @return integer
+     * @return string
      */
     public function getProvenDateid()
     {
@@ -282,34 +282,5 @@ class Property
     public function getComment()
     {
         return $this->comment;
-    }
-    /**
-     * @var string
-     */
-    private $label;
-
-
-    /**
-     * Set label
-     *
-     * @param string $label
-     *
-     * @return Property
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * Get label
-     *
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 }

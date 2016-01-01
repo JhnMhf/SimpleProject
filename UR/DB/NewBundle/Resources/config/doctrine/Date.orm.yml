@@ -46,12 +46,12 @@ UR\DB\NewBundle\Entity\Date:
             type: boolean
             nullable: false
             options:
-                default: 0
+                default: '0'
             column: before_date
         afterDate:
             type: boolean
             nullable: false
             options:
-                default: 0
+                default: '0'
             column: after_date
     lifecycleCallbacks: {  }

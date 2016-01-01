@@ -58,7 +58,7 @@ class Person
     private $deathid;
 
     /**
-     * @var integer
+     * @var string
      */
     private $religionid;
 
@@ -71,6 +71,81 @@ class Person
      * @var string
      */
     private $comment;
+
+    /**
+     * @var string
+     */
+    private $bornInMarriage;
+
+    /**
+     * @var integer
+     */
+    private $baptismid;
+
+    /**
+     * @var string
+     */
+    private $worksid;
+
+    /**
+     * @var string
+     */
+    private $weddingid;
+
+    /**
+     * @var string
+     */
+    private $statusid;
+
+    /**
+     * @var string
+     */
+    private $sourceid;
+
+    /**
+     * @var string
+     */
+    private $roadOfLiveid;
+
+    /**
+     * @var string
+     */
+    private $rankid;
+
+    /**
+     * @var string
+     */
+    private $propertyid;
+
+    /**
+     * @var string
+     */
+    private $honourid;
+
+    /**
+     * @var string
+     */
+    private $educationid;
+
+    /**
+     * @var string
+     */
+    private $control;
+
+    /**
+     * @var string
+     */
+    private $complete;
+
+    /**
+     * @var string
+     */
+    private $jobClassid;
+
+    /**
+     * @var string
+     */
+    private $residenceid;
 
 
     /**
@@ -302,7 +377,7 @@ class Person
     /**
      * Set religionid
      *
-     * @param integer $religionid
+     * @param string $religionid
      *
      * @return Person
      */
@@ -316,7 +391,7 @@ class Person
     /**
      * Get religionid
      *
-     * @return integer
+     * @return string
      */
     public function getReligionid()
     {
@@ -370,81 +445,6 @@ class Person
     {
         return $this->comment;
     }
-    /**
-     * @var string
-     */
-    private $bornInMarriage;
-
-    /**
-     * @var integer
-     */
-    private $baptismid;
-
-    /**
-     * @var integer
-     */
-    private $worksid;
-
-    /**
-     * @var integer
-     */
-    private $weddingid;
-
-    /**
-     * @var integer
-     */
-    private $statusid;
-
-    /**
-     * @var integer
-     */
-    private $sourceid;
-
-    /**
-     * @var integer
-     */
-    private $roadOfLiveid;
-
-    /**
-     * @var integer
-     */
-    private $rankid;
-
-    /**
-     * @var integer
-     */
-    private $propertyid;
-
-    /**
-     * @var integer
-     */
-    private $honourid;
-
-    /**
-     * @var integer
-     */
-    private $educationid;
-
-    /**
-     * @var string
-     */
-    private $control;
-
-    /**
-     * @var string
-     */
-    private $complete;
-
-    /**
-     * @var integer
-     */
-    private $jobClassid;
-
-    /**
-     * @var integer
-     */
-    private $residenceid;
-
 
     /**
      * Set bornInMarriage
@@ -497,7 +497,7 @@ class Person
     /**
      * Set worksid
      *
-     * @param integer $worksid
+     * @param string $worksid
      *
      * @return Person
      */
@@ -511,7 +511,7 @@ class Person
     /**
      * Get worksid
      *
-     * @return integer
+     * @return string
      */
     public function getWorksid()
     {
@@ -521,7 +521,7 @@ class Person
     /**
      * Set weddingid
      *
-     * @param integer $weddingid
+     * @param string $weddingid
      *
      * @return Person
      */
@@ -535,7 +535,7 @@ class Person
     /**
      * Get weddingid
      *
-     * @return integer
+     * @return string
      */
     public function getWeddingid()
     {
@@ -545,7 +545,7 @@ class Person
     /**
      * Set statusid
      *
-     * @param integer $statusid
+     * @param string $statusid
      *
      * @return Person
      */
@@ -559,7 +559,7 @@ class Person
     /**
      * Get statusid
      *
-     * @return integer
+     * @return string
      */
     public function getStatusid()
     {
@@ -569,7 +569,7 @@ class Person
     /**
      * Set sourceid
      *
-     * @param integer $sourceid
+     * @param string $sourceid
      *
      * @return Person
      */
@@ -583,7 +583,7 @@ class Person
     /**
      * Get sourceid
      *
-     * @return integer
+     * @return string
      */
     public function getSourceid()
     {
@@ -593,7 +593,7 @@ class Person
     /**
      * Set roadOfLiveid
      *
-     * @param integer $roadOfLiveid
+     * @param string $roadOfLiveid
      *
      * @return Person
      */
@@ -607,7 +607,7 @@ class Person
     /**
      * Get roadOfLiveid
      *
-     * @return integer
+     * @return string
      */
     public function getRoadOfLiveid()
     {
@@ -617,7 +617,7 @@ class Person
     /**
      * Set rankid
      *
-     * @param integer $rankid
+     * @param string $rankid
      *
      * @return Person
      */
@@ -631,7 +631,7 @@ class Person
     /**
      * Get rankid
      *
-     * @return integer
+     * @return string
      */
     public function getRankid()
     {
@@ -641,7 +641,7 @@ class Person
     /**
      * Set propertyid
      *
-     * @param integer $propertyid
+     * @param string $propertyid
      *
      * @return Person
      */
@@ -655,7 +655,7 @@ class Person
     /**
      * Get propertyid
      *
-     * @return integer
+     * @return string
      */
     public function getPropertyid()
     {
@@ -665,7 +665,7 @@ class Person
     /**
      * Set honourid
      *
-     * @param integer $honourid
+     * @param string $honourid
      *
      * @return Person
      */
@@ -679,7 +679,7 @@ class Person
     /**
      * Get honourid
      *
-     * @return integer
+     * @return string
      */
     public function getHonourid()
     {
@@ -689,7 +689,7 @@ class Person
     /**
      * Set educationid
      *
-     * @param integer $educationid
+     * @param string $educationid
      *
      * @return Person
      */
@@ -703,7 +703,7 @@ class Person
     /**
      * Get educationid
      *
-     * @return integer
+     * @return string
      */
     public function getEducationid()
     {
@@ -761,7 +761,7 @@ class Person
     /**
      * Set jobClassid
      *
-     * @param integer $jobClassid
+     * @param string $jobClassid
      *
      * @return Person
      */
@@ -775,7 +775,7 @@ class Person
     /**
      * Get jobClassid
      *
-     * @return integer
+     * @return string
      */
     public function getJobClassid()
     {
@@ -785,7 +785,7 @@ class Person
     /**
      * Set residenceid
      *
-     * @param integer $residenceid
+     * @param string $residenceid
      *
      * @return Person
      */
@@ -799,7 +799,7 @@ class Person
     /**
      * Get residenceid
      *
-     * @return integer
+     * @return string
      */
     public function getResidenceid()
     {

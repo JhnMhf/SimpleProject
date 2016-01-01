@@ -48,23 +48,15 @@ class Death
     private $comment;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      */
-    private $deathDate;
+    private $deathDateid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      */
-    private $funeralDate;
+    private $funeralDateid;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->deathDate = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->funeralDate = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
@@ -245,128 +237,50 @@ class Death
     }
 
     /**
-     * Add deathDate
+     * Set deathDateid
      *
-     * @param \UR\DB\NewBundle\Entity\Date $deathDate
+     * @param string $deathDateid
      *
      * @return Death
      */
-    public function addDeathDate(\UR\DB\NewBundle\Entity\Date $deathDate)
+    public function setDeathDateid($deathDateid)
     {
-        $this->deathDate[] = $deathDate;
+        $this->deathDateid = $deathDateid;
 
         return $this;
     }
 
     /**
-     * Remove deathDate
-     *
-     * @param \UR\DB\NewBundle\Entity\Date $deathDate
-     */
-    public function removeDeathDate(\UR\DB\NewBundle\Entity\Date $deathDate)
-    {
-        $this->deathDate->removeElement($deathDate);
-    }
-
-    /**
-     * Get deathDate
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDeathDate()
-    {
-        return $this->deathDate;
-    }
-
-    /**
-     * Add funeralDate
-     *
-     * @param \UR\DB\NewBundle\Entity\Date $funeralDate
-     *
-     * @return Death
-     */
-    public function addFuneralDate(\UR\DB\NewBundle\Entity\Date $funeralDate)
-    {
-        $this->funeralDate[] = $funeralDate;
-
-        return $this;
-    }
-
-    /**
-     * Remove funeralDate
-     *
-     * @param \UR\DB\NewBundle\Entity\Date $funeralDate
-     */
-    public function removeFuneralDate(\UR\DB\NewBundle\Entity\Date $funeralDate)
-    {
-        $this->funeralDate->removeElement($funeralDate);
-    }
-
-    /**
-     * Get funeralDate
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFuneralDate()
-    {
-        return $this->funeralDate;
-    }
-    /**
-     * @var string
-     */
-    private $deathDateId;
-
-    /**
-     * @var string
-     */
-    private $funeralDateId;
-
-
-    /**
-     * Set deathDateId
-     *
-     * @param string $deathDateId
-     *
-     * @return Death
-     */
-    public function setDeathDateId($deathDateId)
-    {
-        $this->deathDateId = $deathDateId;
-
-        return $this;
-    }
-
-    /**
-     * Get deathDateId
+     * Get deathDateid
      *
      * @return string
      */
-    public function getDeathDateId()
+    public function getDeathDateid()
     {
-        return $this->deathDateId;
+        return $this->deathDateid;
     }
 
     /**
-     * Set funeralDateId
+     * Set funeralDateid
      *
-     * @param string $funeralDateId
+     * @param string $funeralDateid
      *
      * @return Death
      */
-    public function setFuneralDateId($funeralDateId)
+    public function setFuneralDateid($funeralDateid)
     {
-        $this->funeralDateId = $funeralDateId;
+        $this->funeralDateid = $funeralDateid;
 
         return $this;
     }
 
     /**
-     * Get funeralDateId
+     * Get funeralDateid
      *
      * @return string
      */
-    public function getFuneralDateId()
+    public function getFuneralDateid()
     {
-        return $this->funeralDateId;
+        return $this->funeralDateid;
     }
 }

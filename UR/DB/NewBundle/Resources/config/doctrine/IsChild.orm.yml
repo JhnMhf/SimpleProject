@@ -14,13 +14,15 @@ UR\DB\NewBundle\Entity\IsChild:
                 unsigned: false
             id: true
             column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
         childid:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: childID
         parentid:
             type: integer
@@ -28,9 +30,7 @@ UR\DB\NewBundle\Entity\IsChild:
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: parentID
-    fields:
         relationType:
             type: string
             nullable: true

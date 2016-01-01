@@ -14,13 +14,15 @@ UR\DB\NewBundle\Entity\IsSibling:
                 unsigned: false
             id: true
             column: ID
+            generator:
+                strategy: IDENTITY
+    fields:
         siblingOneid:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: sibling_oneID
         siblingTwoid:
             type: integer
@@ -28,9 +30,7 @@ UR\DB\NewBundle\Entity\IsSibling:
             options:
                 unsigned: false
                 default: '0'
-            id: true
             column: sibling_twoID
-    fields:
         relationType:
             type: string
             nullable: true

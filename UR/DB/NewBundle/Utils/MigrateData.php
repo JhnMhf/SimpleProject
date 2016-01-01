@@ -9,6 +9,7 @@ use UR\DB\NewBundle\Entity\Date;
 use UR\DB\NewBundle\Entity\Death;
 use UR\DB\NewBundle\Entity\Education;
 use UR\DB\NewBundle\Entity\Honour;
+use UR\DB\NewBundle\Entity\IsGrandparent;
 use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Location;
@@ -16,6 +17,7 @@ use UR\DB\NewBundle\Entity\Nation;
 use UR\DB\NewBundle\Entity\Person;
 use UR\DB\NewBundle\Entity\Property;
 use UR\DB\NewBundle\Entity\Rank;
+use UR\DB\NewBundle\Entity\Relative;
 use UR\DB\NewBundle\Entity\Religion;
 use UR\DB\NewBundle\Entity\RoadOfLife;
 use UR\DB\NewBundle\Entity\Source;
@@ -509,11 +511,15 @@ class MigrateData
         return $newIsGrandchild->getId();
     }
 
-    public function migrateIsGrandparent(){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public function migrateIsGrandparent($grandchildId, $grandparentId, $paternal, $relationType ,$comment){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
         $newIsGrandparent = new IsGrandparent();
 
-        //$newIsGrandparent->;
+        $newIsGrandparent->setGrandChildid($grandchildId);
+        $newIsGrandparent->setGrandParentid($grandparentId);
+        $newIsGrandparent->setRelationType($relationType);
+        $newIsGrandparent->setIsPaternal($paternal);
+        $newIsGrandparent->setComment($comment);
         
         $this->newDBManager->persist($newIsGrandparent);
         $this->newDBManager->flush();
@@ -636,16 +642,22 @@ class MigrateData
         return $newRank->getId();
     }
 
-    public function migrateRelative(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    public function migrateRelative($firstName, $patronym, $lastName, $gender, $nation, $comment){
         //insert into new data
         $newRelative = new Relative();
 
-        //$newRelative->;
-        
+        $newRelative->setFirstName($firstName);
+        $newRelative->setPatronym($patronym);
+        $newRelative->setLastName($lastName);
+        $newRelative->setGender($this->getGender($gender));
+        $newRelative->setNationid($this->getNationId($nation));
+
+        $newRelative->setComment($comment);
+
         $this->newDBManager->persist($newRelative);
         $this->newDBManager->flush();
 
-        return $newRelative->getId();
+        return $newRelative;
     }
 
     public function migrateReligion($name, $religionOrder, $change_of_religion, $provenDate, $fromDate, $comment){
@@ -664,6 +676,11 @@ class MigrateData
         $this->newDBManager->flush();
 
         return $newReligion->getId();
+    }
+
+    public function migrateResidence(){
+        //insert into new data
+
     }
 
     public function migrateRoadOfLife($roadOfLifeOrder, $originCountry, $originTerritory, $job, $country, $territory, $location, $fromDate, $toDate, $provenDate, $comment){
