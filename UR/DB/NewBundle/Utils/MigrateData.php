@@ -26,12 +26,34 @@ use UR\DB\NewBundle\Entity\Status;
 use UR\DB\NewBundle\Entity\Territory;
 use UR\DB\NewBundle\Entity\Works;
 
+
+abstract class RelationTypes
+{
+    const PERSON_TO_PERSON = 0;
+    const PERSON_TO_RELATIVE = 1;
+    const PERSON_TO_PARTNER = 2;
+
+    const RELATIVE_TO_PERSON= 3;
+    const RELATIVE_TO_RELATIVE = 4;
+    const RELATIVE_TO_PARTNER = 5;
+
+    const PARTNER_TO_PERSON = 6;
+    const PARTNER_TO_RELATIVE = 7;
+    const PARTNER_TO_PARTNER = 8;
+}
+
 class MigrateData
 {
 
     //http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy/26972181#26972181
     //private $DATE_REGEX = "/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/";
-    private $DATE_REGEX = "/^(\D*)(0|0?[1-9]|[12][0-9]|3[01])[\.\-](0|0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
+    const DATE_REGEX = "/^(\D*)(0|0?[1-9]|[12][0-9]|3[01])[\.\-](0|0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
+
+    const PERSON_CLASS = "UR\DB\NewBundle\Entity\Person";
+    const RELATIVE_CLASS = "UR\DB\NewBundle\Entity\Relative";
+    const PARTNER_CLASS = "UR\DB\NewBundle\Entity\Partner";
+
+
 
     private $container;
     private $newDBManager;
@@ -307,7 +329,7 @@ class MigrateData
 
         $dateString = trim($dateString);
 
-        preg_match($this->DATE_REGEX, $dateString, $date);
+        preg_match(self::DATE_REGEX, $dateString, $date);
 
         //print_r($date);
 
@@ -512,13 +534,13 @@ class MigrateData
         return $newIsGrandchild->getId();
     }
 
-    public function migrateIsGrandparent($grandchildId, $grandparentId, $paternal, $relationType ,$comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public function migrateIsGrandparent($grandchild, $grandparent, $paternal, $comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
         $newIsGrandparent = new IsGrandparent();
 
-        $newIsGrandparent->setGrandChildid($grandchildId);
-        $newIsGrandparent->setGrandParentid($grandparentId);
-        $newIsGrandparent->setRelationType($relationType);
+        $newIsGrandparent->setGrandChildid($grandchild->getId());
+        $newIsGrandparent->setGrandParentid($grandparent->getId());
+        $newIsGrandparent->setRelationType($this->getRelationType($grandchild, $grandparent));
         $newIsGrandparent->setIsPaternal($paternal);
         $newIsGrandparent->setComment($comment);
         
@@ -643,7 +665,7 @@ class MigrateData
         return $newRank->getId();
     }
 
-    public function migrateRelative($firstName, $patronym, $lastName, $gender, $nation, $comment=null){
+    public function migrateRelative($firstName, $patronym, $lastName, $gender, $nation=null, $comment=null){
         //insert into new data
         $newRelative = new Relative();
 
@@ -809,6 +831,59 @@ class MigrateData
 
     public function getNewPersonForOid($OID){
         return $this->newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+    }
+
+    public function getRelationType($firstDataEntry, $secondDataEntry){
+
+        $firstClass = get_class($firstDataEntry);
+
+        $secondClass = get_class($secondDataEntry);
+
+        $type = -1;
+
+        switch($firstClass){
+            case self::PERSON_CLASS:
+                switch($secondClass){
+                    case self::PERSON_CLASS:
+                        $type = RelationTypes::PERSON_TO_PERSON;
+                        break;
+                    case self::RELATIVE_CLASS:
+                        $type = RelationTypes::PERSON_TO_RELATIVE;
+                        break;
+                    case self::PARTNER_CLASS:
+                        $type = RelationTypes::PERSON_TO_PARTNER;
+                        break;
+                }
+                break;
+            case self::RELATIVE_CLASS:
+                switch($secondClass){
+                    case self::PERSON_CLASS:
+                        $type = RelationTypes::RELATIVE_TO_PERSON;
+                        break;
+                    case self::RELATIVE_CLASS:
+                        $type = RelationTypes::RELATIVE_TO_RELATIVE;
+                        break;
+                    case self::PARTNER_CLASS:
+                        $type = RelationTypes::RELATIVE_TO_PARTNER;
+                        break;
+                }
+                break;
+            case self::PARTNER_CLASS:
+                switch($secondClass){
+                    case self::PERSON_CLASS:
+                        $type = RelationTypes::PARTNER_TO_PERSON;
+                        break;
+                    case self::RELATIVE_CLASS:
+                        $type = RelationTypes::PARTNER_TO_RELATIVE;
+                        break;  
+                    case self::PARTNER_CLASS:
+                        $type = RelationTypes::PARTNER_TO_PARTNER;
+                        break;
+                }
+                break;
+        }
+
+        return $type;
     }
 
 }

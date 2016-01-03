@@ -499,9 +499,7 @@ class MigrateController extends Controller
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
             $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation());
 
-            //insert additional data
-
-            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), false, "dem sei groaßmudda");
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $grandmother, false);
         }
 
         //paternal
@@ -527,7 +525,7 @@ class MigrateController extends Controller
             }
 
 
-            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), true, "dem sei groaßmudda");
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $grandmother, true);
         }
         
     }
@@ -549,7 +547,7 @@ class MigrateController extends Controller
                 $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
 
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $newGrandfather->getId(), false, "dem sei groaßvadda");
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, false);
             }else{
                 $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
@@ -572,7 +570,7 @@ class MigrateController extends Controller
                     $grandfather->setDeathid($deathId);
                 }
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandfather->getId(), false, "dem sei groaßvadda");
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $grandfather, false);
             }
 
 
@@ -592,7 +590,7 @@ class MigrateController extends Controller
 
                 $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $newGrandfather->getId(), true, "dem sei groaßvadda");
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, true);
             }else{
                 $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
@@ -635,7 +633,7 @@ class MigrateController extends Controller
                     $grandfather->setStatusid($statusId);
                 }
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandfather->getId(), true, "dem sei groaßvadda");
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $grandfather, true);
             }
 
         }
