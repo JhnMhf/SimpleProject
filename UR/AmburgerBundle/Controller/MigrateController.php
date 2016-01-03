@@ -14,18 +14,48 @@ class MigrateController extends Controller
 {
     public function personAction($ID)
     {
-        // get old data
-    	$oldDBManager = $this->get('doctrine')->getManager('old');
 
-    	$person = $oldDBManager->getRepository('OldBundle:Person')->findOneById($ID);
+        $person = $this->migratePerson($ID);
 
-        if(!$person){
-        	return new Response("Invalid ID");
+        if(is_null($person)){
+            return new Response("Invalid ID");
         }
 
-        $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($ID);
+        return new Response(
+            'Migrated Database entry: '.$person->getId()
+        );
+    }
 
-        $OID = $IDData->getOid();
+    private function getIDForOID($OID, $oldDBManager){
+
+        $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneByOid($OID);
+
+        return $IDData->getId();
+    }
+
+    private function migratePerson($ID, $OID = null){
+                // get old data
+        $oldDBManager = $this->get('doctrine')->getManager('old');
+
+        $person = $oldDBManager->getRepository('OldBundle:Person')->findOneById($ID);
+
+        if(!$person){
+            return null;
+        }
+
+        if(is_null($OID)){
+            $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneById($ID);
+
+            $OID = $IDData->getOid();
+        }
+
+
+        $existingPerson = $this->get("migrate_data.service")->getNewPersonForOid($OID);
+
+        if(!is_null($existingPerson)){
+            //person already migrated, so just return it
+            return $existingPerson;
+        }
 
         $newPerson = $this->get("migrate_data.service")->migratePerson($OID, $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getBerufsklasse(), $person->getKommentar());
 
@@ -64,9 +94,9 @@ class MigrateController extends Controller
 
         $this->migrateGrandmothers($newPerson, $ID, $oldDBManager);
 
-        return new Response(
-            'Migrated Database entry: '.$newPerson->getId()
-        );
+        $this->migrateGrandfathers($newPerson, $ID, $oldDBManager);
+
+        return $newPerson;
     }
 
     private function migrateDeathController($newPerson, $oldPersonID, $oldDBManager){
@@ -467,11 +497,11 @@ class MigrateController extends Controller
             $oldGrandmother = $grandmothers[$i];
 
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
-            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation(), null);
+            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation());
 
             //insert additional data
 
-            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), false, "dem sei groaßmudda", null);
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), false, "dem sei groaßmudda");
         }
 
         //paternal
@@ -481,24 +511,156 @@ class MigrateController extends Controller
             $oldGrandmother = $grandmothers[$i];
 
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
-            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", null, null);
+            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich");
 
             //insert additional data
             if(!is_null($oldGrandmother->getGeburtsland())){
-                $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$oldGrandmother->getGeburtsland(), null,null,null,null);
+                $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$oldGrandmother->getGeburtsland());
 
                 $grandmother->setBirthid($birthID);
             }
 
             if(!is_null($oldGrandmother->getBeruf())){
-                $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandmother->getBeruf(),null);
+                $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandmother->getBeruf());
 
                 $grandmother->setJobid($jobID);
             }
 
 
-            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), true, "dem sei groaßmudda", null);
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), true, "dem sei groaßmudda");
         }
         
+    }
+
+    private function migrateGrandfathers($newPerson, $oldPersonID, $oldDBManager){
+
+        //non paternal
+        $grandfathers = $this->getGrandfatherMaternalWithNativeQuery($oldPersonID, $oldDBManager);
+
+        for($i = 0; $i < count($grandfathers); $i++){
+            $oldGrandfather = $grandfathers[$i];
+
+            //check if reference to person
+            if(!is_null($oldGrandfather["mütterl_großvater_id-nr"])){
+                $grandfathersOID = $oldGrandfather["mütterl_großvater_id-nr"];
+
+                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+
+                $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
+
+
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $newGrandfather->getId(), false, "dem sei groaßvadda");
+            }else{
+                $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
+
+                //insert additional data
+                if(!is_null($oldGrandfather["beruf"])){
+                    $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandfather["beruf"]);
+
+                    $grandfather->setJobid($jobID);
+                }
+
+                if(!is_null($oldGrandfather["wohnort"])){
+                    $residenceId = $this->get("migrate_data.service")->migrateResidence(1,null,null,$oldGrandfather["wohnort"]);
+
+                    $grandfather->setResidenceId($residenceId);
+                }
+
+                if(!is_null($oldGrandfather["gestorben"])){
+                    $deathId = $this->get("migrate_data.service")->migrateDeath(null,$oldGrandfather["gestorben"]);
+
+                    $grandfather->setDeathid($deathId);
+                }
+
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandfather->getId(), false, "dem sei groaßvadda");
+            }
+
+
+        }
+
+        //paternal
+        $grandfathers = $this->getGrandfatherPaternalWithNativeQuery($oldPersonID, $oldDBManager);
+
+        for($i = 0; $i < count($grandfathers); $i++){
+            $oldGrandfather = $grandfathers[$i];
+
+            //check if reference to person
+            if(!is_null($oldGrandfather["vät_großvater_id-nr"])){
+                $grandfathersOID = $oldGrandfather["vät_großvater_id-nr"];
+
+                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+
+                $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
+
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $newGrandfather->getId(), true, "dem sei groaßvadda");
+            }else{
+                $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
+
+                //insert additional data
+                if(!is_null($oldGrandfather["beruf"])){
+                    $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandfather["beruf"]);
+
+                    $grandfather->setJobid($jobID);
+                }
+
+                if(!is_null($oldGrandfather["geburtsort"]) || 
+                    !is_null($oldGrandfather["geburtsland"]) || 
+                    !is_null($oldGrandfather["geburtsterritorium"]) || 
+                    !is_null($oldGrandfather["geboren"])){
+                    $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$oldGrandfather["geburtsland"], $oldGrandfather["geburtsort"],$oldGrandfather["geboren"],$oldGrandfather["geburtsterritorium"]);
+
+                    $grandfather->setBirthid($birthID);
+                }
+
+                if(!is_null($oldGrandfather["wohnort"]) || 
+                    !is_null($oldGrandfather["wohnterritorium"])){
+                    $residenceId = $this->get("migrate_data.service")->migrateResidence(1,null,$oldGrandfather["wohnterritorium"],$oldGrandfather["wohnort"]);
+
+                    $grandfather->setResidenceId($residenceId);
+                }
+
+                if(!is_null($oldGrandfather["gestorben"])){
+                    $deathId = $this->get("migrate_data.service")->migrateDeath(null,$oldGrandfather["gestorben"]);
+
+                    $grandfather->setDeathid($deathId);
+                }
+
+                if(!is_null($oldGrandfather["rang"])){
+                    $rankId = $this->get("migrate_data.service")->migrateRank(1, $oldGrandfather["rang"]);
+                    $grandfather->setRankid($rankId);
+                }
+
+                if(!is_null($oldGrandfather["stand"])){
+                    $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldGrandfather["stand"]);
+                    $grandfather->setStatusid($statusId);
+                }
+
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandfather->getId(), true, "dem sei groaßvadda");
+            }
+
+        }
+        
+    }
+
+    private function getGrandfatherMaternalWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, name, gestorben, wohnort, nation, beruf, `mütterl_großvater_id-nr`, kommentar FROM `großvater_muetterlicherseits` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getGrandfatherPaternalWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, name, geboren, geburtsort, geburtsland, geburtsterritorium, gestorben, wohnort, wohnterritorium, nation, beruf, rang, stand, `vät_großvater_id-nr`, kommentar FROM `großvater_vaeterlicherseits` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
     }
 }
