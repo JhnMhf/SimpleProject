@@ -10,6 +10,7 @@ use UR\DB\NewBundle\Entity\Death;
 use UR\DB\NewBundle\Entity\Education;
 use UR\DB\NewBundle\Entity\Honour;
 use UR\DB\NewBundle\Entity\IsGrandparent;
+use UR\DB\NewBundle\Entity\IsParent;
 use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Location;
@@ -414,7 +415,7 @@ class MigrateData
         return $newBirth->getId();
     }
 
-    public function migrateBaptism($baptismDate, $baptismLocation){
+    public function migrateBaptism($baptismDate, $baptismLocation=null){
         //insert into new data
         $newBaptism = new Baptism();
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
@@ -550,11 +551,14 @@ class MigrateData
         return $newIsGrandparent->getId();
     }
 
-    public function migrateIsParent(){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public function migrateIsParent($child, $parent, $comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
         $newIsParent = new IsParent();
 
-        //$newIsParent->;
+        $newIsParent->setChildID($child->getId());
+        $newIsParent->setParentid($parent->getId());
+        $newIsParent->setRelationType($this->getRelationType($child, $parent));
+        $newIsParent->setComment($comment);
         
         $this->newDBManager->persist($newIsParent);
         $this->newDBManager->flush();
