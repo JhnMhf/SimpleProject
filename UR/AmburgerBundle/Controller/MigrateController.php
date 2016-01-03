@@ -475,5 +475,30 @@ class MigrateController extends Controller
         }
 
         //paternal
+        $grandmothers = $oldDBManager->getRepository('OldBundle:GroßmutterVaeterlicherseits')->findById($oldPersonID);
+
+        for($i = 0; $i < count($grandmothers); $i++){
+            $oldGrandmother = $grandmothers[$i];
+
+            //$firstName, $patronym, $lastName, $gender, $nation, $comment
+            $grandmother = $this->get("migrate_data.service")->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", null, null);
+
+            //insert additional data
+            if(!is_null($oldGrandmother->getGeburtsland())){
+                $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$oldGrandmother->getGeburtsland(), null,null,null,null);
+
+                $grandmother->setBirthid($birthID);
+            }
+
+            if(!is_null($oldGrandmother->getBeruf())){
+                $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandmother->getBeruf(),null);
+
+                $grandmother->setJobid($jobID);
+            }
+
+
+            $this->get("migrate_data.service")->migrateIsGrandparent($newPerson->getId(), $grandmother->getId(), true, "dem sei groaßmudda", null);
+        }
+        
     }
 }

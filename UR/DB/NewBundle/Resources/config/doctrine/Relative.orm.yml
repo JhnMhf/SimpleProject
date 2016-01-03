@@ -148,12 +148,12 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 fixed: false
             column: born_in_marriage
-        jobClassid:
+        jobid:
             type: integer
             nullable: true
             options:
                 unsigned: false
-            column: job_classID
+            column: jobID
         residenceid:
             type: integer
             nullable: true
