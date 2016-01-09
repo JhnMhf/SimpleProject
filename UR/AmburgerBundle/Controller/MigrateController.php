@@ -669,7 +669,7 @@ class MigrateController extends Controller
     }
 
     public function migrateMother($newPerson, $oldPersonID, $oldDBManager){
-        //non paternal
+       
         $mothers = $this->getMotherWithNativeQuery($oldPersonID, $oldDBManager);
 
         for($i = 0; $i < count($mothers); $i++){
@@ -679,9 +679,33 @@ class MigrateController extends Controller
             if(!is_null($oldMother["mutter_id-nr"])){
 
                 //problem since some mutter_id-nrs are referencing sons others are referencing entries for the mother in the person table
+                if($this->checkIfMotherReferenceContainsChildPerson($oldPersonID, $oldMother["mutter_id-nr"], $oldDBManager)){
+                    echo "Child reference found...";
+                    // child reference found what to do now?
+
+                    //for now just insert the data... perhaps in future create one relative and reference to it from all childs?
+                    $this->createMother($newPerson, $oldMother);
+                }else{
+                     echo "Mother reference found...";
+                    //reference to person entry for mother
+                    $mothersOID = $oldMother["mutter_id-nr"];
+
+                    $mothersMainID = $this->getIDForOID($mothersOID, $oldDBManager);
+
+                    $newMother = $this->migratePerson($mothersMainID, $mothersOID);
+
+                    $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother);
+                }
 
             }else{
-                //$firstName, $patronym, $lastName, $gender, $nation, $comment
+                $this->createMother($newPerson, $oldMother);
+            }
+        }
+
+    }
+
+    private function createMother($newPerson, $oldMother){
+        //$firstName, $patronym, $lastName, $gender, $nation, $comment
                 $mother = $this->get("migrate_data.service")->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
 
                 $mother->setForeName($oldMother["rufnamen"]);
@@ -767,9 +791,6 @@ class MigrateController extends Controller
                 }
 
                 $this->get("migrate_data.service")->migrateIsParent($newPerson, $mother);
-            }
-        }
-
     }
 
     private function getMotherWithNativeQuery($oldPersonID, $oldDBManager){
@@ -783,6 +804,44 @@ class MigrateController extends Controller
         return $stmt->fetchAll();
     }
 
+    private function checkIfMotherReferenceContainsChildPerson($childID, $motherReferenceOid, $oldDBManager){
+        
+        /*
+            Für problematische Mutter-Kind Einträge in der mutter_id-nr:
+            Schritt 1: ID für OID in mutter_id-nr auslesen.
+            Schritt 2: Prüfen, ob ein weiterer Eintrag in Mutter für diese ID vorhanden ist.
+            Schritt 3: Prüfen, ob die OID dieses Eintrags auf die ID des ersten Eintrags verweist.
+            Wenn ja ==> Sonderfall gefunden
+            (Wenn nein, eventuell das Ganze so weit weiter machen, bis mutter_id-nr leer ist/kein weiterer Verweis vorhanden ist?)
+            (Dies könnte nötig sein, um einen Kreisverweis von mehr als 2 Kindern abzufangen)
+        */
+
+        echo "Checking against ID ".$childID." for OID ".$motherReferenceOid;
+
+        $referenceMotherID = $this->getIDForOID($motherReferenceOid, $oldDBManager);
+
+        $mother = $this->getMotherWithNativeQuery($referenceMotherID, $oldDBManager);
+
+        if(count($mother) > 0){
+            echo "There are references for ID: ".$referenceMotherID;
+            if(!is_null($mother[0]["mutter_id-nr"]) && $mother[0]["mutter_id-nr"] != ""){
+                echo "New mother id found: ".$mother[0]["mutter_id-nr"];
+                $nextReferenceOid = $mother[0]["mutter_id-nr"];
+
+                $nextReferenceID = $this->getIDForOID($nextReferenceOid, $oldDBManager);
+
+                if($childID == $nextReferenceID){
+                    return true;
+                }
+
+                //check next reference?
+                return $this->checkIfMotherReferenceContainsChildPerson($childID, $nextReferenceOid, $oldDBManager);
+            }
+        }
+
+        return false;
+    }
+
     private function migrateFather($newPerson, $oldPersonID, $oldDBManager){
         //non paternal
         $fathers = $this->getFatherWithNativeQuery($oldPersonID, $oldDBManager);
@@ -792,9 +851,14 @@ class MigrateController extends Controller
 
             //check if reference to person
             if(!is_null($oldFather["vater_id-nr"])){
-
                 //check it?
+                $fathersOID = $oldFather["vater_id-nr"];
 
+                $fathersMainID = $this->getIDForOID($fathersOID, $oldDBManager);
+
+                $newFather = $this->migratePerson($fathersMainID, $fathersOID);
+
+                $this->get("migrate_data.service")->migrateIsParent($newPerson, $newFather);
             }else{
                 //$firstName, $patronym, $lastName, $gender, $nation, $comment
                 $father = $this->get("migrate_data.service")->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
