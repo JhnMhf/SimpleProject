@@ -12,9 +12,22 @@ use UR\DB\NewDBBundle\Utils\MigrateData;
 
 class MigrateController extends Controller
 {
+
+    private $LOGGER;
+
+    private function getLogger()
+    {
+        if(is_null($this->LOGGER)){
+            $this->LOGGER = $this->get('monolog.logger.migrateOld');
+        }
+        
+        return $this->LOGGER;
+    }
+
     public function personAction($ID)
     {
 
+        $this->getLogger()->info("Migrate Request for Person with ID ". $ID);
         $person = $this->migratePerson($ID);
 
         if(is_null($person)){
@@ -680,13 +693,13 @@ class MigrateController extends Controller
 
                 //problem since some mutter_id-nrs are referencing sons others are referencing entries for the mother in the person table
                 if($this->checkIfMotherReferenceContainsChildPerson($oldPersonID, $oldMother["mutter_id-nr"], $oldDBManager)){
-                    echo "Child reference found...";
+                    $this->getLogger()->info("Child reference found...");
                     // child reference found what to do now?
 
                     //for now just insert the data... perhaps in future create one relative and reference to it from all childs?
                     $this->createMother($newPerson, $oldMother);
                 }else{
-                     echo "Mother reference found...";
+                    $this->getLogger()->info("Mother reference found...");
                     //reference to person entry for mother
                     $mothersOID = $oldMother["mutter_id-nr"];
 
@@ -816,16 +829,16 @@ class MigrateController extends Controller
             (Dies könnte nötig sein, um einen Kreisverweis von mehr als 2 Kindern abzufangen)
         */
 
-        echo "Checking against ID ".$childID." for OID ".$motherReferenceOid;
+        $this->getLogger()->info("Checking against ID ".$childID." for OID ".$motherReferenceOid);
 
         $referenceMotherID = $this->getIDForOID($motherReferenceOid, $oldDBManager);
 
         $mother = $this->getMotherWithNativeQuery($referenceMotherID, $oldDBManager);
 
         if(count($mother) > 0){
-            echo "There are references for ID: ".$referenceMotherID;
+            $this->getLogger()->debug("There is a mother for : ".$referenceMotherID);
             if(!is_null($mother[0]["mutter_id-nr"]) && $mother[0]["mutter_id-nr"] != ""){
-                echo "New mother id found: ".$mother[0]["mutter_id-nr"];
+                $this->getLogger()->info("New mother Oid found: ".$mother[0]["mutter_id-nr"]);
                 $nextReferenceOid = $mother[0]["mutter_id-nr"];
 
                 $nextReferenceID = $this->getIDForOID($nextReferenceOid, $oldDBManager);

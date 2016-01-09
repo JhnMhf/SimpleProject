@@ -54,7 +54,7 @@ class MigrateData
     const RELATIVE_CLASS = "UR\DB\NewBundle\Entity\Relative";
     const PARTNER_CLASS = "UR\DB\NewBundle\Entity\Partner";
 
-
+    private $LOGGER;
 
     private $container;
     private $newDBManager;
@@ -63,6 +63,7 @@ class MigrateData
     {
         $this->container = $container;
         $this->newDBManager = $this->get('doctrine')->getManager('new');
+        $this->LOGGER = $this->get('monolog.logger.migrateNew');
     }
 
     private function get($identifier){
