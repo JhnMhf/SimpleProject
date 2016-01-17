@@ -6,6 +6,7 @@ UR\DB\NewBundle\Entity\IsGrandchild:
             columns:
                 - grandparentID
                 - grandchildID
+                - relation_type
     id:
         id:
             type: integer

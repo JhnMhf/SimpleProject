@@ -6,6 +6,7 @@ UR\DB\NewBundle\Entity\IsSibling:
             columns:
                 - sibling_oneID
                 - sibling_twoID
+                - relation_type
     id:
         id:
             type: integer

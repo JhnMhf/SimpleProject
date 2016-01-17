@@ -139,4 +139,3 @@ class IsParent
         return $this->comment;
     }
 }
-

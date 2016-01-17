@@ -111,6 +111,8 @@ class MigrateController extends Controller
 
         $this->migrateFather($newPerson, $ID, $oldDBManager);
 
+        $this->migrateSibling($newPerson, $ID, $oldDBManager);
+
         $this->migrateGrandmothers($newPerson, $ID, $oldDBManager);
 
         $this->migrateGrandfathers($newPerson, $ID, $oldDBManager);
@@ -566,7 +568,7 @@ class MigrateController extends Controller
                 $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
 
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, false);
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, false, $oldGrandfather["kommentar"]);
             }else{
                 $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
@@ -609,7 +611,7 @@ class MigrateController extends Controller
 
                 $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
 
-                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, true);
+                $this->get("migrate_data.service")->migrateIsGrandparent($newPerson, $newGrandfather, true, $oldGrandfather["kommentar"]);
             }else{
                 $grandfather = $this->get("migrate_data.service")->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
@@ -707,7 +709,7 @@ class MigrateController extends Controller
 
                     $newMother = $this->migratePerson($mothersMainID, $mothersOID);
 
-                    $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother);
+                    $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother, $oldMother["kommentar"]);
                 }
 
             }else{
@@ -871,7 +873,7 @@ class MigrateController extends Controller
 
                 $newFather = $this->migratePerson($fathersMainID, $fathersOID);
 
-                $this->get("migrate_data.service")->migrateIsParent($newPerson, $newFather);
+                $this->get("migrate_data.service")->migrateIsParent($newPerson, $newFather, $oldFather["kommentar"]);
             }else{
                 //$firstName, $patronym, $lastName, $gender, $nation, $comment
                 $father = $this->get("migrate_data.service")->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
@@ -993,6 +995,322 @@ class MigrateController extends Controller
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateSibling($newPerson, $oldPersonID, $oldDBManager){
+        //non paternal
+        $siblings = $this->getSiblingWithNativeQuery($oldPersonID, $oldDBManager);
+
+        for($i = 0; $i < count($siblings); $i++){
+            $oldSibling = $siblings[$i];
+
+            //check if reference to person
+            if(!is_null($oldSibling["geschwister_id-nr"])){
+                //check it?
+                $siblingsOID = $oldSibling["geschwister_id-nr"];
+
+                $siblingsMainId = $this->getIDForOID($siblingsOID, $oldDBManager);
+
+                $newSibling = $this->migratePerson($siblingsMainId, $siblingsOID);
+
+                $this->get("migrate_data.service")->migrateIsSibling($newPerson, $newSibling, $oldSibling["kommentar"]);
+            }else{
+                $this->createSibling($newPerson, $oldSibling, $oldPersonID, $oldDBManager);                
+            }
+        }
+
+    }
+
+    private function createSibling($newPerson, $oldSibling, $oldPersonID, $oldDBManager){
+        //$firstName, $patronym, $lastName, $gender, $nation, $comment
+        $sibling = $this->get("migrate_data.service")->migrateRelative($oldSibling["vornamen"], $oldSibling["russ_vornamen"], $oldSibling["name"], $oldSibling["geschlecht"], null, $oldSibling["kommentar"]);
+
+        $sibling->setForeName($oldSibling["rufnamen"]);
+
+        //additional data
+        $siblingEducation = $this->getSiblingsEducationWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingHonour = $this->getSiblingsHonourWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingOrigin = $this->getSiblingsOriginWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingRoadOfLive = $this->getSiblingsRoadOfLiveWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingRank = $this->getSiblingsRankWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingStatus = $this->getSiblingsStatusWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+        $siblingDeath = $this->getSiblingsDeathWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+
+
+
+
+        if(count($siblingEducation) > 0){
+            $educationIDString = "";
+            //education
+            for($i = 0; $i < count($siblingEducation); $i++){
+                $education = $siblingEducation[$i];
+                $educationID = $this->get("migrate_data.service")->migrateEducation($education["order2"],$education["ausbildung"],$education["land"],null,$education["ort"],$education["von-ab"],$education["bis"],$education["belegt"],$education["bildungsabschluss"]);
+
+                if($i != 0){
+                    $educationIDString .= ",";
+                }
+
+                $educationIDString .= $educationID;
+            }
+
+            $sibling->setEducationid($educationIDString);
+        }
+
+
+        if(count($siblingHonour) > 0){
+            $honoursIDString = "";
+            //honour
+            for($i = 0; $i < count($siblingHonour); $i++){
+                $honour = $siblingHonour[$i];
+                $honourID = $this->get("migrate_data.service")->migrateHonour($honour["order2"],$honour["ehren"],$honour["land"]);
+
+                if($i != 0){
+                    $honoursIDString .= ",";
+                }
+
+                $honoursIDString .= $honourID;
+            }
+
+            $sibling->setHonourid($honoursIDString);
+        }
+
+
+        if(count($siblingOrigin) > 0){
+            $birthIdString = "";
+            $baptismIdString = "";
+
+            //origin
+            for($i = 0; $i < count($siblingOrigin); $i++){
+                if($siblingOrigin[$i]['geboren'] != null
+                    || $siblingOrigin[$i]['geburtsort'] != null
+                    || $siblingOrigin[$i]['geburtsland'] != null
+                    || $siblingOrigin[$i]['kommentar'] != null){
+                    //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
+                    $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$siblingOrigin[$i]["geburtsland"], $siblingOrigin[$i]["geburtsort"],$siblingOrigin[$i]["geboren"], null, $siblingOrigin[$i]['kommentar']);
+
+                    if($birthIdString != ""){
+                        $birthIdString .= "," . $birthID;
+                    }else{
+                        $birthIdString = $birthID;
+                    }
+                }
+
+
+                if($siblingOrigin[$i]['getauft'] != null
+                    || $siblingOrigin[$i]['taufort'] != null){
+                    $baptismID = $this->get("migrate_data.service")->migrateBaptism($siblingOrigin[$i]["getauft"], $siblingOrigin[$i]["taufort"]);
+
+                    if($baptismIdString != ""){
+                        $baptismIdString .= "," . $baptismID;
+                    }else{
+                        $baptismIdString = $baptismID;
+                    }
+                }
+
+            }
+
+            if($birthIdString != ""){
+                $sibling->setBirthid($birthIdString);
+            }
+
+            if($baptismIdString != ""){
+                $sibling->setBaptismid($baptismIdString);
+            }
+        }
+
+
+        if(count($siblingRoadOfLive) > 0){
+            $roadOfLiveIDString = "";
+            //roadOfLife
+            for($i = 0; $i < count($siblingRoadOfLive); $i++){
+                $step = $siblingRoadOfLive[$i];
+                $stepID = $this->get("migrate_data.service")->migrateRoadOfLife($step["order2"],$step["stammland"],null,$step["beruf"],null, $step["territorium"],$step["ort"],$step["von-ab"],$step["bis"],$step["belegt"],$step["kommentar"]);
+
+                if($i != 0){
+                    $roadOfLiveIDString .= ",";
+                }
+
+                $roadOfLiveIDString .= $stepID;
+            }
+
+            $sibling->setRoadOfLiveid($roadOfLiveIDString);
+        }
+
+
+        if(count($siblingRank) > 0){
+            $rankIDString = "";
+            //rank
+            for($i = 0; $i < count($siblingRank); $i++){
+                $rank = $siblingRank[$i];
+                $rankID = $this->get("migrate_data.service")->migrateRank($rank["order2"],$rank["rang"],null,$rank["land"],null,null,null,null,null,$rank["kommentar"]);
+
+                if($i != 0){
+                    $rankIDString .= ",";
+                }
+
+                $rankIDString .= $rankID;
+            }
+
+            $sibling->setRankid($rankIDString);
+        }
+
+
+        if(count($siblingStatus) > 0){
+            $statiIDString = "";
+            //status
+            for($i = 0; $i < count($siblingStatus); $i++){
+                $status = $siblingStatus[$i];
+                $statusID = $this->get("migrate_data.service")->migrateStatus($status["order2"],$status["stand"],$status["land"],null,null,$status["von-ab"]);
+
+                if($i != 0){
+                    $statiIDString .= ",";
+                }
+
+                $statiIDString .= $statusID;
+            }
+
+            $sibling->setStatusid($statiIDString);
+        }
+
+
+        if(count($siblingDeath) > 0){
+            $deathIDString = "";
+            //death
+            for($i = 0; $i < count($siblingDeath); $i++){
+                //death
+                if(!is_null($siblingDeath[$i]["begräbnisort"]) || 
+                    !is_null($siblingDeath[$i]["gestorben"]) || 
+                    !is_null($siblingDeath[$i]["todesort"]) || 
+                    !is_null($siblingDeath[$i]["friedhof"]) ||
+                    !is_null($siblingDeath[$i]["todesursache"]) ||
+                    !is_null($siblingDeath[$i]["kommentar"])){
+                    //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
+                    $deathId = $this->get("migrate_data.service")->migrateDeath($siblingDeath[$i]["todesort"],$siblingDeath[$i]["gestorben"], null, $siblingDeath[$i]["todesursache"], null, $siblingDeath[$i]["friedhof"], $siblingDeath[$i]["begräbnisort"], null,$siblingDeath[$i]["kommentar"]);
+
+                    if($deathIDString != ""){
+                        $deathIDString .= "," . $deathId;
+                    }else{
+                        $deathIDString = $deathId;
+                    }
+                }
+            }
+
+            $sibling->setDeathid($deathIDString);
+        }
+
+
+        $this->get("migrate_data.service")->migrateIsSibling($newPerson, $sibling);
+    }
+
+    private function getSiblingWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, vornamen, russ_vornamen, name, rufnamen, geschlecht, `geschwister_id-nr`, kommentar 
+                    FROM `geschwister` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+
+    private function getSiblingsEducationWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, land, ort, `von-ab`, bis, ausbildung, bildungsabschluss, belegt 
+        FROM `ausbildung_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsHonourWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, land, ehren
+                FROM `ehren_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+
+    private function getSiblingsOriginWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, geboren, geburtsort, geburtsland, getauft, taufort, kommentar
+                FROM `herkunft_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsRoadOfLiveWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, ort, territorium, stammland, beruf, `von-ab`, bis, belegt, kommentar
+                FROM `lebensweg_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsRankWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, land, rang, kommentar
+                FROM `rang_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsStatusWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, land, stand, `von-ab`
+                FROM `stand_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsDeathWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager){
+        $sql = "SELECT `ID`,`order`,`order2`,`begräbnisort`,`gestorben`,`todesort`,`friedhof`,`kommentar`,`todesursache` 
+                FROM `tod_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
         $stmt->execute();
 
 

@@ -11,6 +11,7 @@ use UR\DB\NewBundle\Entity\Education;
 use UR\DB\NewBundle\Entity\Honour;
 use UR\DB\NewBundle\Entity\IsGrandparent;
 use UR\DB\NewBundle\Entity\IsParent;
+use UR\DB\NewBundle\Entity\IsSibling;
 use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Location;
@@ -579,9 +580,15 @@ class MigrateData
         return $newIsParentInLaw->getId();
     }
 
-    public function migrateIsSibling(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    public function migrateIsSibling($siblingOne, $siblineTwo, $comment=null){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         //insert into new data
         $newIsSibling = new IsSibling();
+
+
+        $newIsSibling->setSiblingOneid($siblingOne->getId());
+        $newIsSibling->setSiblingTwoid($siblineTwo->getId());
+        $newIsSibling->setRelationType($this->getRelationType($siblingOne, $siblineTwo));
+        $newIsSibling->setComment($comment);
 
         //$newIsSibling->;
         
