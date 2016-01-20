@@ -16,6 +16,7 @@ use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
 use UR\DB\NewBundle\Entity\Location;
 use UR\DB\NewBundle\Entity\Nation;
+use UR\DB\NewBundle\Entity\Partner;
 use UR\DB\NewBundle\Entity\Person;
 use UR\DB\NewBundle\Entity\Property;
 use UR\DB\NewBundle\Entity\Rank;
@@ -26,6 +27,7 @@ use UR\DB\NewBundle\Entity\RoadOfLife;
 use UR\DB\NewBundle\Entity\Source;
 use UR\DB\NewBundle\Entity\Status;
 use UR\DB\NewBundle\Entity\Territory;
+use UR\DB\NewBundle\Entity\Wedding;
 use UR\DB\NewBundle\Entity\Works;
 
 
@@ -383,16 +385,49 @@ class MigrateData
     }
 
 
-    private function getGender($genderString){
+    public function getGender($gender){
         //undefined = 0, male = 1, female = 2
 
-        if($genderString == "männlich"){
-            return 1;
-        }else if($genderString == "weiblich"){
-            return 2;
-        }
+        if(is_numeric($gender)){
+            if($gender == 1){
+                return 1;
+            }else if($gender == 2){
+                return 2;
+            }
 
-        return 0;
+            return 0;
+        }else{
+            if($gender == "männlich"){
+                return 1;
+            }else if($gender == "weiblich"){
+                return 2;
+            }
+
+            return 0;
+        }
+    }
+
+
+    public function getOppositeGender($gender){
+        //undefined = 0, male = 1, female = 2
+
+        if(is_numeric($gender)){
+            if($gender == 1){
+                return 2;
+            }else if($gender == 2){
+                return 1;
+            }
+
+            return 0;
+        }else{
+            if($gender == "männlich"){
+                return "weiblich";
+            }else if($gender == "weiblich"){
+                return "männlich";
+            }
+
+            return "undefined";
+        }
     }
 
     /* end helper method */
@@ -513,30 +548,6 @@ class MigrateData
         return $newHonour->getId();
     }
 
-    public function migrateIsChild(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //insert into new data
-        $newIsChild = new IsChild();
-
-        //$newIsChild->;
-        
-        $this->newDBManager->persist($newIsChild);
-        $this->newDBManager->flush();
-
-        return $newIsChild->getId();
-    }
-
-    public function migrateIsGrandchild(){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        //insert into new data
-        $newIsGrandchild = new IsGrandchild();
-
-        //$newIsGrandchild->;
-        
-        $this->newDBManager->persist($newIsGrandchild);
-        $this->newDBManager->flush();
-
-        return $newIsGrandchild->getId();
-    }
-
     public function migrateIsGrandparent($grandchild, $grandparent, $paternal, $comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //insert into new data
         $newIsGrandparent = new IsGrandparent();
@@ -611,6 +622,25 @@ class MigrateData
     public function migrateNation($name, $comment=null){
         //insert into new data
         return $this->getNationId($name, $comment);
+    }
+
+
+    public function migratePartner($firstName, $patronym, $lastName, $gender, $nation=null, $comment=null){
+        //insert into new data
+        $newPartner = new Partner();
+
+        $newPartner->setFirstName($firstName);
+        $newPartner->setPatronym($patronym);
+        $newPartner->setLastName($lastName);
+        $newPartner->setGender($this->getGender($gender));
+        $newPartner->setOriginalNationid($this->getNationId($nation));
+
+        $newPartner->setComment($comment);
+
+        $this->newDBManager->persist($newPartner);
+        $this->newDBManager->flush();
+
+        return $newPartner;
     }
 
     //add additional stuff?
@@ -792,28 +822,57 @@ class MigrateData
         return $this->getTerritoryId($name, $comment);
     }
 
-    public function migrateWedding($weddingOrder, $husbandId, $wifeId, $relationType, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment){
+    public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate, $weddingLocation, $weddingTerritory, $bannsDate, $breakupReason, $breakupDate, $marriageComment, $beforeAfter, $comment){
         //insert into new data
         $newWedding = new Wedding();
 
+        if($personTwo->getGender() == 1){
+            //person two is husband
+            $newWedding->setHusbandId($personTwo->getId());
+            $newWedding->setWifeId($personOne->getId());
+            $newWedding->setRelationType($this->getRelationType($personTwo, $personOne));
+        }else {
+            //person one is husband (or we don't know the genders)
+            $newWedding->setHusbandId($personOne->getId());
+            $newWedding->setWifeId($personTwo->getId());
+            $newWedding->setRelationType($this->getRelationType($personOne, $personTwo));
+        }
+
         $newWedding->setWeddingOrder($weddingOrder);
-        $newWedding->setHusbandId($husbandId);
-        $newWedding->setWifeId($wifeId);
-        $newWedding->setRelationType($relationType);
-        $newWedding->setWeddingDateid($weddingDateid);
-        $newWedding->setWeddingLocationid($weddingLocationid);
-        $newWedding->setWeddingTerritoryid($weddingTerritoryid);
-        $newWedding->setBannsDateid($bannsDateid);
+        $newWedding->setWeddingDateid($this->getDate($weddingDate));
+        $newWedding->setWeddingLocationid($this->getLocationId($weddingLocation));
+        $newWedding->setWeddingTerritoryid($this->getTerritoryId($weddingTerritory));
+        $newWedding->setBannsDateid($this->getDate($bannsDate));
         $newWedding->setBreakupReason($breakupReason);
-        $newWedding->setBreakupDateid($breakupDateid);
+        $newWedding->setBreakupDateid($this->getDate($breakupDate));
         $newWedding->setMarriageComment($marriageComment);
         $newWedding->setBeforeAfter($beforeAfter);
         $newWedding->setComment($comment);
-        
+
         $this->newDBManager->persist($newWedding);
         $this->newDBManager->flush();
 
         return $newWedding->getId();
+    }
+
+    public function checkIfWeddingAlreadyExists($weddingOrder, $personOne, $personTwo){
+        $husbandId = $personOne->getId();
+        $wifeId = $personTwo->getId();
+        $relationType = $this->getRelationType($personOne, $personTwo);
+
+        if($personTwo->getGender() == 1){
+            //person two is husband
+            $husbandId = $personTwo->getId();
+            $wifeId = $personOne->getId();
+            $relationType = $this->getRelationType($personTwo, $personOne);
+        }
+
+        return $this->newDBManager->getRepository('NewBundle:Wedding')
+        ->findOneBy( array('weddingOrder' => $weddingOrder, 
+                            'husbandId' => $husbandId,
+                            'wifeId' => $wifeId,
+                            'relationType' => $relationType
+                            ));
     }
 
     public function migrateWork($label, $works_order, $country=null, $location=null, $fromDate=null, $toDate=null, $territory=null, $provenDate=null, $comment=null){
