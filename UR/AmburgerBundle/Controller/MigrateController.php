@@ -1331,10 +1331,17 @@ class MigrateController extends Controller
             $oldMarriagePartner = $marriagePartners[$i];
 
             //check if reference to person
-            if(!is_null($oldMarriagePartner["ehepartner_id-nr"])){
+            if(!is_null($oldMarriagePartner["ehepartner_id-nr"]) ||
+                !is_null($oldMarriagePartner["partnerpartner_id-nr"])){
                 $this->getLogger()->info("Reference to person found!");
+
+
                 //check it?
                 $marriagePartnersOID = $oldMarriagePartner["ehepartner_id-nr"];
+
+                if(is_null($marriagePartnersOID)){
+                    $marriagePartnersOID = $oldMarriagePartner["partnerpartner_id-nr"];
+                }
 
                 $marriagePartnersMainID = $this->getIDForOID($marriagePartnersOID, $oldDBManager);
 
