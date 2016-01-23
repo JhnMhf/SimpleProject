@@ -25,7 +25,7 @@ UR\DB\NewBundle\Entity\IsParent:
                 unsigned: false
                 default: '0'
             column: childID
-        parentid:
+        parentID:
             type: integer
             nullable: false
             options:

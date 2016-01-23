@@ -119,6 +119,8 @@ class MigrateController extends Controller
 
         $this->migrateMarriagePartner($newPerson, $ID, $oldDBManager);
 
+        $this->migrateChild($newPerson, $ID, $oldDBManager);
+
         return $newPerson;
     }
 
@@ -1470,17 +1472,8 @@ class MigrateController extends Controller
 
 
     private function migrateWedding($newPerson, $marriagePartner, $oldMarriagePartner){
-
-
-        $existingWedding = $this->get("migrate_data.service")->checkIfWeddingAlreadyExists($oldMarriagePartner['order'], $newPerson, $marriagePartner);
-
-        if($existingWedding == null){
-            //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
-            $this->get("migrate_data.service")->migrateWedding($oldMarriagePartner['order'], $newPerson, $marriagePartner, $oldMarriagePartner['hochzeitstag'], $oldMarriagePartner['hochzeitsort'], $oldMarriagePartner['hochzeitsterritorium'], $oldMarriagePartner['aufgebot'], $oldMarriagePartner['auflösung'], $oldMarriagePartner['gelöst'], $oldMarriagePartner['verheiratet'], $oldMarriagePartner['vorher-nachher'], null);
-        }else{
-            $this->getLogger()->info("Wedding already exists!");
-        }
-
+        //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
+        $this->get("migrate_data.service")->migrateWedding($oldMarriagePartner['order'], $newPerson, $marriagePartner, $oldMarriagePartner['hochzeitstag'], $oldMarriagePartner['hochzeitsort'], $oldMarriagePartner['hochzeitsterritorium'], $oldMarriagePartner['aufgebot'], $oldMarriagePartner['auflösung'], $oldMarriagePartner['gelöst'], $oldMarriagePartner['verheiratet'], $oldMarriagePartner['vorher-nachher'], null);
     }
 
     private function getMarriagePartnerWithNativeQuery($oldPersonID, $oldDBManager){
@@ -1501,10 +1494,6 @@ class MigrateController extends Controller
         return $stmt->fetchAll();
     }
 
-
-
-
-
     private function migrateChild($newPerson, $oldPersonID, $oldDBManager){
         //non paternal
         $children = $this->getChildWithNativeQuery($oldPersonID, $oldDBManager);
@@ -1522,10 +1511,26 @@ class MigrateController extends Controller
                 $newChild = $this->migratePerson($childsMainId, $childsOID);
 
                 $this->get("migrate_data.service")->migrateIsParent($newChild, $newPerson, $oldChild["kommentar"]);
+
+                $this->addSecondParentToChild($newPerson, $newChild, $oldChild);
             }else{
                 $this->createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager);                
             }
         }
+    }
+
+    private function addSecondParentToChild($newPerson, $newChild, $oldChild){
+        $secondParent = $this->findSecondParentToChild($newPerson, $oldChild);
+
+        if(!is_null($secondParent)){
+            $this->get("migrate_data.service")->migrateIsParent($newChild, $secondParent, $oldChild["kommentar"]);
+        }
+    }
+
+    private function findSecondParentToChild($newPerson, $oldChild){
+        $weddingOrder = $oldChild['order'];
+
+        return $this->get("migrate_data.service")->getMarriagePartner($weddingOrder, $newPerson);
     }
 
     private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager){
@@ -1538,6 +1543,8 @@ class MigrateController extends Controller
         //@ToDo...
 
         $this->get("migrate_data.service")->migrateIsParent($child, $newPerson);
+
+        $this->addSecondParentToChild($newPerson, $child, $oldChild);
     }
 
     private function getChildWithNativeQuery($oldPersonID, $oldDBManager){

@@ -15,12 +15,12 @@ class IsGrandparent
     /**
      * @var integer
      */
-    private $grandParentid = '0';
+    private $grandParentID = '0';
 
     /**
      * @var integer
      */
-    private $grandChildid = '0';
+    private $grandChildID = '0';
 
     /**
      * @var string
@@ -39,20 +39,6 @@ class IsGrandparent
 
 
     /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return IsGrandparent
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * Get id
      *
      * @return integer
@@ -63,51 +49,51 @@ class IsGrandparent
     }
 
     /**
-     * Set grandParentid
+     * Set grandParentID
      *
-     * @param integer $grandParentid
+     * @param integer $grandParentID
      *
      * @return IsGrandparent
      */
-    public function setGrandParentid($grandParentid)
+    public function setGrandParentID($grandParentID)
     {
-        $this->grandParentid = $grandParentid;
+        $this->grandParentID = $grandParentID;
 
         return $this;
     }
 
     /**
-     * Get grandParentid
+     * Get grandParentID
      *
      * @return integer
      */
-    public function getGrandParentid()
+    public function getGrandParentID()
     {
-        return $this->grandParentid;
+        return $this->grandParentID;
     }
 
     /**
-     * Set grandChildid
+     * Set grandChildID
      *
-     * @param integer $grandChildid
+     * @param integer $grandChildID
      *
      * @return IsGrandparent
      */
-    public function setGrandChildid($grandChildid)
+    public function setGrandChildID($grandChildID)
     {
-        $this->grandChildid = $grandChildid;
+        $this->grandChildID = $grandChildID;
 
         return $this;
     }
 
     /**
-     * Get grandChildid
+     * Get grandChildID
      *
      * @return integer
      */
-    public function getGrandChildid()
+    public function getGrandChildID()
     {
-        return $this->grandChildid;
+        return $this->grandChildID;
     }
 
     /**
@@ -182,3 +168,4 @@ class IsGrandparent
         return $this->comment;
     }
 }
+

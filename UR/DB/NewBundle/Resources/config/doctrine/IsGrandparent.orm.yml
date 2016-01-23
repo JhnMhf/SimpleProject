@@ -18,14 +18,14 @@ UR\DB\NewBundle\Entity\IsGrandparent:
             generator:
                 strategy: IDENTITY
     fields:
-        grandParentid:
+        grandParentID:
             type: integer
             nullable: false
             options:
                 unsigned: false
                 default: '0'
             column: grandparentID
-        grandChildid:
+        grandChildID:
             type: integer
             nullable: false
             options:

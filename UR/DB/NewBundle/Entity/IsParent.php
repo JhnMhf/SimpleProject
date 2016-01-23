@@ -20,7 +20,7 @@ class IsParent
     /**
      * @var integer
      */
-    private $parentid = '0';
+    private $parentID = '0';
 
     /**
      * @var string
@@ -68,27 +68,27 @@ class IsParent
     }
 
     /**
-     * Set parentid
+     * Set parentID
      *
-     * @param integer $parentid
+     * @param integer $parentID
      *
      * @return IsParent
      */
-    public function setParentid($parentid)
+    public function setParentID($parentID)
     {
-        $this->parentid = $parentid;
+        $this->parentID = $parentID;
 
         return $this;
     }
 
     /**
-     * Get parentid
+     * Get parentID
      *
      * @return integer
      */
-    public function getParentid()
+    public function getParentID()
     {
-        return $this->parentid;
+        return $this->parentID;
     }
 
     /**
@@ -139,3 +139,4 @@ class IsParent
         return $this->comment;
     }
 }
+
