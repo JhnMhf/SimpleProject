@@ -746,7 +746,7 @@ class MigrateData
         return $newReligion->getId();
     }
 
-    public function migrateResidence($residenceOrder, $residenceCountry, $residenceTerritory, $residenceLocation){
+    public function migrateResidence($residenceOrder, $residenceCountry, $residenceTerritory=null, $residenceLocation=null){
         //insert into new data
         $newResidence = new Residence();
 
@@ -762,7 +762,7 @@ class MigrateData
         return $newResidence->getId();
     }
 
-    public function migrateRoadOfLife($roadOfLifeOrder, $originCountry, $originTerritory, $job, $country, $territory, $location, $fromDate, $toDate, $provenDate, $comment=null){
+    public function migrateRoadOfLife($roadOfLifeOrder, $originCountry=null, $originTerritory=null, $job=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newRoadOfLife = new RoadOfLife();
 

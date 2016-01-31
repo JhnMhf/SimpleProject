@@ -1533,14 +1533,265 @@ class MigrateController extends Controller
         return $this->get("migrate_data.service")->getMarriagePartner($weddingOrder, $newPerson);
     }
 
-    private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager){
+private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager){
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $child = $this->get("migrate_data.service")->migrateRelative($oldChild["vornamen"], $oldChild["russ_vornamen"], $oldChild["name"], $oldChild["geschlecht"], null, $oldChild["kommentar"]);
 
         $child->setForeName($oldChild["rufnamen"]);
 
         //additional data
-        //@ToDo...
+        $childEducation = $this->getChildsEducationWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childProperty = $this->getChildsPropertyWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childHonour = $this->getChildsHonourWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childOrigin = $this->getChildsOriginWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childRoadOfLife = $this->getChildsRoadOfLifeWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childRank = $this->getChildsRankWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childReligion = $this->getChildsReligionWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childStatus = $this->getChildsStatusWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        $childDeath = $this->getChildsDeathWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
+
+        //birth
+        //geboren, geburtsort, from oldChild
+        if(!is_null($oldChild["geboren"]) 
+            || !is_null($oldChild["geburtsort"]) 
+            || count($childOrigin) > 0){
+
+            if(count($childOrigin) == 0){
+                $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,null, $oldChild["geburtsort"],$oldChild["geboren"]);
+                $child->setBirthid($birthID);
+            }else{
+                //BELEGT?!?!?!
+                $birthIdString = "";
+                $baptismIdString = "";
+                //origin
+                for($i = 0; $i < count($childOrigin); $i++){
+                    $origin = $childOrigin[$i];
+
+                    $geburtsOrt = $oldChild["geburtsort"];
+                    $geboren = $oldChild["geboren"];
+
+                    if(!is_null($origin['geburtsort'])
+                        && $origin['geburtsort'] != $geburtsOrt){
+                         if(!is_null($geburtsOrt)){
+                            // add it with oder
+                            $geburtsOrt .= " ODER ".$origin['geburtsort'];
+                        }else{
+                            $geburtsOrt = $origin['geburtsort'];
+                        }
+                    }
+
+                    if(!is_null($origin['geboren'])
+                        && $origin['geboren'] != $geboren){
+                        if(!is_null($geboren)){
+                            //create date array? add comment?
+                            $geboren .= ";".$origin['geboren'];
+                        }else{
+                            $geboren = $origin['geboren'];
+                        }
+                    }
+
+                    if(!is_null($geboren)
+                        || !is_null($geburtsOrt)
+                        || !is_null($origin['geburtsland'])
+                        || !is_null($origin['geburtsterritorium'])
+                        || !is_null($origin['kommentar'])){
+                        //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
+                        $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,null,$origin["geburtsland"], $geburtsOrt,$geboren, $origin['geburtsterritorium'], $origin['kommentar']);
+
+                        if($birthIdString != ""){
+                            $birthIdString .= "," . $birthID;
+                        }else{
+                            $birthIdString = $birthID;
+                        }
+                    }
+
+
+                    if(!is_null($origin['getauft'])
+                        || !is_null($origin['taufort'])){
+                        $baptismID = $this->get("migrate_data.service")->migrateBaptism($origin["getauft"], $origin["taufort"]);
+
+                        if($baptismIdString != ""){
+                            $baptismIdString .= "," . $baptismID;
+                        }else{
+                            $baptismIdString = $baptismID;
+                        }
+                    }
+
+                }
+
+                if($birthIdString != ""){
+                    $child->setBirthid($birthIdString);
+                }
+
+                if($baptismIdString != ""){
+                    $child->setBaptismid($baptismIdString);
+                }
+            }
+
+        }
+
+        if(count($childEducation) > 0){
+            $educationIDString = "";
+            //education
+            for($i = 0; $i < count($childEducation); $i++){
+                $education = $childEducation[$i];
+                $educationID = $this->get("migrate_data.service")->migrateEducation($education["order3"],$education["ausbildung"],$education["land"],null,$education["ort"],$education["von-ab"],$education["bis"],$education["belegt"],$education["bildungsabschluss"],$education["bildungsabschlussdatum"], $education["bildungsabschlussort"], $education["kommentar"]);
+
+                if($i != 0){
+                    $educationIDString .= ",";
+                }
+
+                $educationIDString .= $educationID;
+            }
+
+            $child->setEducationid($educationIDString);
+        }
+
+
+        if(count($childProperty) > 0){
+            $propertyIDString = "";
+            //property
+            for($i = 0; $i < count($childProperty); $i++){
+                $property = $childProperty[$i];
+                //$propertyOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null
+                $propertyID = $this->get("migrate_data.service")->migrateProperty($property["order3"],$property["besitz"],$property["land"],$property['territorium'],$property["ort"],$property["von-ab"],null,$property["belegt"]);
+
+                if($i != 0){
+                    $propertyIDString .= ",";
+                }
+
+                $propertyIDString .= $propertyID;
+            }
+
+            $child->setPropertyid($propertyIDString);
+        }
+
+
+        if(count($childHonour) > 0){
+            $honoursIDString = "";
+            //honour
+            for($i = 0; $i < count($childHonour); $i++){
+                $honour = $childHonour[$i];
+                //$honourOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null
+                $honourID = $this->get("migrate_data.service")->migrateHonour($honour["order3"],$honour["ehren"],$honour["land"],null,$honour["ort"],$honour["von-ab"]);
+
+                if($i != 0){
+                    $honoursIDString .= ",";
+                }
+
+                $honoursIDString .= $honourID;
+            }
+
+            $child->setHonourid($honoursIDString);
+        }
+
+
+
+
+
+        if(count($childRoadOfLife) > 0){
+            $roadOfLifeIDString = "";
+            //roadOfLife
+            for($i = 0; $i < count($childRoadOfLife); $i++){
+                $step = $childRoadOfLife[$i];
+                //$roadOfLifeOrder, $originCountry=null, $originTerritory=null, $job=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null
+                $stepID = $this->get("migrate_data.service")->migrateRoadOfLife($step["order3"],$step["stammland"],null,$step["beruf"],$step["land"], $step["territorium"],$step["ort"],$step["von-ab"],$step["bis"],$step["belegt"],$step["kommentar"]);
+
+                if($i != 0){
+                    $roadOfLifeIDString .= ",";
+                }
+
+                $roadOfLifeIDString .= $stepID;
+            }
+
+            $child->setRoadOfLiveid($roadOfLifeIDString);
+        }
+
+
+        if(count($childRank) > 0){
+            $rankIDString = "";
+            //rank
+            for($i = 0; $i < count($childRank); $i++){
+                $rank = $childRank[$i];
+                //$rankOrder, $label, $class=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null
+                $rankID = $this->get("migrate_data.service")->migrateRank($rank["order3"],$rank["rang"],$rank["rangklasse"],$rank["land"],null,$rank["ort"],$rank["von-ab"],$rank["bis"],$rank["belegt"],$rank["kommentar"]);
+
+                if($i != 0){
+                    $rankIDString .= ",";
+                }
+
+                $rankIDString .= $rankID;
+            }
+
+            $child->setRankid($rankIDString);
+        }
+
+        //religoin
+        if(count($childReligion) > 0){
+            $religionIDString = "";
+            //rank
+            for($i = 0; $i < count($childReligion); $i++){
+                $religion = $childReligion[$i];
+                //$name, $religionOrder, $change_of_religion=null, $provenDate=null, $fromDate=null, $comment=null
+                $religionID = $this->get("migrate_data.service")->migrateReligion($religion["konfession"], $religion["order3"], null, null, null, $religion["kommentar"]);
+
+                if($i != 0){
+                    $religionIDString .= ",";
+                }
+
+                $religionIDString .= $religionID;
+            }
+
+            $child->setReligionid($religionIDString);
+        }
+
+
+        if(count($childStatus) > 0){
+            $statiIDString = "";
+            //status
+            for($i = 0; $i < count($childStatus); $i++){
+                $status = $childStatus[$i];
+                //$statusOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null
+                $statusID = $this->get("migrate_data.service")->migrateStatus($status["order3"],$status["stand"],$status["land"],$status["territorium"],$status["ort"],$status["von-ab"], null, $status["belegt"],$status["kommentar"]);
+
+                if($i != 0){
+                    $statiIDString .= ",";
+                }
+
+                $statiIDString .= $statusID;
+            }
+
+            $child->setStatusid($statiIDString);
+        }
+
+
+        if(count($childDeath) > 0){
+            $deathIDString = "";
+            //death
+            for($i = 0; $i < count($childDeath); $i++){
+                $death = $childDeath[$i];
+                //death
+                //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
+                $deathId = $this->get("migrate_data.service")->migrateDeath($death["todesort"],$death["gestorben"], $death["todesland"], $death["todesursache"], $death["todesterritorium"], $death["friedhof"], $death["begräbnisort"], $death["begraben"],$death["kommentar"]);
+
+                if($deathIDString != ""){
+                    $deathIDString .= "," . $deathId;
+                }else{
+                    $deathIDString = $deathId;
+                }
+            }
+
+            $child->setDeathid($deathIDString);
+        }
+        
 
         $this->get("migrate_data.service")->migrateIsParent($child, $newPerson);
 
@@ -1553,6 +1804,131 @@ class MigrateController extends Controller
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsEducationWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, land, ort, ausbildung, `von-ab`, bis, bildungsabschluss, bildungsabschlussdatum, bildungsabschlussort, belegt, kommentar
+            FROM `ausbildung_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsPropertyWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, land, ort, territorium, besitz, `von-ab`, belegt
+                FROM `besitz_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsHonourWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, ort, land, `von-ab`, ehren
+                    FROM `ehren_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsOriginWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, geboren, geburtsort, geburtsterritorium, geburtsland, getauft, taufort, belegt, kommentar
+                FROM `herkunft_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsRoadOfLifeWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, ort, territorium, land, stammland, beruf, `von-ab`, bis, belegt, kommentar
+                FROM `lebensweg_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsRankWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, ort, land, rang, rangklasse, `von-ab`, bis, belegt, kommentar
+                FROM `rang_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsReligionWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, konfession, kommentar
+                FROM `religion_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsStatusWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, ort, territorium, land, stand, `von-ab`, belegt, kommentar
+                FROM `stand_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsDeathWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager){
+        $sql = "SELECT `ID`,`order`,`order2`,`order3`,`todesort`,`todesterritorium`,`gestorben`,`begräbnisort`,`todesursache`,`friedhof`,`begraben`,`todesland`,`kommentar` 
+                FROM `tod_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
         $stmt->execute();
 
 
