@@ -718,4 +718,33 @@ class Partner
     {
         return $this->residenceid;
     }
+    /**
+     * @var integer
+     */
+    private $jobid;
+
+
+    /**
+     * Set jobid
+     *
+     * @param integer $jobid
+     *
+     * @return Partner
+     */
+    public function setJobid($jobid)
+    {
+        $this->jobid = $jobid;
+
+        return $this;
+    }
+
+    /**
+     * Get jobid
+     *
+     * @return integer
+     */
+    public function getJobid()
+    {
+        return $this->jobid;
+    }
 }

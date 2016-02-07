@@ -168,4 +168,3 @@ class IsGrandparent
         return $this->comment;
     }
 }
-

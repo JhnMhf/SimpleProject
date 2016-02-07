@@ -154,6 +154,12 @@ UR\DB\NewBundle\Entity\Partner:
             options:
                 unsigned: false
             column: job_classID
+        jobid:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: jobID
         residenceid:
             type: integer
             nullable: true

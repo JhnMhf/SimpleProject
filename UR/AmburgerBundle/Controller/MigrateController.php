@@ -121,6 +121,12 @@ class MigrateController extends Controller
 
         $this->migrateChild($newPerson, $ID, $oldDBManager);
 
+        $this->migrateFatherInLaw($newPerson, $ID, $oldDBManager);
+
+
+
+        // migrate GrandChild after marriagepartners of child
+
         return $newPerson;
     }
 
@@ -1929,6 +1935,262 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('marriageOrder', $marriageOrder);
         $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+
+    private function migrateFatherInLaw($newPerson, $oldPersonID, $oldDBManager){
+        //non paternal
+        $fathersInLaw = $this->getFatherInLawWithNativeQuery($oldPersonID, $oldDBManager);
+
+        for($i = 0; $i < count($fathersInLaw); $i++){
+            $oldFatherInLaw = $fathersInLaw[$i];
+
+            //check if reference to person
+            if(!is_null($oldFatherInLaw["schwiegervater_id-nr"])){
+                //check it?
+                $fatherInLawOID = $oldFatherInLaw["schwiegervater_id-nr"];
+
+                $fatherInLawsMainId = $this->getIDForOID($fatherInLawOID, $oldDBManager);
+
+                $newFatherInLaw = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
+
+                $this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $newFatherInLaw, $oldFatherInLaw["kommentar"]);
+
+            }else{
+                $this->createFatherInLaw($newPerson, $oldFatherInLaw, $oldPersonID, $oldDBManager);                
+            }
+        }
+    }
+
+    private function createFatherInLaw($newPerson, $oldFatherInLaw, $oldPersonID, $oldDBManager){
+
+
+        //$this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $newFatherInLaw);
+    }
+
+    private function getFatherInLawWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, gestorben, todesort, 
+        begraben, begräbnisort, ehelich, hochzeitsort, wohnort, wohnland, wohnterritorium, nation, 
+        getauft, taufort, konfession, herkunftsort, herkunftsterritorium, bildungsabschluss, beruf, 
+        rang, ehren, stand, besitz, `schwiegervater_id-nr`, kommentar 
+        FROM `schwiegervater` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateMotherInLaw($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getMotherInLawWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, geburtsort, 
+            gestorben, todesort, nation, ehelich, herkunftsort, beruf, stand, kommentar
+            FROM `schwiegermutter` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateOtherPartners($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getOtherPartnersWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, vornamen, russ_vornamen, name, `order`, order2, 
+        geboren, geburtsort, gestorben, todesort, friedhof, herkunftsort, 
+        herkunftsterritorium, konfession, `vorher-nachher`, aufgebot, 
+        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, beruf, 
+        stand, rang, ehren, besitz, bildungsabschluss, `partnerpartner_id-nr`, kommentar
+        FROM `anderer_partner` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migratePartnersOfFather($newPerson, $oldPersonID, $oldDBManager){
+
+    }
+
+    private function getPartnersOfFatherWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, name, geboren, geburtsort, getauft, 
+        taufort, gestorben, todesort, verheiratet, hochzeitstag, hochzeitsort, beruf, stand, `vorher-nachher`, kommentar
+        FROM `partnerin_des_vaters` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migratePartnersOfMother($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getPartnersOfMotherWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, name, verheiratet, hochzeitstag, hochzeitsort, 
+        auflösung, gelöst, `vorher-nachher`, rang, beruf, stand, belegt, kommentar
+        FROM `partner_der_mutter` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateMarriagePartnersOfSibling($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getMarriagePartnersOfSiblingWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, herkunftsort, 
+        gestorben, begraben, begräbnisort, friedhof, `geschwisterpartner_id-nr`, verheiratet, 
+        hochzeitstag, hochzeitsort, auflösung, konfession, bildungsabschluss, stand, beruf, 
+        ehren, rang, `vorher-nachher`, kommentar
+            FROM `ehepartner_des_geschwisters` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateChildrenOfSibling($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getChildrenOfSiblingWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT  ID, `order`, order2, order3, vornamen, name, geschlecht, geboren, 
+        geburtsort, getauft, taufort, gestorben, beruf, kommentar
+            FROM `geschwisterkind` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateMarriagePartnersOfChildren($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getMarriagePartnersOfChildrenWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, vornamen, russ_vornamen, name, rufnamen, 
+        nation, geboren, geburtsort, geburtsterritorium, herkunftsort, herkunftsterritorium, 
+        gestorben, todesort, begräbnisort, friedhof, aufgebot, verheiratet, hochzeitstag, 
+        hochzeitsort, auflösung, gelöst, bildungsabschluss, beruf, rang, stand, besitz, 
+        `kindespartner_id-nr`, kommentar
+        FROM `ehepartner_des_kindes` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateOtherPartnersOfChildren($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getOtherPartnersOfChildrenWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, vornamen, name, `order`, order2, order3, order4, geboren, geburtsort, 
+        gestorben, todesort, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
+        rang, kommentar
+        FROM `anderer_partner_des_kindes` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateFatherInLawOfChildren($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getFatherInLawOfChildrenWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, order4, vornamen, name, ehelich, beruf, rang, wohnort
+        FROM `schwiegervater_des_kindes` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateMotherInLawOfChildren($newPerson, $oldPersonID, $oldDBManager){
+        
+    }
+
+    private function getMotherInLawOfChildrenWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID, `order`, order2, order3, order4, vornamen, name, ehelich
+        FROM `schwiegermutter_des_kindes` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function migrateGrandchild($newPerson, $oldPersonID, $oldDBManager){
+        //
+        /*$grandchildren = $this->getGrandchildWithNativeQuery($oldPersonID, $oldDBManager);
+
+        for($i = 0; $i < count($grandchildren); $i++){
+            $oldGrandchild = $grandchildren[$i];
+
+            //check if reference to person
+            if(!is_null($oldGrandchild["enkel_id-nr"])){
+                //check it?
+                $grandchildsOID = $oldGrandchild["enkel_id-nr"];
+
+                $grandchildsMainId = $this->getIDForOID($grandchildsOID, $oldDBManager);
+
+                $newGrandchild = $this->migratePerson($grandchildsMainId, $grandchildsOID);
+
+                $paternal = true;
+
+                $this->get("migrate_data.service")->migrateIsGrandparent($newGrandchild, $newPerson, $paternal,$oldGrandchild["kommentar"]);
+
+                $this->addSecondGrandparentToChild($newPerson, $newGrandchild, $oldGrandchild);
+            }else{
+                $this->createGrandchild($newPerson, $oldGrandchild, $oldPersonID, $oldDBManager);                
+            }
+        }*/
+
+    }
+
+    private function createGrandchild($newPerson, $oldGrandchild, $oldPersonID, $oldDBManager){
+
+    }
+
+    private function getGrandchildWithNativeQuery($oldPersonID, $oldDBManager){
+        $sql = "SELECT ID,`order`, order2, order3, order4, vornamen, russ_vornamen, name, rufnamen, geschlecht, `enkel_id-nr`, geboren, geburtsort, gestorben, bildungsabschluss, beruf, wohnort, besitz, stand, rang, kommentar
+                    FROM `enkelkind` WHERE ID=:personID";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
         $stmt->execute();
 
 

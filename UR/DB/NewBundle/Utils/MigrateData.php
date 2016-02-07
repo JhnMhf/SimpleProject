@@ -11,6 +11,7 @@ use UR\DB\NewBundle\Entity\Education;
 use UR\DB\NewBundle\Entity\Honour;
 use UR\DB\NewBundle\Entity\IsGrandparent;
 use UR\DB\NewBundle\Entity\IsParent;
+use UR\DB\NewBundle\Entity\IsParentInLaw;
 use UR\DB\NewBundle\Entity\IsSibling;
 use UR\DB\NewBundle\Entity\Job;
 use UR\DB\NewBundle\Entity\JobClass;
@@ -582,19 +583,23 @@ class MigrateData
         }
     }
 
-    public function migrateIsParentInLaw(){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //insert into new data
-        $newIsParentInLaw = new IsParentInLaw();
+    public function migrateIsParentInLaw($childInLaw, $parentInLaw, $comment=null){  
+        $this->LOGGER->info("Adding childParentInLawRelation with... ChildId: ".$childInLaw->getId(). " ParentId: ". $parentInLaw->getId());
+        if(!$this->parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw)){
+            //insert into new data
+            $newIsParentInLaw = new IsParentInLaw();
 
-        //$newIsParentInLaw->;
-        
-        $this->newDBManager->persist($newIsParentInLaw);
-        $this->newDBManager->flush();
-
-        return $newIsParentInLaw->getId();
+            $newIsParentInLaw->setChildInLawid($childInLaw->getId());
+            $newIsParentInLaw->setParentInLawid($parentInLaw->getId());
+            $newIsParentInLaw->setRelationType($this->getRelationType($childInLaw, $parentInLaw));
+            $newIsParentInLaw->setComment($comment);
+            
+            $this->newDBManager->persist($newIsParentInLaw);
+            $this->newDBManager->flush();
+        }
     }
 
-    public function migrateIsSibling($siblingOne, $siblineTwo, $comment=null){  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public function migrateIsSibling($siblingOne, $siblineTwo, $comment=null){ 
         //insert into new data
         $newIsSibling = new IsSibling();
 
@@ -1046,6 +1051,26 @@ class MigrateData
             ->findOneBy( array('relationType' => $relationType, 
                             'childID' => $child->getId(),
                             'parentID' => $parent->getId()
+                            ));
+
+        if(is_null($relation)){
+            $this->LOGGER->debug("Didn't find existing child <-> parent Relation");
+            return false;
+        }else{
+            $this->LOGGER->debug("Found existing child <-> parent Relation");
+            return true;
+        }
+    }
+
+    public function parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw){
+        $relationType = $this->getRelationType($childInLaw, $parentInLaw);
+
+        $this->LOGGER->info("Searching for childParentInLawRelation with... ChildId: ".$childInLaw->getId(). " ParentId: ". $parentInLaw->getId()." RelationType: ".$relationType);
+
+        $relation = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')
+            ->findOneBy( array('relationType' => $relationType, 
+                            'childInLawid' => $childInLaw->getId(),
+                            'parentInLawid' => $parentInLaw->getId()
                             ));
 
         if(is_null($relation)){
