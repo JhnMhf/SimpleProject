@@ -1087,7 +1087,7 @@ class MigrateData
 
         $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChildId: ".$grandchild->getId(). " GrandParentId: ". $grandparent->getId()." RelationType: ".$relationType);
 
-        $relation = $this->newDBManager->getRepository('NewBundle:IsGrandParent')
+        $relation = $this->newDBManager->getRepository('NewBundle:IsGrandparent')
             ->findOneBy( array('relationType' => $relationType, 
                             'grandChildID' => $grandchild->getId(),
                             'grandParentID' => $grandparent->getId()

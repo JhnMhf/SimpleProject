@@ -123,7 +123,7 @@ class MigrateController extends Controller
 
         $this->migrateFatherInLaw($newPerson, $ID, $oldDBManager);
 
-
+        $this->migrateMotherInLaw($newPerson, $ID, $oldDBManager);
 
         // migrate GrandChild after marriagepartners of child
 
@@ -2096,9 +2096,49 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
     }
 
     private function createMotherInLaw($newPerson, $oldMotherInLaw, $oldPersonID, $oldDBManager){
+         //$firstName, $patronym, $lastName, $gender, $nation, $comment
+        $motherInLaw = $this->get("migrate_data.service")->migrateRelative($oldMotherInLaw["vornamen"], $oldMotherInLaw["russ_vornamen"], $oldMotherInLaw["name"], "weiblich" , $oldMotherInLaw["nation"], $oldMotherInLaw["kommentar"]);
 
 
-        //$this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $newFatherInLaw);
+         //birth
+        if(!is_null($oldMotherInLaw["herkunftsort"]) || 
+            !is_null($oldMotherInLaw["geburtsort"]) || 
+            !is_null($oldMotherInLaw["geboren"])){
+            //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
+            $birthID = $this->get("migrate_data.service")->migrateBirth(null,null,$oldMotherInLaw["herkunftsort"],$oldMotherInLaw["geburtsort"], null,$oldMotherInLaw["geboren"]);
+
+            $motherInLaw->setBirthid($birthID);
+        }
+
+        //death
+        if(!is_null($oldMotherInLaw["gestorben"]) || 
+            !is_null($oldMotherInLaw["todesort"])){
+            //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
+            $deathId = $this->get("migrate_data.service")->migrateDeath($oldMotherInLaw["todesort"],$oldMotherInLaw["gestorben"]);
+
+            $motherInLaw->setDeathid($deathId);
+        }
+
+        //status
+        if(!is_null($oldMotherInLaw["stand"])){
+            $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldMotherInLaw["stand"]);
+            $motherInLaw->setStatusid($statusId);
+        }
+
+
+        //job
+        if(!is_null($oldMotherInLaw["beruf"])){
+            $jobID = $this->get("migrate_data.service")->migrateJob($oldMotherInLaw["beruf"]);
+
+            $motherInLaw->setJobid($jobID);
+        }
+
+        //born_in_marriage
+        if(!is_null($oldMotherInLaw["ehelich"])){
+            $motherInLaw->setBornInMarriage($oldMotherInLaw["ehelich"]);
+        }
+
+        $this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $motherInLaw);
     }
 
     private function getMotherInLawWithNativeQuery($oldPersonID, $oldDBManager){
