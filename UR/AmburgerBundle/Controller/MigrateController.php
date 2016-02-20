@@ -209,25 +209,6 @@ class MigrateController extends Controller
 
 
         return $stmt->fetchAll();
-
-
-        /*$resultMap = new ResultSetMapping;
-
-
-        $resultMap->addEntityResult('OldBundle:Religion', '');
-        $resultMap->addEntityResult('OldBundle:Religion', 'r');
-        $resultMap->addFieldResult('r', 'ID', 'id');
-        $resultMap->addFieldResult('r', 'order', 'order');
-        $resultMap->addFieldResult('r', 'von-ab', 'vonAb');
-        $resultMap->addFieldResult('r', 'konfession', 'konfession');
-        $resultMap->addFieldResult('r', 'konversion', 'konversion');
-        $resultMap->addFieldResult('r', 'belegt', 'belegt');
-        $resultMap->addFieldResult('r', 'kommentar', 'kommentar');
-
-        $query = $oldDBManager->createNativeQuery('SELECT ID, `order`, `von-ab`, konfession, konversion, belegt, kommentar FROM `religion` WHERE ID=:personID', $resultMap);
-        $query->setParameter('personID', $oldPersonID);
-
-        return $query->getArrayResult();*/
     }
 
     private function migrateOriginalNation($newPerson, $person){
@@ -694,8 +675,10 @@ class MigrateController extends Controller
         for($i = 0; $i < count($mothers); $i++){
             $oldMother = $mothers[$i];
 
+            $newMother = null;
             //check if reference to person
             if(!is_null($oldMother["mutter_id-nr"])){
+
 
                 //problem since some mutter_id-nrs are referencing sons others are referencing entries for the mother in the person table
                 if($this->checkIfMotherReferenceContainsChildPerson($oldPersonID, $oldMother["mutter_id-nr"], $oldDBManager)){
@@ -703,7 +686,7 @@ class MigrateController extends Controller
                     // child reference found what to do now?
 
                     //for now just insert the data... perhaps in future create one relative and reference to it from all childs?
-                    $this->createMother($newPerson, $oldMother);
+                    $newMother = $this->createMother($newPerson, $oldMother);
                 }else{
                     $this->getLogger()->info("Mother reference found...");
                     //reference to person entry for mother
@@ -717,99 +700,103 @@ class MigrateController extends Controller
                 }
 
             }else{
-                $this->createMother($newPerson, $oldMother);
+                $newMother =$this->createMother($newPerson, $oldMother);
             }
+
+            //partners of mother
+            $this->migratePartnersOfMother($newPerson, $newMother, $oldPersonID, $oldDBManager);
         }
 
     }
 
     private function createMother($newPerson, $oldMother){
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
-                $mother = $this->get("migrate_data.service")->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
+        $mother = $this->get("migrate_data.service")->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
 
-                $mother->setForeName($oldMother["rufnamen"]);
+        $mother->setForeName($oldMother["rufnamen"]);
 
-                //additional data
+        //additional data
 
-                //birth
-                if(!is_null($oldMother["herkunftsort"]) || 
-                    !is_null($oldMother["herkunftsland"]) || 
-                    !is_null($oldMother["herkunftsterritorium"]) || 
-                    !is_null($oldMother["geburtsort"]) || 
-                    !is_null($oldMother["geboren"])){
-                    //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
-                    $birthID = $this->get("migrate_data.service")->migrateBirth($oldMother["herkunftsland"],$oldMother["herkunftsterritorium"],$oldMother["herkunftsort"],null, $oldMother["geburtsort"],$oldMother["geboren"]);
+        //birth
+        if(!is_null($oldMother["herkunftsort"]) || 
+            !is_null($oldMother["herkunftsland"]) || 
+            !is_null($oldMother["herkunftsterritorium"]) || 
+            !is_null($oldMother["geburtsort"]) || 
+            !is_null($oldMother["geboren"])){
+            //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
+            $birthID = $this->get("migrate_data.service")->migrateBirth($oldMother["herkunftsland"],$oldMother["herkunftsterritorium"],$oldMother["herkunftsort"],null, $oldMother["geburtsort"],$oldMother["geboren"]);
 
-                    $mother->setBirthid($birthID);
-                }
+            $mother->setBirthid($birthID);
+        }
 
-                //baptism
-                if(!is_null($oldMother["getauft"])){
-                    $baptismId = $this->get("migrate_data.service")->migrateBaptism($oldMother["getauft"]);
+        //baptism
+        if(!is_null($oldMother["getauft"])){
+            $baptismId = $this->get("migrate_data.service")->migrateBaptism($oldMother["getauft"]);
 
-                    $mother->setBaptismid($baptismId);
-                }
+            $mother->setBaptismid($baptismId);
+        }
 
-                //death
-                if(!is_null($oldMother["gestorben"]) || 
-                    !is_null($oldMother["todesort"]) || 
-                    !is_null($oldMother["todesterritorium"]) || 
-                    !is_null($oldMother["begraben"]) || 
-                    !is_null($oldMother["friedhof"])){
-                    //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
-                    $deathId = $this->get("migrate_data.service")->migrateDeath($oldMother["todesort"],$oldMother["gestorben"], null, null, $oldMother["todesterritorium"], $oldMother["friedhof"], null, $oldMother["begraben"]);
+        //death
+        if(!is_null($oldMother["gestorben"]) || 
+            !is_null($oldMother["todesort"]) || 
+            !is_null($oldMother["todesterritorium"]) || 
+            !is_null($oldMother["begraben"]) || 
+            !is_null($oldMother["friedhof"])){
+            //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
+            $deathId = $this->get("migrate_data.service")->migrateDeath($oldMother["todesort"],$oldMother["gestorben"], null, null, $oldMother["todesterritorium"], $oldMother["friedhof"], null, $oldMother["begraben"]);
 
-                    $mother->setDeathid($deathId);
-                }
+            $mother->setDeathid($deathId);
+        }
 
-                //residence
-                if(!is_null($oldMother["wohnort"])){
-                    $residenceId = $this->get("migrate_data.service")->migrateResidence(1,null,null,$oldMother["wohnort"]);
+        //residence
+        if(!is_null($oldMother["wohnort"])){
+            $residenceId = $this->get("migrate_data.service")->migrateResidence(1,null,null,$oldMother["wohnort"]);
 
-                    $mother->setResidenceId($residenceId);
-                }
+            $mother->setResidenceId($residenceId);
+        }
 
-                //religion
-                if(!is_null($oldMother["konfession"])){
-                    $religionId = $this->get("migrate_data.service")->migrateReligion($oldMother["konfession"], 1);
+        //religion
+        if(!is_null($oldMother["konfession"])){
+            $religionId = $this->get("migrate_data.service")->migrateReligion($oldMother["konfession"], 1);
 
-                    $mother->setReligionid($religionId);
-                }
-               
-                //status
-                if(!is_null($oldMother["stand"])){
-                    $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldMother["stand"]);
-                    $mother->setStatusid($statusId);
-                }
+            $mother->setReligionid($religionId);
+        }
+       
+        //status
+        if(!is_null($oldMother["stand"])){
+            $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldMother["stand"]);
+            $mother->setStatusid($statusId);
+        }
 
-                //rank
-                if(!is_null($oldMother["rang"])){
-                    $rankId = $this->get("migrate_data.service")->migrateRank(1, $oldMother["rang"]);
-                    $mother->setRankid($rankId);
-                }
-
-
-                //property
-                if(!is_null($oldMother["besitz"])){
-                    $propertyId = $this->get("migrate_data.service")->migrateProperty(1, $oldMother["besitz"]);
-
-                    $mother->setPropertyid($propertyId);
-                }
+        //rank
+        if(!is_null($oldMother["rang"])){
+            $rankId = $this->get("migrate_data.service")->migrateRank(1, $oldMother["rang"]);
+            $mother->setRankid($rankId);
+        }
 
 
-                //job
-                if(!is_null($oldMother["beruf"])){
-                    $jobID = $this->get("migrate_data.service")->migrateJob($oldMother["beruf"]);
+        //property
+        if(!is_null($oldMother["besitz"])){
+            $propertyId = $this->get("migrate_data.service")->migrateProperty(1, $oldMother["besitz"]);
 
-                    $mother->setJobid($jobID);
-                }
+            $mother->setPropertyid($propertyId);
+        }
 
-                //born_in_marriage
-                if(!is_null($oldMother["ehelich"])){
-                    $mother->setBornInMarriage($oldMother["ehelich"]);
-                }
 
-                $this->get("migrate_data.service")->migrateIsParent($newPerson, $mother);
+        //job
+        if(!is_null($oldMother["beruf"])){
+            $jobID = $this->get("migrate_data.service")->migrateJob($oldMother["beruf"]);
+
+            $mother->setJobid($jobID);
+        }
+
+        //born_in_marriage
+        if(!is_null($oldMother["ehelich"])){
+            $mother->setBornInMarriage($oldMother["ehelich"]);
+        }
+
+        $this->get("migrate_data.service")->migrateIsParent($newPerson, $mother);
+        return $mother;
     }
 
     private function getMotherWithNativeQuery($oldPersonID, $oldDBManager){
@@ -867,6 +854,7 @@ class MigrateController extends Controller
 
         for($i = 0; $i < count($fathers); $i++){
             $oldFather = $fathers[$i];
+            $newFather = null;
 
             //check if reference to person
             if(!is_null($oldFather["vater_id-nr"])){
@@ -879,117 +867,126 @@ class MigrateController extends Controller
 
                 $this->get("migrate_data.service")->migrateIsParent($newPerson, $newFather, $oldFather["kommentar"]);
             }else{
-                //$firstName, $patronym, $lastName, $gender, $nation, $comment
-                $father = $this->get("migrate_data.service")->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
-
-                $father->setForeName($oldFather["rufnamen"]);
-
-                //additional data
-
-                //birth
-                if(!is_null($oldFather["herkunftsort"]) || 
-                    !is_null($oldFather["herkunftsland"]) || 
-                    !is_null($oldFather["herkunftsterritorium"]) || 
-                    !is_null($oldFather["geburtsort"]) || 
-                    !is_null($oldFather["geburtsterritorium"]) || 
-                    !is_null($oldFather["geburtsland"]) || 
-                    !is_null($oldFather["geboren"])){
-                    //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
-                    $birthID = $this->get("migrate_data.service")->migrateBirth($oldFather["herkunftsland"],$oldFather["herkunftsterritorium"],$oldFather["herkunftsort"],$oldFather["geburtsland"], $oldFather["geburtsort"],$oldFather["geboren"], $oldFather["geburtsterritorium"]);
-
-                    $father->setBirthid($birthID);
-                }
-
-                //baptism
-                if(!is_null($oldFather["getauft"]) ||
-                    !is_null($oldFather["taufort"])){
-                    $baptismId = $this->get("migrate_data.service")->migrateBaptism($oldFather["getauft"], $oldFather["taufort"]);
-
-                    $father->setBaptismid($baptismId);
-                }
-
-                //death
-                if(!is_null($oldFather["gestorben"]) || 
-                    !is_null($oldFather["todesort"]) || 
-                    !is_null($oldFather["todesterritorium"]) || 
-                    !is_null($oldFather["begraben"]) || 
-                    !is_null($oldFather["begräbnisort"])){
-                    //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
-                    $deathId = $this->get("migrate_data.service")->migrateDeath($oldFather["todesort"],$oldFather["gestorben"], null, null, $oldFather["todesterritorium"], null, $oldFather["begräbnisort"], $oldFather["begraben"]);
-
-                    $father->setDeathid($deathId);
-                }
-
-                //residence
-                if(!is_null($oldFather["wohnort"]) ||
-                    !is_null($oldFather["wohnterritorium"]) ||
-                    !is_null($oldFather["wohnland"])){
-                    $residenceId = $this->get("migrate_data.service")->migrateResidence(1,$oldFather["wohnland"],$oldFather["wohnterritorium"],$oldFather["wohnort"]);
-
-                    $father->setResidenceId($residenceId);
-                }
-
-                //religion
-                if(!is_null($oldFather["konfession"])){
-                    $religionId = $this->get("migrate_data.service")->migrateReligion($oldFather["konfession"], 1);
-
-                    $father->setReligionid($religionId);
-                }
-               
-                //status
-                if(!is_null($oldFather["stand"])){
-                    $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldFather["stand"]);
-                    $father->setStatusid($statusId);
-                }
-
-                //rank
-                if(!is_null($oldFather["rang"])){
-                    $rankId = $this->get("migrate_data.service")->migrateRank(1, $oldFather["rang"]);
-                    $father->setRankid($rankId);
-                }
-
-
-                //property
-                if(!is_null($oldFather["besitz"])){
-                    $propertyId = $this->get("migrate_data.service")->migrateProperty(1, $oldFather["besitz"]);
-
-                    $father->setPropertyid($propertyId);
-                }
-
-
-                //job
-                if(!is_null($oldFather["beruf"])){
-                    $jobID = $this->get("migrate_data.service")->migrateJob($oldFather["beruf"]);
-
-                    $father->setJobid($jobID);
-                }
-
-                //education
-                if(!is_null($oldFather["ausbildung"]) ||
-                    !is_null($oldFather["bildungsabschluss"])){
-                    //$educationOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $graduationLabel=null, $graduationDate=null, $graduationLocation=null, $comment=null
-                    $educationID = $this->get("migrate_data.service")->migrateEducation(1, $oldFather["ausbildung"], null, null, null, null, null, null, $oldFather["bildungsabschluss"]);
-
-                    $father->setEducationid($educationID);
-                }
-
-                //honour
-                if(!is_null($oldFather["ehren"])){
-                    $honourID = $this->get("migrate_data.service")->migrateHonour(1, $oldFather["ehren"]);
-
-                    $father->setHonourid($honourID);
-                }
-
-                //born_in_marriage
-                if(!is_null($oldFather["ehelich"])){
-                    $father->setBornInMarriage($oldFather["ehelich"]);
-                }
-
-                $this->get("migrate_data.service")->migrateIsParent($newPerson, $father);
+                $newFather = $this->createFather($newPerson, $oldFather, $oldPersonID, $oldDBManager);
             }
+
+            $this->migratePartnersOfFather($newPerson, $newFather, $oldPersonID, $oldDBManager);
         }
 
     }
+
+    private function createFather($newPerson, $oldFather, $oldPersonID, $oldDBManager){
+        //$firstName, $patronym, $lastName, $gender, $nation, $comment
+        $father = $this->get("migrate_data.service")->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
+
+        $father->setForeName($oldFather["rufnamen"]);
+
+        //additional data
+
+        //birth
+        if(!is_null($oldFather["herkunftsort"]) || 
+            !is_null($oldFather["herkunftsland"]) || 
+            !is_null($oldFather["herkunftsterritorium"]) || 
+            !is_null($oldFather["geburtsort"]) || 
+            !is_null($oldFather["geburtsterritorium"]) || 
+            !is_null($oldFather["geburtsland"]) || 
+            !is_null($oldFather["geboren"])){
+            //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
+            $birthID = $this->get("migrate_data.service")->migrateBirth($oldFather["herkunftsland"],$oldFather["herkunftsterritorium"],$oldFather["herkunftsort"],$oldFather["geburtsland"], $oldFather["geburtsort"],$oldFather["geboren"], $oldFather["geburtsterritorium"]);
+
+            $father->setBirthid($birthID);
+        }
+
+        //baptism
+        if(!is_null($oldFather["getauft"]) ||
+            !is_null($oldFather["taufort"])){
+            $baptismId = $this->get("migrate_data.service")->migrateBaptism($oldFather["getauft"], $oldFather["taufort"]);
+
+            $father->setBaptismid($baptismId);
+        }
+
+        //death
+        if(!is_null($oldFather["gestorben"]) || 
+            !is_null($oldFather["todesort"]) || 
+            !is_null($oldFather["todesterritorium"]) || 
+            !is_null($oldFather["begraben"]) || 
+            !is_null($oldFather["begräbnisort"])){
+            //$deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null
+            $deathId = $this->get("migrate_data.service")->migrateDeath($oldFather["todesort"],$oldFather["gestorben"], null, null, $oldFather["todesterritorium"], null, $oldFather["begräbnisort"], $oldFather["begraben"]);
+
+            $father->setDeathid($deathId);
+        }
+
+        //residence
+        if(!is_null($oldFather["wohnort"]) ||
+            !is_null($oldFather["wohnterritorium"]) ||
+            !is_null($oldFather["wohnland"])){
+            $residenceId = $this->get("migrate_data.service")->migrateResidence(1,$oldFather["wohnland"],$oldFather["wohnterritorium"],$oldFather["wohnort"]);
+
+            $father->setResidenceId($residenceId);
+        }
+
+        //religion
+        if(!is_null($oldFather["konfession"])){
+            $religionId = $this->get("migrate_data.service")->migrateReligion($oldFather["konfession"], 1);
+
+            $father->setReligionid($religionId);
+        }
+       
+        //status
+        if(!is_null($oldFather["stand"])){
+            $statusId = $this->get("migrate_data.service")->migrateStatus(1, $oldFather["stand"]);
+            $father->setStatusid($statusId);
+        }
+
+        //rank
+        if(!is_null($oldFather["rang"])){
+            $rankId = $this->get("migrate_data.service")->migrateRank(1, $oldFather["rang"]);
+            $father->setRankid($rankId);
+        }
+
+
+        //property
+        if(!is_null($oldFather["besitz"])){
+            $propertyId = $this->get("migrate_data.service")->migrateProperty(1, $oldFather["besitz"]);
+
+            $father->setPropertyid($propertyId);
+        }
+
+
+        //job
+        if(!is_null($oldFather["beruf"])){
+            $jobID = $this->get("migrate_data.service")->migrateJob($oldFather["beruf"]);
+
+            $father->setJobid($jobID);
+        }
+
+        //education
+        if(!is_null($oldFather["ausbildung"]) ||
+            !is_null($oldFather["bildungsabschluss"])){
+            //$educationOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $graduationLabel=null, $graduationDate=null, $graduationLocation=null, $comment=null
+            $educationID = $this->get("migrate_data.service")->migrateEducation(1, $oldFather["ausbildung"], null, null, null, null, null, null, $oldFather["bildungsabschluss"]);
+
+            $father->setEducationid($educationID);
+        }
+
+        //honour
+        if(!is_null($oldFather["ehren"])){
+            $honourID = $this->get("migrate_data.service")->migrateHonour(1, $oldFather["ehren"]);
+
+            $father->setHonourid($honourID);
+        }
+
+        //born_in_marriage
+        if(!is_null($oldFather["ehelich"])){
+            $father->setBornInMarriage($oldFather["ehelich"]);
+        }
+
+        $this->get("migrate_data.service")->migrateIsParent($newPerson, $father);
+
+        return $father;
+    }
+
     private function getFatherWithNativeQuery($oldPersonID, $oldDBManager){
         $sql = "SELECT `ID`,`order`,`vater_id-nr`,`vornamen`,`name`,`russ_vornamen`,`rufnamen`,
         `geboren`,`geburtsterritorium`,`geburtsort`,`geburtsland`,`herkunftsort`,`herkunftsterritorium`,`herkunftsland`,
@@ -2288,17 +2285,17 @@ class MigrateController extends Controller
     }
 
     //other marriage partners of the father of the person
-    private function migratePartnersOfFather($newPerson, $oldPersonID, $oldDBManager){
+    private function migratePartnersOfFather($newPerson, $newFather, $oldPersonID, $oldDBManager){
         $partnersOfFather = $this->getPartnersOfFatherWithNativeQuery($oldPersonID, $oldDBManager);
 
         for($i = 0; $i < count($partnersOfFather); $i++){
             $oldPartnersOfFather = $partnersOfFather[$i];
-            $this->createPartnersOfFather($newPerson, $oldPartnersOfFather, $oldPersonID, $oldDBManager);                
+            $this->createPartnersOfFather($newPerson,$newFather, $oldPartnersOfFather, $oldPersonID, $oldDBManager);                
         }
     }
 
-    private function createPartnersOfFather($newPerson, $oldPartnersOfFather, $oldPersonID, $oldDBManager){
-        $partnerOfFather = $this->get("migrate_data.service")->migrateRelative($oldPartnersOfFather["vornamen"], null, $oldPartnersOfFather["name"], "weiblich", null, $oldPartnersOfFather["kommentar"]);
+    private function createPartnersOfFather($newPerson,$newFather, $oldPartnersOfFather, $oldPersonID, $oldDBManager){
+        $partnerOfFather = $this->get("migrate_data.service")->migratePartner($oldPartnersOfFather["vornamen"], null, $oldPartnersOfFather["name"], "weiblich", null, $oldPartnersOfFather["kommentar"]);
 
          //birth
         if(!is_null($oldPartnersOfFather["geburtsort"]) || 
@@ -2340,7 +2337,7 @@ class MigrateController extends Controller
             $partnerOfFather->setJobid($jobID);
         }
 
-        //verheiratet, hochzeitstag, hochzeitsort, `vorher-nachher`
+        $this->get("migrate_data.service")->migrateWedding($oldPartnersOfFather['order2'], $newFather, $partnerOfFather, $oldPartnersOfFather['hochzeitstag'], $oldPartnersOfFather['hochzeitsort'], null, null, null, null, $oldPartnersOfFather['verheiratet'], $oldPartnersOfFather['vorher-nachher'], null);
     }
 
     private function getPartnersOfFatherWithNativeQuery($oldPersonID, $oldDBManager){
@@ -2355,17 +2352,17 @@ class MigrateController extends Controller
         return $stmt->fetchAll();
     }
 
-    private function migratePartnersOfMother($newPerson, $oldPersonID, $oldDBManager){
+    private function migratePartnersOfMother($newPerson, $newMother, $oldPersonID, $oldDBManager){
         $partnersOfMother = $this->getPartnersOfMotherWithNativeQuery($oldPersonID, $oldDBManager);
 
         for($i = 0; $i < count($partnersOfMother); $i++){
             $oldPartnersOfMother = $partnersOfMother[$i];
-            $this->createPartnersOfMother($newPerson, $oldPartnersOfMother, $oldPersonID, $oldDBManager);                
+            $this->createPartnersOfMother($newPerson,$newMother, $oldPartnersOfMother, $oldPersonID, $oldDBManager);                
         }
     }
 
-    private function createPartnersOfMother($newPerson, $oldPartnersOfMother, $oldPersonID, $oldDBManager){
-        $partnerOfMother = $this->get("migrate_data.service")->migrateRelative($oldPartnersOfMother["vornamen"], null, $oldPartnersOfMother["name"], "männlich", null, $oldPartnersOfMother["kommentar"]);
+    private function createPartnersOfMother($newPerson,$newMother, $oldPartnersOfMother, $oldPersonID, $oldDBManager){
+        $partnerOfMother = $this->get("migrate_data.service")->migratePartner($oldPartnersOfMother["vornamen"], null, $oldPartnersOfMother["name"], "männlich", null, $oldPartnersOfMother["kommentar"]);
 
         //status
         if(!is_null($oldPartnersOfMother["stand"])){
@@ -2386,9 +2383,10 @@ class MigrateController extends Controller
             $partnerOfMother->setJobid($jobID);
         }
 
-        //verheiratet, hochzeitstag, hochzeitsort, 
-        //auflösung, gelöst, `vorher-nachher`, , belegt
+        //belegt
 
+        //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
+        $this->get("migrate_data.service")->migrateWedding($oldPartnersOfMother['order2'], $newMother, $partnerOfMother, $oldPartnersOfMother['hochzeitstag'], $oldPartnersOfMother['hochzeitsort'], null, null, $oldPartnersOfMother['auflösung'], $oldPartnersOfMother['gelöst'], $oldPartnersOfMother['verheiratet'], $oldPartnersOfMother['vorher-nachher'], null);
     }
 
     private function getPartnersOfMotherWithNativeQuery($oldPersonID, $oldDBManager){
@@ -2431,7 +2429,7 @@ class MigrateController extends Controller
 
     private function createMarriagePartnersOfSibling($newPerson, $newSibling, $oldMarriagePartnersOfSibling, $oldPersonID, $oldDBManager){
         $gender = $this->get("migrate_data.service")->getOppositeGender($newSibling->getGender());
-        $marriagePartnersOfSibling = $this->get("migrate_data.service")->migrateRelative($oldMarriagePartnersOfSibling["vornamen"], $oldMarriagePartnersOfSibling["russ_vornamen"], $oldMarriagePartnersOfSibling["name"], $gender, null, $oldMarriagePartnersOfSibling["kommentar"]);
+        $marriagePartnersOfSibling = $this->get("migrate_data.service")->migratePartner($oldMarriagePartnersOfSibling["vornamen"], $oldMarriagePartnersOfSibling["russ_vornamen"], $oldMarriagePartnersOfSibling["name"], $gender, null, $oldMarriagePartnersOfSibling["kommentar"]);
 
          //birth
         if(!is_null($oldMarriagePartnersOfSibling["herkunftsort"]) || 
@@ -2617,7 +2615,7 @@ class MigrateController extends Controller
 ####################
 
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
-        $marriagePartnerOfChild = $this->get("migrate_data.service")->migrateRelative($oldMarriagePartnerOfChild["vornamen"], $oldMarriagePartnerOfChild["russ_vornamen"], $oldMarriagePartnerOfChild["name"], $gender, $oldMarriagePartnerOfChild["nation"], $oldMarriagePartnerOfChild["kommentar"]);
+        $marriagePartnerOfChild = $this->get("migrate_data.service")->migratePartner($oldMarriagePartnerOfChild["vornamen"], $oldMarriagePartnerOfChild["russ_vornamen"], $oldMarriagePartnerOfChild["name"], $gender, $oldMarriagePartnerOfChild["nation"], $oldMarriagePartnerOfChild["kommentar"]);
 
         $marriagePartnerOfChild->setForeName($oldMarriagePartnerOfChild["rufnamen"]);
 
@@ -2715,7 +2713,7 @@ class MigrateController extends Controller
 ####################
         
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
-        $otherPartnerOfChild = $this->get("migrate_data.service")->migrateRelative($oldOtherPartnerOfChild["vornamen"], null, $oldOtherPartnerOfChild["name"], $gender, null, $oldOtherPartnerOfChild["kommentar"]);
+        $otherPartnerOfChild = $this->get("migrate_data.service")->migratePartner($oldOtherPartnerOfChild["vornamen"], null, $oldOtherPartnerOfChild["name"], $gender, null, $oldOtherPartnerOfChild["kommentar"]);
 
          //birth
         if(!is_null($oldOtherPartnerOfChild["geburtsort"]) || 
