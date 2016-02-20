@@ -121,10 +121,6 @@ class MigrateController extends Controller
 
         $this->migrateChild($newPerson, $ID, $oldDBManager);
 
-        $this->migrateFatherInLaw($newPerson, $ID, $oldDBManager);
-
-        $this->migrateMotherInLaw($newPerson, $ID, $oldDBManager);
-
         // migrate GrandChild after marriagepartners of child
 
         return $newPerson;
@@ -1018,6 +1014,8 @@ class MigrateController extends Controller
         for($i = 0; $i < count($siblings); $i++){
             $oldSibling = $siblings[$i];
 
+            $newSibling = null;
+
             //check if reference to person
             if(!is_null($oldSibling["geschwister_id-nr"])){
                 //check it?
@@ -1029,8 +1027,10 @@ class MigrateController extends Controller
 
                 $this->get("migrate_data.service")->migrateIsSibling($newPerson, $newSibling, $oldSibling["kommentar"]);
             }else{
-                $this->createSibling($newPerson, $oldSibling, $oldPersonID, $oldDBManager);                
+                $newSibling = $this->createSibling($newPerson, $oldSibling, $oldPersonID, $oldDBManager);                
             }
+
+            $this->migrateMarriagePartnersOfSibling($newPerson, $newSibling, $oldSibling["order"], $oldPersonID, $oldDBManager);
         }
 
     }
@@ -1220,6 +1220,8 @@ class MigrateController extends Controller
 
 
         $this->get("migrate_data.service")->migrateIsSibling($newPerson, $sibling);
+
+        return $sibling;
     }
 
     private function getSiblingWithNativeQuery($oldPersonID, $oldDBManager){
@@ -1338,6 +1340,8 @@ class MigrateController extends Controller
         for($i = 0; $i < count($marriagePartners); $i++){
             $oldMarriagePartner = $marriagePartners[$i];
 
+            $newMarriagePartner = null;
+
             //check if reference to person
             if(!is_null($oldMarriagePartner["ehepartner_id-nr"]) ||
                 !is_null($oldMarriagePartner["partnerpartner_id-nr"])){
@@ -1358,8 +1362,14 @@ class MigrateController extends Controller
                 //ehe
                 $this->migrateWedding($newPerson, $newMarriagePartner, $oldMarriagePartner);
             }else{
-                $this->createMarriagePartner($newPerson, $oldMarriagePartner, $oldPersonID, $oldDBManager);                
+                $newMarriagePartner = $this->createMarriagePartner($newPerson, $oldMarriagePartner, $oldPersonID, $oldDBManager);                
             }
+
+            //mother in law imports father in law!
+            $this->migrateMotherInLaw($newPerson,$newMarriagePartner,$oldMarriagePartner["order"], $oldPersonID, $oldDBManager);
+
+
+            //children?
         }
     }
 
@@ -1462,6 +1472,8 @@ class MigrateController extends Controller
         }
 
         $this->migrateWedding($newPerson, $marriagePartner, $oldMarriagePartner);
+
+        return $marriagePartner;
     }
 
     private function getOppositeGender($newPerson){
@@ -1942,8 +1954,8 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
     }
 
 
-    private function migrateFatherInLaw($newPerson, $oldPersonID, $oldDBManager){
-        $fathersInLaw = $this->getFatherInLawWithNativeQuery($oldPersonID, $oldDBManager);
+    private function migrateFatherInLaw($newPerson, $newMarriagePartner, $marriageOrder, $newMotherInLaw, $motherInLawOrder, $oldPersonID, $oldDBManager){
+        $fathersInLaw = $this->getFatherInLawWithNativeQuery($oldPersonID,$marriageOrder, $motherInLawOrder, $oldDBManager);
 
         for($i = 0; $i < count($fathersInLaw); $i++){
             $oldFatherInLaw = $fathersInLaw[$i];
@@ -1957,15 +1969,21 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
 
                 $newFatherInLaw = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
 
+                $this->migrateWeddingOfParentsInLaw($newFatherInLaw, $newMotherInLaw, $oldFatherInLaw);
                 $this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $newFatherInLaw, $oldFatherInLaw["kommentar"]);
-
+                $this->get("migrate_data.service")->migrateIsParent($newMarriagePartner, $newFatherInLaw, $oldFatherInLaw["kommentar"]);
             }else{
-                $this->createFatherInLaw($newPerson, $oldFatherInLaw, $oldPersonID, $oldDBManager);                
+                $this->createFatherInLaw($newPerson,$newMarriagePartner,$newMotherInLaw, $oldFatherInLaw, $oldPersonID, $oldDBManager);                
             }
         }
     }
 
-    private function createFatherInLaw($newPerson, $oldFatherInLaw, $oldPersonID, $oldDBManager){
+    private function migrateWeddingOfParentsInLaw($newFatherInLaw, $newMotherInLaw, $oldFatherInLaw){
+        //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
+        $this->get("migrate_data.service")->migrateWedding(1, $newFatherInLaw, $newMotherInLaw, null, $oldFatherInLaw['hochzeitsort']);
+    }
+
+    private function createFatherInLaw($newPerson,$newMarriagePartner,$newMotherInLaw, $oldFatherInLaw, $oldPersonID, $oldDBManager){
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $fatherInLaw = $this->get("migrate_data.service")->migrateRelative($oldFatherInLaw["vornamen"], $oldFatherInLaw["russ_vornamen"], $oldFatherInLaw["name"], "männlich" , $oldFatherInLaw["nation"], $oldFatherInLaw["kommentar"]);
 
@@ -2063,39 +2081,39 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
             $fatherInLaw->setBornInMarriage($oldFatherInLaw["ehelich"]);
         }
 
-
-        /*
-         hochzeitsort, 
-        */
-
+        $this->migrateWeddingOfParentsInLaw($fatherInLaw, $newMotherInLaw, $oldFatherInLaw);
 
         $this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $fatherInLaw);
+        $this->get("migrate_data.service")->migrateIsParent($newMarriagePartner, $fatherInLaw);
     }
 
-    private function getFatherInLawWithNativeQuery($oldPersonID, $oldDBManager){
+    private function getFatherInLawWithNativeQuery($oldPersonID, $marriageOrder, $motherInLawOrder, $oldDBManager){
         $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, gestorben, todesort, 
         begraben, begräbnisort, ehelich, hochzeitsort, wohnort, wohnland, wohnterritorium, nation, 
         getauft, taufort, konfession, herkunftsort, herkunftsterritorium, bildungsabschluss, beruf, 
         rang, ehren, stand, besitz, `schwiegervater_id-nr`, kommentar 
-        FROM `schwiegervater` WHERE ID=:personID";
+        FROM `schwiegervater` WHERE ID=:personID AND `order`=:marriageOrder AND order2=:motherInLawOrder";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('motherInLawOrder', $motherInLawOrder);
         $stmt->execute();
 
         return $stmt->fetchAll();
     }
 
-    private function migrateMotherInLaw($newPerson, $oldPersonID, $oldDBManager){
-        $mothersInLaw = $this->getMotherInLawWithNativeQuery($oldPersonID, $oldDBManager);
+    private function migrateMotherInLaw($newPerson,$newMarriagePartner, $marriageOrder, $oldPersonID, $oldDBManager){
+        $mothersInLaw = $this->getMotherInLawWithNativeQuery($oldPersonID,$marriageOrder, $oldDBManager);
 
         for($i = 0; $i < count($mothersInLaw); $i++){
             $oldMotherInLaw = $mothersInLaw[$i];
-            $this->createMotherInLaw($newPerson, $oldMotherInLaw, $oldPersonID, $oldDBManager);                
+            $newMotherInLaw = $this->createMotherInLaw($newPerson,$newMarriagePartner, $oldMotherInLaw, $oldPersonID, $oldDBManager);
+            $this->migrateFatherInLaw($newPerson,$newMarriagePartner,$marriageOrder,$newMotherInLaw, $oldMotherInLaw['order2'], $oldPersonID, $oldDBManager);
         }
     }
 
-    private function createMotherInLaw($newPerson, $oldMotherInLaw, $oldPersonID, $oldDBManager){
+    private function createMotherInLaw($newPerson,$newMarriagePartner, $oldMotherInLaw, $oldPersonID, $oldDBManager){
          //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $motherInLaw = $this->get("migrate_data.service")->migrateRelative($oldMotherInLaw["vornamen"], $oldMotherInLaw["russ_vornamen"], $oldMotherInLaw["name"], "weiblich" , $oldMotherInLaw["nation"], $oldMotherInLaw["kommentar"]);
 
@@ -2139,15 +2157,19 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
         }
 
         $this->get("migrate_data.service")->migrateIsParentInLaw($newPerson, $motherInLaw);
+        $this->get("migrate_data.service")->migrateIsParent($newMarriagePartner, $motherInLaw);
+
+        return $motherInLaw;
     }
 
-    private function getMotherInLawWithNativeQuery($oldPersonID, $oldDBManager){
+    private function getMotherInLawWithNativeQuery($oldPersonID, $marriageOrder, $oldDBManager){
         $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, geburtsort, 
             gestorben, todesort, nation, ehelich, herkunftsort, beruf, stand, kommentar
-            FROM `schwiegermutter` WHERE ID=:personID";
+            FROM `schwiegermutter` WHERE ID=:personID AND `order`=:marriageOrder";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
         $stmt->execute();
 
         return $stmt->fetchAll();
@@ -2392,11 +2414,13 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
         return $stmt->fetchAll();
     }
 
-    private function migrateMarriagePartnersOfSibling($newPerson, $oldPersonID, $oldDBManager){
-        $marriagePartnersOfSibling = $this->getMarriagePartnersOfSiblingWithNativeQuery($oldPersonID, $oldDBManager);
+    private function migrateMarriagePartnersOfSibling($newPerson, $newSibling, $siblingOrder, $oldPersonID, $oldDBManager){
+        $marriagePartnersOfSibling = $this->getMarriagePartnersOfSiblingWithNativeQuery($oldPersonID,$siblingOrder, $oldDBManager);
 
         for($i = 0; $i < count($marriagePartnersOfSibling); $i++){
             $oldMarriagePartnersOfSibling = $marriagePartnersOfSibling[$i];
+
+            $newMarriagePartner = null;
 
             if(!is_null($oldMarriagePartnersOfSibling["geschwisterpartner_id-nr"])){
                 //check it?
@@ -2404,16 +2428,20 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
 
                 $marriagePartnersOfSiblingMainId = $this->getIDForOID($marriagePartnersOfSiblingOID, $oldDBManager);
 
-                $newMarriagePartnersOfSibling = $this->migratePerson($marriagePartnersOfSiblingMainId, $marriagePartnersOfSiblingOID);
+                $newMarriagePartner = $this->migratePerson($marriagePartnersOfSiblingMainId, $marriagePartnersOfSiblingOID);
 
+                $this->migrateWeddingOfSibling($newSibling, $newMarriagePartner, $oldMarriagePartnersOfSibling);
             }else{
-                $this->createMarriagePartnersOfSibling($newPerson, $oldMarriagePartnersOfSibling, $oldPersonID, $oldDBManager);                 
+                $newMarriagePartner = $this->createMarriagePartnersOfSibling($newPerson, $newSibling, $oldMarriagePartnersOfSibling, $oldPersonID, $oldDBManager);                 
             }
-                         
+
+            $this->migrateChildrenOfSibling($newPerson, $newSibling, $siblingOrder, $newMarriagePartner, $oldMarriagePartnersOfSibling["order2"], $oldPersonID, $oldDBManager);
+            //migrate children of marriage partner                 
         }
     }
 
-    private function createMarriagePartnersOfSibling($newPerson, $oldMarriagePartnersOfSibling, $oldPersonID, $oldDBManager){   
+    private function createMarriagePartnersOfSibling($newPerson, $newSibling, $oldMarriagePartnersOfSibling, $oldPersonID, $oldDBManager){
+        $gender = $this->get("migrate_data.service")->getOppositeGender($newSibling->getGender());
         $marriagePartnersOfSibling = $this->get("migrate_data.service")->migrateRelative($oldMarriagePartnersOfSibling["vornamen"], $oldMarriagePartnersOfSibling["russ_vornamen"], $oldMarriagePartnersOfSibling["name"], $gender, null, $oldMarriagePartnersOfSibling["kommentar"]);
 
          //birth
@@ -2481,32 +2509,41 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
 
         //verheiratet, 
         //hochzeitstag, hochzeitsort, auflösung,`vorher-nachher`,
+        $this->migrateWeddingOfSibling($newSibling, $marriagePartnersOfSibling, $oldMarriagePartnersOfSibling);
+
+        return $marriagePartnersOfSibling;
     }
 
-    private function getMarriagePartnersOfSiblingWithNativeQuery($oldPersonID, $oldDBManager){
+    private function migrateWeddingOfSibling($newSibling, $marriagePartner, $oldMarriagePartnersOfSibling){
+        //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
+        $this->get("migrate_data.service")->migrateWedding($oldMarriagePartnersOfSibling['order2'], $newSibling, $marriagePartner, $oldMarriagePartnersOfSibling['hochzeitstag'], $oldMarriagePartnersOfSibling['hochzeitsort'], null, null, $oldMarriagePartnersOfSibling['auflösung'], null, $oldMarriagePartnersOfSibling['verheiratet'], $oldMarriagePartnersOfSibling['vorher-nachher'], null);
+    }
+
+    private function getMarriagePartnersOfSiblingWithNativeQuery($oldPersonID,$siblingOrder, $oldDBManager){
         $sql = "SELECT ID, `order`, order2, vornamen, russ_vornamen, name, geboren, herkunftsort, 
         gestorben, begraben, begräbnisort, friedhof, `geschwisterpartner_id-nr`, verheiratet, 
         hochzeitstag, hochzeitsort, auflösung, konfession, bildungsabschluss, stand, beruf, 
         ehren, rang, `vorher-nachher`, kommentar
-            FROM `ehepartner_des_geschwisters` WHERE ID=:personID";
+            FROM `ehepartner_des_geschwisters` WHERE ID=:personID AND `order`=:siblingOrder";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingOrder', $siblingOrder);
         $stmt->execute();
 
         return $stmt->fetchAll();
     }
 
-    private function migrateChildrenOfSibling($newPerson, $oldPersonID, $oldDBManager){
-        $childrenOfSibling = $this->getChildrenOfSiblingWithNativeQuery($oldPersonID, $oldDBManager);
+    private function migrateChildrenOfSibling($newPerson, $newSibling, $siblingOrder, $newMarriagePartner, $marriageOrder, $oldPersonID, $oldDBManager){
+        $childrenOfSibling = $this->getChildrenOfSiblingWithNativeQuery($oldPersonID, $siblingOrder, $marriageOrder, $oldDBManager);
 
         for($i = 0; $i < count($childrenOfSibling); $i++){
             $oldChildrenOfSibling = $childrenOfSibling[$i];
-            $this->createChildrenOfSibling($newPerson, $oldChildrenOfSibling, $oldPersonID, $oldDBManager);                
+            $this->createChildrenOfSibling($newPerson, $oldChildrenOfSibling, $newSibling, $newMarriagePartner, $oldPersonID, $oldDBManager);                
         }
     }
 
-    private function createChildrenOfSibling($newPerson, $oldChildOfSibling, $oldPersonID, $oldDBManager){
+    private function createChildrenOfSibling($newPerson, $oldChildOfSibling,$newSibling, $newMarriagePartner, $oldPersonID, $oldDBManager){
         $childOfSibling = $this->get("migrate_data.service")->migrateRelative($oldChildOfSibling["vornamen"],null, $oldChildOfSibling["name"], $oldChildOfSibling["geschlecht"], null, $oldChildOfSibling["kommentar"]);
 
          //birth
@@ -2541,15 +2578,19 @@ private function createChild($newPerson, $oldChild, $oldPersonID, $oldDBManager)
             $childOfSibling->setJobid($jobID);
         }
 
+        $this->get("migrate_data.service")->migrateIsParent($childOfSibling, $newSibling);
+        $this->get("migrate_data.service")->migrateIsParent($childOfSibling, $newMarriagePartner);
     }
 
-    private function getChildrenOfSiblingWithNativeQuery($oldPersonID, $oldDBManager){
+    private function getChildrenOfSiblingWithNativeQuery($oldPersonID, $siblingOrder, $marriageOrder, $oldDBManager){
         $sql = "SELECT  ID, `order`, order2, order3, vornamen, name, geschlecht, geboren, 
         geburtsort, getauft, taufort, gestorben, beruf, kommentar
-            FROM `geschwisterkind` WHERE ID=:personID";
+            FROM `geschwisterkind` WHERE ID=:personID AND `order`=:siblingOrder AND order2=:marriageOrder";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingOrder', $siblingOrder);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
         $stmt->execute();
 
         return $stmt->fetchAll();

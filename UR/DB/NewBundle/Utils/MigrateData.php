@@ -830,7 +830,7 @@ class MigrateData
         return $this->getTerritoryId($name, $comment);
     }
 
-    public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate, $weddingLocation, $weddingTerritory, $bannsDate, $breakupReason, $breakupDate, $marriageComment, $beforeAfter, $comment){
+    public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate=null, $weddingLocation=null, $weddingTerritory=null, $bannsDate=null, $breakupReason=null, $breakupDate=null, $marriageComment=null, $beforeAfter=null, $comment=null){
         if(!$this->checkIfWeddingAlreadyExists($weddingOrder, $personOne, $personTwo)){
             //insert into new data
             $newWedding = new Wedding();
