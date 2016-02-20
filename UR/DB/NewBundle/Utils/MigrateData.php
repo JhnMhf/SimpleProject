@@ -845,8 +845,8 @@ class MigrateData
                 $wife = $personOne;
             }
 
-            $newWedding->setHusbandId($personOne->getId());
-            $newWedding->setWifeId($personTwo->getId());
+            $newWedding->setHusbandId($husband->getId());
+            $newWedding->setWifeId($wife->getId());
             $newWedding->setRelationType($this->getWeddingRelationType($husband, $wife));
 
             $newWedding->setWeddingOrder($weddingOrder);
