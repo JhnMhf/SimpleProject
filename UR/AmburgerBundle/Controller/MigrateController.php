@@ -2614,8 +2614,9 @@ class MigrateController extends Controller
                $newMarriagePartner = $this->createMarriagePartnersOfChildren($newPerson, $newChild, $oldMarriagePartner, $oldPersonID, $oldDBManager);                
             }
 
-
             //other partners
+            $this->migrateOtherPartnersOfChildren($newPerson,$newMarriagePartner,$parentMarriageOrder, $childOrder,$oldMarriagePartner['order3'], $oldPersonID, $oldDBManager);
+
         }
     }
 
@@ -2717,19 +2718,17 @@ class MigrateController extends Controller
         return $stmt->fetchAll();
     }
 
-    private function migrateOtherPartnersOfChildren($newPerson, $oldPersonID, $oldDBManager){
-        $otherPartnersOfChildren = $this->getOtherPartnersOfChildrenWithNativeQuery($oldPersonID, $oldDBManager);
+    private function migrateOtherPartnersOfChildren($newPerson,$newMarriagePartner,$parentMarriageOrder, $childOrder,$childMarriageOrder, $oldPersonID, $oldDBManager){
+        $otherPartnersOfChildren = $this->getOtherPartnersOfChildrenWithNativeQuery($oldPersonID,$parentMarriageOrder, $childOrder,$childMarriageOrder, $oldDBManager);
 
         for($i = 0; $i < count($otherPartnersOfChildren); $i++){
             $oldOtherPartnersOfChildren = $otherPartnersOfChildren[$i];
-            $this->createOtherPartnersOfChildren($newPerson, $oldOtherPartnersOfChildren, $oldPersonID, $oldDBManager);                
+            $this->createOtherPartnersOfChildren($newPerson,$newMarriagePartner, $oldOtherPartnersOfChildren, $oldPersonID, $oldDBManager);                
         }
     }
 
-    private function createOtherPartnersOfChildren($newPerson, $oldOtherPartnerOfChild, $oldPersonID, $oldDBManager){
-####################
-        $gender = "unknown";
-####################
+    private function createOtherPartnersOfChildren($newPerson,$newMarriagePartner, $oldOtherPartnerOfChild, $oldPersonID, $oldDBManager){
+        $gender = $this->getOppositeGender($newMarriagePartner);
         
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $otherPartnerOfChild = $this->get("migrate_data.service")->migratePartner($oldOtherPartnerOfChild["vornamen"], null, $oldOtherPartnerOfChild["name"], $gender, null, $oldOtherPartnerOfChild["kommentar"]);
@@ -2758,17 +2757,30 @@ class MigrateController extends Controller
             $otherPartnerOfChild->setRankid($rankId);
         }
 
-        //`vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
+        $this->migrateWeddingOfOtherPartnersOfChild($newMarriagePartner, $otherPartnerOfChild, $oldOtherPartnerOfChild);
     }
 
-    private function getOtherPartnersOfChildrenWithNativeQuery($oldPersonID, $oldDBManager){
+    private function migrateWeddingOfOtherPartnersOfChild($newMarriagePartner, $otherPartnerOfChild, $oldOtherPartnerOfChild){
+        //auflösung, 
+
+        //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
+        $this->get("migrate_data.service")->migrateWedding($oldOtherPartnerOfChild['order4'], $newMarriagePartner, $otherPartnerOfChild, 
+            $oldOtherPartnerOfChild['hochzeitstag'], $oldOtherPartnerOfChild['hochzeitsort'],null, 
+            null, $oldOtherPartnerOfChild['auflösung'], null, 
+            $oldOtherPartnerOfChild['verheiratet'], $oldOtherPartnerOfChild['vorher-nachher']);
+    }
+
+    private function getOtherPartnersOfChildrenWithNativeQuery($oldPersonID,$parentMarriageOrder, $childOrder,$childMarriageOrder, $oldDBManager){
         $sql = "SELECT ID, vornamen, name, `order`, order2, order3, order4, geboren, geburtsort, 
         gestorben, todesort, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
         rang, kommentar
-        FROM `anderer_partner_des_kindes` WHERE ID=:personID";
+        FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:parentMarriageOrder AND order2=:childOrder AND order3=:childMarriageOrder";
 
         $stmt = $oldDBManager->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('parentMarriageOrder', $parentMarriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->bindValue('childMarriageOrder', $childMarriageOrder);
         $stmt->execute();
 
         return $stmt->fetchAll();
