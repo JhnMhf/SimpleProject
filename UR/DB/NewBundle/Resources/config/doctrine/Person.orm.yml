@@ -170,18 +170,6 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 fixed: false
             column: educationID
-        control:
-            type: text
-            nullable: true
-            length: 65535
-            options:
-                fixed: false
-        complete:
-            type: text
-            nullable: true
-            length: 65535
-            options:
-                fixed: false
         jobClassid:
             type: string
             nullable: true
@@ -196,4 +184,23 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 fixed: false
             column: residenceID
+        jobid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: jobID
+        control:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        complete:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
     lifecycleCallbacks: {  }

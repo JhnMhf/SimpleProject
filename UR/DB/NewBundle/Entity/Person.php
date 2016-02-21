@@ -809,4 +809,33 @@ class Person
     {
         return $this->residenceid;
     }
+    /**
+     * @var string
+     */
+    private $jobid;
+
+
+    /**
+     * Set jobid
+     *
+     * @param string $jobid
+     *
+     * @return Person
+     */
+    public function setJobid($jobid)
+    {
+        $this->jobid = $jobid;
+
+        return $this;
+    }
+
+    /**
+     * Get jobid
+     *
+     * @return string
+     */
+    public function getJobid()
+    {
+        return $this->jobid;
+    }
 }

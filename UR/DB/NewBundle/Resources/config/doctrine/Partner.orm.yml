@@ -33,16 +33,18 @@ UR\DB\NewBundle\Entity\Partner:
                 fixed: false
             column: last_name
         foreName:
-            type: integer
+            type: string
             nullable: true
+            length: 100
             options:
-                unsigned: false
+                fixed: false
             column: fore_name
         birthName:
-            type: integer
+            type: string
             nullable: true
+            length: 100
             options:
-                unsigned: false
+                fixed: false
             column: birth_name
         gender:
             type: integer
@@ -64,10 +66,11 @@ UR\DB\NewBundle\Entity\Partner:
                 unsigned: false
             column: deathID
         religionid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: religionID
         originalNationid:
             type: integer
@@ -95,75 +98,87 @@ UR\DB\NewBundle\Entity\Partner:
                 unsigned: false
             column: baptismID
         worksid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: worksID
         weddingid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: weddingID
         statusid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: statusID
         sourceid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: sourceID
         roadOfLiveid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: road_of_liveID
         rankid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: rankID
         propertyid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: propertyID
         honourid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: honourID
         educationid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: educationID
         jobClassid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: job_classID
-        jobid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: jobID
         residenceid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: residenceID
+        jobid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: jobID
     lifecycleCallbacks: {  }

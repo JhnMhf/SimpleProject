@@ -33,16 +33,18 @@ UR\DB\NewBundle\Entity\Relative:
                 fixed: false
             column: last_name
         foreName:
-            type: integer
+            type: string
             nullable: true
+            length: 100
             options:
-                unsigned: false
+                fixed: false
             column: fore_name
         birthName:
-            type: integer
+            type: string
             nullable: true
+            length: 100
             options:
-                unsigned: false
+                fixed: false
             column: birth_name
         gender:
             type: integer
@@ -64,10 +66,11 @@ UR\DB\NewBundle\Entity\Relative:
                 unsigned: false
             column: deathID
         religionid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: religionID
         nationid:
             type: integer
@@ -75,66 +78,6 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 unsigned: false
             column: nationID
-        baptismid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: baptismID
-        worksid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: worksID
-        weddingid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: weddingID
-        statusid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: statusID
-        sourceid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: sourceID
-        roadOfLiveid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: road_of_liveID
-        rankid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: rankID
-        propertyid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: propertyID
-        honourid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: honourID
-        educationid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: educationID
         comment:
             type: text
             nullable: true
@@ -148,16 +91,94 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 fixed: false
             column: born_in_marriage
-        jobid:
+        baptismid:
             type: integer
             nullable: true
             options:
                 unsigned: false
-            column: jobID
+            column: baptismID
+        worksid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: worksID
+        weddingid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: weddingID
+        statusid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: statusID
+        sourceid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: sourceID
+        roadOfLiveid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: road_of_liveID
+        rankid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: rankID
+        propertyid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: propertyID
+        honourid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: honourID
+        educationid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: educationID
+        jobClassid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: job_classID
         residenceid:
-            type: integer
+            type: string
             nullable: true
+            length: 200
             options:
-                unsigned: false
+                fixed: false
             column: residenceID
+        jobid:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+            column: jobID
     lifecycleCallbacks: {  }
