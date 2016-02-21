@@ -1174,19 +1174,16 @@ class MigrateData
             case RelationTypes::PERSON_TO_PARTNER:
                 return $this->newDBManager->getRepository('NewBundle:Person')
                     ->findOneBy( array('id' => $id));
-                break;
             case RelationTypes::RELATIVE_TO_PERSON:
             case RelationTypes::RELATIVE_TO_RELATIVE;
             case RelationTypes::RELATIVE_TO_PARTNER;
                 return $this->newDBManager->getRepository('NewBundle:Relative')
                     ->findOneBy( array('id' => $id));
-                break;
             case RelationTypes::PARTNER_TO_PERSON;
             case RelationTypes::PARTNER_TO_RELATIVE;
             case RelationTypes::PARTNER_TO_PARTNER;
                 return $this->newDBManager->getRepository('NewBundle:Partner')
                     ->findOneBy( array('id' => $id));
-                break;
         }
 
         return null;
@@ -1199,19 +1196,16 @@ class MigrateData
             case RelationTypes::PARTNER_TO_PERSON;
                 return $this->newDBManager->getRepository('NewBundle:Person')
                     ->findOneBy( array('id' => $id));
-                break;
             case RelationTypes::PERSON_TO_RELATIVE:
             case RelationTypes::RELATIVE_TO_RELATIVE;
             case RelationTypes::PARTNER_TO_RELATIVE;
                 return $this->newDBManager->getRepository('NewBundle:Relative')
                     ->findOneBy( array('id' => $id));
-                break;
             case RelationTypes::PERSON_TO_PARTNER:
             case RelationTypes::RELATIVE_TO_PARTNER;
             case RelationTypes::PARTNER_TO_PARTNER;
                 return $this->newDBManager->getRepository('NewBundle:Partner')
                     ->findOneBy( array('id' => $id));
-                break;
         }
 
         return null;
