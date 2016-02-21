@@ -6,3 +6,7 @@ services:
         class: UR\DB\NewBundle\Utils\MigrateData
         arguments: 
            container: "@service_container"
+    person_fusion.service:
+        class: UR\DB\NewBundle\Utils\PersonMerger
+        arguments: 
+           container: "@service_container"

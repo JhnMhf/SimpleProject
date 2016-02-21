@@ -698,7 +698,7 @@ class MigrateController extends Controller
 
                     $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother, $oldMother["kommentar"]);
                     
-                    //$this->get("person_fusion.service")->fusePersons($newMother,$newMother);
+                    $this->get("person_fusion.service")->fusePersons($newMother,$newMother);
                 }
 
             }else{
