@@ -148,6 +148,10 @@ class Person
     private $residenceid;
 
 
+    public function __toString (){
+        return "Person with ID: ".$this->getId();
+    }
+    
     /**
      * Get id
      *

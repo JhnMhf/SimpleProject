@@ -132,6 +132,10 @@ class Relative
      */
     private $residenceid;
 
+    
+    public function __toString (){
+        return "Relative with ID: ".$this->getId();
+    }
 
     /**
      * Get id

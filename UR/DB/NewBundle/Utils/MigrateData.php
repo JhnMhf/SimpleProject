@@ -549,8 +549,8 @@ class MigrateData
         return $newHonour->getId();
     }
 
-    public function migrateIsGrandparent($grandchild, $grandparent, $paternal, $comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        $this->LOGGER->info("Adding grandchildgrandParentRelation with... grandChildId: ".$grandchild->getId(). " grandParentId: ". $grandparent->getId());
+    public function migrateIsGrandparent($grandchild, $grandparent, $paternal, $comment=null){   
+        $this->LOGGER->info("Adding grandchildgrandParentRelation with... grandChild: '".$grandchild. "' grandParent: '". $grandparent."'");
         if(!$this->grandparentChildRelationAlreadyExists($grandchild, $grandparent)){
 
             //insert into new data
@@ -567,8 +567,8 @@ class MigrateData
         }
     }
 
-    public function migrateIsParent($child, $parent, $comment=null){   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        $this->LOGGER->info("Adding childParentRelation with... ChildId: ".$child->getId(). " ParentId: ". $parent->getId());
+    public function migrateIsParent($child, $parent, $comment=null){ 
+        $this->LOGGER->info("Adding childParentRelation with... Child: '".$child. "' Parent: '". $parent."'");
         if(!$this->parentChildRelationAlreadyExists($child, $parent)){
             //insert into new data
             $newIsParent = new IsParent();
@@ -584,7 +584,7 @@ class MigrateData
     }
 
     public function migrateIsParentInLaw($childInLaw, $parentInLaw, $comment=null){  
-        $this->LOGGER->info("Adding childParentInLawRelation with... ChildId: ".$childInLaw->getId(). " ParentId: ". $parentInLaw->getId());
+        $this->LOGGER->info("Adding childParentInLawRelation with... Child: '".$childInLaw. "' Parent: '". $parentInLaw."'");
         if(!$this->parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw)){
             //insert into new data
             $newIsParentInLaw = new IsParentInLaw();
@@ -879,7 +879,7 @@ class MigrateData
 
         $relationType = $this->getWeddingRelationType($husband, $wife);
 
-        $this->LOGGER->info("Searching for wedding with... HusbandId: ".$husband->getId(). " WifeId: ". $wife->getId()." RelationType: ".$relationType . " and WeddingOrder: ".$weddingOrder);
+        $this->LOGGER->info("Searching for wedding with... Husband: '".$husband. "' Wife: '". $wife."' RelationType: ".$relationType . " and WeddingOrder: ".$weddingOrder);
 
         $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
             ->findOneBy( array('weddingOrder' => $weddingOrder, 
@@ -1045,7 +1045,7 @@ class MigrateData
     public function parentChildRelationAlreadyExists($child, $parent){
         $relationType = $this->getRelationType($child, $parent);
 
-        $this->LOGGER->info("Searching for childParentRelation with... ChildId: ".$child->getId(). " ParentId: ". $parent->getId()." RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for childParentRelation with... Child: '".$child. "' Parent: '". $parent."' RelationType: ".$relationType);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsParent')
             ->findOneBy( array('relationType' => $relationType, 
@@ -1065,7 +1065,7 @@ class MigrateData
     public function parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw){
         $relationType = $this->getRelationType($childInLaw, $parentInLaw);
 
-        $this->LOGGER->info("Searching for childParentInLawRelation with... ChildId: ".$childInLaw->getId(). " ParentId: ". $parentInLaw->getId()." RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for childParentInLawRelation with... Child: '".$childInLaw. "' Parent: '". $parentInLaw."' RelationType: ".$relationType);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')
             ->findOneBy( array('relationType' => $relationType, 
@@ -1085,7 +1085,7 @@ class MigrateData
     public function grandparentChildRelationAlreadyExists($grandchild, $grandparent){
         $relationType = $this->getRelationType($grandchild, $grandparent);
 
-        $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChildId: ".$grandchild->getId(). " GrandParentId: ". $grandparent->getId()." RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChild: '".$grandchild. "' GrandParent: '". $grandparent."' RelationType: ".$relationType);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsGrandparent')
             ->findOneBy( array('relationType' => $relationType, 

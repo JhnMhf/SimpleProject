@@ -133,6 +133,10 @@ class Partner
     private $residenceid;
 
 
+    public function __toString (){
+        return "Partner with ID: ".$this->getId();
+    }
+    
     /**
      * Get id
      *
