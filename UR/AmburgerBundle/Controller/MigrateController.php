@@ -26,8 +26,8 @@ class MigrateController extends Controller
 
     public function personAction($ID)
     {
-
         $this->getLogger()->info("Migrate Request for Person with ID ". $ID);
+
         $person = $this->migratePerson($ID);
 
         if(is_null($person)){
@@ -47,7 +47,8 @@ class MigrateController extends Controller
     }
 
     private function migratePerson($ID, $OID = null){
-                // get old data
+        $this->getLogger()->info("Migrating Person with ID: ". $ID);
+        // get old data
         $oldDBManager = $this->get('doctrine')->getManager('old');
 
         $person = $oldDBManager->getRepository('OldBundle:Person')->findOneById($ID);
@@ -696,13 +697,16 @@ class MigrateController extends Controller
 
                     $newMother = $this->migratePerson($mothersMainID, $mothersOID);
 
-                    $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother, $oldMother["kommentar"]);
+                    $newMotherObj =$this->createMother($oldMother);
                     
-                    $this->get("person_fusion.service")->fusePersons($newMother,$newMother);
+                    $fusedMother = $this->get("person_fusion.service")->fusePersons($newMother,$newMotherObj);
+                    
+                    $this->get("migrate_data.service")->migrateIsParent($newPerson, $fusedMother);
                 }
 
             }else{
-                $newMother =$this->createMother($newPerson, $oldMother);
+                $newMother =$this->createMother($oldMother);
+                $this->get("migrate_data.service")->migrateIsParent($newPerson, $newMother);
             }
 
             //partners of mother
@@ -711,7 +715,7 @@ class MigrateController extends Controller
 
     }
 
-    private function createMother($newPerson, $oldMother){
+    private function createMother($oldMother){
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $mother = $this->get("migrate_data.service")->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
 
@@ -797,7 +801,6 @@ class MigrateController extends Controller
             $mother->setBornInMarriage($oldMother["ehelich"]);
         }
 
-        $this->get("migrate_data.service")->migrateIsParent($newPerson, $mother);
         return $mother;
     }
 
