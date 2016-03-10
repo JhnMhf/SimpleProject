@@ -699,7 +699,7 @@ class MigrateController extends Controller
 
                     $newMotherObj =$this->createMother($oldMother);
                     
-                    $fusedMother = $this->get("person_fusion.service")->fusePersons($newMother,$newMotherObj);
+                    $fusedMother = $this->get("person_merging.service")->mergePersons($newMother,$newMotherObj);
                     
                     $this->get("migrate_data.service")->migrateIsParent($newPerson, $fusedMother);
                 }

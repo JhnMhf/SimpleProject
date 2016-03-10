@@ -25,7 +25,7 @@ class PersonMerger {
     {
         $this->container = $container;
         $this->newDBManager = $this->get('doctrine')->getManager('new');
-        $this->LOGGER = $this->get('monolog.logger.personFusion');
+        $this->LOGGER = $this->get('monolog.logger.personMerging');
     }
 
     private function get($identifier){
@@ -33,14 +33,14 @@ class PersonMerger {
     }
     
     
-    public function fusePersons($personOne, $personTwo){
+    public function mergePersons($personOne, $personTwo){
         $this->LOGGER->info("Request for fusing two persons.");
         $this->LOGGER->info("Person 1: ".$personOne);
         $this->LOGGER->info("Person 2: ".$personTwo);
         
         if($personOne->getGender() != $personTwo->getGender()
                 && $personOne->getGender() != self::GENDER_UNKNOWN && $personTwo != self::GENDER_UNKNOWN){
-            $this->LOGGER->warn("Trying to fuse a man with a woman, is this really right?");
+            $this->LOGGER->warn("Trying to merge a man with a woman, is this really right?");
         }
         
         $dataMaster = $this->determineDatamaster($personOne, $personTwo);
@@ -56,8 +56,8 @@ class PersonMerger {
         }
         
         
-        $this->fuseBasicPerson($dataMaster, $toBeDeleted);
-        $this->fuseRelationships($dataMaster, $toBeDeleted);
+        $this->mergeBasicPerson($dataMaster, $toBeDeleted);
+        $this->mergeRelationships($dataMaster, $toBeDeleted);
         
         //save new combined person
         //and delete old
@@ -97,53 +97,62 @@ class PersonMerger {
         
     }
     
-    private function fuseBasicPerson($dataMaster, $toBeDeleted){
+    private function mergeBasicPerson($dataMaster, $toBeDeleted){
         $this->LOGGER->info("Fusing base person of '".$toBeDeleted . "' into ".$dataMaster);
          
-        $dataMaster->setFirstName($this->fuseString($dataMaster->getFirstName(), $toBeDeleted->getFirstName()));
-        $dataMaster->setPatronym($this->fuseString($dataMaster->getPatronym(), $toBeDeleted->getPatronym()));
-        $dataMaster->setLastName($this->fuseString($dataMaster->getLastName(), $toBeDeleted->getLastName()));
-        $dataMaster->setForeName($this->fuseString($dataMaster->getForeName(), $toBeDeleted->getForeName()));
-        $dataMaster->setBirthName($this->fuseString($dataMaster->getBirthName(), $toBeDeleted->getBirthName()));
+        $dataMaster->setFirstName($this->mergeString($dataMaster->getFirstName(), $toBeDeleted->getFirstName()));
+        $dataMaster->setPatronym($this->mergeString($dataMaster->getPatronym(), $toBeDeleted->getPatronym()));
+        $dataMaster->setLastName($this->mergeString($dataMaster->getLastName(), $toBeDeleted->getLastName()));
+        $dataMaster->setForeName($this->mergeString($dataMaster->getForeName(), $toBeDeleted->getForeName()));
+        $dataMaster->setBirthName($this->mergeString($dataMaster->getBirthName(), $toBeDeleted->getBirthName()));
         
-        $this->fuseGender($dataMaster, $toBeDeleted);
-        $dataMaster->setComment($this->fuseComment($dataMaster->getComment(), $toBeDeleted->getComment()));
-        $dataMaster->setBornInMarriage($this->fuseString($dataMaster->getBornInMarriage(), $toBeDeleted->getBornInMarriage()));
+        $this->mergeGender($dataMaster, $toBeDeleted);
+        $dataMaster->setComment($this->mergeComment($dataMaster->getComment(), $toBeDeleted->getComment()));
+        $dataMaster->setBornInMarriage($this->mergeString($dataMaster->getBornInMarriage(), $toBeDeleted->getBornInMarriage()));
 
         //now the references :(
-        $this->fuseBirthId($dataMaster, $toBeDeleted);
-        $this->fuseDeathId($dataMaster, $toBeDeleted);
-        $this->fuseReligionId($dataMaster, $toBeDeleted);
-        $this->fuseNationId($dataMaster, $toBeDeleted);
-        $this->fuseBaptismId($dataMaster, $toBeDeleted);
-        $this->fuseWorksId($dataMaster, $toBeDeleted);
-        $this->fuseStatusId($dataMaster, $toBeDeleted);
-        $this->fuseSourceId($dataMaster, $toBeDeleted);
-        $this->fuseRoadOfLiveId($dataMaster, $toBeDeleted);
-        $this->fuseRankId($dataMaster, $toBeDeleted);
-        $this->fusePropertyId($dataMaster, $toBeDeleted);
-        $this->fuseHonourId($dataMaster, $toBeDeleted);
-        $this->fuseEducationId($dataMaster, $toBeDeleted);
-        $this->fuseJobClassId($dataMaster, $toBeDeleted);
-        $this->fuseResidenceId($dataMaster, $toBeDeleted);
+        $this->mergeBirthId($dataMaster, $toBeDeleted);
+        $this->mergeDeathId($dataMaster, $toBeDeleted);
+        $this->mergeReligionId($dataMaster, $toBeDeleted);
+        $this->mergeNationId($dataMaster, $toBeDeleted);
+        $this->mergeBaptismId($dataMaster, $toBeDeleted);
+        $this->mergeWorksId($dataMaster, $toBeDeleted);
+        $this->mergeStatusId($dataMaster, $toBeDeleted);
+        $this->mergeSourceId($dataMaster, $toBeDeleted);
+        $this->mergeRoadOfLiveId($dataMaster, $toBeDeleted);
+        $this->mergeRankId($dataMaster, $toBeDeleted);
+        $this->mergePropertyId($dataMaster, $toBeDeleted);
+        $this->mergeHonourId($dataMaster, $toBeDeleted);
+        $this->mergeEducationId($dataMaster, $toBeDeleted);
+        $this->mergeJobClassId($dataMaster, $toBeDeleted);
+        $this->mergeResidenceId($dataMaster, $toBeDeleted);
         
         //weddingid?
         
     }
     
-    private function fuseRelationships($dataMaster, $toBeDeleted){
+    private function mergeRelationships($dataMaster, $toBeDeleted){
         $this->LOGGER->info("Fusing relationships of '".$toBeDeleted . "' into ".$dataMaster);
+
+        /*
+         * it is necessary to migrate nonexistant relationships from 
+         * toBeDeleted into Master.
+         * But it is also necessary to merge duplicate relationsships, 
+         * and check their relationships...
+         * In this case we must be remember to ignore the relationship
+         * to the "calling" person or we will have a cycle
+         */
 
     }
     
-    private function fuseBirthId($dataMaster, $toBeDeleted){
+    private function mergeBirthId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getBirthId();
         $toBeDeletedReference = $toBeDeleted->getBirthId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -151,14 +160,14 @@ class PersonMerger {
         $dataMaster->setBirthId($combinedReference);
     }
     
-    private function fuseDeathId($dataMaster, $toBeDeleted){
+    private function mergeDeathId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getDeathId();
         $toBeDeletedReference = $toBeDeleted->getDeathId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -166,14 +175,14 @@ class PersonMerger {
         $dataMaster->setDeathId($combinedReference);
     }
     
-    private function fuseReligionId($dataMaster, $toBeDeleted){
+    private function mergeReligionId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getReligionId();
         $toBeDeletedReference = $toBeDeleted->getReligionId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -181,15 +190,15 @@ class PersonMerger {
         $dataMaster->setReligionId($combinedReference);
     }
     
-    private function fuseNationId($dataMaster, $toBeDeleted){
+    private function mergeNationId($dataMaster, $toBeDeleted){
         
         $dataMasterReference = $this->getNation($dataMaster);
         $toBeDeletedReference = $this->getNation($toBeDeleted);
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -206,14 +215,14 @@ class PersonMerger {
         }
     }
     
-    private function fuseBaptismId($dataMaster, $toBeDeleted){
+    private function mergeBaptismId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getBaptismId();
         $toBeDeletedReference = $toBeDeleted->getBaptismId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -221,14 +230,14 @@ class PersonMerger {
         $dataMaster->setBaptismId($combinedReference);
     }
     
-    private function fuseWorksId($dataMaster, $toBeDeleted){
+    private function mergeWorksId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getWorksId();
         $toBeDeletedReference = $toBeDeleted->getWorksId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -236,14 +245,14 @@ class PersonMerger {
         $dataMaster->setWorksId($combinedReference);
     }
     
-    private function fuseStatusId($dataMaster, $toBeDeleted){
+    private function mergeStatusId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getStatusId();
         $toBeDeletedReference = $toBeDeleted->getStatusId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -251,14 +260,14 @@ class PersonMerger {
         $dataMaster->setStatusId($combinedReference);
     }
        
-    private function fuseSourceId($dataMaster, $toBeDeleted){
+    private function mergeSourceId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getSourceId();
         $toBeDeletedReference = $toBeDeleted->getSourceId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -266,14 +275,14 @@ class PersonMerger {
         $dataMaster->setSourceId($combinedReference);
     }
     
-    private function fuseRoadOfLiveId($dataMaster, $toBeDeleted){
+    private function mergeRoadOfLiveId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getRoadOfLiveId();
         $toBeDeletedReference = $toBeDeleted->getRoadOfLiveId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -281,14 +290,14 @@ class PersonMerger {
         $dataMaster->setRoadOfLiveId($combinedReference);
     }
     
-    private function fuseRankId($dataMaster, $toBeDeleted){
+    private function mergeRankId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getRankId();
         $toBeDeletedReference = $toBeDeleted->getRankId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -296,14 +305,14 @@ class PersonMerger {
         $dataMaster->setRankId($combinedReference);
     }
     
-    private function fusePropertyId($dataMaster, $toBeDeleted){
+    private function mergePropertyId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getPropertyId();
         $toBeDeletedReference = $toBeDeleted->getPropertyId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -311,14 +320,14 @@ class PersonMerger {
         $dataMaster->setPropertyId($combinedReference);
     }
     
-    private function fuseHonourId($dataMaster, $toBeDeleted){
+    private function mergeHonourId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getHonourId();
         $toBeDeletedReference = $toBeDeleted->getHonourId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -326,14 +335,14 @@ class PersonMerger {
         $dataMaster->setHonourId($combinedReference);
     }
     
-    private function fuseEducationId($dataMaster, $toBeDeleted){
+    private function mergeEducationId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getEducationId();
         $toBeDeletedReference = $toBeDeleted->getEducationId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -341,14 +350,14 @@ class PersonMerger {
         $dataMaster->setEducationId($combinedReference);
     }
     
-    private function fuseJobClassId($dataMaster, $toBeDeleted){
+    private function mergeJobClassId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getJobClassId();
         $toBeDeletedReference = $toBeDeleted->getJobClassId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -356,14 +365,14 @@ class PersonMerger {
         $dataMaster->setJobClassId($combinedReference);
     }
     
-    private function fuseResidenceId($dataMaster, $toBeDeleted){
+    private function mergeResidenceId($dataMaster, $toBeDeleted){
         $dataMasterReference = $dataMaster->getResidenceId();
         $toBeDeletedReference = $toBeDeleted->getResidenceId();
         
         $combinedReference = null;
         
-        if($this->checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference);
+        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
+            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
             
         }
@@ -371,7 +380,7 @@ class PersonMerger {
         $dataMaster->setResidenceId($combinedReference);
     }
     
-    private function fuseString($dataMasterString, $toBeDeletedString){
+    private function mergeString($dataMasterString, $toBeDeletedString){
         $this->LOGGER->debug("Fusing Strings... '".$dataMasterString."' with '".$toBeDeletedString."'");
         $result = $dataMasterString;
         if(is_null($toBeDeletedString) || $toBeDeletedString == ""){
@@ -383,24 +392,24 @@ class PersonMerger {
         }
         //else ==> they are the same, do nothing just use the dataMasterString
         
-        $this->LOGGER->debug("Fused to '".$result."'");
+        $this->LOGGER->debug("Merged to '".$result."'");
         
         return $result;
     }
     
-    private function fuseGender($dataMaster, $toBeDeleted){
+    private function mergeGender($dataMaster, $toBeDeleted){
         if($dataMaster->getGender() != $toBeDeleted->getGender()
                 && $dataMaster->getGender() == self::GENDER_UNKNOWN){
                 $dataMaster->setGender($toBeDeleted->getGender());
         }
     }
     
-    private function fuseComment($dataMasterComment, $toBeDeletedComment){
-        return $this->fuseString($dataMasterComment, $toBeDeletedComment);
+    private function mergeComment($dataMasterComment, $toBeDeletedComment){
+        return $this->mergeString($dataMasterComment, $toBeDeletedComment);
     }
     
-    private function checkForEasyReferenceFuse($dataMasterReference, $toBeDeletedReference){
-        $this->LOGGER->debug("Checking for easy reference fuse.");
+    private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference){
+        $this->LOGGER->debug("Checking for easy reference merge.");
         if(is_null($toBeDeletedReference) || $toBeDeletedReference == ""){
             return true;
         }else if(is_null($dataMasterReference) || $dataMasterReference == ""){
@@ -410,8 +419,8 @@ class PersonMerger {
         return false;
     }
     
-    private function doEasyReferenceFuse($dataMasterReference, $toBeDeletedReference){
-        $this->LOGGER->debug("Doing the easy reference fuse.");
+    private function doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference){
+        $this->LOGGER->debug("Doing the easy reference merge.");
         if(is_null($toBeDeletedReference) || $toBeDeletedReference == ""){
             return $dataMasterReference;
         }else if(is_null($dataMasterReference) || $dataMasterReference == ""){
