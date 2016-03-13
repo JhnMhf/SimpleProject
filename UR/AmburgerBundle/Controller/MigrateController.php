@@ -34,9 +34,14 @@ class MigrateController extends Controller
             return new Response("Invalid ID");
         }
 
+        /*
         return new Response(
             'Migrated Database entry: '.$person->getId()
-        );
+        );*/
+        
+        return $this->forward('NewBundle:Default:json', array(
+            'ID'  => $person->getId()
+        ));
     }
 
     private function getIDForOID($OID, $oldDBManager){

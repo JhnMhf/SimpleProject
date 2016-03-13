@@ -10,6 +10,10 @@ namespace UR\DB\NewBundle\Utils;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
 
+// http://stackoverflow.com/questions/14022374/the-differences-between-generatedvalue-strategies
+// http://stackoverflow.com/questions/9087585/generating-next-sequence-value-manually-in-doctrine-2/28561017#28561017
+
+
 /**
  * Description of SequenceIDGenerator
  *
