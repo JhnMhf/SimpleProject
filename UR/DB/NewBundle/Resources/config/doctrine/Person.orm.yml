@@ -65,25 +65,6 @@ UR\DB\NewBundle\Entity\Person:
                 unsigned: false
                 comment: '0 = undefined, 1 = male, 2 = female'
                 default: '0'
-        birthid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: birthID
-        deathid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: deathID
-        religionid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: religionID
         originalNationid:
             type: integer
             nullable: true
@@ -103,75 +84,6 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 fixed: false
             column: born_in_marriage
-        baptismid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: baptismID
-        worksid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: worksID
-        weddingid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: weddingID
-        statusid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: statusID
-        sourceid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: sourceID
-        roadOfLiveid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: road_of_liveID
-        rankid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: rankID
-        propertyid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: propertyID
-        honourid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: honourID
-        educationid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: educationID
         jobClassid:
             type: string
             nullable: true
@@ -179,13 +91,6 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 fixed: false
             column: job_classID
-        residenceid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: residenceID
         jobid:
             type: string
             nullable: true

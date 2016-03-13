@@ -154,7 +154,7 @@ class PersonMerger {
         if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
             $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
         }else{
-            
+            //load references and compare them
         }
         
         $dataMaster->setBirthId($combinedReference);
@@ -408,6 +408,38 @@ class PersonMerger {
         return $this->mergeString($dataMasterComment, $toBeDeletedComment);
     }
     
+    private function mergeJob($dataMasterJob, $toBeDeletedJob){
+        return $this->mergeString($dataMasterJob, $toBeDeletedJob);
+    }
+    
+    private function mergeJobClass($dataMasterJobClass, $toBeDeletedJobClass){
+        return $this->mergeString($dataMasterJobClass, $toBeDeletedJobClass);
+    }
+    
+    private function mergeNation($dataMasterNation, $toBeDeletedNation){
+        return $this->mergeString($dataMasterNation, $toBeDeletedNation);
+    }
+    
+    private function mergeCountry($dataMasterCountry, $toBeDeletedCountry){
+        return $this->mergeString($dataMasterCountry, $toBeDeletedCountry);
+    }
+    
+    private function mergeTerritory($dataMasterTerritory, $toBeDeletedTerritory){
+        return $this->mergeString($dataMasterTerritory, $toBeDeletedTerritory);
+    }
+    
+    private function mergeLocation($dataMasterLocation, $toBeDeletedLocation){
+        return $this->mergeString($dataMasterLocation, $toBeDeletedLocation);
+    }
+    
+    private function mergeDate($dataMasterDate, $toBeDeletedDate){
+        //merge date!
+        //and mind 0.0.1800 and similar dates!
+        //if one date is "genauer" als the other, use it!
+        //btw. ignore comments just merge them if necessary!
+        
+    }
+    
     private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference){
         $this->LOGGER->debug("Checking for easy reference merge.");
         if(is_null($toBeDeletedReference) || $toBeDeletedReference == ""){
@@ -423,8 +455,8 @@ class PersonMerger {
         $this->LOGGER->debug("Doing the easy reference merge.");
         if(is_null($toBeDeletedReference) || $toBeDeletedReference == ""){
             return $dataMasterReference;
-        }else if(is_null($dataMasterReference) || $dataMasterReference == ""){
-            return $toBeDeletedReference;
-        } 
+        }
+        
+        return $toBeDeletedReference;
     }
 }

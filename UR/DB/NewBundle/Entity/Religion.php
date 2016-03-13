@@ -196,4 +196,33 @@ class Religion
     {
         return $this->changeOfReligion;
     }
+    /**
+     * @var integer
+     */
+    private $personID;
+
+
+    /**
+     * Set personID
+     *
+     * @param integer $personID
+     *
+     * @return Religion
+     */
+    public function setPersonID($personID)
+    {
+        $this->personID = $personID;
+
+        return $this;
+    }
+
+    /**
+     * Get personID
+     *
+     * @return integer
+     */
+    public function getPersonID()
+    {
+        return $this->personID;
+    }
 }

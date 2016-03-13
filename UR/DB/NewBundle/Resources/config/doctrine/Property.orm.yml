@@ -69,4 +69,10 @@ UR\DB\NewBundle\Entity\Property:
             length: 65535
             options:
                 fixed: false
+        personID:
+            type: integer
+            nullable: false
+            column: person_ID
+            options:
+                comment: 'can be a reference to person, partner or relative'
     lifecycleCallbacks: {  }

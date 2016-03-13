@@ -341,4 +341,33 @@ class RoadOfLife
     {
         return $this->comment;
     }
+    /**
+     * @var integer
+     */
+    private $personID;
+
+
+    /**
+     * Set personID
+     *
+     * @param integer $personID
+     *
+     * @return RoadOfLife
+     */
+    public function setPersonID($personID)
+    {
+        $this->personID = $personID;
+
+        return $this;
+    }
+
+    /**
+     * Get personID
+     *
+     * @return integer
+     */
+    public function getPersonID()
+    {
+        return $this->personID;
+    }
 }
