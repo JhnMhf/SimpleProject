@@ -1,0 +1,12 @@
+UR\DB\NewBundle\Entity\UniqueIDSequence:
+    type: entity
+    repositoryClass: UR\DB\NewBundle\Entity\UniqueIDSequenceRepository
+    table: unique_id_sequence
+    id:
+        currentHighestId:
+            type: integer
+            nullable: false
+            options:
+                default: 0
+            column: current_highest_id
+    lifecycleCallbacks: {  }

@@ -14,7 +14,9 @@ UR\DB\NewBundle\Entity\Person:
             id: true
             column: ID
             generator:
-                strategy: IDENTITY
+                   strategy: CUSTOM
+            customIdGenerator:
+                class: 'UR\DB\NewBundle\Utils\SequenceIDGenerator'
     fields:
         oid:
             type: integer

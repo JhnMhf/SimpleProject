@@ -10,7 +10,9 @@ UR\DB\NewBundle\Entity\Relative:
             id: true
             column: ID
             generator:
-                strategy: IDENTITY
+                   strategy: CUSTOM
+            customIdGenerator:
+                class: 'UR\DB\NewBundle\Utils\SequenceIDGenerator'
     fields:
         firstName:
             type: string
