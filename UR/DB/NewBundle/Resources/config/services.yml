@@ -10,3 +10,7 @@ services:
         class: UR\DB\NewBundle\Utils\PersonMerger
         arguments: 
            container: "@service_container"
+    response_builder.service:
+        class: UR\DB\NewBundle\Utils\ResponseBuilder
+        arguments: 
+           container: "@service_container"
