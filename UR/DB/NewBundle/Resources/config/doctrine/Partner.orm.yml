@@ -1,91 +1,14 @@
+# partner
 UR\DB\NewBundle\Entity\Partner:
     type: entity
     table: partner
-    id:
-        id:
-            type: integer
-            nullable: false
-            options:
-                unsigned: false
-            id: true
-            column: ID
-            generator:
-                   strategy: CUSTOM
-            customIdGenerator:
-                class: 'UR\DB\NewBundle\Utils\SequenceIDGenerator'
+    inheritance:
+        type: concrete
+        extends: Entities\BasePerson 
     fields:
-        firstName:
-            type: string
-            nullable: true
-            length: 100
-            options:
-                fixed: false
-            column: first_name
-        patronym:
-            type: string
-            nullable: true
-            length: 100
-            options:
-                fixed: false
-        lastName:
-            type: string
-            nullable: true
-            length: 100
-            options:
-                fixed: false
-            column: last_name
-        foreName:
-            type: string
-            nullable: true
-            length: 100
-            options:
-                fixed: false
-            column: fore_name
-        birthName:
-            type: string
-            nullable: true
-            length: 100
-            options:
-                fixed: false
-            column: birth_name
-        gender:
-            type: integer
-            nullable: false
-            options:
-                unsigned: false
-                comment: '0 = undefined, 1 = male, 2 = female'
-                default: '0'
         originalNationid:
             type: integer
             nullable: true
             options:
                 unsigned: false
             column: original_nationID
-        comment:
-            type: text
-            nullable: true
-            length: 65535
-            options:
-                fixed: false
-        bornInMarriage:
-            type: text
-            nullable: true
-            length: 65535
-            options:
-                fixed: false
-            column: born_in_marriage
-        jobClassid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: job_classID
-        jobid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: jobID
-    lifecycleCallbacks: {  }

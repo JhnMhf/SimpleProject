@@ -10,17 +10,17 @@ class Source
     /**
      * @var integer
      */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $label;
+    private $personID;
 
     /**
      * @var boolean
      */
     private $sourceOrder = '1';
+
+    /**
+     * @var string
+     */
+    private $label;
 
     /**
      * @var string
@@ -37,39 +37,34 @@ class Source
      */
     private $comment;
 
-
     /**
-     * Get id
-     *
-     * @return integer
+     * @var \UR\DB\NewBundle\Entity\BasePerson
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $person;
+
 
     /**
-     * Set label
+     * Set personID
      *
-     * @param string $label
+     * @param integer $personID
      *
      * @return Source
      */
-    public function setLabel($label)
+    public function setPersonID($personID)
     {
-        $this->label = $label;
+        $this->personID = $personID;
 
         return $this;
     }
 
     /**
-     * Get label
+     * Get personID
      *
-     * @return string
+     * @return integer
      */
-    public function getLabel()
+    public function getPersonID()
     {
-        return $this->label;
+        return $this->personID;
     }
 
     /**
@@ -94,6 +89,30 @@ class Source
     public function getSourceOrder()
     {
         return $this->sourceOrder;
+    }
+
+    /**
+     * Set label
+     *
+     * @param string $label
+     *
+     * @return Source
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * Get label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     /**
@@ -167,33 +186,43 @@ class Source
     {
         return $this->comment;
     }
-    /**
-     * @var integer
-     */
-    private $personID;
-
 
     /**
-     * Set personID
+     * Set person
      *
-     * @param integer $personID
+     * @param \UR\DB\NewBundle\Entity\BasePerson $person
      *
      * @return Source
      */
-    public function setPersonID($personID)
+    public function setPerson(\UR\DB\NewBundle\Entity\BasePerson $person = null)
     {
-        $this->personID = $personID;
+        $this->person = $person;
 
         return $this;
     }
 
     /**
-     * Get personID
+     * Get person
+     *
+     * @return \UR\DB\NewBundle\Entity\BasePerson
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+    /**
+     * @var integer
+     */
+    private $id;
+
+
+    /**
+     * Get id
      *
      * @return integer
      */
-    public function getPersonID()
+    public function getId()
     {
-        return $this->personID;
+        return $this->id;
     }
 }
