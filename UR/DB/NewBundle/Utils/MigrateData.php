@@ -636,7 +636,7 @@ class MigrateData
         $newPartner->setPatronym($patronym);
         $newPartner->setLastName($lastName);
         $newPartner->setGender($this->getGender($gender));
-        $newPartner->setOriginalNationid($this->getNation($nation));
+        $newPartner->setOriginalNation($this->getNation($nation));
 
         $newPartner->setComment($comment);
 
@@ -714,7 +714,7 @@ class MigrateData
         $newRelative->setPatronym($patronym);
         $newRelative->setLastName($lastName);
         $newRelative->setGender($this->getGender($gender));
-        $newRelative->setNationid($this->getNation($nation));
+        $newRelative->setNation($this->getNation($nation));
 
         $newRelative->setComment($comment);
 

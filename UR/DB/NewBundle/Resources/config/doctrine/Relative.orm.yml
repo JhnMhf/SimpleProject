@@ -12,3 +12,87 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 unsigned: false
             column: nationID
+    oneToMany:
+        sources:
+          orderBy: { 'sourceOrder': 'ASC' }
+          targetEntity: Source
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        births:
+          targetEntity: Birth
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        baptisms:
+          targetEntity: Baptism
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        deaths:
+          targetEntity: Death
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        educations:
+          orderBy: { 'educationOrder': 'ASC' }
+          targetEntity: Education
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        honours:
+          orderBy: { 'honourOrder': 'ASC' }
+          targetEntity: Honour
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        properties:
+          orderBy: { 'propertyOrder': 'ASC' }
+          targetEntity: Property
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        ranks:
+          orderBy: { 'rankOrder': 'ASC' }
+          targetEntity: Rank
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        religions:
+          orderBy: { 'religionOrder': 'ASC' }
+          targetEntity: Religion
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        residences:
+          orderBy: { 'residenceOrder': 'ASC' }
+          targetEntity: Residence
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        roadOfLife:
+          orderBy: { 'roadOfLifeOrder': 'ASC' }
+          targetEntity: RoadOfLife
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        stati:
+          orderBy: { 'statusOrder': 'ASC' }
+          targetEntity: Status
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+        works:
+          orderBy: { 'worksOrder': 'ASC' }
+          targetEntity: Works
+          mappedBy: person
+          fetch: EAGER
+          cascade: ["remove"]
+    manyToOne:
+        nation:
+            targetEntity: Nation
+            fetch: EAGER
+            joinColumn:
+                name: nationID
+                referencedColumnName: ID
+                nullable: true            
