@@ -1,3 +1,6 @@
 new_homepage:
     path:     /json/{ID}
     defaults: { _controller: NewBundle:Default:json }
+clearDatabase:
+    path: /database/truncate
+    defaults: { _controller: NewBundle:Default:clearDatabase }
