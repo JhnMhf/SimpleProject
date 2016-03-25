@@ -430,14 +430,18 @@ class MigrateData
             return "undefined";
         }
     }
+    
+    public function flush(){
+        $this->newDBManager->flush();
+    }
 
     /* end helper method */
 
-    public function migrateBirth($personID, $originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null){
+    public function migrateBirth($person, $originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null){
         //insert into new data
         $newBirth = new Birth();
 
-        $newBirth->setPersonID($personID);
+        $newBirth->setPerson($person);
         $newBirth->setOriginCountryid($this->getCountryId($originCountry));
         $newBirth->setOriginTerritoryid($this->getTerritoryId($originTerritory));
         $newBirth->setOriginLocationid($this->getLocationId($originLocation));
@@ -451,11 +455,11 @@ class MigrateData
         $this->newDBManager->persist($newBirth);
     }
 
-    public function migrateBaptism($personID, $baptismDate, $baptismLocation=null){
+    public function migrateBaptism($person, $baptismDate, $baptismLocation=null){
         //insert into new data
         $newBaptism = new Baptism();
         
-        $newBaptism->setPersonID($personID);
+        $newBaptism->setPerson($person);
         $newBaptism->setBaptismLocationid($this->getLocationId($baptismLocation));
         $newBaptism->setBaptismDateId($this->getDate($baptismDate));
         
@@ -483,11 +487,11 @@ class MigrateData
         return $newDate->getId();
     }
 
-    public function migrateDeath($personID, $deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null){
+    public function migrateDeath($person, $deathLocation, $deathDate, $deathCountry=null, $causeOfDeath=null, $territoryOfDeath=null, $graveyard=null, $funeralLocation=null, $funeralDate=null, $comment=null){
         //insert into new data
         $newDeath = new Death();
 
-        $newDeath->setPersonID($personID);
+        $newDeath->setPerson($person);
         $newDeath->setDeathLocationid($this->getLocationId($deathLocation));
         $newDeath->setDeathCountryid($this->getCountryId($deathCountry));
         $newDeath->setCauseOfDeath($causeOfDeath);
@@ -501,11 +505,11 @@ class MigrateData
         $this->newDBManager->persist($newDeath);
     }
 
-    public function migrateEducation($personID, $educationOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $graduationLabel=null, $graduationDate=null, $graduationLocation=null, $comment=null){
+    public function migrateEducation($person, $educationOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $graduationLabel=null, $graduationDate=null, $graduationLocation=null, $comment=null){
         //insert into new data
         $newEducation = new Education();
 
-        $newEducation->setPersonID($personID);
+        $newEducation->setPerson($person);
         $newEducation->setEducationOrder($educationOrder);
         $newEducation->setLabel($label);
         $newEducation->setCountryid($this->getCountryId($country));
@@ -522,11 +526,11 @@ class MigrateData
         $this->newDBManager->persist($newEducation);
     }
 
-    public function migrateHonour($personID, $honourOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
+    public function migrateHonour($person, $honourOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newHonour = new Honour();
 
-        $newHonour->setPersonID($personID);
+        $newHonour->setPerson($person);
         $newHonour->setHonourOrder($honourOrder);
         $newHonour->setLabel($label);
         $newHonour->setCountryid($this->getCountryId($country));
@@ -665,11 +669,11 @@ class MigrateData
         return $newPerson;
     }
 
-    public function migrateProperty($personID, $propertyOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
+    public function migrateProperty($person, $propertyOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newProperty = new Property();
 
-        $newProperty->setPersonID($personID);
+        $newProperty->setPerson($person);
         $newProperty->setPropertyOrder($propertyOrder);
         $newProperty->setLabel($label);
         $newProperty->setCountryid($this->getCountryId($country));
@@ -683,11 +687,11 @@ class MigrateData
         $this->newDBManager->persist($newProperty);
     }
 
-    public function migrateRank($personID, $rankOrder, $label, $class=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
+    public function migrateRank($person, $rankOrder, $label, $class=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newRank = new Rank();
 
-        $newRank->setPersonID($personID);
+        $newRank->setPerson($person);
         $newRank->setRankOrder($rankOrder);
         $newRank->setLabel($label);
         $newRank->setClass($class);
@@ -720,11 +724,11 @@ class MigrateData
         return $newRelative;
     }
 
-    public function migrateReligion($personID, $name, $religionOrder, $change_of_religion=null, $provenDate=null, $fromDate=null, $comment=null){
+    public function migrateReligion($person, $name, $religionOrder, $change_of_religion=null, $provenDate=null, $fromDate=null, $comment=null){
         //insert into new data
         $newReligion = new Religion();
 
-        $newReligion->setPersonID($personID);
+        $newReligion->setPerson($person);
         $newReligion->setName($name);
         $newReligion->setReligionOrder($religionOrder);
         $newReligion->setChangeOfReligion($change_of_religion);
@@ -736,11 +740,11 @@ class MigrateData
         $this->newDBManager->persist($newReligion);
     }
 
-    public function migrateResidence($personID, $residenceOrder, $residenceCountry, $residenceTerritory=null, $residenceLocation=null){
+    public function migrateResidence($person, $residenceOrder, $residenceCountry, $residenceTerritory=null, $residenceLocation=null){
         //insert into new data
         $newResidence = new Residence();
 
-        $newResidence->setPersonID($personID);
+        $newResidence->setPerson($person);
         $newResidence->setResidenceOrder($residenceOrder);
         $newResidence->setResidenceCountryid($this->getCountryId($residenceCountry));
         $newResidence->setResidenceTerritoryid($this->getTerritoryId($residenceTerritory));
@@ -750,11 +754,11 @@ class MigrateData
         $this->newDBManager->persist($newResidence);
     }
 
-    public function migrateRoadOfLife($personID, $roadOfLifeOrder, $originCountry=null, $originTerritory=null, $job=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
+    public function migrateRoadOfLife($person, $roadOfLifeOrder, $originCountry=null, $originTerritory=null, $job=null, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newRoadOfLife = new RoadOfLife();
 
-        $newRoadOfLife->setPersonID($personID);
+        $newRoadOfLife->setPerson($person);
         $newRoadOfLife->setRoadOfLifeOrder($roadOfLifeOrder);
         $newRoadOfLife->setOriginCountryid($this->getCountryId($originCountry));
         $newRoadOfLife->setOriginTerritoryid($this->getTerritoryId($originTerritory));
@@ -784,11 +788,11 @@ class MigrateData
         $this->newDBManager->persist($newSource);
     }
 
-    public function migrateStatus($personID, $statusOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
+    public function migrateStatus($person, $statusOrder, $label, $country=null, $territory=null, $location=null, $fromDate=null, $toDate=null, $provenDate=null, $comment=null){
         //insert into new data
         $newStatus = new Status();
 
-        $newStatus->setPersonID($personID);
+        $newStatus->setPerson($person);
         $newStatus->setStatusOrder($statusOrder);
         $newStatus->setLabel($label);
         $newStatus->setCountryid($this->getCountryId($country));
@@ -874,11 +878,11 @@ class MigrateData
         }
     }
 
-    public function migrateWork($personID, $label, $works_order, $country=null, $location=null, $fromDate=null, $toDate=null, $territory=null, $provenDate=null, $comment=null){
+    public function migrateWork($person, $label, $works_order, $country=null, $location=null, $fromDate=null, $toDate=null, $territory=null, $provenDate=null, $comment=null){
         //insert into new data
         $newWorks = new Works();
 
-        $newWorks->setPersonID($personID);
+        $newWorks->setPerson($person);
         $newWorks->setLabel($label);
         $newWorks->setWorksOrder($works_order);
         $newWorks->setCountryid($this->getCountryId($country));

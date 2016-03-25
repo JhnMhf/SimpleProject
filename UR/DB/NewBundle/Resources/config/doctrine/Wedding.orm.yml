@@ -20,7 +20,7 @@ UR\DB\NewBundle\Entity\Wedding:
                 strategy: IDENTITY
     fields:
         weddingOrder:
-            type: boolean
+            type: integer
             nullable: false
             options:
                 default: '1'

@@ -39,3 +39,51 @@ UR\DB\NewBundle\Entity\Person:
           targetEntity: Source
           mappedBy: person
           fetch: EAGER
+        births:
+          targetEntity: Birth
+          mappedBy: person
+          fetch: EAGER
+        baptisms:
+          targetEntity: Baptism
+          mappedBy: person
+          fetch: EAGER
+        deaths:
+          targetEntity: Death
+          mappedBy: person
+          fetch: EAGER
+        educations:
+          targetEntity: Education
+          mappedBy: person
+          fetch: EAGER
+        honours:
+          targetEntity: Honour
+          mappedBy: person
+          fetch: EAGER
+        properties:
+          targetEntity: Property
+          mappedBy: person
+          fetch: EAGER
+        ranks:
+          targetEntity: Rank
+          mappedBy: person
+          fetch: EAGER
+        religions:
+          targetEntity: Religion
+          mappedBy: person
+          fetch: EAGER
+        residences:
+          targetEntity: Residence
+          mappedBy: person
+          fetch: EAGER
+        roadOfLife:
+          targetEntity: RoadOfLife
+          mappedBy: person
+          fetch: EAGER
+        stati:
+          targetEntity: Status
+          mappedBy: person
+          fetch: EAGER
+        works:
+          targetEntity: Works
+          mappedBy: person
+          fetch: EAGER

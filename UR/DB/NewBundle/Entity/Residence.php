@@ -167,4 +167,33 @@ class Residence
     {
         return $this->personID;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\BasePerson
+     */
+    private $person;
+
+
+    /**
+     * Set person
+     *
+     * @param \UR\DB\NewBundle\Entity\BasePerson $person
+     *
+     * @return Residence
+     */
+    public function setPerson(\UR\DB\NewBundle\Entity\BasePerson $person = null)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \UR\DB\NewBundle\Entity\BasePerson
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
 }

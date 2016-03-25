@@ -25,7 +25,7 @@ UR\DB\NewBundle\Entity\Residence:
                 unsigned: false
             column: residence_territoryID
         residenceOrder:
-            type: boolean
+            type: integer
             nullable: false
             options:
                 default: '1'
@@ -36,10 +36,7 @@ UR\DB\NewBundle\Entity\Residence:
             options:
                 unsigned: false
             column: residence_countryID
-        personID:
-            type: integer
-            nullable: false
-            column: person_ID
-            options:
-                comment: 'can be a reference to person, partner or relative'
+    manyToOne:
+        person:
+            targetEntity: BasePerson
     lifecycleCallbacks: {  }
