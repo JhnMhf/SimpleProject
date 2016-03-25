@@ -36,6 +36,7 @@ UR\DB\NewBundle\Entity\Person:
                 
     oneToMany:
         sources:
+          orderBy: { 'sourceOrder': 'ASC' }
           targetEntity: Source
           mappedBy: person
           fetch: EAGER
@@ -52,38 +53,47 @@ UR\DB\NewBundle\Entity\Person:
           mappedBy: person
           fetch: EAGER
         educations:
+          orderBy: { 'educationOrder': 'ASC' }
           targetEntity: Education
           mappedBy: person
           fetch: EAGER
         honours:
+          orderBy: { 'honourOrder': 'ASC' }
           targetEntity: Honour
           mappedBy: person
           fetch: EAGER
         properties:
+          orderBy: { 'propertyOrder': 'ASC' }
           targetEntity: Property
           mappedBy: person
           fetch: EAGER
         ranks:
+          orderBy: { 'rankOrder': 'ASC' }
           targetEntity: Rank
           mappedBy: person
           fetch: EAGER
         religions:
+          orderBy: { 'religionOrder': 'ASC' }
           targetEntity: Religion
           mappedBy: person
           fetch: EAGER
         residences:
+          orderBy: { 'residenceOrder': 'ASC' }
           targetEntity: Residence
           mappedBy: person
           fetch: EAGER
         roadOfLife:
+          orderBy: { 'roadOfLifeOrder': 'ASC' }
           targetEntity: RoadOfLife
           mappedBy: person
           fetch: EAGER
         stati:
+          orderBy: { 'statusOrder': 'ASC' }
           targetEntity: Status
           mappedBy: person
           fetch: EAGER
         works:
+          orderBy: { 'worksOrder': 'ASC' }
           targetEntity: Works
           mappedBy: person
           fetch: EAGER
