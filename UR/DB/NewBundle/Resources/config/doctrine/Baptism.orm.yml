@@ -28,4 +28,12 @@ UR\DB\NewBundle\Entity\Baptism:
     manyToOne:
         person:
             targetEntity: BasePerson
+        baptismLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: baptism_locationID
+                referencedColumnName: ID
+                nullable: true
+                
     lifecycleCallbacks: {  }

@@ -81,6 +81,20 @@ UR\DB\NewBundle\Entity\BasePerson:
             options:
                 fixed: false
             column: jobID
-
+    manyToOne:
+        job:
+            targetEntity: Job
+            fetch: EAGER
+            joinColumn:
+                name: jobID
+                referencedColumnName: ID
+                nullable: true
+        jobClass:
+            targetEntity: JobClass
+            fetch: EAGER
+            joinColumn:
+                name: job_classID
+                referencedColumnName: ID
+                nullable: true
     
     lifecycleCallbacks: {  }

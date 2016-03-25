@@ -196,4 +196,91 @@ class Residence
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $residenceCountry;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $residenceTerritory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $residenceLocation;
+
+
+    /**
+     * Set residenceCountry
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $residenceCountry
+     *
+     * @return Residence
+     */
+    public function setResidenceCountry(\UR\DB\NewBundle\Entity\Country $residenceCountry = null)
+    {
+        $this->residenceCountry = $residenceCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get residenceCountry
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getResidenceCountry()
+    {
+        return $this->residenceCountry;
+    }
+
+    /**
+     * Set residenceTerritory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $residenceTerritory
+     *
+     * @return Residence
+     */
+    public function setResidenceTerritory(\UR\DB\NewBundle\Entity\Territory $residenceTerritory = null)
+    {
+        $this->residenceTerritory = $residenceTerritory;
+
+        return $this;
+    }
+
+    /**
+     * Get residenceTerritory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getResidenceTerritory()
+    {
+        return $this->residenceTerritory;
+    }
+
+    /**
+     * Set residenceLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $residenceLocation
+     *
+     * @return Residence
+     */
+    public function setResidenceLocation(\UR\DB\NewBundle\Entity\Location $residenceLocation = null)
+    {
+        $this->residenceLocation = $residenceLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get residenceLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getResidenceLocation()
+    {
+        return $this->residenceLocation;
+    }
 }

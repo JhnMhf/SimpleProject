@@ -92,4 +92,32 @@ UR\DB\NewBundle\Entity\Education:
     manyToOne:
         person:
             targetEntity: BasePerson
+        country:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: countryID
+                referencedColumnName: ID
+                nullable: true        
+        territory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: territoryID
+                referencedColumnName: ID
+                nullable: true
+        location:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: locationID
+                referencedColumnName: ID
+                nullable: true         
+        graduationLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: graduation_locationID
+                referencedColumnName: ID
+                nullable: true      
     lifecycleCallbacks: {  }

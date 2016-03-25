@@ -138,4 +138,33 @@ class Baptism
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $baptismLocation;
+
+
+    /**
+     * Set baptismLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $baptismLocation
+     *
+     * @return Baptism
+     */
+    public function setBaptismLocation(\UR\DB\NewBundle\Entity\Location $baptismLocation = null)
+    {
+        $this->baptismLocation = $baptismLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get baptismLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getBaptismLocation()
+    {
+        return $this->baptismLocation;
+    }
 }

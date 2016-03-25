@@ -39,4 +39,26 @@ UR\DB\NewBundle\Entity\Residence:
     manyToOne:
         person:
             targetEntity: BasePerson
+        residenceCountry:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: residence_countryID
+                referencedColumnName: ID
+                nullable: true        
+        residenceTerritory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: residence_territoryID
+                referencedColumnName: ID
+                nullable: true
+        residenceLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: residence_locationID
+                referencedColumnName: ID
+                nullable: true             
+            
     lifecycleCallbacks: {  }

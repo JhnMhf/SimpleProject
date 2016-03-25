@@ -72,4 +72,32 @@ UR\DB\NewBundle\Entity\Death:
     manyToOne:
         person:
             targetEntity: BasePerson
+        deathCountry:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: death_countryID
+                referencedColumnName: ID
+                nullable: true        
+        territoryOfDeath:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: territory_of_deathID
+                referencedColumnName: ID
+                nullable: true
+        deathLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: death_locationID
+                referencedColumnName: ID
+                nullable: true        
+        funeralLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: funeral_locationID
+                referencedColumnName: ID
+                nullable: true        
     lifecycleCallbacks: {  }

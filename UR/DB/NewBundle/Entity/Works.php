@@ -341,4 +341,91 @@ class Works
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $country;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $territory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $location;
+
+
+    /**
+     * Set country
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $country
+     *
+     * @return Works
+     */
+    public function setCountry(\UR\DB\NewBundle\Entity\Country $country = null)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * Set territory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $territory
+     *
+     * @return Works
+     */
+    public function setTerritory(\UR\DB\NewBundle\Entity\Territory $territory = null)
+    {
+        $this->territory = $territory;
+
+        return $this;
+    }
+
+    /**
+     * Get territory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getTerritory()
+    {
+        return $this->territory;
+    }
+
+    /**
+     * Set location
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $location
+     *
+     * @return Works
+     */
+    public function setLocation(\UR\DB\NewBundle\Entity\Location $location = null)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
 }

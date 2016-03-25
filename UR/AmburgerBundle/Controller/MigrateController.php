@@ -207,7 +207,7 @@ class MigrateController extends Controller
         if(!is_null($person->getUrspNation())){
             $nationId = $this->get("migrate_data.service")->migrateNation($person->getUrspNation(), "");
 
-            $newPerson->setOriginalNationid($nationId);
+            $newPerson->setOriginalNation($nationId);
         }
     }
 
@@ -437,7 +437,7 @@ class MigrateController extends Controller
             if(!is_null($oldGrandmother->getBeruf())){
                 $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandmother->getBeruf());
 
-                $grandmother->setJobid($jobID);
+                $grandmother->setJob($jobID);
             }
 
 
@@ -471,7 +471,7 @@ class MigrateController extends Controller
                 if(!is_null($oldGrandfather["beruf"])){
                     $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandfather["beruf"]);
 
-                    $grandfather->setJobid($jobID);
+                    $grandfather->setJob($jobID);
                 }
 
                 if(!is_null($oldGrandfather["wohnort"])){
@@ -510,7 +510,7 @@ class MigrateController extends Controller
                 if(!is_null($oldGrandfather["beruf"])){
                     $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandfather["beruf"]);
 
-                    $grandfather->setJobid($jobID);
+                    $grandfather->setJob($jobID);
                 }
 
                 if(!is_null($oldGrandfather["geburtsort"]) || 
@@ -678,7 +678,7 @@ class MigrateController extends Controller
         if(!is_null($oldMother["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldMother["beruf"]);
 
-            $mother->setJobid($jobID);
+            $mother->setJob($jobID);
         }
 
         //born_in_marriage
@@ -834,7 +834,7 @@ class MigrateController extends Controller
         if(!is_null($oldFather["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldFather["beruf"]);
 
-            $father->setJobid($jobID);
+            $father->setJob($jobID);
         }
 
         //education
@@ -1235,7 +1235,7 @@ class MigrateController extends Controller
         if(!is_null($oldMarriagePartner["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldMarriagePartner["beruf"]);
 
-            $marriagePartner->setJobid($jobID);
+            $marriagePartner->setJob($jobID);
         }
 
         //education
@@ -1722,7 +1722,7 @@ class MigrateController extends Controller
         if(!is_null($oldFatherInLaw["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldFatherInLaw["beruf"]);
 
-            $fatherInLaw->setJobid($jobID);
+            $fatherInLaw->setJob($jobID);
         }
 
         //education
@@ -1803,7 +1803,7 @@ class MigrateController extends Controller
         if(!is_null($oldMotherInLaw["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldMotherInLaw["beruf"]);
 
-            $motherInLaw->setJobid($jobID);
+            $motherInLaw->setJob($jobID);
         }
 
         //born_in_marriage
@@ -1909,7 +1909,7 @@ class MigrateController extends Controller
         if(!is_null($oldOtherPartner["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldOtherPartner["beruf"]);
 
-            $otherPartner->setJobid($jobID);
+            $otherPartner->setJob($jobID);
         }
 
         //education
@@ -1985,7 +1985,7 @@ class MigrateController extends Controller
         if(!is_null($oldPartnersOfFather["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldPartnersOfFather["beruf"]);
 
-            $partnerOfFather->setJobid($jobID);
+            $partnerOfFather->setJob($jobID);
         }
 
         $this->get("migrate_data.service")->migrateWedding($oldPartnersOfFather['order2'], $newFather, $partnerOfFather, $oldPartnersOfFather['hochzeitstag'], $oldPartnersOfFather['hochzeitsort'], null, null, null, null, $oldPartnersOfFather['verheiratet'], $oldPartnersOfFather['vorher-nachher'], null);
@@ -2029,7 +2029,7 @@ class MigrateController extends Controller
         if(!is_null($oldPartnersOfMother["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldPartnersOfMother["beruf"]);
 
-            $partnerOfMother->setJobid($jobID);
+            $partnerOfMother->setJob($jobID);
         }
 
         //belegt
@@ -2116,7 +2116,7 @@ class MigrateController extends Controller
         if(!is_null($oldMarriagePartnersOfSibling["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldMarriagePartnersOfSibling["beruf"]);
 
-            $marriagePartnersOfSibling->setJobid($jobID);
+            $marriagePartnersOfSibling->setJob($jobID);
         }
 
         //education
@@ -2193,7 +2193,7 @@ class MigrateController extends Controller
         if(!is_null($oldChildOfSibling["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldChildOfSibling["beruf"]);
 
-            $childOfSibling->setJobid($jobID);
+            $childOfSibling->setJob($jobID);
         }
 
         $this->get("migrate_data.service")->migrateIsParent($childOfSibling, $newSibling);
@@ -2304,7 +2304,7 @@ class MigrateController extends Controller
         if(!is_null($oldMarriagePartnerOfChild["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldMarriagePartnerOfChild["beruf"]);
 
-            $marriagePartnerOfChild->setJobid($jobID);
+            $marriagePartnerOfChild->setJob($jobID);
         }
 
         //education
@@ -2419,7 +2419,7 @@ class MigrateController extends Controller
         if(!is_null($oldFatherInLawOfChild["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldFatherInLawOfChild["beruf"]);
 
-            $fatherInLawOfChild->setJobid($jobID);
+            $fatherInLawOfChild->setJob($jobID);
         }
 
         //born_in_marriage
@@ -2636,7 +2636,7 @@ class MigrateController extends Controller
         if(!is_null($oldGrandchild["beruf"])){
             $jobID = $this->get("migrate_data.service")->migrateJob($oldGrandchild["beruf"]);
 
-            $grandchild->setJobid($jobID);
+            $grandchild->setJob($jobID);
         }
 
         //education

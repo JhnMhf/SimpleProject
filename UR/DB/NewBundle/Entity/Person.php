@@ -23,11 +23,6 @@ class Person extends BasePerson  {
     private $oid;
 
     /**
-     * @var integer
-     */
-    private $originalNationid;
-
-    /**
      * @var string
      */
     private $control;
@@ -60,30 +55,6 @@ class Person extends BasePerson  {
     public function getOid()
     {
         return $this->oid;
-    }
-
-    /**
-     * Set originalNationid
-     *
-     * @param integer $originalNationid
-     *
-     * @return Person
-     */
-    public function setOriginalNationid($originalNationid)
-    {
-        $this->originalNationid = $originalNationid;
-
-        return $this;
-    }
-
-    /**
-     * Get originalNationid
-     *
-     * @return integer
-     */
-    public function getOriginalNationid()
-    {
-        return $this->originalNationid;
     }
 
     /**
@@ -648,5 +619,63 @@ class Person extends BasePerson  {
     public function getWorks()
     {
         return $this->works;
+    }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Nation
+     */
+    private $originalNation;
+
+
+    /**
+     * Set originalNation
+     *
+     * @param \UR\DB\NewBundle\Entity\Nation $originalNation
+     *
+     * @return Person
+     */
+    public function setOriginalNation(\UR\DB\NewBundle\Entity\Nation $originalNation = null)
+    {
+        $this->originalNation = $originalNation;
+
+        return $this;
+    }
+
+    /**
+     * Get originalNation
+     *
+     * @return \UR\DB\NewBundle\Entity\Nation
+     */
+    public function getOriginalNation()
+    {
+        return $this->originalNation;
+    }
+    /**
+     * @var integer
+     */
+    private $originalNationid;
+
+
+    /**
+     * Set originalNationid
+     *
+     * @param integer $originalNationid
+     *
+     * @return Person
+     */
+    public function setOriginalNationid($originalNationid)
+    {
+        $this->originalNationid = $originalNationid;
+
+        return $this;
+    }
+
+    /**
+     * Get originalNationid
+     *
+     * @return integer
+     */
+    public function getOriginalNationid()
+    {
+        return $this->originalNationid;
     }
 }

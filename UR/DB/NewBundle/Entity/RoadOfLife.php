@@ -399,4 +399,178 @@ class RoadOfLife
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $originCountry;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $originTerritory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Job
+     */
+    private $job;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $country;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $territory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $location;
+
+
+    /**
+     * Set originCountry
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $originCountry
+     *
+     * @return RoadOfLife
+     */
+    public function setOriginCountry(\UR\DB\NewBundle\Entity\Country $originCountry = null)
+    {
+        $this->originCountry = $originCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get originCountry
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getOriginCountry()
+    {
+        return $this->originCountry;
+    }
+
+    /**
+     * Set originTerritory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $originTerritory
+     *
+     * @return RoadOfLife
+     */
+    public function setOriginTerritory(\UR\DB\NewBundle\Entity\Territory $originTerritory = null)
+    {
+        $this->originTerritory = $originTerritory;
+
+        return $this;
+    }
+
+    /**
+     * Get originTerritory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getOriginTerritory()
+    {
+        return $this->originTerritory;
+    }
+
+    /**
+     * Set job
+     *
+     * @param \UR\DB\NewBundle\Entity\Job $job
+     *
+     * @return RoadOfLife
+     */
+    public function setJob(\UR\DB\NewBundle\Entity\Job $job = null)
+    {
+        $this->job = $job;
+
+        return $this;
+    }
+
+    /**
+     * Get job
+     *
+     * @return \UR\DB\NewBundle\Entity\Job
+     */
+    public function getJob()
+    {
+        return $this->job;
+    }
+
+    /**
+     * Set country
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $country
+     *
+     * @return RoadOfLife
+     */
+    public function setCountry(\UR\DB\NewBundle\Entity\Country $country = null)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * Set territory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $territory
+     *
+     * @return RoadOfLife
+     */
+    public function setTerritory(\UR\DB\NewBundle\Entity\Territory $territory = null)
+    {
+        $this->territory = $territory;
+
+        return $this;
+    }
+
+    /**
+     * Get territory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getTerritory()
+    {
+        return $this->territory;
+    }
+
+    /**
+     * Set location
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $location
+     *
+     * @return RoadOfLife
+     */
+    public function setLocation(\UR\DB\NewBundle\Entity\Location $location = null)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
 }

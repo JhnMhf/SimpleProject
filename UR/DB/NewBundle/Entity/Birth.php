@@ -312,4 +312,178 @@ class Birth
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $originCountry;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $originTerritory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $originLocation;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $birthCountry;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $birthTerritory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $birthLocation;
+
+
+    /**
+     * Set originCountry
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $originCountry
+     *
+     * @return Birth
+     */
+    public function setOriginCountry(\UR\DB\NewBundle\Entity\Country $originCountry = null)
+    {
+        $this->originCountry = $originCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get originCountry
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getOriginCountry()
+    {
+        return $this->originCountry;
+    }
+
+    /**
+     * Set originTerritory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $originTerritory
+     *
+     * @return Birth
+     */
+    public function setOriginTerritory(\UR\DB\NewBundle\Entity\Territory $originTerritory = null)
+    {
+        $this->originTerritory = $originTerritory;
+
+        return $this;
+    }
+
+    /**
+     * Get originTerritory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getOriginTerritory()
+    {
+        return $this->originTerritory;
+    }
+
+    /**
+     * Set originLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $originLocation
+     *
+     * @return Birth
+     */
+    public function setOriginLocation(\UR\DB\NewBundle\Entity\Location $originLocation = null)
+    {
+        $this->originLocation = $originLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get originLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getOriginLocation()
+    {
+        return $this->originLocation;
+    }
+
+    /**
+     * Set birthCountry
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $birthCountry
+     *
+     * @return Birth
+     */
+    public function setBirthCountry(\UR\DB\NewBundle\Entity\Country $birthCountry = null)
+    {
+        $this->birthCountry = $birthCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get birthCountry
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getBirthCountry()
+    {
+        return $this->birthCountry;
+    }
+
+    /**
+     * Set birthTerritory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $birthTerritory
+     *
+     * @return Birth
+     */
+    public function setBirthTerritory(\UR\DB\NewBundle\Entity\Territory $birthTerritory = null)
+    {
+        $this->birthTerritory = $birthTerritory;
+
+        return $this;
+    }
+
+    /**
+     * Get birthTerritory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getBirthTerritory()
+    {
+        return $this->birthTerritory;
+    }
+
+    /**
+     * Set birthLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $birthLocation
+     *
+     * @return Birth
+     */
+    public function setBirthLocation(\UR\DB\NewBundle\Entity\Location $birthLocation = null)
+    {
+        $this->birthLocation = $birthLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get birthLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getBirthLocation()
+    {
+        return $this->birthLocation;
+    }
 }

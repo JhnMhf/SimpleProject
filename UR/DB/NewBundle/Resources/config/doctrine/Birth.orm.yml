@@ -64,4 +64,46 @@ UR\DB\NewBundle\Entity\Birth:
     manyToOne:
         person:
             targetEntity: BasePerson
+        originCountry:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: origin_countryID
+                referencedColumnName: ID
+                nullable: true
+        originTerritory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: origin_territoryID
+                referencedColumnName: ID
+                nullable: true
+        originLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: origin_locationID
+                referencedColumnName: ID
+                nullable: true
+        birthCountry:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: birth_countryID
+                referencedColumnName: ID
+                nullable: true        
+        birthTerritory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: birth_territoryID
+                referencedColumnName: ID
+                nullable: true
+        birthLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: birth_locationID
+                referencedColumnName: ID
+                nullable: true        
     lifecycleCallbacks: {  }

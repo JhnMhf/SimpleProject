@@ -81,4 +81,46 @@ UR\DB\NewBundle\Entity\RoadOfLife:
     manyToOne:
         person:
             targetEntity: BasePerson
+        originCountry:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: origin_countryID
+                referencedColumnName: ID
+                nullable: true        
+        originTerritory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: origin_territoryID
+                referencedColumnName: ID
+                nullable: true
+        job:
+            targetEntity: Job
+            fetch: EAGER
+            joinColumn:
+                name: jobID
+                referencedColumnName: ID
+                nullable: true        
+        country:
+            targetEntity: Country
+            fetch: EAGER
+            joinColumn:
+                name: countryID
+                referencedColumnName: ID
+                nullable: true        
+        territory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: territoryID
+                referencedColumnName: ID
+                nullable: true
+        location:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: locationID
+                referencedColumnName: ID
+                nullable: true     
     lifecycleCallbacks: {  }

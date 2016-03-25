@@ -97,3 +97,12 @@ UR\DB\NewBundle\Entity\Person:
           targetEntity: Works
           mappedBy: person
           fetch: EAGER
+    manyToOne:
+        originalNation:
+            targetEntity: Nation
+            fetch: EAGER
+            joinColumn:
+                name: original_nationID
+                referencedColumnName: ID
+                nullable: true
+       

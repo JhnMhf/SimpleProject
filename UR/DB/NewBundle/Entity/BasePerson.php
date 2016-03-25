@@ -52,16 +52,6 @@ class BasePerson
      */
     private $bornInMarriage;
 
-    /**
-     * @var string
-     */
-    private $jobClassid;
-
-    /**
-     * @var string
-     */
-    private $jobid;
-
 
     /**
      * Get id
@@ -264,6 +254,75 @@ class BasePerson
     {
         return $this->bornInMarriage;
     }
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Job
+     */
+    private $job;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\JobClass
+     */
+    private $jobClass;
+
+
+    /**
+     * Set job
+     *
+     * @param \UR\DB\NewBundle\Entity\Job $job
+     *
+     * @return BasePerson
+     */
+    public function setJob(\UR\DB\NewBundle\Entity\Job $job = null)
+    {
+        $this->job = $job;
+
+        return $this;
+    }
+
+    /**
+     * Get job
+     *
+     * @return \UR\DB\NewBundle\Entity\Job
+     */
+    public function getJob()
+    {
+        return $this->job;
+    }
+
+    /**
+     * Set jobClass
+     *
+     * @param \UR\DB\NewBundle\Entity\JobClass $jobClass
+     *
+     * @return BasePerson
+     */
+    public function setJobClass(\UR\DB\NewBundle\Entity\JobClass $jobClass = null)
+    {
+        $this->jobClass = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get jobClass
+     *
+     * @return \UR\DB\NewBundle\Entity\JobClass
+     */
+    public function getJobClass()
+    {
+        return $this->jobClass;
+    }
+    /**
+     * @var string
+     */
+    private $jobClassid;
+
+    /**
+     * @var string
+     */
+    private $jobid;
+
 
     /**
      * Set jobClassid

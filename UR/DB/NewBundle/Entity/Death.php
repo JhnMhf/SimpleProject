@@ -341,4 +341,120 @@ class Death
     {
         return $this->person;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Country
+     */
+    private $deathCountry;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $territoryOfDeath;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $deathLocation;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $funeralLocation;
+
+
+    /**
+     * Set deathCountry
+     *
+     * @param \UR\DB\NewBundle\Entity\Country $deathCountry
+     *
+     * @return Death
+     */
+    public function setDeathCountry(\UR\DB\NewBundle\Entity\Country $deathCountry = null)
+    {
+        $this->deathCountry = $deathCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get deathCountry
+     *
+     * @return \UR\DB\NewBundle\Entity\Country
+     */
+    public function getDeathCountry()
+    {
+        return $this->deathCountry;
+    }
+
+    /**
+     * Set territoryOfDeath
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $territoryOfDeath
+     *
+     * @return Death
+     */
+    public function setTerritoryOfDeath(\UR\DB\NewBundle\Entity\Territory $territoryOfDeath = null)
+    {
+        $this->territoryOfDeath = $territoryOfDeath;
+
+        return $this;
+    }
+
+    /**
+     * Get territoryOfDeath
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getTerritoryOfDeath()
+    {
+        return $this->territoryOfDeath;
+    }
+
+    /**
+     * Set deathLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $deathLocation
+     *
+     * @return Death
+     */
+    public function setDeathLocation(\UR\DB\NewBundle\Entity\Location $deathLocation = null)
+    {
+        $this->deathLocation = $deathLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get deathLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getDeathLocation()
+    {
+        return $this->deathLocation;
+    }
+
+    /**
+     * Set funeralLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $funeralLocation
+     *
+     * @return Death
+     */
+    public function setFuneralLocation(\UR\DB\NewBundle\Entity\Location $funeralLocation = null)
+    {
+        $this->funeralLocation = $funeralLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get funeralLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getFuneralLocation()
+    {
+        return $this->funeralLocation;
+    }
 }
