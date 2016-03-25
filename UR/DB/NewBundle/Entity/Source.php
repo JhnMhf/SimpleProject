@@ -10,17 +10,17 @@ class Source
     /**
      * @var integer
      */
-    private $personID;
-
-    /**
-     * @var boolean
-     */
-    private $sourceOrder = '1';
+    private $id;
 
     /**
      * @var string
      */
     private $label;
+
+    /**
+     * @var boolean
+     */
+    private $sourceOrder = '1';
 
     /**
      * @var string
@@ -44,51 +44,13 @@ class Source
 
 
     /**
-     * Set personID
-     *
-     * @param integer $personID
-     *
-     * @return Source
-     */
-    public function setPersonID($personID)
-    {
-        $this->personID = $personID;
-
-        return $this;
-    }
-
-    /**
-     * Get personID
+     * Get id
      *
      * @return integer
      */
-    public function getPersonID()
+    public function getId()
     {
-        return $this->personID;
-    }
-
-    /**
-     * Set sourceOrder
-     *
-     * @param boolean $sourceOrder
-     *
-     * @return Source
-     */
-    public function setSourceOrder($sourceOrder)
-    {
-        $this->sourceOrder = $sourceOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get sourceOrder
-     *
-     * @return boolean
-     */
-    public function getSourceOrder()
-    {
-        return $this->sourceOrder;
+        return $this->id;
     }
 
     /**
@@ -113,6 +75,30 @@ class Source
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * Set sourceOrder
+     *
+     * @param boolean $sourceOrder
+     *
+     * @return Source
+     */
+    public function setSourceOrder($sourceOrder)
+    {
+        $this->sourceOrder = $sourceOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get sourceOrder
+     *
+     * @return boolean
+     */
+    public function getSourceOrder()
+    {
+        return $this->sourceOrder;
     }
 
     /**
@@ -209,20 +195,5 @@ class Source
     public function getPerson()
     {
         return $this->person;
-    }
-    /**
-     * @var integer
-     */
-    private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }

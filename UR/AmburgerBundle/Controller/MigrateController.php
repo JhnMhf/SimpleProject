@@ -216,7 +216,7 @@ class MigrateController extends Controller
         if(count($sources) > 0){
             for($i = 0; $i < count($sources); $i++){
                 $quelle = $sources[$i];
-                $this->get("migrate_data.service")->migrateSource($newPerson->getId(),$quelle["order"], $quelle["bezeichnung"], $quelle["fundstelle"], $quelle["bemerkung"],$quelle["kommentar"]);
+                $this->get("migrate_data.service")->migrateSource($newPerson,$quelle["order"], $quelle["bezeichnung"], $quelle["fundstelle"], $quelle["bemerkung"],$quelle["kommentar"]);
             }
         }
     }

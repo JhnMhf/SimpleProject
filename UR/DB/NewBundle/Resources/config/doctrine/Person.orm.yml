@@ -33,3 +33,9 @@ UR\DB\NewBundle\Entity\Person:
             length: 65535
             options:
                 fixed: false
+                
+    oneToMany:
+        sources:
+          targetEntity: Source
+          mappedBy: person
+          fetch: EAGER

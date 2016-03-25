@@ -133,4 +133,52 @@ class Person extends BasePerson  {
     {
         return $this->complete;
     }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $sources;
+
+
+    /**
+     * Get sources
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSources()
+    {
+        return $this->sources;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->sources = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Add source
+     *
+     * @param \UR\DB\NewBundle\Entity\Source $source
+     *
+     * @return Person
+     */
+    public function addSource(\UR\DB\NewBundle\Entity\Source $source)
+    {
+        $this->sources[] = $source;
+
+        return $this;
+    }
+
+    /**
+     * Remove source
+     *
+     * @param \UR\DB\NewBundle\Entity\Source $source
+     */
+    public function removeSource(\UR\DB\NewBundle\Entity\Source $source)
+    {
+        $this->sources->removeElement($source);
+    }
 }

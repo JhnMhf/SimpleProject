@@ -770,11 +770,11 @@ class MigrateData
         $this->newDBManager->persist($newRoadOfLife);
     }
 
-    public function migrateSource($personID, $sourceOrder, $label, $placeOfDiscovery=null, $remark=null, $comment=null){
+    public function migrateSource($person, $sourceOrder, $label, $placeOfDiscovery=null, $remark=null, $comment=null){
         //insert into new data
         $newSource = new Source();
 
-        $newSource->setPersonID($personID);
+        $newSource->setPerson($person);
         $newSource->setSourceOrder($sourceOrder);
         $newSource->setLabel($label);
         $newSource->setPlaceOfDiscovery($placeOfDiscovery);

@@ -81,4 +81,6 @@ UR\DB\NewBundle\Entity\BasePerson:
             options:
                 fixed: false
             column: jobID
+
+    
     lifecycleCallbacks: {  }
