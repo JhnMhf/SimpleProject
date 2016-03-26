@@ -457,4 +457,62 @@ class Death
     {
         return $this->funeralLocation;
     }
+    /**
+     * @var date_reference
+     */
+    private $deathDate;
+
+    /**
+     * @var date_reference
+     */
+    private $funeralDate;
+
+
+    /**
+     * Set deathDate
+     *
+     * @param date_reference $deathDate
+     *
+     * @return Death
+     */
+    public function setDeathDate($deathDate)
+    {
+        $this->deathDate = $deathDate;
+
+        return $this;
+    }
+
+    /**
+     * Get deathDate
+     *
+     * @return date_reference
+     */
+    public function getDeathDate()
+    {
+        return $this->deathDate;
+    }
+
+    /**
+     * Set funeralDate
+     *
+     * @param date_reference $funeralDate
+     *
+     * @return Death
+     */
+    public function setFuneralDate($funeralDate)
+    {
+        $this->funeralDate = $funeralDate;
+
+        return $this;
+    }
+
+    /**
+     * Get funeralDate
+     *
+     * @return date_reference
+     */
+    public function getFuneralDate()
+    {
+        return $this->funeralDate;
+    }
 }

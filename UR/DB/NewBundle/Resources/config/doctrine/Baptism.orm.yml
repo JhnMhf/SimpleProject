@@ -12,13 +12,10 @@ UR\DB\NewBundle\Entity\Baptism:
             generator:
                 strategy: IDENTITY
     fields:
-        baptismDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        baptismDate:
+            type: date_reference
             column: baptism_dateID
+            nullable: true
         baptismLocationid:
             type: integer
             nullable: true
@@ -36,4 +33,6 @@ UR\DB\NewBundle\Entity\Baptism:
                 referencedColumnName: ID
                 nullable: true
                 
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks:
+        #postLoad: [loadDates]
+      

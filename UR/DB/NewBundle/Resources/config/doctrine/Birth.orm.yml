@@ -42,13 +42,10 @@ UR\DB\NewBundle\Entity\Birth:
             options:
                 unsigned: false
             column: birth_locationID
-        birthDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        birthDate:
+            type: date_reference
             column: birth_dateID
+            nullable: true
         birthTerritoryid:
             type: integer
             nullable: true

@@ -30,20 +30,14 @@ UR\DB\NewBundle\Entity\Religion:
             options:
                 default: '1'
             column: religion_order
-        provenDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: proven_dateID
-        fromDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        fromDate:
+            type: date_reference
             column: from_dateID
+            nullable: true
+        provenDate:
+            type: date_reference
+            column: proven_dateID
+            nullable: true
         changeOfReligion:
             type: text
             nullable: true

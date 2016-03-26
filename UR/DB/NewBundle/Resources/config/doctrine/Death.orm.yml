@@ -55,20 +55,14 @@ UR\DB\NewBundle\Entity\Death:
             length: 65535
             options:
                 fixed: false
-        deathDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        deathDate:
+            type: date_reference
             column: death_dateId
-        funeralDateid:
-            type: string
             nullable: true
-            length: 200
-            options:
-                fixed: false
+        funeralDate:
+            type: date_reference
             column: funeral_dateId
+            nullable: true
     manyToOne:
         person:
             targetEntity: BasePerson

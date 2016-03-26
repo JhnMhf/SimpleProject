@@ -486,4 +486,33 @@ class Birth
     {
         return $this->birthLocation;
     }
+    /**
+     * @var date_reference
+     */
+    private $birthDate;
+
+
+    /**
+     * Set birthDate
+     *
+     * @param date_reference $birthDate
+     *
+     * @return Birth
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * Get birthDate
+     *
+     * @return date_reference
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
 }

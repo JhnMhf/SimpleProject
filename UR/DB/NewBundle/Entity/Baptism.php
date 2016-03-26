@@ -167,4 +167,33 @@ class Baptism
     {
         return $this->baptismLocation;
     }
+    /**
+     * @var date_reference
+     */
+    private $baptismDate;
+
+
+    /**
+     * Set baptismDate
+     *
+     * @param date_reference $baptismDate
+     *
+     * @return Baptism
+     */
+    public function setBaptismDate($baptismDate)
+    {
+        $this->baptismDate = $baptismDate;
+
+        return $this;
+    }
+
+    /**
+     * Get baptismDate
+     *
+     * @return date_reference
+     */
+    public function getBaptismDate()
+    {
+        return $this->baptismDate;
+    }
 }

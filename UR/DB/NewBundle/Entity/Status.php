@@ -428,4 +428,91 @@ class Status
     {
         return $this->location;
     }
+    /**
+     * @var date_reference
+     */
+    private $fromDate;
+
+    /**
+     * @var date_reference
+     */
+    private $toDate;
+
+    /**
+     * @var date_reference
+     */
+    private $provenDate;
+
+
+    /**
+     * Set fromDate
+     *
+     * @param date_reference $fromDate
+     *
+     * @return Status
+     */
+    public function setFromDate($fromDate)
+    {
+        $this->fromDate = $fromDate;
+
+        return $this;
+    }
+
+    /**
+     * Get fromDate
+     *
+     * @return date_reference
+     */
+    public function getFromDate()
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * Set toDate
+     *
+     * @param date_reference $toDate
+     *
+     * @return Status
+     */
+    public function setToDate($toDate)
+    {
+        $this->toDate = $toDate;
+
+        return $this;
+    }
+
+    /**
+     * Get toDate
+     *
+     * @return date_reference
+     */
+    public function getToDate()
+    {
+        return $this->toDate;
+    }
+
+    /**
+     * Set provenDate
+     *
+     * @param date_reference $provenDate
+     *
+     * @return Status
+     */
+    public function setProvenDate($provenDate)
+    {
+        $this->provenDate = $provenDate;
+
+        return $this;
+    }
+
+    /**
+     * Get provenDate
+     *
+     * @return date_reference
+     */
+    public function getProvenDate()
+    {
+        return $this->provenDate;
+    }
 }

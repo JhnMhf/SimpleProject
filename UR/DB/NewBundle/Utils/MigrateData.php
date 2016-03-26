@@ -63,7 +63,7 @@ class MigrateData
     private $container;
     private $newDBManager;
 
-	public function __construct($container)
+    public function __construct($container)
     {
         $this->container = $container;
         $this->newDBManager = $this->get('doctrine')->getManager('new');
@@ -294,14 +294,16 @@ class MigrateData
         $this->newDBManager->flush();
 
         //now collect ids for the calling method
-        $dateIdArray = [];
+        /*$dateIdArray = [];
 
         for($i = 0; $i < count($newDatesArray); $i++){
             $dateId = $newDatesArray[$i]->getId();
             $dateIdArray[] = $dateId;
         }
 
-        return $this->createStringFromIdArray($dateIdArray);
+        return $this->createStringFromIdArray($dateIdArray);*/
+        
+        return $newDatesArray;
     }
 
     private function createStringFromIdArray($idArray){
@@ -450,7 +452,7 @@ class MigrateData
         $newBirth->setBirthTerritory($this->getTerritory($birthTerritory));
         $newBirth->setComment($comment);
 
-        $newBirth->setBirthDateId($this->getDate($birthDate));
+        $newBirth->setBirthDate($this->getDate($birthDate));
 
         $this->newDBManager->persist($newBirth);
     }
@@ -461,7 +463,7 @@ class MigrateData
         
         $newBaptism->setPerson($person);
         $newBaptism->setBaptismLocation($this->getLocation($baptismLocation));
-        $newBaptism->setBaptismDateId($this->getDate($baptismDate));
+        $newBaptism->setBaptismDate($this->getDate($baptismDate));
         
         $this->newDBManager->persist($newBaptism);
     }
@@ -499,8 +501,8 @@ class MigrateData
         $newDeath->setGraveyard($graveyard);
         $newDeath->setFuneralLocation($this->getLocation($funeralLocation));
         $newDeath->setComment($comment);
-        $newDeath->setDeathDateId($this->getDate($deathDate));
-        $newDeath->setFuneralDateId($this->getDate($funeralDate));
+        $newDeath->setDeathDate($this->getDate($deathDate));
+        $newDeath->setFuneralDate($this->getDate($funeralDate));
         
         $this->newDBManager->persist($newDeath);
     }
@@ -515,11 +517,11 @@ class MigrateData
         $newEducation->setCountry($this->getCountry($country));
         $newEducation->setTerritory($this->getTerritory($territory));
         $newEducation->setLocation($this->getLocation($location));
-        $newEducation->setFromDateid($this->getDate($fromDate));
-        $newEducation->setToDateid($this->getDate($toDate));
-        $newEducation->setProvenDateid($this->getDate($provenDate));
+        $newEducation->setFromDate($this->getDate($fromDate));
+        $newEducation->setToDate($this->getDate($toDate));
+        $newEducation->setProvenDate($this->getDate($provenDate));
         $newEducation->setGraduationLabel($graduationLabel);
-        $newEducation->setGraduationDateid($this->getDate($graduationDate));
+        $newEducation->setGraduationDate($this->getDate($graduationDate));
         $newEducation->setGraduationLocation($this->getLocation($graduationLocation));
         $newEducation->setComment($comment);
         
@@ -536,9 +538,9 @@ class MigrateData
         $newHonour->setCountry($this->getCountry($country));
         $newHonour->setTerritory($this->getTerritory($territory));
         $newHonour->setLocation($this->getLocation($location));
-        $newHonour->setFromDateid($this->getDate($fromDate));
-        $newHonour->setToDateid($this->getDate($toDate));
-        $newHonour->setProvenDateid($this->getDate($provenDate));
+        $newHonour->setFromDate($this->getDate($fromDate));
+        $newHonour->setToDate($this->getDate($toDate));
+        $newHonour->setProvenDate($this->getDate($provenDate));
         $newHonour->setComment($comment);
         
         $this->newDBManager->persist($newHonour);
@@ -679,9 +681,9 @@ class MigrateData
         $newProperty->setCountry($this->getCountry($country));
         $newProperty->setTerritory($this->getTerritory($territory));
         $newProperty->setLocation($this->getLocation($location));
-        $newProperty->setFromDateid($this->getDate($fromDate));
-        $newProperty->setToDateid($this->getDate($toDate));
-        $newProperty->setProvenDateid($this->getDate($provenDate));
+        $newProperty->setFromDate($this->getDate($fromDate));
+        $newProperty->setToDate($this->getDate($toDate));
+        $newProperty->setProvenDate($this->getDate($provenDate));
         $newProperty->setComment($comment);
         
         $this->newDBManager->persist($newProperty);
@@ -698,9 +700,9 @@ class MigrateData
         $newRank->setCountry($this->getCountry($country));
         $newRank->setTerritory($this->getTerritory($territory));
         $newRank->setLocation($this->getLocation($location));
-        $newRank->setFromDateid($this->getDate($fromDate));
-        $newRank->setToDateid($this->getDate($toDate));
-        $newRank->setProvenDateid($this->getDate($provenDate));
+        $newRank->setFromDate($this->getDate($fromDate));
+        $newRank->setToDate($this->getDate($toDate));
+        $newRank->setProvenDate($this->getDate($provenDate));
         $newRank->setComment($comment);
         
         $this->newDBManager->persist($newRank);
@@ -734,8 +736,8 @@ class MigrateData
         $newReligion->setChangeOfReligion($change_of_religion);
         $newReligion->setComment($comment);
 
-        $newReligion->setProvenDateid($this->getDate($provenDate));
-        $newReligion->setFromDateId($this->getDate($fromDate));
+        $newReligion->setProvenDate($this->getDate($provenDate));
+        $newReligion->setFromDate($this->getDate($fromDate));
         
         $this->newDBManager->persist($newReligion);
     }
@@ -766,9 +768,9 @@ class MigrateData
         $newRoadOfLife->setCountry($this->getCountry($country));
         $newRoadOfLife->setTerritory($this->getTerritory($territory));
         $newRoadOfLife->setLocation($this->getLocation($location));
-        $newRoadOfLife->setFromDateid($this->getDate($fromDate));
-        $newRoadOfLife->setToDateid($this->getDate($toDate));
-        $newRoadOfLife->setProvenDateid($this->getDate($provenDate));
+        $newRoadOfLife->setFromDate($this->getDate($fromDate));
+        $newRoadOfLife->setToDate($this->getDate($toDate));
+        $newRoadOfLife->setProvenDate($this->getDate($provenDate));
         $newRoadOfLife->setComment($comment);
         
         $this->newDBManager->persist($newRoadOfLife);
@@ -798,9 +800,9 @@ class MigrateData
         $newStatus->setCountry($this->getCountry($country));
         $newStatus->setTerritory($this->getTerritory($territory));
         $newStatus->setLocation($this->getLocation($location));
-        $newStatus->setFromDateid($this->getDate($fromDate));
-        $newStatus->setToDateid($this->getDate($toDate));
-        $newStatus->setProvenDateid($this->getDate($provenDate));
+        $newStatus->setFromDate($this->getDate($fromDate));
+        $newStatus->setToDate($this->getDate($toDate));
+        $newStatus->setProvenDate($this->getDate($provenDate));
         $newStatus->setComment($comment);
         
         $this->newDBManager->persist($newStatus);
@@ -887,10 +889,10 @@ class MigrateData
         $newWorks->setWorksOrder($works_order);
         $newWorks->setCountry($this->getCountry($country));
         $newWorks->setLocation($this->getLocation($location));
-        $newWorks->setFromDateid($this->getDate($fromDate));
-        $newWorks->setToDateid($this->getDate($toDate));
+        $newWorks->setFromDate($this->getDate($fromDate));
+        $newWorks->setToDate($this->getDate($toDate));
         $newWorks->setTerritory($this->getTerritory($territory));
-        $newWorks->setProvenDateid($this->getDate($provenDate));
+        $newWorks->setProvenDate($this->getDate($provenDate));
         $newWorks->setComment($comment);
         
         $this->newDBManager->persist($newWorks);

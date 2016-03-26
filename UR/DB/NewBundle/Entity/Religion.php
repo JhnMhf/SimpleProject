@@ -254,4 +254,91 @@ class Religion
     {
         return $this->person;
     }
+    /**
+     * @var date_reference
+     */
+    private $fromDate;
+
+    /**
+     * @var date_reference
+     */
+    private $toDate;
+
+
+    /**
+     * Set fromDate
+     *
+     * @param date_reference $fromDate
+     *
+     * @return Religion
+     */
+    public function setFromDate($fromDate)
+    {
+        $this->fromDate = $fromDate;
+
+        return $this;
+    }
+
+    /**
+     * Get fromDate
+     *
+     * @return date_reference
+     */
+    public function getFromDate()
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * Set toDate
+     *
+     * @param date_reference $toDate
+     *
+     * @return Religion
+     */
+    public function setToDate($toDate)
+    {
+        $this->toDate = $toDate;
+
+        return $this;
+    }
+
+    /**
+     * Get toDate
+     *
+     * @return date_reference
+     */
+    public function getToDate()
+    {
+        return $this->toDate;
+    }
+    /**
+     * @var date_reference
+     */
+    private $provenDate;
+
+
+    /**
+     * Set provenDate
+     *
+     * @param date_reference $provenDate
+     *
+     * @return Religion
+     */
+    public function setProvenDate($provenDate)
+    {
+        $this->provenDate = $provenDate;
+
+        return $this;
+    }
+
+    /**
+     * Get provenDate
+     *
+     * @return date_reference
+     */
+    public function getProvenDate()
+    {
+        return $this->provenDate;
+    }
 }

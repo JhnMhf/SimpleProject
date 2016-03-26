@@ -42,26 +42,16 @@ UR\DB\NewBundle\Entity\Honour:
             options:
                 unsigned: false
             column: locationID
-        fromDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        fromDate:
+            type: date_reference
             column: from_dateID
-        toDateid:
-            type: string
             nullable: true
-            length: 200
-            options:
-                fixed: false
+        toDate:
+            type: date_reference
             column: to_dateID
-        provenDateid:
-            type: string
             nullable: true
-            length: 200
-            options:
-                fixed: false
+        provenDate:
+            type: date_reference
             column: proven_dateID
         comment:
             type: text
