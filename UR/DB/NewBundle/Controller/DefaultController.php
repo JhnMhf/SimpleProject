@@ -7,32 +7,45 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function jsonAction($ID)
+    public function jsonAction($type, $ID)
     {
-        return $this->get("response_builder.service")->getJSONResponse($this->loadPersonByID($ID));
+        return $this->get("response_builder.service")->getJSONResponse($this->loadPersonByID($type, $ID));
     }
     
-    public function xmlAction($ID){
-        return $this->get("response_builder.service")->getXMLResponse($this->loadPersonByID($ID));
+    public function xmlAction($type, $ID){
+        return $this->get("response_builder.service")->getXMLResponse($this->loadPersonByID($type, $ID));
     }
     
-    private function loadPersonByID($ID){
+    private function loadPersonByID($type, $ID){
         $newDBManager = $this->get('doctrine')->getManager('new');
-        $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
         
-        if(is_null($person)){
-            $person = $newDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+        if($type == 'id'){
+            $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        
+            if(is_null($person)){
+                $person = $newDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+            }
+
+            if(is_null($person)){
+                $person = $newDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
+            }
+
+            if(is_null($person)){
+               //throw exception
+            }
+
+            return $person;
+        } else if($type == 'oid'){
+            $person = $newDBManager->getRepository('NewBundle:Person')->findOneByOid($ID);
+        
+            if(is_null($person)){
+               //throw exception
+            }
+
+            return $person;
         }
-        
-        if(is_null($person)){
-            $person = $newDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
-        }
-        
-        if(is_null($person)){
-           //throw exception
-        }
-        
-        return $person;
+            
+        return null;
     }
     
     //http://stackoverflow.com/questions/5452760/truncate-foreign-key-constrained-table

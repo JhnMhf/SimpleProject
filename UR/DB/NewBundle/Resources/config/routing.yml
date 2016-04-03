@@ -1,8 +1,8 @@
 json:
-    path:     /json/{ID}
+    path:     /json/{type}/{ID}
     defaults: { _controller: NewBundle:Default:json }
 xml:
-    path:     /xml/{ID}
+    path:     /xml/{type}/{ID}
     defaults: { _controller: NewBundle:Default:xml }    
 clearDatabase:
     path: /database/truncate

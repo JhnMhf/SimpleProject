@@ -15,4 +15,9 @@ class DefaultController extends Controller
     {
         return $this->render('AmburgerBundle:Default:test.html.twig');
     }
+    
+    public function overviewAction()
+    {
+        return $this->render('AmburgerBundle:Default:overview.html.twig');
+    }
 }

@@ -40,6 +40,7 @@ class MigrateController extends Controller
         );*/
         
         return $this->forward('NewBundle:Default:json', array(
+            'type' => 'id',
             'ID'  => $person->getId()
         ));
     }

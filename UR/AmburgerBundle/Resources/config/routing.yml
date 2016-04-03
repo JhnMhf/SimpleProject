@@ -3,7 +3,7 @@ amburger_homepage:
     defaults: { _controller: AmburgerBundle:Default:index }
 
 amburger_homepage2:
-    path:     /test
+    path:     /test/
     defaults: { _controller: AmburgerBundle:Default:test }
 
 test_old:
@@ -13,3 +13,7 @@ test_old:
 migrate:
     path:     /migrate/{ID}
     defaults: { _controller: AmburgerBundle:Migrate:person }
+    
+overview:
+    path:     /overview/
+    defaults: { _controller: AmburgerBundle:Default:overview }

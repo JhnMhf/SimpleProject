@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Foundation | Welcome</title>
+        <link rel="stylesheet" href="{{asset('bundles/amburger/css/foundation.css')}}" />
+        <link rel="stylesheet" href="{{asset('bundles/amburger/css/main.css')}}" />
+        <link rel="stylesheet" href="{{asset('bundles/amburger/css/test.css')}}" />
+        <script src="{{asset('bundles/amburger/js/lib/vendor/modernizr.js')}}"></script>
+    </head>
+    <body>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <h1>Overview</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="large-4 medium-4 columns" id="idType-container">
+                    <label>ID or OID</label>
+                    <input type="radio" name="idType" value="id" id="radioID" checked><label for="radioID">ID</label>
+                    <input type="radio" name="idType" value="oid" id="radioOID"><label for="radioOID">OID</label>
+                </div>
+                <div class="large-4 medium-4 columns">
+                    <label>Zu verwendende ID</label>
+                    <input id="id-value" type="text" placeholder="z.B.: 1234" />
+                </div>
+                <div class="large-4 medium-4 columns">
+                    <a class="small round button" id="load-btn">Laden</a><br/>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="person-data">
+        </div>
+    </div>
+    <script src="{{asset('bundles/amburger/js/lib/vendor/jquery.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/lib/foundation.min.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/src/overview.js')}}"></script>
+    <script>
+        $(document).foundation();
+    </script>
+</body>
+</html>
