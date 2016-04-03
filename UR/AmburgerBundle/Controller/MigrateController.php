@@ -147,11 +147,19 @@ class MigrateController extends Controller
         $birth = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($oldPersonID);
 
         //if necessary get more informations from other tables
-
-
         if(!is_null($birth)){
-            $this->get("migrate_data.service")->migrateBirth($newPerson,$birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
-        }
+            if($birth->getHerkunftsland() != null ||
+                $birth->getHerkunftsterritorium() != null ||
+                $birth->getHerkunftsort() != null ||
+                $birth->getGeburtsland() != null ||
+                $birth->getGeburtsort() != null ||
+                $birth->getGeboren() != null ||
+                $birth->getGeburtsterritorium() != null ||
+                $birth->getKommentar() != null){
+                
+                $this->get("migrate_data.service")->migrateBirth($newPerson,$birth->getHerkunftsland(),$birth->getHerkunftsterritorium(),$birth->getHerkunftsort(),$birth->getGeburtsland(),$birth->getGeburtsort(),$birth->getGeboren(),$birth->getGeburtsterritorium(),$birth->getKommentar());
+            }
+          }
     }
 
 
