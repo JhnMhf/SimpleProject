@@ -1,6 +1,9 @@
-new_homepage:
+json:
     path:     /json/{ID}
     defaults: { _controller: NewBundle:Default:json }
+xml:
+    path:     /xml/{ID}
+    defaults: { _controller: NewBundle:Default:xml }    
 clearDatabase:
     path: /database/truncate
     defaults: { _controller: NewBundle:Default:clearDatabase }

@@ -9,6 +9,7 @@
 namespace UR\DB\NewBundle\Utils;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of JSONPayloadBuilder
@@ -45,6 +46,19 @@ class ResponseBuilder {
         $json = $serializer->serialize($obj, 'json');
         $response = new JsonResponse();
         $response->setContent($json);
+        
+        return $response;
+    }
+    
+    public function getXMLResponse($obj){
+        if(get_class($obj) == self::PERSON_CLASS){
+            //$this->LOGGER->debug("PERSON: " . $obj . " has Sources: " . count($obj->getSources()));
+        }
+        
+        $serializer = $this->container->get('serializer');
+        $xml = $serializer->serialize($obj, 'xml');
+        $response = new Response($xml);
+        $response->headers->set('Content-Type', 'xml');
         
         return $response;
     }

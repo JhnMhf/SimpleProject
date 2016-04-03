@@ -9,6 +9,14 @@ class DefaultController extends Controller
 {
     public function jsonAction($ID)
     {
+        return $this->get("response_builder.service")->getJSONResponse($this->loadPersonByID($ID));
+    }
+    
+    public function xmlAction($ID){
+        return $this->get("response_builder.service")->getXMLResponse($this->loadPersonByID($ID));
+    }
+    
+    private function loadPersonByID($ID){
         $newDBManager = $this->get('doctrine')->getManager('new');
         $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
         
@@ -23,8 +31,8 @@ class DefaultController extends Controller
         if(is_null($person)){
            //throw exception
         }
-
-        return $this->get("response_builder.service")->getJSONResponse($person);
+        
+        return $person;
     }
     
     //http://stackoverflow.com/questions/5452760/truncate-foreign-key-constrained-table
