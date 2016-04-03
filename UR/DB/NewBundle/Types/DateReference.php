@@ -48,6 +48,10 @@ class DateReference extends Type
         //expects list of date objects
         //returns comma separated string
         
+        if(is_null($value) || count($value) == 0){
+            return null;
+        }
+        
         $dateIdArray = [];
 
         for($i = 0; $i < count($value); $i++){
@@ -69,6 +73,10 @@ class DateReference extends Type
     {
         //expects comma separated string
         //returns list of csv objects
+        
+        if(is_null($value) || $value == ""){
+            return [];
+        }
         
         $datesArray = explode(",", $value);
         

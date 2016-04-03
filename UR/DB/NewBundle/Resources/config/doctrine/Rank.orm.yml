@@ -59,6 +59,7 @@ UR\DB\NewBundle\Entity\Rank:
         provenDate:
             type: date_reference
             column: proven_dateID
+            nullable: true
         comment:
             type: text
             nullable: true

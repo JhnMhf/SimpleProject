@@ -41,6 +41,7 @@ UR\DB\NewBundle\Entity\Works:
         provenDate:
             type: date_reference
             column: proven_dateID
+            nullable: true
         territoryid:
             type: integer
             nullable: true
