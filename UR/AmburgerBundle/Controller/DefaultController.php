@@ -20,4 +20,12 @@ class DefaultController extends Controller
     {
         return $this->render('AmburgerBundle:Default:overview.html.twig');
     }
+    
+    public function baseAction(){
+        return $this->render('AmburgerBundle:DataCorrection:base.html.twig');
+    }
+    
+    public function loginAction(){
+        return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>true, 'show_password_notice'=>true));
+    }
 }

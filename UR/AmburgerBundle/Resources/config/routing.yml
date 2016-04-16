@@ -17,3 +17,12 @@ migrate:
 overview:
     path:     /overview/
     defaults: { _controller: AmburgerBundle:Default:overview }
+    
+base:
+    path:     /base/
+    defaults: { _controller: AmburgerBundle:Default:base }    
+    
+        
+login:
+    path:     /login/
+    defaults: { _controller: AmburgerBundle:Default:login }    

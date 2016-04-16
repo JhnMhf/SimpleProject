@@ -1,0 +1,64 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}TOOLNAME{% endblock %}</title>
+        
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{asset('bundles/amburger/css/foundation.css')}}" />
+        <link rel="stylesheet" href="{{asset('bundles/amburger/css/main.css')}}" />
+        <script src="{{asset('bundles/amburger/js/lib/vendor/modernizr.js')}}"></script>
+    {% endblock %}
+    </head>
+    <body>
+        
+         
+        <header>
+            <div class="row" id="header">
+                <div class="large-12 columns">
+                    <div class="large-2 columns center">
+                        BILD IOS
+                    </div>
+                    <div class="large-8 columns center">
+                        {% block header %}
+                        <h1>TOOLNAME</h1>
+                        {% endblock %}
+                    </div>
+                    <div class="large-2 columns center">
+                        BILD MEI
+                    </div>
+
+                </div>
+            </div>
+        </header>
+         
+         <div id="body">
+            {% block body %}
+      
+            {% endblock %}
+        </div>
+
+        
+        <footer id="footer">
+            <div class="row">
+                <div class="large-12 columns">
+                    {% block footer %}
+                    <h1>Footer</h1>
+                    {% endblock %}
+                </div>
+            </div>
+        </footer>
+        
+        
+
+    {% block javascripts %}
+        <script src="{{asset('bundles/amburger/js/lib/vendor/jquery.js')}}"></script>
+        <script src="{{asset('bundles/amburger/js/lib/foundation.min.js')}}"></script>
+        <script src="{{asset('bundles/amburger/js/src/overview.js')}}"></script>
+        <script>
+            $(document).foundation();
+        </script>
+    {% endblock %}
+</body>
+</html>
