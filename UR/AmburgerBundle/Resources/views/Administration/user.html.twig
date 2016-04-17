@@ -1,19 +1,13 @@
 {% extends "AmburgerBundle:Base:base.html.twig" %}
 {% block body %}
     <div class="row">
-        <div class="large-6 columns large-centered center">
-            <h2 class="welcome-header">Willkommen!</h2>
-            <p class="welcome-text"> Blablbababablsdf </p>
-        </div>
-    </div>
-    <div class="row">
         <div class="large-6 columns large-centered center login-container">
             <form method="POST" class="form-signin">
-              <input type="hidden" name="_target_path" value="overview" />
-              <h2 class="form-signin-heading">Login</h2>
+              <input type="hidden" name="_target_path" value="user" />
+              <h2 class="form-signin-heading">Neuen Nutzer anlegen</h2>
                 <div class="row">
                     <div class="large-2 columns large-offset-2">
-                          <label for="inputUserName">Nutzername:</label>
+                          <label for="inputUserName">Neuer Nutzername:</label>
                     </div>
                     <div class="large-6 columns">
                         <input name="username" type="text" id="inputUserName" class="form-control {% if show_username_notice %}error{% endif %}" placeholder="Nutzername" required autofocus>
@@ -25,7 +19,7 @@
 
                 <div class="row ">
                     <div class="large-2 columns large-offset-2">
-                          <label for="inputPassword">Passwort:</label>
+                          <label for="inputPassword">Neues Passwort:</label>
                     </div>
                     <div class="large-6 columns">
                           <input name="password" type="password" id="inputPassword" class="form-control {% if show_password_notice %}error{% endif %}" placeholder="Passwort" required>
@@ -37,7 +31,7 @@
                 </div>
                 <div class="row ">
                       <div class="large-6 columns large-centered">
-                          <button id="login-button" class="round button" type="submit">Login</button>
+                          <button id="login-button" class="round button" type="submit">Anlegen</button>
                     </div>
                 </div>
             </form>

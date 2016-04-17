@@ -22,7 +22,31 @@ base:
     path:     /base/
     defaults: { _controller: AmburgerBundle:Default:base }    
     
-        
+
+# login
+
 login:
     path:     /login/
-    defaults: { _controller: AmburgerBundle:Default:login }    
+    defaults: { _controller: AmburgerBundle:Login:index }    
+    methods: [GET]
+    
+login_validate:
+    path:     /login/
+    defaults: { _controller: AmburgerBundle:Login:login }    
+    methods: [POST]
+    
+logout:
+    path: /logout/
+    defaults: { _controller: AmburgerBundle:Login:logout }
+    
+# usercontrol
+
+addUser_index:
+    path: /user/
+    defaults: { _controller: AmburgerBundle:User:index }    
+    methods: [GET]
+
+addUser:
+    path: /user/
+    defaults: { _controller: AmburgerBundle:User:addUser }    
+    methods: [POST]
