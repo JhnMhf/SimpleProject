@@ -29,6 +29,8 @@ class MigrateController extends Controller
         $this->getLogger()->info("Migrate Request for Person with ID ". $ID);
 
         $person = $this->migratePerson($ID);
+        
+        //print_r("Normalisiert: ".$this->get("normalization.service")->writeOutAbbreviations("Du bist mein Mamaschaf. Mein bayer. Mamaschaf! Und du besitzt eine Batt.. Und hast einen adl. Adj.!")."\n");
 
         if(is_null($person)){
             return new Response("Invalid ID");
