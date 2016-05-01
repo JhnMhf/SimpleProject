@@ -62,12 +62,15 @@ class MigrateData
 
     private $container;
     private $newDBManager;
+    
+    private $normalizationService;
 
     public function __construct($container)
     {
         $this->container = $container;
         $this->newDBManager = $this->get('doctrine')->getManager('new');
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
+        $this->normalizationService = $this->get("normalization.service");
     }
 
     private function get($identifier){
@@ -75,6 +78,10 @@ class MigrateData
     }
 
     /* helper method */
+    
+    private function normalize($string){
+        return $this->normalizationService->writeOutAbbreviations($string);
+    }
 
 
     public function getCountry($countryName, $comment = null){
@@ -82,6 +89,8 @@ class MigrateData
         if($countryName == "" || $countryName == null){
             return null;
         }
+        
+        $countryName = $this->normalize($countryName);
 
         // check if country exists
         if($comment == null || $comment == ""){
@@ -102,7 +111,7 @@ class MigrateData
         $newCountry = new Country();
 
         $newCountry->setName($countryName);
-        $newCountry->setComment($comment);
+        $newCountry->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newCountry);
         $this->newDBManager->flush();
@@ -114,6 +123,8 @@ class MigrateData
         if($territoryName == "" || $territoryName == null){
             return null;
         }
+        
+        $territoryName = $this->normalize($territoryName);
 
         // check if territory exists
         if($comment == null || $comment == ""){
@@ -134,7 +145,7 @@ class MigrateData
         $newTerritory = new Territory();
 
         $newTerritory->setName($territoryName);
-        $newTerritory->setComment($comment);
+        $newTerritory->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newTerritory);
         $this->newDBManager->flush();
@@ -146,6 +157,8 @@ class MigrateData
         if($locationName == "" || $locationName == null){
             return null;
         }
+        
+        $locationName = $this->normalize($locationName);
 
         // check if location exists
         if($comment == null || $comment == ""){
@@ -167,7 +180,7 @@ class MigrateData
         $newLocation = new Location();
 
         $newLocation->setName($locationName);
-        $newLocation->setComment($comment);
+        $newLocation->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newLocation);
         $this->newDBManager->flush();
@@ -179,6 +192,8 @@ class MigrateData
         if($nationName == "" || $nationName == null){
             return null;
         }
+        
+        $nationName = $this->normalize($nationName);
 
         // check if location exists
         if($comment == null || $comment == ""){
@@ -199,7 +214,7 @@ class MigrateData
         $newNation = new Nation();
 
         $newNation->setName($nationName);
-        $newNation->setComment($comment);
+        $newNation->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newNation);
         $this->newDBManager->flush();
@@ -211,6 +226,8 @@ class MigrateData
         if($jobLabel == "" || $jobLabel == null){
             return null;
         }
+        
+        $jobLabel = $this->normalize($jobLabel);
 
         // check if job exists
         if($comment == null || $comment == ""){
@@ -231,7 +248,7 @@ class MigrateData
         $newJob = new Job();
 
         $newJob->setLabel($jobLabel);
-        $newJob->setComment($comment);
+        $newJob->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newJob);
         $this->newDBManager->flush();
@@ -244,6 +261,8 @@ class MigrateData
         if($jobClassLabel == "" || $jobClassLabel == null){
             return null;
         }
+        
+        $jobClassLabel = $this->normalize($jobClassLabel);
 
         // check if jobClass exists
         if($comment == null || $comment == ""){
@@ -377,7 +396,7 @@ class MigrateData
             }
 
             if($commentString != ""){
-                $newDate->setComment($commentString);
+                $newDate->setComment($this->normalize($commentString));
             }
 
         }else{
@@ -450,7 +469,7 @@ class MigrateData
         $newBirth->setBirthCountry($this->getCountry($birthCountry));
         $newBirth->setBirthLocation($this->getLocation($birthLocation));
         $newBirth->setBirthTerritory($this->getTerritory($birthTerritory));
-        $newBirth->setComment($comment);
+        $newBirth->setComment($this->normalize($comment));
 
         $newBirth->setBirthDate($this->getDate($birthDate));
 
@@ -481,7 +500,7 @@ class MigrateData
         $newDate->setMonth($month);
         $newDate->setYear($year);
         $newDate->setWeekday($weekday);
-        $newDate->setComment($comment);
+        $newDate->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newDate);
         $this->newDBManager->flush();
@@ -496,11 +515,11 @@ class MigrateData
         $newDeath->setPerson($person);
         $newDeath->setDeathLocation($this->getLocation($deathLocation));
         $newDeath->setDeathCountry($this->getCountry($deathCountry));
-        $newDeath->setCauseOfDeath($causeOfDeath);
+        $newDeath->setCauseOfDeath($this->normalize($causeOfDeath));
         $newDeath->setTerritoryOfDeath($this->getTerritory($territoryOfDeath));
-        $newDeath->setGraveyard($graveyard);
+        $newDeath->setGraveyard($this->normalize($graveyard));
         $newDeath->setFuneralLocation($this->getLocation($funeralLocation));
-        $newDeath->setComment($comment);
+        $newDeath->setComment($this->normalize($comment));
         $newDeath->setDeathDate($this->getDate($deathDate));
         $newDeath->setFuneralDate($this->getDate($funeralDate));
         
@@ -513,17 +532,17 @@ class MigrateData
 
         $newEducation->setPerson($person);
         $newEducation->setEducationOrder($educationOrder);
-        $newEducation->setLabel($label);
+        $newEducation->setLabel($this->normalize($label));
         $newEducation->setCountry($this->getCountry($country));
         $newEducation->setTerritory($this->getTerritory($territory));
         $newEducation->setLocation($this->getLocation($location));
         $newEducation->setFromDate($this->getDate($fromDate));
         $newEducation->setToDate($this->getDate($toDate));
         $newEducation->setProvenDate($this->getDate($provenDate));
-        $newEducation->setGraduationLabel($graduationLabel);
+        $newEducation->setGraduationLabel($this->normalize($graduationLabel));
         $newEducation->setGraduationDate($this->getDate($graduationDate));
         $newEducation->setGraduationLocation($this->getLocation($graduationLocation));
-        $newEducation->setComment($comment);
+        $newEducation->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newEducation);
     }
@@ -534,14 +553,14 @@ class MigrateData
 
         $newHonour->setPerson($person);
         $newHonour->setHonourOrder($honourOrder);
-        $newHonour->setLabel($label);
+        $newHonour->setLabel($this->normalize($label));
         $newHonour->setCountry($this->getCountry($country));
         $newHonour->setTerritory($this->getTerritory($territory));
         $newHonour->setLocation($this->getLocation($location));
         $newHonour->setFromDate($this->getDate($fromDate));
         $newHonour->setToDate($this->getDate($toDate));
         $newHonour->setProvenDate($this->getDate($provenDate));
-        $newHonour->setComment($comment);
+        $newHonour->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newHonour);
     }
@@ -557,7 +576,7 @@ class MigrateData
             $newIsGrandparent->setGrandParentID($grandparent->getId());
             $newIsGrandparent->setRelationType($this->getRelationType($grandchild, $grandparent));
             $newIsGrandparent->setIsPaternal($paternal);
-            $newIsGrandparent->setComment($comment);
+            $newIsGrandparent->setComment($this->normalize($comment));
             
             $this->newDBManager->persist($newIsGrandparent);
             $this->newDBManager->flush();
@@ -573,7 +592,7 @@ class MigrateData
             $newIsParent->setChildID($child->getId());
             $newIsParent->setParentID($parent->getId());
             $newIsParent->setRelationType($this->getRelationType($child, $parent));
-            $newIsParent->setComment($comment);
+            $newIsParent->setComment($this->normalize($comment));
             
             $this->newDBManager->persist($newIsParent);
             $this->newDBManager->flush();
@@ -589,7 +608,7 @@ class MigrateData
             $newIsParentInLaw->setChildInLawid($childInLaw->getId());
             $newIsParentInLaw->setParentInLawid($parentInLaw->getId());
             $newIsParentInLaw->setRelationType($this->getRelationType($childInLaw, $parentInLaw));
-            $newIsParentInLaw->setComment($comment);
+            $newIsParentInLaw->setComment($this->normalize($comment));
             
             $this->newDBManager->persist($newIsParentInLaw);
             $this->newDBManager->flush();
@@ -604,7 +623,7 @@ class MigrateData
         $newIsSibling->setSiblingOneid($siblingOne->getId());
         $newIsSibling->setSiblingTwoid($siblineTwo->getId());
         $newIsSibling->setRelationType($this->getRelationType($siblingOne, $siblineTwo));
-        $newIsSibling->setComment($comment);
+        $newIsSibling->setComment($this->normalize($comment));
 
         //$newIsSibling->;
         
@@ -634,13 +653,13 @@ class MigrateData
         //insert into new data
         $newPartner = new Partner();
 
-        $newPartner->setFirstName($firstName);
-        $newPartner->setPatronym($patronym);
-        $newPartner->setLastName($lastName);
+        $newPartner->setFirstName($this->normalize($firstName));
+        $newPartner->setPatronym($this->normalize($patronym));
+        $newPartner->setLastName($this->normalize($lastName));
         $newPartner->setGender($this->getGender($gender));
         $newPartner->setOriginalNation($this->getNation($nation));
 
-        $newPartner->setComment($comment);
+        $newPartner->setComment($this->normalize($comment));
 
         $this->newDBManager->persist($newPartner);
         $this->newDBManager->flush();
@@ -656,14 +675,14 @@ class MigrateData
         $newPerson = new Person();
 
         $newPerson->setOid($oid);
-        $newPerson->setFirstName($firstName);
-        $newPerson->setPatronym($patronym);
-        $newPerson->setLastName($lastName);
-        $newPerson->setForeName($foreName);
-        $newPerson->setBirthName($birthName);
+        $newPerson->setFirstName($this->normalize($firstName));
+        $newPerson->setPatronym($this->normalize($patronym));
+        $newPerson->setLastName($this->normalize($lastName));
+        $newPerson->setForeName($this->normalize($foreName));
+        $newPerson->setBirthName($this->normalize($birthName));
         $newPerson->setGender($this->getGender($gender));
         $newPerson->setJobClass($this->getJobClass($jobClass));
-        $newPerson->setComment($comment);
+        $newPerson->setComment($this->normalize($comment));
 
         $this->newDBManager->persist($newPerson);
         $this->newDBManager->flush();
@@ -677,14 +696,14 @@ class MigrateData
 
         $newProperty->setPerson($person);
         $newProperty->setPropertyOrder($propertyOrder);
-        $newProperty->setLabel($label);
+        $newProperty->setLabel($this->normalize($label));
         $newProperty->setCountry($this->getCountry($country));
         $newProperty->setTerritory($this->getTerritory($territory));
         $newProperty->setLocation($this->getLocation($location));
         $newProperty->setFromDate($this->getDate($fromDate));
         $newProperty->setToDate($this->getDate($toDate));
         $newProperty->setProvenDate($this->getDate($provenDate));
-        $newProperty->setComment($comment);
+        $newProperty->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newProperty);
     }
@@ -695,15 +714,15 @@ class MigrateData
 
         $newRank->setPerson($person);
         $newRank->setRankOrder($rankOrder);
-        $newRank->setLabel($label);
-        $newRank->setClass($class);
+        $newRank->setLabel($this->normalize($label));
+        $newRank->setClass($this->normalize($class));
         $newRank->setCountry($this->getCountry($country));
         $newRank->setTerritory($this->getTerritory($territory));
         $newRank->setLocation($this->getLocation($location));
         $newRank->setFromDate($this->getDate($fromDate));
         $newRank->setToDate($this->getDate($toDate));
         $newRank->setProvenDate($this->getDate($provenDate));
-        $newRank->setComment($comment);
+        $newRank->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newRank);
     }
@@ -712,13 +731,13 @@ class MigrateData
         //insert into new data
         $newRelative = new Relative();
 
-        $newRelative->setFirstName($firstName);
-        $newRelative->setPatronym($patronym);
-        $newRelative->setLastName($lastName);
+        $newRelative->setFirstName($this->normalize($firstName));
+        $newRelative->setPatronym($this->normalize($patronym));
+        $newRelative->setLastName($this->normalize($lastName));
         $newRelative->setGender($this->getGender($gender));
         $newRelative->setNation($this->getNation($nation));
 
-        $newRelative->setComment($comment);
+        $newRelative->setComment($this->normalize($comment));
 
         $this->newDBManager->persist($newRelative);
         $this->newDBManager->flush();
@@ -731,10 +750,10 @@ class MigrateData
         $newReligion = new Religion();
 
         $newReligion->setPerson($person);
-        $newReligion->setName($name);
+        $newReligion->setName($this->normalize($name));
         $newReligion->setReligionOrder($religionOrder);
-        $newReligion->setChangeOfReligion($change_of_religion);
-        $newReligion->setComment($comment);
+        $newReligion->setChangeOfReligion($this->normalize($change_of_religion));
+        $newReligion->setComment($this->normalize($comment));
 
         $newReligion->setProvenDate($this->getDate($provenDate));
         $newReligion->setFromDate($this->getDate($fromDate));
@@ -771,7 +790,7 @@ class MigrateData
         $newRoadOfLife->setFromDate($this->getDate($fromDate));
         $newRoadOfLife->setToDate($this->getDate($toDate));
         $newRoadOfLife->setProvenDate($this->getDate($provenDate));
-        $newRoadOfLife->setComment($comment);
+        $newRoadOfLife->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newRoadOfLife);
     }
@@ -782,10 +801,10 @@ class MigrateData
 
         $newSource->setPerson($person);
         $newSource->setSourceOrder($sourceOrder);
-        $newSource->setLabel($label);
-        $newSource->setPlaceOfDiscovery($placeOfDiscovery);
-        $newSource->setRemark($remark);
-        $newSource->setComment($comment);
+        $newSource->setLabel($this->normalize($label));
+        $newSource->setPlaceOfDiscovery($this->normalize($placeOfDiscovery));
+        $newSource->setRemark($this->normalize($remark));
+        $newSource->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newSource);
     }
@@ -796,14 +815,14 @@ class MigrateData
 
         $newStatus->setPerson($person);
         $newStatus->setStatusOrder($statusOrder);
-        $newStatus->setLabel($label);
+        $newStatus->setLabel($this->normalize($label));
         $newStatus->setCountry($this->getCountry($country));
         $newStatus->setTerritory($this->getTerritory($territory));
         $newStatus->setLocation($this->getLocation($location));
         $newStatus->setFromDate($this->getDate($fromDate));
         $newStatus->setToDate($this->getDate($toDate));
         $newStatus->setProvenDate($this->getDate($provenDate));
-        $newStatus->setComment($comment);
+        $newStatus->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newStatus);
     }
@@ -837,11 +856,11 @@ class MigrateData
             $newWedding->setWeddingLocationid($this->getLocation($weddingLocation));
             $newWedding->setWeddingTerritoryid($this->getTerritory($weddingTerritory));
             $newWedding->setBannsDateid($this->getDate($bannsDate));
-            $newWedding->setBreakupReason($breakupReason);
+            $newWedding->setBreakupReason($this->normalize($breakupReason));
             $newWedding->setBreakupDateid($this->getDate($breakupDate));
-            $newWedding->setMarriageComment($marriageComment);
+            $newWedding->setMarriageComment($this->normalize($marriageComment));
             $newWedding->setBeforeAfter($beforeAfter);
-            $newWedding->setComment($comment);
+            $newWedding->setComment($this->normalize($comment));
 
             $this->newDBManager->persist($newWedding);
             $this->newDBManager->flush();
@@ -885,7 +904,7 @@ class MigrateData
         $newWorks = new Works();
 
         $newWorks->setPerson($person);
-        $newWorks->setLabel($label);
+        $newWorks->setLabel($this->normalize($label));
         $newWorks->setWorksOrder($works_order);
         $newWorks->setCountry($this->getCountry($country));
         $newWorks->setLocation($this->getLocation($location));
@@ -893,7 +912,7 @@ class MigrateData
         $newWorks->setToDate($this->getDate($toDate));
         $newWorks->setTerritory($this->getTerritory($territory));
         $newWorks->setProvenDate($this->getDate($provenDate));
-        $newWorks->setComment($comment);
+        $newWorks->setComment($this->normalize($comment));
         
         $this->newDBManager->persist($newWorks);
     }

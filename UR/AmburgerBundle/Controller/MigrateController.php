@@ -15,6 +15,7 @@ class MigrateController extends Controller
 
     private $LOGGER;
     private $migrationService;
+    private $normalizationService;
 
     private function getLogger()
     {
@@ -32,6 +33,15 @@ class MigrateController extends Controller
         }
         
         return $this->migrationService;
+    }
+    
+    private function getNormalizationService()
+    {
+        if(is_null($this->normalizationService)){
+            $this->normalizationService = $this->get("normalization.service");
+        }
+        
+        return $this->normalizationService;
     }
 
     public function personAction($ID)
@@ -639,7 +649,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $mother = $this->getMigrationService()->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
 
-        $mother->setForeName($oldMother["rufnamen"]);
+        $mother->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMother["rufnamen"]));
 
         //additional data
 
@@ -704,7 +714,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldMother["ehelich"])){
-            $mother->setBornInMarriage($oldMother["ehelich"]);
+            $mother->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldMother["ehelich"]));
         }
 
         return $mother;
@@ -790,7 +800,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
 
-        $father->setForeName($oldFather["rufnamen"]);
+        $father->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldFather["rufnamen"]));
 
         //additional data
 
@@ -872,7 +882,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldFather["ehelich"])){
-            $father->setBornInMarriage($oldFather["ehelich"]);
+            $father->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldFather["ehelich"]));
         }
 
         $this->getMigrationService()->migrateIsParent($newPerson, $father);
@@ -930,7 +940,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $sibling = $this->getMigrationService()->migrateRelative($oldSibling["vornamen"], $oldSibling["russ_vornamen"], $oldSibling["name"], $oldSibling["geschlecht"], null, $oldSibling["kommentar"]);
 
-        $sibling->setForeName($oldSibling["rufnamen"]);
+        $sibling->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldSibling["rufnamen"]));
 
         //additional data
         $siblingEducation = $this->getSiblingsEducationWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
@@ -1195,7 +1205,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $marriagePartner = $this->getMigrationService()->migratePartner($oldMarriagePartner["vornamen"], $oldMarriagePartner["russ_vornamen"], $oldMarriagePartner["name"], $gender, $oldMarriagePartner["nation"], $oldMarriagePartner["kommentar"]);
 
-        $marriagePartner->setForeName($oldMarriagePartner["rufnamen"]);
+        $marriagePartner->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartner["rufnamen"]));
 
         //additional data
         //birth
@@ -1345,7 +1355,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $child = $this->getMigrationService()->migrateRelative($oldChild["vornamen"], $oldChild["russ_vornamen"], $oldChild["name"], $oldChild["geschlecht"], null, $oldChild["kommentar"]);
 
-        $child->setForeName($oldChild["rufnamen"]);
+        $child->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldChild["rufnamen"]));
 
         //additional data
         $childEducation = $this->getChildsEducationWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
@@ -1759,7 +1769,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldFatherInLaw["ehelich"])){
-            $fatherInLaw->setBornInMarriage($oldFatherInLaw["ehelich"]);
+            $fatherInLaw->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldFatherInLaw["ehelich"]));
         }
 
         $this->migrateWeddingOfParentsInLaw($fatherInLaw, $newMotherInLaw, $oldFatherInLaw);
@@ -1829,7 +1839,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldMotherInLaw["ehelich"])){
-            $motherInLaw->setBornInMarriage($oldMotherInLaw["ehelich"]);
+            $motherInLaw->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldMotherInLaw["ehelich"]));
         }
 
         $this->getMigrationService()->migrateIsParentInLaw($newPerson, $motherInLaw);
@@ -2282,7 +2292,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $marriagePartnerOfChild = $this->getMigrationService()->migratePartner($oldMarriagePartnerOfChild["vornamen"], $oldMarriagePartnerOfChild["russ_vornamen"], $oldMarriagePartnerOfChild["name"], $gender, $oldMarriagePartnerOfChild["nation"], $oldMarriagePartnerOfChild["kommentar"]);
 
-        $marriagePartnerOfChild->setForeName($oldMarriagePartnerOfChild["rufnamen"]);
+        $marriagePartnerOfChild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartnerOfChild["rufnamen"]));
 
          //birth
         if(!is_null($oldMarriagePartnerOfChild["herkunftsort"]) || 
@@ -2445,7 +2455,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldFatherInLawOfChild["ehelich"])){
-            $fatherInLawOfChild->setBornInMarriage($oldFatherInLawOfChild["ehelich"]);
+            $fatherInLawOfChild->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldFatherInLawOfChild["ehelich"]));
         }
 
         if(!is_null($oldFatherInLawOfChild["wohnort"])){
@@ -2486,7 +2496,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldMotherInLawOfChild["ehelich"])){
-            $motherInLawOfChild->setBornInMarriage($oldMotherInLawOfChild["ehelich"]);
+            $motherInLawOfChild->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldMotherInLawOfChild["ehelich"]));
         }
 
         $this->getMigrationService()->migrateIsParent($newMarriagePartner, $motherInLawOfChild);
@@ -2535,7 +2545,7 @@ class MigrateController extends Controller
 
         //born_in_marriage
         if(!is_null($oldMotherOfSibling["ehelich"])){
-            $motherOfSibling->setBornInMarriage($oldMotherOfSibling["ehelich"]);
+            $motherOfSibling->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldMotherOfSibling["ehelich"]));
         }
 
         $this->getMigrationService()->migrateIsParent($newSibling, $motherOfSibling);
@@ -2620,7 +2630,7 @@ class MigrateController extends Controller
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $grandchild = $this->getMigrationService()->migrateRelative($oldGrandchild["vornamen"], $oldGrandchild["russ_vornamen"], $oldGrandchild["name"], $oldGrandchild["geschlecht"], null, $oldGrandchild["kommentar"]);
 
-        $grandchild->setForeName($oldGrandchild["rufnamen"]);
+        $grandchild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldGrandchild["rufnamen"]));
 
          //birth
         if(!is_null($oldGrandchild["geburtsort"]) || 

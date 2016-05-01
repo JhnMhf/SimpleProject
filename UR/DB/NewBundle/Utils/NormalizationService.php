@@ -46,8 +46,6 @@ class NormalizationService {
         $keys = array_map('strlen', array_keys($abbreviationsMap));
         array_multisort($keys, SORT_DESC, $abbreviationsMap);
         
-        print_r($abbreviationsMap);
-        
         $this->abbreviationKeys = array_keys($abbreviationsMap);
         $this->abbreviationValues = array_values($abbreviationsMap);
     }
