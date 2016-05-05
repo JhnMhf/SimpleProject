@@ -18,3 +18,7 @@ services:
         class: UR\DB\NewBundle\Utils\NormalizationService
         arguments: 
            container: "@service_container"
+    comparer.service:
+        class: UR\DB\NewBundle\Utils\PersonComparer
+        arguments: 
+           container: "@service_container"
