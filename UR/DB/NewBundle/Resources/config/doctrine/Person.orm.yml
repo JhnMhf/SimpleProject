@@ -33,26 +33,35 @@ UR\DB\NewBundle\Entity\Person:
             length: 65535
             options:
                 fixed: false
-                
+    oneToOne:
+        birth:
+          targetEntity: Birth
+          joinColumn:
+            name: birth_id
+            referencedColumnName: ID
+            nullable: true
+          fetch: EAGER
+          cascade: ["remove"]
+        baptism:
+          targetEntity: Baptism
+          joinColumn:
+            name: baptism_id
+            referencedColumnName: ID
+            nullable: true
+          fetch: EAGER
+          cascade: ["remove"]
+        death:
+          targetEntity: Death
+          joinColumn:
+            name: death_id
+            referencedColumnName: ID
+            nullable: true
+          fetch: EAGER
+          cascade: ["remove"]
     oneToMany:
         sources:
           orderBy: { 'sourceOrder': 'ASC' }
           targetEntity: Source
-          mappedBy: person
-          fetch: EAGER
-          cascade: ["remove"]
-        births:
-          targetEntity: Birth
-          mappedBy: person
-          fetch: EAGER
-          cascade: ["remove"]
-        baptisms:
-          targetEntity: Baptism
-          mappedBy: person
-          fetch: EAGER
-          cascade: ["remove"]
-        deaths:
-          targetEntity: Death
           mappedBy: person
           fetch: EAGER
           cascade: ["remove"]

@@ -46,26 +46,7 @@ class Partner extends BasePerson  {
     {
         return $this->originalNationid;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $sources;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $births;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $baptisms;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $deaths;
-
+   
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -121,10 +102,6 @@ class Partner extends BasePerson  {
      */
     public function __construct()
     {
-        $this->sources = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->births = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->baptisms = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->deaths = new \Doctrine\Common\Collections\ArrayCollection();
         $this->educations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->honours = new \Doctrine\Common\Collections\ArrayCollection();
         $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
@@ -134,142 +111,6 @@ class Partner extends BasePerson  {
         $this->roadOfLife = new \Doctrine\Common\Collections\ArrayCollection();
         $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
         $this->works = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add source
-     *
-     * @param \UR\DB\NewBundle\Entity\Source $source
-     *
-     * @return Partner
-     */
-    public function addSource(\UR\DB\NewBundle\Entity\Source $source)
-    {
-        $this->sources[] = $source;
-
-        return $this;
-    }
-
-    /**
-     * Remove source
-     *
-     * @param \UR\DB\NewBundle\Entity\Source $source
-     */
-    public function removeSource(\UR\DB\NewBundle\Entity\Source $source)
-    {
-        $this->sources->removeElement($source);
-    }
-
-    /**
-     * Get sources
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSources()
-    {
-        return $this->sources;
-    }
-
-    /**
-     * Add birth
-     *
-     * @param \UR\DB\NewBundle\Entity\Birth $birth
-     *
-     * @return Partner
-     */
-    public function addBirth(\UR\DB\NewBundle\Entity\Birth $birth)
-    {
-        $this->births[] = $birth;
-
-        return $this;
-    }
-
-    /**
-     * Remove birth
-     *
-     * @param \UR\DB\NewBundle\Entity\Birth $birth
-     */
-    public function removeBirth(\UR\DB\NewBundle\Entity\Birth $birth)
-    {
-        $this->births->removeElement($birth);
-    }
-
-    /**
-     * Get births
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getBirths()
-    {
-        return $this->births;
-    }
-
-    /**
-     * Add baptism
-     *
-     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
-     *
-     * @return Partner
-     */
-    public function addBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism)
-    {
-        $this->baptisms[] = $baptism;
-
-        return $this;
-    }
-
-    /**
-     * Remove baptism
-     *
-     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
-     */
-    public function removeBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism)
-    {
-        $this->baptisms->removeElement($baptism);
-    }
-
-    /**
-     * Get baptisms
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getBaptisms()
-    {
-        return $this->baptisms;
-    }
-
-    /**
-     * Add death
-     *
-     * @param \UR\DB\NewBundle\Entity\Death $death
-     *
-     * @return Partner
-     */
-    public function addDeath(\UR\DB\NewBundle\Entity\Death $death)
-    {
-        $this->deaths[] = $death;
-
-        return $this;
-    }
-
-    /**
-     * Remove death
-     *
-     * @param \UR\DB\NewBundle\Entity\Death $death
-     */
-    public function removeDeath(\UR\DB\NewBundle\Entity\Death $death)
-    {
-        $this->deaths->removeElement($death);
-    }
-
-    /**
-     * Get deaths
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDeaths()
-    {
-        return $this->deaths;
     }
 
     /**
@@ -600,5 +441,92 @@ class Partner extends BasePerson  {
     public function getOriginalNation()
     {
         return $this->originalNation;
+    }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Birth
+     */
+    private $birth;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Baptism
+     */
+    private $baptism;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Death
+     */
+    private $death;
+
+
+    /**
+     * Set birth
+     *
+     * @param \UR\DB\NewBundle\Entity\Birth $birth
+     *
+     * @return Partner
+     */
+    public function setBirth(\UR\DB\NewBundle\Entity\Birth $birth = null)
+    {
+        $this->birth = $birth;
+
+        return $this;
+    }
+
+    /**
+     * Get birth
+     *
+     * @return \UR\DB\NewBundle\Entity\Birth
+     */
+    public function getBirth()
+    {
+        return $this->birth;
+    }
+
+    /**
+     * Set baptism
+     *
+     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
+     *
+     * @return Partner
+     */
+    public function setBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism = null)
+    {
+        $this->baptism = $baptism;
+
+        return $this;
+    }
+
+    /**
+     * Get baptism
+     *
+     * @return \UR\DB\NewBundle\Entity\Baptism
+     */
+    public function getBaptism()
+    {
+        return $this->baptism;
+    }
+
+    /**
+     * Set death
+     *
+     * @param \UR\DB\NewBundle\Entity\Death $death
+     *
+     * @return Partner
+     */
+    public function setDeath(\UR\DB\NewBundle\Entity\Death $death = null)
+    {
+        $this->death = $death;
+
+        return $this;
+    }
+
+    /**
+     * Get death
+     *
+     * @return \UR\DB\NewBundle\Entity\Death
+     */
+    public function getDeath()
+    {
+        return $this->death;
     }
 }

@@ -82,15 +82,15 @@ class PersonComparer {
         
         $this->LOGGER->debug("Nation the same");
         
-        if($this->unmatchedArrays($personOne->getBirths(), $personTwo->getBirths(), "birth")){
+        if($this->unmatchedArrays($personOne->getBirth(), $personTwo->getBirth(), "birth")){
             return false;
         }
         
-        if($this->unmatchedArrays($personOne->getBaptisms(), $personTwo->getBaptisms(), "baptism")){
+        if($this->unmatchedArrays($personOne->getBaptism(), $personTwo->getBaptism(), "baptism")){
             return false;
         }
         
-        if($this->unmatchedArrays($personOne->getDeaths(), $personTwo->getDeaths(), "death")){
+        if($this->unmatchedArrays($personOne->getDeath(), $personTwo->getDeath(), "death")){
             return false;
         }
         

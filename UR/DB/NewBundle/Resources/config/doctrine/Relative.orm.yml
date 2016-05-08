@@ -12,28 +12,32 @@ UR\DB\NewBundle\Entity\Relative:
             options:
                 unsigned: false
             column: nationID
-    oneToMany:
-        sources:
-          orderBy: { 'sourceOrder': 'ASC' }
-          targetEntity: Source
-          mappedBy: person
-          fetch: EAGER
-          cascade: ["remove"]
-        births:
+    oneToOne:
+        birth:
           targetEntity: Birth
-          mappedBy: person
+          joinColumn:
+            name: birth_id
+            referencedColumnName: ID
+            nullable: true
           fetch: EAGER
           cascade: ["remove"]
-        baptisms:
+        baptism:
           targetEntity: Baptism
-          mappedBy: person
+          joinColumn:
+            name: baptism_id
+            referencedColumnName: ID
+            nullable: true
           fetch: EAGER
           cascade: ["remove"]
-        deaths:
+        death:
           targetEntity: Death
-          mappedBy: person
+          joinColumn:
+            name: death_id
+            referencedColumnName: ID
+            nullable: true
           fetch: EAGER
           cascade: ["remove"]
+    oneToMany:
         educations:
           orderBy: { 'educationOrder': 'ASC' }
           targetEntity: Education
