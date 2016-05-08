@@ -93,4 +93,16 @@ class DefaultController extends Controller
         
         return new Response('Truncated the whole new database!');
     }
+    
+    public function comparePersonAction($firstPersonOID, $secondPersonOID){
+        $comparerService = $this->get('comparer.service');
+        $newDBManager = $this->get('doctrine')->getManager('new');
+        
+        $personOne = $newDBManager->getRepository('NewBundle:Person')->findOneByOid($firstPersonOID);
+        $personTwo = $newDBManager->getRepository('NewBundle:Person')->findOneByOid($secondPersonOID);
+        
+        $compareResult = $comparerService->comparePersons($personOne, $personTwo) ? "is the same" : "is not the same";
+        
+        return new Response('Given person '.$personOne.' '.$compareResult.' as person '.$personTwo);
+    }
 }

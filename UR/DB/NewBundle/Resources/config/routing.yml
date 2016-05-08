@@ -7,3 +7,6 @@ xml:
 clearDatabase:
     path: /database/truncate
     defaults: { _controller: NewBundle:Default:clearDatabase }
+compareTest:
+    path: /compare/{firstPersonOID}/{secondPersonOID}
+    defaults: { _controller: NewBundle:Default:comparePerson }
