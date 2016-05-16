@@ -1,0 +1,47 @@
+
+Vater + Mutter ==> vater/mutter_id-nr
+
+Anderer Partner (alte DB) ==> anderer Partner der EHEPARTNER
+
+Prüfen, ob IsInRelationshipWith Tabelle überhaupt notwendig ist.
+
+Großeltern order verknüpfen prüfen.
+
+AndererPartner über ID nicht OID verknüpft? Beispiel 52
+PRÜFEN welche verknüpfungen über OID und welche über ID gemacht sind.
+
+PRÜFEN ob ähnliche Verknüpfungen (wie bei Mutter) auch in anderen Tabellen vorkommen
+
+Für problematische Mutter-Kind Einträge in der mutter_id-nr:
+Schritt 1: ID für OID in mutter_id-nr auslesen.
+Schritt 2: Prüfen, ob ein weiterer Eintrag in Mutter für diese ID vorhanden ist.
+Schritt 3: Prüfen, ob die OID dieses Eintrags auf die ID des ersten Eintrags verweist.
+Wenn ja ==> Sonderfall gefunden
+(Wenn nein, eventuell das Ganze so weit weiter machen, bis mutter_id-nr leer ist/kein weiterer Verweis vorhanden ist?)
+(Dies könnte nötig sein, um einen Kreisverweis von mehr als 2 Kindern abzufangen)
+
+
+Wohnort nur notwendig für Großvater etc. NICHT FÜR DIE PERSON AN SICH!!!!1111einseinseinself 
+
+
+IsGrandparent (und grandchild) können nicht ersetzt werden, weil es nicht sicher ist, ob immer das Zwischenglied (child/ parent) vorhanden ist.
+
+
+Mutter:
+Doppelte Daten (Beispiel: ID 1121 und 1119) 
+mutter_id-nr zeigt im oberen Fall auf die beiden Söhne... 
+in anderen Fällen wie z.B. ID 95279 zeigt es aber auf einen Eintrag in der Personentabelle (22136)
+
+"ehelich" beschreibt vermutlich, ob das Kind in der Ehe geboren wurde oder nicht (gehört eig. eher zum Kind/ Person als zur Mutter)
+
+
+
+Ehepartner haben kein Geschlecht (dies muss sich anhand des ursprünglichen Partners erschloßen werden)
+
+Ehepartner besitzt "partnerpartner_id-nr". Diese ist nur für einen Eintrag vorhanden und hierbei verweist sie auf den Ehepartner als Person eingetragen.
+Somit stellt es das selbe wie die "ehepartner_id-nr" dar.
+
+Problem:
+Prüfen ob Referenz Spalten (meistens enden diese mit _id-nr) außer einer ID noch mehr Daten enthalten. 
+In der "kind" Tabelle kommen einträge mit ";" oder "," separiert vor. Außerdem sind teilweise Anmerkungen oder "?" in der ID Spalte enthalten.
+

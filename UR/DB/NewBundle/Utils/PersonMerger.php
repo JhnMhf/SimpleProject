@@ -33,6 +33,8 @@ class PersonMerger {
     }
     
     
+    //@TODO: Finish Personmergin/ fusion
+    //Its not only necessary to finish the method but to call it from MigratController
     public function mergePersons($personOne, $personTwo){
         $this->LOGGER->info("Request for fusing two persons.");
         $this->LOGGER->info("Person 1: ".$personOne);

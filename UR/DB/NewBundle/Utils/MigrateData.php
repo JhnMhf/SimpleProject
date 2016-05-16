@@ -221,7 +221,9 @@ class MigrateData
 
         return $newNation;
     }
-
+    
+    //@TODO: Berufsbezeichnungen??? vllt mit Synonymvergleich, Problem unter anderem die Schreibfehler
+    //Perhaps it belongs to the jobclass and not the job?
     public function getJob($jobLabel, $comment = null){
         if($jobLabel == "" || $jobLabel == null){
             return null;
@@ -311,16 +313,6 @@ class MigrateData
 
         //first flush to get ids later
         $this->newDBManager->flush();
-
-        //now collect ids for the calling method
-        /*$dateIdArray = [];
-
-        for($i = 0; $i < count($newDatesArray); $i++){
-            $dateId = $newDatesArray[$i]->getId();
-            $dateIdArray[] = $dateId;
-        }
-
-        return $this->createStringFromIdArray($dateIdArray);*/
         
         return $newDatesArray;
     }
@@ -347,10 +339,11 @@ class MigrateData
     }
 
 
-    //@ToDO:
-    //31.12.1793-1.1.1796   
+    //@TODO: 31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
+    //@TODO: 0.0.1752 Remove 0.0?
+    //@TODO: Check how -1990 gets persisted
     private function createRealDateFromString($dateString){
         //echo "real date: ".$dateString;
 

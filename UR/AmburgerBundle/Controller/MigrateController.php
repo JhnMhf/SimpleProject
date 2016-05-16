@@ -884,6 +884,8 @@ class MigrateController extends Controller
         if(!is_null($oldFather["ehelich"])){
             $father->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldFather["ehelich"]));
         }
+        
+        //@TODO: hochzeitagstag?
 
         $this->getMigrationService()->migrateIsParent($newPerson, $father);
 

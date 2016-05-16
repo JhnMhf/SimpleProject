@@ -30,6 +30,7 @@ class NormalizationService {
         $this->createAbbreviationsMap();
     }
     
+    //@TODO: Add unification for "?", "keine Angabe", "keine An gabe", "Unbekannt", leer
     private function createAbbreviationsMap(){
         $abbreviationsMap = [];
         
@@ -57,4 +58,6 @@ class NormalizationService {
     public function writeOutAbbreviations($string){
         return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
     }
+    
+    //@TODO: Add GND Database?
 }
