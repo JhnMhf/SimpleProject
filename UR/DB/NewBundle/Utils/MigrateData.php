@@ -567,7 +567,6 @@ class MigrateData
 
             $newIsGrandparent->setGrandChildID($grandchild->getId());
             $newIsGrandparent->setGrandParentID($grandparent->getId());
-            $newIsGrandparent->setRelationType($this->getRelationType($grandchild, $grandparent));
             $newIsGrandparent->setIsPaternal($paternal);
             $newIsGrandparent->setComment($this->normalize($comment));
             
@@ -584,7 +583,6 @@ class MigrateData
 
             $newIsParent->setChildID($child->getId());
             $newIsParent->setParentID($parent->getId());
-            $newIsParent->setRelationType($this->getRelationType($child, $parent));
             $newIsParent->setComment($this->normalize($comment));
             
             $this->newDBManager->persist($newIsParent);
@@ -600,7 +598,6 @@ class MigrateData
 
             $newIsParentInLaw->setChildInLawid($childInLaw->getId());
             $newIsParentInLaw->setParentInLawid($parentInLaw->getId());
-            $newIsParentInLaw->setRelationType($this->getRelationType($childInLaw, $parentInLaw));
             $newIsParentInLaw->setComment($this->normalize($comment));
             
             $this->newDBManager->persist($newIsParentInLaw);
@@ -615,7 +612,6 @@ class MigrateData
 
         $newIsSibling->setSiblingOneid($siblingOne->getId());
         $newIsSibling->setSiblingTwoid($siblineTwo->getId());
-        $newIsSibling->setRelationType($this->getRelationType($siblingOne, $siblineTwo));
         $newIsSibling->setComment($this->normalize($comment));
 
         //$newIsSibling->;
@@ -842,15 +838,14 @@ class MigrateData
 
             $newWedding->setHusbandId($husband->getId());
             $newWedding->setWifeId($wife->getId());
-            $newWedding->setRelationType($this->getWeddingRelationType($husband, $wife));
 
             $newWedding->setWeddingOrder($weddingOrder);
-            $newWedding->setWeddingDateid($this->getDate($weddingDate));
-            $newWedding->setWeddingLocationid($this->getLocation($weddingLocation));
-            $newWedding->setWeddingTerritoryid($this->getTerritory($weddingTerritory));
-            $newWedding->setBannsDateid($this->getDate($bannsDate));
+            $newWedding->setWeddingDate($this->getDate($weddingDate));
+            $newWedding->setWeddingLocation($this->getLocation($weddingLocation));
+            $newWedding->setWeddingTerritory($this->getTerritory($weddingTerritory));
+            $newWedding->setBannsDate($this->getDate($bannsDate));
             $newWedding->setBreakupReason($this->normalize($breakupReason));
-            $newWedding->setBreakupDateid($this->getDate($breakupDate));
+            $newWedding->setBreakupDate($this->getDate($breakupDate));
             $newWedding->setMarriageComment($this->normalize($marriageComment));
             $newWedding->setBeforeAfter($beforeAfter);
             $newWedding->setComment($this->normalize($comment));
@@ -872,15 +867,12 @@ class MigrateData
             
         }
 
-        $relationType = $this->getWeddingRelationType($husband, $wife);
-
-        $this->LOGGER->info("Searching for wedding with... Husband: '".$husband. "' Wife: '". $wife."' RelationType: ".$relationType . " and WeddingOrder: ".$weddingOrder);
+        $this->LOGGER->info("Searching for wedding with... Husband: '".$husband. "' Wife: '". $wife." and WeddingOrder: ".$weddingOrder);
 
         $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
             ->findOneBy( array('weddingOrder' => $weddingOrder, 
                                 'husbandId' => $husband->getId(),
-                                'wifeId' => $wife->getId(),
-                                'relationType' => $relationType
+                                'wifeId' => $wife->getId()
                                 ));
 
         if(is_null($wedding)){
@@ -919,130 +911,13 @@ class MigrateData
         return $this->newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
     }
 
-    public function getWeddingRelationType($husband, $wife){
-        return $this->getRelationType($husband, $wife);
-    }
-
-    public function getRelationType($firstDataEntry, $secondDataEntry){
-
-        $firstClass = get_class($firstDataEntry);
-
-        $secondClass = get_class($secondDataEntry);
-
-        $type = -1;
-
-        switch($firstClass){
-            case self::PERSON_CLASS:
-                switch($secondClass){
-                    case self::PERSON_CLASS:
-                        $type = RelationTypes::PERSON_TO_PERSON;
-                        break;
-                    case self::RELATIVE_CLASS:
-                        $type = RelationTypes::PERSON_TO_RELATIVE;
-                        break;
-                    case self::PARTNER_CLASS:
-                        $type = RelationTypes::PERSON_TO_PARTNER;
-                        break;
-                }
-                break;
-            case self::RELATIVE_CLASS:
-                switch($secondClass){
-                    case self::PERSON_CLASS:
-                        $type = RelationTypes::RELATIVE_TO_PERSON;
-                        break;
-                    case self::RELATIVE_CLASS:
-                        $type = RelationTypes::RELATIVE_TO_RELATIVE;
-                        break;
-                    case self::PARTNER_CLASS:
-                        $type = RelationTypes::RELATIVE_TO_PARTNER;
-                        break;
-                }
-                break;
-            case self::PARTNER_CLASS:
-                switch($secondClass){
-                    case self::PERSON_CLASS:
-                        $type = RelationTypes::PARTNER_TO_PERSON;
-                        break;
-                    case self::RELATIVE_CLASS:
-                        $type = RelationTypes::PARTNER_TO_RELATIVE;
-                        break;  
-                    case self::PARTNER_CLASS:
-                        $type = RelationTypes::PARTNER_TO_PARTNER;
-                        break;
-                }
-                break;
-        }
-
-        return $type;
-    }
-
-    public function getPossibleWeddingTypes($husband, $wife){
-        return $this->getPossibleRelationTypes($husband, $wife);
-    }
-
-    public function getPossibleRelationTypes($firstDataEntry, $secondDataEntry){
-        $firstClass = null;
-        $secondClass = null;
-
-        if(!is_null($firstDataEntry)){
-            $firstClass = get_class($firstDataEntry);
-        }
-        
-        if(!is_null($secondDataEntry)){
-            $secondClass = get_class($secondDataEntry);
-        }
-        
-
-        $types = array();
-
-        switch($firstClass){
-            case null:
-                switch($secondClass){
-                    case self::PERSON_CLASS:
-                        $types[] = RelationTypes::PERSON_TO_PERSON;
-                        $types[] = RelationTypes::RELATIVE_TO_PERSON;
-                        $types[] = RelationTypes::PARTNER_TO_PERSON;
-                        break;
-                    case self::RELATIVE_CLASS:
-                        $types[] = RelationTypes::PERSON_TO_RELATIVE;
-                        $types[] = RelationTypes::RELATIVE_TO_RELATIVE;
-                        $types[] = RelationTypes::PARTNER_TO_RELATIVE;
-                        break;
-                    case self::PARTNER_CLASS:
-                        $types[] = RelationTypes::PERSON_TO_PARTNER;
-                        $types[] = RelationTypes::RELATIVE_TO_PARTNER;
-                        $types[] = RelationTypes::PARTNER_TO_PARTNER;
-                        break;
-                }
-                break;
-            case self::PERSON_CLASS:
-                $types[] = RelationTypes::PERSON_TO_PERSON;
-                $types[] = RelationTypes::PERSON_TO_RELATIVE;
-                $types[] = RelationTypes::PERSON_TO_PARTNER;
-            case self::RELATIVE_CLASS:
-                $types[] = RelationTypes::RELATIVE_TO_PERSON;
-                $types[] = RelationTypes::RELATIVE_TO_RELATIVE;
-                $types[] = RelationTypes::RELATIVE_TO_PARTNER;
-            case self::PARTNER_CLASS:
-                $types[] = RelationTypes::PARTNER_TO_PERSON;
-                $types[] = RelationTypes::PARTNER_TO_RELATIVE;
-                $types[] = RelationTypes::PARTNER_TO_PARTNER;
-                break;
-        }
-
-        return $types;
-    }
-
     /* Migration helper methods */
 
     public function parentChildRelationAlreadyExists($child, $parent){
-        $relationType = $this->getRelationType($child, $parent);
-
-        $this->LOGGER->info("Searching for childParentRelation with... Child: '".$child. "' Parent: '". $parent."' RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for childParentRelation with... Child: '".$child. "' Parent: '". $parent);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsParent')
-            ->findOneBy( array('relationType' => $relationType, 
-                            'childID' => $child->getId(),
+            ->findOneBy( array('childID' => $child->getId(),
                             'parentID' => $parent->getId()
                             ));
 
@@ -1056,13 +931,10 @@ class MigrateData
     }
 
     public function parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw){
-        $relationType = $this->getRelationType($childInLaw, $parentInLaw);
-
-        $this->LOGGER->info("Searching for childParentInLawRelation with... Child: '".$childInLaw. "' Parent: '". $parentInLaw."' RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for childParentInLawRelation with... Child: '".$childInLaw. "' Parent: '". $parentInLaw);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')
-            ->findOneBy( array('relationType' => $relationType, 
-                            'childInLawid' => $childInLaw->getId(),
+            ->findOneBy( array('childInLawid' => $childInLaw->getId(),
                             'parentInLawid' => $parentInLaw->getId()
                             ));
 
@@ -1076,13 +948,10 @@ class MigrateData
     }
 
     public function grandparentChildRelationAlreadyExists($grandchild, $grandparent){
-        $relationType = $this->getRelationType($grandchild, $grandparent);
-
-        $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChild: '".$grandchild. "' GrandParent: '". $grandparent."' RelationType: ".$relationType);
+        $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChild: '".$grandchild. "' GrandParent: '". $grandparent);
 
         $relation = $this->newDBManager->getRepository('NewBundle:IsGrandparent')
-            ->findOneBy( array('relationType' => $relationType, 
-                            'grandChildID' => $grandchild->getId(),
+            ->findOneBy( array('grandChildID' => $grandchild->getId(),
                             'grandParentID' => $grandparent->getId()
                             ));
 
@@ -1117,91 +986,48 @@ class MigrateData
 
     private function findHusband($weddingOrder, $wife){
         //given person is female
-        $weddingTypes = $this->getPossibleWeddingTypes(null, $wife);
-
-
         $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
             ->findOneBy( array('weddingOrder' => $weddingOrder, 
-                            'wifeId' => $wife->getId(),
-                            'relationType' => $weddingTypes
+                            'wifeId' => $wife->getId()
                             ));
 
         if(is_null($wedding)){
             return null;
         }
 
-        return $this->loadHusband($wedding->getHusbandId(), $wedding->getRelationType());
+        return $this->loadPerson($wedding->getHusbandId());
     }
 
     private function findWife($weddingOrder, $husband){
-        //given person is female
-        $weddingTypes = $this->getPossibleWeddingTypes($husband, null);
-
-
+        //given person is male
         $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
             ->findOneBy( array('weddingOrder' => $weddingOrder, 
-                            'husbandId' => $husband->getId(),
-                            'relationType' => $weddingTypes
+                            'husbandId' => $husband->getId()
                             ));
 
         if(is_null($wedding)){
             return null;
         }
 
-        return $this->loadWife($wedding->getWifeId(), $wedding->getRelationType());
+        return $this->loadPerson($wedding->getWifeId());
     }
 
-    private function loadHusband($id, $relationType){
-        return $this->loadFirstEntry($id, $relationType);
-    }
-
-    private function loadWife($id, $relationType){
-        return $this->loadSecondEntry($id, $relationType);
-    }
-
-
-    private function loadFirstEntry($id, $relationType){
-        switch($relationType){   
-            case RelationTypes::PERSON_TO_PERSON:
-            case RelationTypes::PERSON_TO_RELATIVE:
-            case RelationTypes::PERSON_TO_PARTNER:
-                return $this->newDBManager->getRepository('NewBundle:Person')
-                    ->findOneBy( array('id' => $id));
-            case RelationTypes::RELATIVE_TO_PERSON:
-            case RelationTypes::RELATIVE_TO_RELATIVE;
-            case RelationTypes::RELATIVE_TO_PARTNER;
-                return $this->newDBManager->getRepository('NewBundle:Relative')
-                    ->findOneBy( array('id' => $id));
-            case RelationTypes::PARTNER_TO_PERSON;
-            case RelationTypes::PARTNER_TO_RELATIVE;
-            case RelationTypes::PARTNER_TO_PARTNER;
-                return $this->newDBManager->getRepository('NewBundle:Partner')
-                    ->findOneBy( array('id' => $id));
+    private function loadPerson($id){
+        $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
+        
+        if(is_null($person)){
+            $person = $this->newDBManager->getRepository('NewBundle:Relative')->findOneById($id);
         }
 
-        return null;
-    }
-
-    private function loadSecondEntry($id, $relationType){
-        switch($relationType){   
-            case RelationTypes::PERSON_TO_PERSON:
-            case RelationTypes::RELATIVE_TO_PERSON:
-            case RelationTypes::PARTNER_TO_PERSON;
-                return $this->newDBManager->getRepository('NewBundle:Person')
-                    ->findOneBy( array('id' => $id));
-            case RelationTypes::PERSON_TO_RELATIVE:
-            case RelationTypes::RELATIVE_TO_RELATIVE;
-            case RelationTypes::PARTNER_TO_RELATIVE;
-                return $this->newDBManager->getRepository('NewBundle:Relative')
-                    ->findOneBy( array('id' => $id));
-            case RelationTypes::PERSON_TO_PARTNER:
-            case RelationTypes::RELATIVE_TO_PARTNER;
-            case RelationTypes::PARTNER_TO_PARTNER;
-                return $this->newDBManager->getRepository('NewBundle:Partner')
-                    ->findOneBy( array('id' => $id));
+        if(is_null($person)){
+            $person = $this->newDBManager->getRepository('NewBundle:Partner')->findOneById($id);
         }
 
-        return null;
+        if(is_null($person)){
+            //throw exception
+        }
+
+        return $person;
     }
 
 }

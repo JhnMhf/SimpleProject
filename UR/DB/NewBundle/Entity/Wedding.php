@@ -28,16 +28,6 @@ class Wedding
     private $wifeId = '0';
 
     /**
-     * @var string
-     */
-    private $relationType;
-
-    /**
-     * @var string
-     */
-    private $weddingDateid;
-
-    /**
      * @var integer
      */
     private $weddingLocationid;
@@ -50,17 +40,7 @@ class Wedding
     /**
      * @var string
      */
-    private $bannsDateid;
-
-    /**
-     * @var string
-     */
     private $breakupReason;
-
-    /**
-     * @var string
-     */
-    private $breakupDateid;
 
     /**
      * @var string
@@ -161,54 +141,6 @@ class Wedding
     }
 
     /**
-     * Set relationType
-     *
-     * @param string $relationType
-     *
-     * @return Wedding
-     */
-    public function setRelationType($relationType)
-    {
-        $this->relationType = $relationType;
-
-        return $this;
-    }
-
-    /**
-     * Get relationType
-     *
-     * @return string
-     */
-    public function getRelationType()
-    {
-        return $this->relationType;
-    }
-
-    /**
-     * Set weddingDateid
-     *
-     * @param string $weddingDateid
-     *
-     * @return Wedding
-     */
-    public function setWeddingDateid($weddingDateid)
-    {
-        $this->weddingDateid = $weddingDateid;
-
-        return $this;
-    }
-
-    /**
-     * Get weddingDateid
-     *
-     * @return string
-     */
-    public function getWeddingDateid()
-    {
-        return $this->weddingDateid;
-    }
-
-    /**
      * Set weddingLocationid
      *
      * @param integer $weddingLocationid
@@ -257,30 +189,6 @@ class Wedding
     }
 
     /**
-     * Set bannsDateid
-     *
-     * @param string $bannsDateid
-     *
-     * @return Wedding
-     */
-    public function setBannsDateid($bannsDateid)
-    {
-        $this->bannsDateid = $bannsDateid;
-
-        return $this;
-    }
-
-    /**
-     * Get bannsDateid
-     *
-     * @return string
-     */
-    public function getBannsDateid()
-    {
-        return $this->bannsDateid;
-    }
-
-    /**
      * Set breakupReason
      *
      * @param string $breakupReason
@@ -304,29 +212,6 @@ class Wedding
         return $this->breakupReason;
     }
 
-    /**
-     * Set breakupDateid
-     *
-     * @param string $breakupDateid
-     *
-     * @return Wedding
-     */
-    public function setBreakupDateid($breakupDateid)
-    {
-        $this->breakupDateid = $breakupDateid;
-
-        return $this;
-    }
-
-    /**
-     * Get breakupDateid
-     *
-     * @return string
-     */
-    public function getBreakupDateid()
-    {
-        return $this->breakupDateid;
-    }
 
     /**
      * Set marriageComment
@@ -398,5 +283,179 @@ class Wedding
     public function getComment()
     {
         return $this->comment;
+    }
+    /**
+     * @var date_reference
+     */
+    private $weddingDate;
+
+    /**
+     * @var date_reference
+     */
+    private $bannsDate;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Territory
+     */
+    private $weddingTerritory;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Location
+     */
+    private $weddingLocation;
+
+
+    /**
+     * Set weddingDate
+     *
+     * @param date_reference $weddingDate
+     *
+     * @return Wedding
+     */
+    public function setWeddingDate($weddingDate)
+    {
+        $this->weddingDate = $weddingDate;
+
+        return $this;
+    }
+
+    /**
+     * Get weddingDate
+     *
+     * @return date_reference
+     */
+    public function getWeddingDate()
+    {
+        return $this->weddingDate;
+    }
+
+    /**
+     * Set bannsDate
+     *
+     * @param date_reference $bannsDate
+     *
+     * @return Wedding
+     */
+    public function setBannsDate($bannsDate)
+    {
+        $this->bannsDate = $bannsDate;
+
+        return $this;
+    }
+
+    /**
+     * Get bannsDate
+     *
+     * @return date_reference
+     */
+    public function getBannsDate()
+    {
+        return $this->bannsDate;
+    }
+
+    /**
+     * Set weddingTerritory
+     *
+     * @param \UR\DB\NewBundle\Entity\Territory $weddingTerritory
+     *
+     * @return Wedding
+     */
+    public function setWeddingTerritory(\UR\DB\NewBundle\Entity\Territory $weddingTerritory = null)
+    {
+        $this->weddingTerritory = $weddingTerritory;
+
+        return $this;
+    }
+
+    /**
+     * Get weddingTerritory
+     *
+     * @return \UR\DB\NewBundle\Entity\Territory
+     */
+    public function getWeddingTerritory()
+    {
+        return $this->weddingTerritory;
+    }
+
+    /**
+     * Set weddingLocation
+     *
+     * @param \UR\DB\NewBundle\Entity\Location $weddingLocation
+     *
+     * @return Wedding
+     */
+    public function setWeddingLocation(\UR\DB\NewBundle\Entity\Location $weddingLocation = null)
+    {
+        $this->weddingLocation = $weddingLocation;
+
+        return $this;
+    }
+
+    /**
+     * Get weddingLocation
+     *
+     * @return \UR\DB\NewBundle\Entity\Location
+     */
+    public function getWeddingLocation()
+    {
+        return $this->weddingLocation;
+    }
+    /**
+     * @var date_reference
+     */
+    private $breakupDateid;
+
+
+    /**
+     * Set breakupDateid
+     *
+     * @param date_reference $breakupDateid
+     *
+     * @return Wedding
+     */
+    public function setBreakupDateid($breakupDateid)
+    {
+        $this->breakupDateid = $breakupDateid;
+
+        return $this;
+    }
+
+    /**
+     * Get breakupDateid
+     *
+     * @return date_reference
+     */
+    public function getBreakupDateid()
+    {
+        return $this->breakupDateid;
+    }
+    /**
+     * @var date_reference
+     */
+    private $breakupDate;
+
+
+    /**
+     * Set breakupDate
+     *
+     * @param date_reference $breakupDate
+     *
+     * @return Wedding
+     */
+    public function setBreakupDate($breakupDate)
+    {
+        $this->breakupDate = $breakupDate;
+
+        return $this;
+    }
+
+    /**
+     * Get breakupDate
+     *
+     * @return date_reference
+     */
+    public function getBreakupDate()
+    {
+        return $this->breakupDate;
     }
 }

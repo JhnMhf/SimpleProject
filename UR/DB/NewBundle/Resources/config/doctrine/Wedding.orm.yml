@@ -7,7 +7,6 @@ UR\DB\NewBundle\Entity\Wedding:
                 - wedding_order
                 - husband_ID
                 - wife_ID
-                - relation_type
     id:
         id:
             type: integer
@@ -39,20 +38,10 @@ UR\DB\NewBundle\Entity\Wedding:
                 unsigned: false
                 default: '0'
             column: wife_ID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
-        weddingDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
+        weddingDate:
+            type: date_reference
             column: wedding_dateID
+            nullable: true
         weddingLocationid:
             type: integer
             nullable: true
@@ -65,14 +54,12 @@ UR\DB\NewBundle\Entity\Wedding:
             options:
                 unsigned: false
             column: wedding_territoryID
-        bannsDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-                comment: '== Aufgebot'
+        bannsDate:
+            type: date_reference
             column: banns_dateID
+            nullable: true
+            options:
+                comment: '== Aufgebot'
         breakupReason:
             type: text
             nullable: true
@@ -81,14 +68,12 @@ UR\DB\NewBundle\Entity\Wedding:
                 fixed: false
                 comment: '== Auflösung'
             column: breakup_reason
-        breakupDateid:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-                comment: '== gelöst'
+        breakupDate:
+            type: date_reference
             column: breakup_dateID
+            nullable: true
+            options:
+                comment: '== gelöst'
         marriageComment:
             type: text
             nullable: true
@@ -109,4 +94,19 @@ UR\DB\NewBundle\Entity\Wedding:
             length: 65535
             options:
                 fixed: false
+    manyToOne:     
+        weddingTerritory:
+            targetEntity: Territory
+            fetch: EAGER
+            joinColumn:
+                name: wedding_territoryID
+                referencedColumnName: ID
+                nullable: true
+        weddingLocation:
+            targetEntity: Location
+            fetch: EAGER
+            joinColumn:
+                name: wedding_locationID
+                referencedColumnName: ID
+                nullable: true     
     lifecycleCallbacks: {  }

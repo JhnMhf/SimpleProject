@@ -35,7 +35,7 @@ class PersonMerger {
     
     //@TODO: Finish Personmergin/ fusion
     //Its not only necessary to finish the method but to call it from MigratController
-    public function mergePersons($personOne, $personTwo){
+    public function mergePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne,\UR\DB\NewBundle\Entity\BasePerson $personTwo){
         $this->LOGGER->info("Request for fusing two persons.");
         $this->LOGGER->info("Person 1: ".$personOne);
         $this->LOGGER->info("Person 2: ".$personTwo);
@@ -70,7 +70,7 @@ class PersonMerger {
         return $dataMaster;
     }
     
-    private function determineDatamaster($personOne, $personTwo){
+    private function determineDatamaster(\UR\DB\NewBundle\Entity\BasePerson $personOne,\UR\DB\NewBundle\Entity\BasePerson $personTwo){
         if(get_class($personTwo) == self::PERSON_CLASS
                 && get_class($personOne) != self::PERSON_CLASS){
             return $personTwo;
@@ -79,7 +79,7 @@ class PersonMerger {
         return $personOne;
     }
     
-   private function determineToBeRemoved($personOne, $personTwo){
+   private function determineToBeRemoved(\UR\DB\NewBundle\Entity\BasePerson $personOne,\UR\DB\NewBundle\Entity\BasePerson $personTwo){
         if(get_class($personTwo) == self::PERSON_CLASS
                 && get_class($personOne) != self::PERSON_CLASS){
             return $personOne;
@@ -88,7 +88,7 @@ class PersonMerger {
         return $personTwo;
     }
     
-    private function removeObject($toBeDeleted){
+    private function removeObject(\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $this->LOGGER->info("Now removing: ".$toBeDeleted);
         //remove obj itself
         $this->newDBManager->remove($toBeDeleted);
@@ -99,7 +99,7 @@ class PersonMerger {
         
     }
     
-    private function mergeBasicPerson($dataMaster, $toBeDeleted){
+    private function mergeBasicPerson(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $this->LOGGER->info("Fusing base person of '".$toBeDeleted . "' into ".$dataMaster);
          
         $dataMaster->setFirstName($this->mergeString($dataMaster->getFirstName(), $toBeDeleted->getFirstName()));
@@ -113,27 +113,31 @@ class PersonMerger {
         $dataMaster->setBornInMarriage($this->mergeString($dataMaster->getBornInMarriage(), $toBeDeleted->getBornInMarriage()));
 
         //now the references :(
-        $this->mergeBirthId($dataMaster, $toBeDeleted);
-        $this->mergeDeathId($dataMaster, $toBeDeleted);
-        $this->mergeReligionId($dataMaster, $toBeDeleted);
-        $this->mergeNationId($dataMaster, $toBeDeleted);
-        $this->mergeBaptismId($dataMaster, $toBeDeleted);
-        $this->mergeWorksId($dataMaster, $toBeDeleted);
-        $this->mergeStatusId($dataMaster, $toBeDeleted);
-        $this->mergeSourceId($dataMaster, $toBeDeleted);
-        $this->mergeRoadOfLiveId($dataMaster, $toBeDeleted);
-        $this->mergeRankId($dataMaster, $toBeDeleted);
-        $this->mergePropertyId($dataMaster, $toBeDeleted);
-        $this->mergeHonourId($dataMaster, $toBeDeleted);
-        $this->mergeEducationId($dataMaster, $toBeDeleted);
-        $this->mergeJobClassId($dataMaster, $toBeDeleted);
-        $this->mergeResidenceId($dataMaster, $toBeDeleted);
+        $this->mergeBirth($dataMaster, $toBeDeleted);
+        $this->mergeDeath($dataMaster, $toBeDeleted);
+        $this->mergeBaptism($dataMaster, $toBeDeleted);
+        
+        //@TODO: Reenable
+        /*
+        $this->mergeReligion($dataMaster, $toBeDeleted);
+        $this->mergeNation($dataMaster, $toBeDeleted);
+        $this->mergeWorks($dataMaster, $toBeDeleted);
+        $this->mergeStatus($dataMaster, $toBeDeleted);
+        $this->mergeSource($dataMaster, $toBeDeleted);
+        $this->mergeRoadOfLive($dataMaster, $toBeDeleted);
+        $this->mergeRank($dataMaster, $toBeDeleted);
+        $this->mergeProperty($dataMaster, $toBeDeleted);
+        $this->mergeHonour($dataMaster, $toBeDeleted);
+        $this->mergeEducation($dataMaster, $toBeDeleted);
+        $this->mergeJobClass($dataMaster, $toBeDeleted);
+        $this->mergeResidence($dataMaster, $toBeDeleted);
+         */
         
         //weddingid?
         
     }
     
-    private function mergeRelationships($dataMaster, $toBeDeleted){
+    private function mergeRelationships(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $this->LOGGER->info("Fusing relationships of '".$toBeDeleted . "' into ".$dataMaster);
 
         /*
@@ -147,37 +151,66 @@ class PersonMerger {
 
     }
     
-    private function mergeBirthId($dataMaster, $toBeDeleted){
-        $dataMasterReference = $dataMaster->getBirthId();
-        $toBeDeletedReference = $toBeDeleted->getBirthId();
+    private function mergeBirth(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $dataMasterBirth = $dataMaster->getBirth();
+        $toBeDeletedBirth = $toBeDeleted->getBirth();
         
-        $combinedReference = null;
-        
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
-            //load references and compare them
+        if($dataMasterBirth != null && $toBeDeletedBirth != null){
+            $dataMasterBirth->setOriginCountry($this->mergeCountryObject($dataMasterBirth->getOriginCountry(), $toBeDeletedBirth->getOriginCountry()));
+            $dataMasterBirth->setOriginTerritory($this->mergeTerritoryObject($dataMasterBirth->getOriginTerritory(), $toBeDeletedBirth->getOriginTerritory()));
+            $dataMasterBirth->setOriginLocation($this->mergeLocationObject($dataMasterBirth->getOriginLocation(), $toBeDeletedBirth->getOriginLocation()));
+            $dataMasterBirth->setBirthCountry($this->mergeCountryObject($dataMasterBirth->getBirthCountry(), $toBeDeletedBirth->getBirthCountry()));
+            $dataMasterBirth->setBirthTerritory($this->mergeTerritoryObject($dataMasterBirth->getBirthTerritory(), $toBeDeletedBirth->getBirthTerritory()));
+            $dataMasterBirth->setBirthLocation($this->mergeLocationObject($dataMasterBirth->getBirthLocation(), $toBeDeletedBirth->getBirthLocation()));
+            $dataMasterBirth->setBirthDate($this->mergeDateReference($dataMasterBirth->getBirthDate(), $toBeDeletedBirth->getBirthDate()));
+            $dataMasterBirth->setComment($this->mergeComment($dataMasterBirth->getComment(), $toBeDeletedBirth->getComment()));
+
+            $dataMaster->setBirth($dataMasterBirth);
+        } else if ($toBeDeletedBirth != null){
+            $dataMaster->setBirth($toBeDeletedBirth);
         }
         
-        $dataMaster->setBirthId($combinedReference);
+
     }
     
-    private function mergeDeathId($dataMaster, $toBeDeleted){
-        $dataMasterReference = $dataMaster->getDeathId();
-        $toBeDeletedReference = $toBeDeleted->getDeathId();
+    private function mergeBaptism(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $dataMasterBaptism = $dataMaster->getBaptism();
+        $toBeDeletedBaptism = $toBeDeleted->getBaptism();
         
-        $combinedReference = null;
+        if($dataMasterBaptism != null && $toBeDeletedBaptism != null){
+            $dataMasterBaptism->setOriginLocation($this->mergeLocationObject($dataMasterBaptism->getBaptismLocation(), $toBeDeletedBaptism->getBaptismLocation()));
+            $dataMasterBaptism->setBirthDate($this->mergeDateReference($dataMasterBaptism->getBaptismDate(), $toBeDeletedBaptism->getBaptismDate()));
         
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
-            
+            $dataMaster->setBirth($dataMasterBaptism);
+        } else if ($toBeDeletedBaptism != null){
+            $dataMaster->setBirth($toBeDeletedBaptism);
+        }
+    }
+    
+    private function mergeDeath(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $dataMasterDeath = $dataMaster->getDeath();
+        $toBeDeletedDeath = $toBeDeleted->getDeath();
+        
+        if($dataMasterDeath != null && $toBeDeletedDeath != null){
+            $dataMasterDeath->setDeathCountry($this->mergeCountryObject($dataMasterDeath->getDeathCountry(),$toBeDeletedDeath->getDeathCountry()));
+            $dataMasterDeath->setTerritoryOfDeath($this->mergeTerritoryObject($dataMasterDeath->getTerritoryOfDeath(),$toBeDeletedDeath->getTerritoryOfDeath()));
+            $dataMasterDeath->setDeathLocation($this->mergeLocationObject($dataMasterDeath->getDeathLocation(),$toBeDeletedDeath->getDeathLocation()));
+            $dataMasterDeath->setDeathDate($this->mergeDateReference($dataMasterDeath->getDeathDate(),$toBeDeletedDeath->getDeathDate()));
+            $dataMasterDeath->setCauseOfDeath($this->mergeStrings($dataMasterDeath->getCauseOfDeath(),$toBeDeletedDeath->getCauseOfDeath()));
+            $dataMasterDeath->setGraveyard($this->mergeStrings($dataMasterDeath->getGraveyard(),$toBeDeletedDeath->getGraveyard()));
+            $dataMasterDeath->setFuneralLocation($this->mergeLocationObject($dataMasterDeath->getFuneralLocation(),$toBeDeletedDeath->getFuneralLocation()));
+            $dataMasterDeath->setFuneralDate($this->mergeDateReference($dataMasterDeath->getFuneralDate(),$toBeDeletedDeath->getFuneralDate()));
+            $dataMasterDeath->setComment($this->mergeComment($dataMasterDeath->getComment(), $toBeDeletedDeath->getComment()));
+
+            $dataMaster->setDeath($dataMasterDeath);
+        } else if ($toBeDeletedDeath != null){
+            $dataMaster->setDeath($toBeDeletedDeath);
         }
         
-        $dataMaster->setDeathId($combinedReference);
+        
     }
     
-    private function mergeReligionId($dataMaster, $toBeDeleted){
+    private function mergeReligion(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getReligionId();
         $toBeDeletedReference = $toBeDeleted->getReligionId();
         
@@ -192,7 +225,7 @@ class PersonMerger {
         $dataMaster->setReligionId($combinedReference);
     }
     
-    private function mergeNationId($dataMaster, $toBeDeleted){
+    private function mergeNation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         
         $dataMasterReference = $this->getNation($dataMaster);
         $toBeDeletedReference = $this->getNation($toBeDeleted);
@@ -208,7 +241,7 @@ class PersonMerger {
         $dataMaster->setOriginalNationId($combinedReference);
     }
     
-    private function getNation($person){
+    private function getNation(\UR\DB\NewBundle\Entity\BasePerson $person){
         switch(get_class($person)){
             case self::PERSON_CLASS:
                 return $person->getOriginalNationId();
@@ -217,22 +250,9 @@ class PersonMerger {
         }
     }
     
-    private function mergeBaptismId($dataMaster, $toBeDeleted){
-        $dataMasterReference = $dataMaster->getBaptismId();
-        $toBeDeletedReference = $toBeDeleted->getBaptismId();
-        
-        $combinedReference = null;
-        
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
-            
-        }
-        
-        $dataMaster->setBaptismId($combinedReference);
-    }
     
-    private function mergeWorksId($dataMaster, $toBeDeleted){
+    
+    private function mergeWorks(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getWorksId();
         $toBeDeletedReference = $toBeDeleted->getWorksId();
         
@@ -247,7 +267,7 @@ class PersonMerger {
         $dataMaster->setWorksId($combinedReference);
     }
     
-    private function mergeStatusId($dataMaster, $toBeDeleted){
+    private function mergeStatus(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getStatusId();
         $toBeDeletedReference = $toBeDeleted->getStatusId();
         
@@ -262,7 +282,7 @@ class PersonMerger {
         $dataMaster->setStatusId($combinedReference);
     }
        
-    private function mergeSourceId($dataMaster, $toBeDeleted){
+    private function mergeSource(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getSourceId();
         $toBeDeletedReference = $toBeDeleted->getSourceId();
         
@@ -277,7 +297,7 @@ class PersonMerger {
         $dataMaster->setSourceId($combinedReference);
     }
     
-    private function mergeRoadOfLiveId($dataMaster, $toBeDeleted){
+    private function mergeRoadOfLive(\UR\DB\NewBundle\Entity\BasePerson$dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getRoadOfLiveId();
         $toBeDeletedReference = $toBeDeleted->getRoadOfLiveId();
         
@@ -292,7 +312,7 @@ class PersonMerger {
         $dataMaster->setRoadOfLiveId($combinedReference);
     }
     
-    private function mergeRankId($dataMaster, $toBeDeleted){
+    private function mergeRank(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getRankId();
         $toBeDeletedReference = $toBeDeleted->getRankId();
         
@@ -307,7 +327,7 @@ class PersonMerger {
         $dataMaster->setRankId($combinedReference);
     }
     
-    private function mergePropertyId($dataMaster, $toBeDeleted){
+    private function mergeProperty(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getPropertyId();
         $toBeDeletedReference = $toBeDeleted->getPropertyId();
         
@@ -322,7 +342,7 @@ class PersonMerger {
         $dataMaster->setPropertyId($combinedReference);
     }
     
-    private function mergeHonourId($dataMaster, $toBeDeleted){
+    private function mergeHonour(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getHonourId();
         $toBeDeletedReference = $toBeDeleted->getHonourId();
         
@@ -337,7 +357,7 @@ class PersonMerger {
         $dataMaster->setHonourId($combinedReference);
     }
     
-    private function mergeEducationId($dataMaster, $toBeDeleted){
+    private function mergeEducation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getEducationId();
         $toBeDeletedReference = $toBeDeleted->getEducationId();
         
@@ -352,7 +372,7 @@ class PersonMerger {
         $dataMaster->setEducationId($combinedReference);
     }
     
-    private function mergeJobClassId($dataMaster, $toBeDeleted){
+    private function mergeJobClass(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getJobClassId();
         $toBeDeletedReference = $toBeDeleted->getJobClassId();
         
@@ -367,7 +387,7 @@ class PersonMerger {
         $dataMaster->setJobClassId($combinedReference);
     }
     
-    private function mergeResidenceId($dataMaster, $toBeDeleted){
+    private function mergeResidence(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $dataMasterReference = $dataMaster->getResidenceId();
         $toBeDeletedReference = $toBeDeleted->getResidenceId();
         
@@ -410,31 +430,152 @@ class PersonMerger {
         return $this->mergeString($dataMasterComment, $toBeDeletedComment);
     }
     
-    private function mergeJob($dataMasterJob, $toBeDeletedJob){
-        return $this->mergeString($dataMasterJob, $toBeDeletedJob);
+    private function mergeJobObject(\UR\DB\NewBundle\Entity\Job $dataMasterJob,\UR\DB\NewBundle\Entity\Job $toBeDeletedJob){
+        $this->LOGGER->debug("Fusing Jobs... '".$dataMasterJob."' with '".$toBeDeletedJob."'");
+        
+        $result = $dataMasterJob;
+        if(is_null($toBeDeletedJob) || $toBeDeletedJob == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterJob) || $dataMasterJob == ""){
+            $result = $toBeDeletedJob;
+        } else if(strcasecmp($dataMasterJob->getLabel(), $toBeDeletedJob->getLabel()) != 0
+                || strcasecmp($dataMasterJob->getComment(), $toBeDeletedJob->getComment()) != 0){
+            $resultLabel = $dataMasterJob->getLabel() . " ODER ".$toBeDeletedJob->getLabel();
+            $resultComment = $dataMasterJob->getComment() . " ODER ".$toBeDeletedJob->getComment();
+            $newJob = new \UR\DB\NewBundle\Entity\Job();
+            $newJob->setLabel($resultLabel);
+            $newJob->setComment($resultComment);
+            $result = $newJob;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeJobClass($dataMasterJobClass, $toBeDeletedJobClass){
-        return $this->mergeString($dataMasterJobClass, $toBeDeletedJobClass);
+    private function mergeJobClassObject(\UR\DB\NewBundle\Entity\JobClass $dataMasterJobClass,\UR\DB\NewBundle\Entity\JobClass  $toBeDeletedJobClass){
+        $this->LOGGER->debug("Fusing JobClass... '".$dataMasterJobClass."' with '".$toBeDeletedJobClass."'");
+        
+        $result = $dataMasterJobClass;
+        if(is_null($toBeDeletedJobClass) || $toBeDeletedJobClass == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterJobClass) || $dataMasterJobClass == ""){
+            $result = $toBeDeletedJobClass;
+        } else if(strcasecmp($dataMasterJobClass->getLabel(), $toBeDeletedJobClass->getLabel()) != 0){
+            $resultLabel = $dataMasterJobClass->getLabel() . " ODER ".$toBeDeletedJobClass->getLabel();
+            $newJobClass = new \UR\DB\NewBundle\Entity\JobClass();
+            $newJobClass->setLabel($resultLabel);
+            $result = $newJobClass;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeNation($dataMasterNation, $toBeDeletedNation){
-        return $this->mergeString($dataMasterNation, $toBeDeletedNation);
+    private function mergeNationObject(\UR\DB\NewBundle\Entity\Nation $dataMasterNation,\UR\DB\NewBundle\Entity\Nation $toBeDeletedNation){
+        $this->LOGGER->debug("Fusing Nation... '".$dataMasterNation."' with '".$toBeDeletedNation."'");
+        
+        $result = $dataMasterNation;
+        if(is_null($toBeDeletedNation) || $toBeDeletedNation == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterNation) || $dataMasterNation == ""){
+            $result = $toBeDeletedNation;
+        } else if(strcasecmp($dataMasterNation->getLabel(), $toBeDeletedNation->getLabel()) != 0
+                || strcasecmp($dataMasterNation->getComment(), $toBeDeletedNation->getComment()) != 0){
+            $resultLabel = $dataMasterNation->getLabel() . " ODER ".$toBeDeletedNation->getLabel();
+            $resultComment = $dataMasterNation->getComment() . " ODER ".$toBeDeletedNation->getComment();
+            $newNation = new \UR\DB\NewBundle\Entity\Nation();
+            $newNation->setLabel($resultLabel);
+            $newNation->setComment($resultComment);
+            $result = $newNation;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeCountry($dataMasterCountry, $toBeDeletedCountry){
-        return $this->mergeString($dataMasterCountry, $toBeDeletedCountry);
+    private function mergeCountryObject(\UR\DB\NewBundle\Entity\Country $dataMasterCountry,\UR\DB\NewBundle\Entity\Country $toBeDeletedCountry){
+        $this->LOGGER->debug("Fusing Country... '".$dataMasterCountry."' with '".$toBeDeletedCountry."'");
+        
+        $result = $dataMasterCountry;
+        if(is_null($toBeDeletedCountry) || $toBeDeletedCountry == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterCountry) || $dataMasterCountry == ""){
+            $result = $toBeDeletedCountry;
+        } else if(strcasecmp($dataMasterCountry->getLabel(), $toBeDeletedCountry->getLabel()) != 0
+                || strcasecmp($dataMasterCountry->getComment(), $toBeDeletedCountry->getComment()) != 0){
+            $resultLabel = $dataMasterCountry->getLabel() . " ODER ".$toBeDeletedCountry->getLabel();
+            $resultComment = $dataMasterCountry->getComment() . " ODER ".$toBeDeletedCountry->getComment();
+            $newCountry = new \UR\DB\NewBundle\Entity\Country();
+            $newCountry->setLabel($resultLabel);
+            $newCountry->setComment($resultComment);
+            $result = $newCountry;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeTerritory($dataMasterTerritory, $toBeDeletedTerritory){
-        return $this->mergeString($dataMasterTerritory, $toBeDeletedTerritory);
+    private function mergeTerritoryObject(\UR\DB\NewBundle\Entity\Territory $dataMasterTerritory,\UR\DB\NewBundle\Entity\Territory $toBeDeletedTerritory){
+        $this->LOGGER->debug("Fusing Territory... '".$dataMasterTerritory."' with '".$toBeDeletedTerritory."'");
+        
+        $result = $dataMasterTerritory;
+        if(is_null($toBeDeletedTerritory) || $toBeDeletedTerritory == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterTerritory) || $dataMasterTerritory == ""){
+            $result = $toBeDeletedTerritory;
+        } else if(strcasecmp($dataMasterTerritory->getLabel(), $toBeDeletedTerritory->getLabel()) != 0
+                || strcasecmp($dataMasterTerritory->getComment(), $toBeDeletedTerritory->getComment()) != 0){
+            $resultLabel = $dataMasterTerritory->getLabel() . " ODER ".$toBeDeletedTerritory->getLabel();
+            $resultComment = $dataMasterTerritory->getComment() . " ODER ".$toBeDeletedTerritory->getComment();
+            $newTerritory = new \UR\DB\NewBundle\Entity\Territory();
+            $newTerritory->setLabel($resultLabel);
+            $newTerritory->setComment($resultComment);
+            $result = $newTerritory;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeLocation($dataMasterLocation, $toBeDeletedLocation){
-        return $this->mergeString($dataMasterLocation, $toBeDeletedLocation);
+    private function mergeLocationObject(\UR\DB\NewBundle\Entity\Location $dataMasterLocation,\UR\DB\NewBundle\Entity\Location $toBeDeletedLocation){
+        $this->LOGGER->debug("Fusing Location... '".$dataMasterLocation."' with '".$toBeDeletedLocation."'");
+        
+        $result = $dataMasterLocation;
+        if(is_null($toBeDeletedLocation) || $toBeDeletedLocation == ""){
+            //do nothing, since the default is the dataMasterstring
+        }else if(is_null($dataMasterLocation) || $dataMasterLocation == ""){
+            $result = $toBeDeletedLocation;
+        } else if(strcasecmp($dataMasterLocation->getLabel(), $toBeDeletedLocation->getLabel()) != 0
+                || strcasecmp($dataMasterLocation->getComment(), $toBeDeletedLocation->getComment()) != 0){
+            $resultLabel = $dataMasterLocation->getLabel() . " ODER ".$toBeDeletedLocation->getLabel();
+            $resultComment = $dataMasterLocation->getComment() . " ODER ".$toBeDeletedLocation->getComment();
+            $newLocation = new \UR\DB\NewBundle\Entity\Location();
+            $newLocation->setLabel($resultLabel);
+            $newLocation->setComment($resultComment);
+            $result = $newLocation;
+        }
+        
+        $this->LOGGER->debug("Merged to '".$result."'");
+        
+        return $result;
     }
     
-    private function mergeDate($dataMasterDate, $toBeDeletedDate){
+    //@TODO: Implement Data Reference merge!
+    private function mergeDateReference(array $dataMasterDate,array $toBeDeletedDate){
+        //merge date!
+        //and mind 0.0.1800 and similar dates!
+        //if one date is "genauer" als the other, use it!
+        //btw. ignore comments just merge them if necessary!
+        
+        return $dataMasterDate;
+    }
+    
+    private function mergeDateObject(\UR\DB\NewBundle\Entity\Date $dataMasterDate,\UR\DB\NewBundle\Entity\Date $toBeDeletedDate){
         //merge date!
         //and mind 0.0.1800 and similar dates!
         //if one date is "genauer" als the other, use it!
