@@ -231,7 +231,7 @@ class PersonComparer {
         return false;
     }
     
-    private function matchingBirth($birthOne, $birthTwo){
+    public function matchingBirth($birthOne, $birthTwo){
         if($birthOne->getOriginCountry() != $birthTwo->getOriginCountry()){
             return false;
         }
@@ -263,7 +263,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingBaptism($baptismOne, $baptismTwo){
+    public function matchingBaptism($baptismOne, $baptismTwo){
         if($baptismOne->getBaptismLocation() != $baptismTwo->getBaptismLocation()){
             return false;
         }
@@ -275,7 +275,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingDeath($deathOne, $deathTwo){
+    public function matchingDeath($deathOne, $deathTwo){
         if($deathOne->getDeathLocation() != $deathTwo->getDeathLocation()){
             return false;
         }
@@ -311,7 +311,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingEducation($educationOne, $educationTwo){
+    public function matchingEducation($educationOne, $educationTwo){
         if($educationOne->getLabel() != $educationTwo->getLabel()){
             return false;
         }
@@ -355,7 +355,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingHonour($honourOne, $honourTwo){
+    public function matchingHonour($honourOne, $honourTwo){
         if($honourOne->getLabel() != $honourTwo->getLabel()){
             return false;
         }
@@ -387,7 +387,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingProperty($propertyOne, $propertyTwo){
+    public function matchingProperty($propertyOne, $propertyTwo){
         if($propertyOne->getLabel() != $propertyTwo->getLabel()){
             return false;
         }
@@ -419,7 +419,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingRank($rankOne, $rankTwo){
+    public function matchingRank($rankOne, $rankTwo){
         if($rankOne->getLabel() != $rankTwo->getLabel()){
             return false;
         }
@@ -455,7 +455,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingReligion($religionOne, $religionTwo){
+    public function matchingReligion($religionOne, $religionTwo){
         if($religionOne->getName() != $religionTwo->getName()){
             return false;
         }
@@ -475,7 +475,7 @@ class PersonComparer {
         return true;
     }
           
-    private function matchingResidence($residenceOne, $residenceTwo){
+    public function matchingResidence($residenceOne, $residenceTwo){
         if($residenceOne->getResidenceCountry() != $residenceTwo->getResidenceCountry()){
             return false;
         }
@@ -491,7 +491,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingRoadOfLife($roadOfLifeOne, $roadOfLifeTwo){
+    public function matchingRoadOfLife($roadOfLifeOne, $roadOfLifeTwo){
         if($roadOfLifeOne->getJob() != $roadOfLifeTwo->getJob()){
             return false;
         }
@@ -531,7 +531,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingStatus($statusOne, $statusTwo){
+    public function matchingStatus($statusOne, $statusTwo){
         if($statusOne->getLabel() != $statusTwo->getLabel()){
             return false;
         }
@@ -563,7 +563,7 @@ class PersonComparer {
         return true;
     }
     
-    private function matchingWork($workOne, $workTwo){
+    public function matchingWork($workOne, $workTwo){
         if($workOne->getLabel() != $workTwo->getLabel()){
             return false;
         }
@@ -596,7 +596,7 @@ class PersonComparer {
     }
 
     
-    private function matchingDates($dateOne, $dateTwo){
+    public function matchingDates($dateOne, $dateTwo){
 
         if($dateOne->getDay() != $dateTwo->getDay()){
             return false;

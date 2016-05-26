@@ -20,12 +20,14 @@ class PersonMerger {
 
     private $container;
     private $newDBManager;
+    private $compareService;
 
     public function __construct($container)
     {
         $this->container = $container;
         $this->newDBManager = $this->get('doctrine')->getManager('new');
         $this->LOGGER = $this->get('monolog.logger.personMerging');
+        $this->compareService = $this->get("comparer.service");
     }
 
     private function get($identifier){
@@ -116,10 +118,9 @@ class PersonMerger {
         $this->mergeBirth($dataMaster, $toBeDeleted);
         $this->mergeDeath($dataMaster, $toBeDeleted);
         $this->mergeBaptism($dataMaster, $toBeDeleted);
-        
+        $this->mergeReligion($dataMaster, $toBeDeleted);
         //@TODO: Reenable
         /*
-        $this->mergeReligion($dataMaster, $toBeDeleted);
         $this->mergeNation($dataMaster, $toBeDeleted);
         $this->mergeWorks($dataMaster, $toBeDeleted);
         $this->mergeStatus($dataMaster, $toBeDeleted);
@@ -152,6 +153,7 @@ class PersonMerger {
     }
     
     private function mergeBirth(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $this->LOGGER->info("Fusing Birth of '".$toBeDeleted . "' into ".$dataMaster);
         $dataMasterBirth = $dataMaster->getBirth();
         $toBeDeletedBirth = $toBeDeleted->getBirth();
         
@@ -169,11 +171,10 @@ class PersonMerger {
         } else if ($toBeDeletedBirth != null){
             $dataMaster->setBirth($toBeDeletedBirth);
         }
-        
-
     }
     
     private function mergeBaptism(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $this->LOGGER->info("Fusing Baptism of '".$toBeDeleted . "' into ".$dataMaster);
         $dataMasterBaptism = $dataMaster->getBaptism();
         $toBeDeletedBaptism = $toBeDeleted->getBaptism();
         
@@ -188,6 +189,7 @@ class PersonMerger {
     }
     
     private function mergeDeath(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
+        $this->LOGGER->info("Fusing Death of '".$toBeDeleted . "' into ".$dataMaster);
         $dataMasterDeath = $dataMaster->getDeath();
         $toBeDeletedDeath = $toBeDeleted->getDeath();
         
@@ -206,65 +208,134 @@ class PersonMerger {
         } else if ($toBeDeletedDeath != null){
             $dataMaster->setDeath($toBeDeletedDeath);
         }
-        
-        
     }
     
     private function mergeReligion(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
-        $dataMasterReference = $dataMaster->getReligionId();
-        $toBeDeletedReference = $toBeDeleted->getReligionId();
+        $this->LOGGER->info("Fusing Religion of '".$toBeDeleted . "' into ".$dataMaster);
+        $dataMasterReligionCollection = $dataMaster->getReligions();
+        $toBeDeletedReligionCollection = $toBeDeleted->getReligions();
         
-        $combinedReference = null;
+        $this->LOGGER->debug("Size of dataMaster ReligionsCollection ".count($dataMasterReligionCollection));
+        $this->LOGGER->debug("Size of toBeDeleted ReligionsCollection ".count($toBeDeletedReligionCollection));
         
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
+        $dataMasterReligionArray = $dataMasterReligionCollection->getValues();
+        $toBeDeletedReligionArray = $toBeDeletedReligionCollection->getValues();
+        
+        $this->LOGGER->debug("Size of dataMaster Religions ".count($dataMasterReligionArray));
+        $this->LOGGER->debug("Size of toBeDeleted Religions ".count($toBeDeletedReligionArray));
+        
+        //@TODO: Merge based on order or on best matching?
+        //Generell Algorithm:
+        //1. Find matching entries and merge them?
+        //2. Find all entries which were not merged
+        //3. Build list of merged entries and unmerged entries?
+        
+        $listOfMatchingEntriesOfDatamaster = [];
+        $listOfMatchingEntriesOfToBeDeleted = [];
+        
+        for($i = 0; $i < count($dataMasterReligionArray); $i++){
+            $religionOne = $dataMasterReligionArray[$i];
             
+            
+            for($j = 0; $j < count($toBeDeletedReligionArray); $j++){
+                $religionTwo = $toBeDeletedReligionArray[$j];
+                
+                //check if this element already found a match
+                if(!in_array($religionTwo, $listOfMatchingEntriesOfToBeDeleted)){
+                    
+                    //check if the two elements are similar
+                    if($this->compareService->matchingReligion($religionOne, $religionTwo)){
+                        $listOfMatchingEntriesOfDatamaster[] = $religionOne;
+                        $listOfMatchingEntriesOfToBeDeleted[] = $religionTwo;
+                        continue;
+                    }
+                }
+            }
         }
         
-        $dataMaster->setReligionId($combinedReference);
+        $this->LOGGER->debug("Size of matching DataMaster Religions ".count($listOfMatchingEntriesOfDatamaster));
+        $this->LOGGER->debug("Size of matching toBeDeleted Religions ".count($listOfMatchingEntriesOfToBeDeleted));
+        
+        //fuse all matching religions and add the fused to the datamaster
+        for($i = 0; $i < count($listOfMatchingEntriesOfDatamaster); $i++){
+            $fusedReligion = $this->mergeReligionObjects($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i]);
+            
+            //add new fused religion
+            $dataMaster->addReligion($fusedReligion);
+            
+            //remove old religion from datamaster (and database?)
+            $dataMaster->removeReligion($listOfMatchingEntriesOfDatamaster[$i]);
+        }
+        
+        //find missing religions
+        
+        //do nothing with datamasterreligions? they are already
+        $unmatchedDataMasterReligions = array_diff($dataMasterReligionArray, $listOfMatchingEntriesOfDatamaster);
+        
+        //move unmatchd religions from toBeDeleted to Datamaster
+        $unmatchedToBeDeletedReligions = array_diff($toBeDeletedReligionArray, $listOfMatchingEntriesOfToBeDeleted);
+        
+        $this->LOGGER->debug("Size of unmatching DataMaster Religions ".count($unmatchedDataMasterReligions));
+        $this->LOGGER->debug("Size of unmatching toBeDeleted Religions ".count($unmatchedToBeDeletedReligions));
+        
+        for($i = 0; $i < count($unmatchedToBeDeletedReligions); $i++){
+            //add to datamaster
+            $dataMaster->addReligion($unmatchedToBeDeletedReligions[$i]);
+            
+            //remove religion from toBeDeleted
+            $toBeDeleted->removeReligion($unmatchedToBeDeletedReligions[$i]);
+        }
+        
+        //fix orders?
+    }
+    
+    private function mergeReligionObjects(\UR\DB\NewBundle\Entity\Religion $dataMasterReligion, \UR\DB\NewBundle\Entity\Religion $toBeDeletedReligion){
+        
+        
+        return $dataMasterReligion;
     }
     
     private function mergeNation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         
-        $dataMasterReference = $this->getNation($dataMaster);
-        $toBeDeletedReference = $this->getNation($toBeDeleted);
+        $dataMasterNation = $this->getNation($dataMaster);
+        $toBeDeletedNation = $this->getNation($toBeDeleted);
         
-        $combinedReference = null;
-        
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
-            
-        }
-        
-        $dataMaster->setOriginalNationId($combinedReference);
+        $this->setNation($dataMaster, $this->mergeNationObject($dataMasterNation, $toBeDeletedNation));
     }
     
     private function getNation(\UR\DB\NewBundle\Entity\BasePerson $person){
-        switch(get_class($person)){
-            case self::PERSON_CLASS:
-                return $person->getOriginalNationId();
-            default:
-                return $person->getNationId();
+        if(get_class($person) == self::RELATIVE_CLASS){
+            return $person->getNation();
         }
+        
+        return $person->getOriginalNation();
+    }
+    
+    private function setNation(\UR\DB\NewBundle\Entity\BasePerson $person, \UR\DB\NewBundle\Entity\Nation $nation){
+        if(get_class($person) == self::RELATIVE_CLASS){
+            $person->setNation($nation);
+        }
+        
+        $person->setOriginalNation($nation);
     }
     
     
     
     private function mergeWorks(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
-        $dataMasterReference = $dataMaster->getWorksId();
-        $toBeDeletedReference = $toBeDeleted->getWorksId();
+        $this->LOGGER->info("Fusing Works of '".$toBeDeleted . "' into ".$dataMaster);
+        $dataMasterWorksCollection = $dataMaster->getWorks();
+        $toBeDeletedWorksCollection = $toBeDeleted->getWorks();
         
-        $combinedReference = null;
+        $this->LOGGER->debug("Size of dataMaster WorksCollection ".count($dataMasterWorksCollection));
+        $this->LOGGER->debug("Size of toBeDeleted WorksCollection ".count($toBeDeletedWorksCollection));
         
-        if($this->checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference)){
-            $combinedReference = $this->doEasyReferenceMerge($dataMasterReference, $toBeDeletedReference);
-        }else{
-            
-        }
+        $dataMasterWorksArray = $dataMasterWorksCollection->getValues();
+        $toBeDeletedWorksArray = $toBeDeletedWorksCollection->getValues();
         
-        $dataMaster->setWorksId($combinedReference);
+        $this->LOGGER->debug("Size of dataMaster Religions ".count($dataMasterWorksArray));
+        $this->LOGGER->debug("Size of toBeDeleted Religions ".count($toBeDeletedWorksArray));
+        
+        //TODO: Finish implementaiton
     }
     
     private function mergeStatus(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){

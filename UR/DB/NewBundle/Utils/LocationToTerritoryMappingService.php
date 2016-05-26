@@ -13,28 +13,25 @@ namespace UR\DB\NewBundle\Utils;
  *
  * @author johanna
  */
-class NormalizationService {
+class LocationToTerritoryMappingService {
    
-    const CSV_FILE = "@NewBundle/Resources/files/abbreviations.csv";
+    const CSV_FILE = "@NewBundle/Resources/files/locationToTerritory.csv";
     const DELIMITER = "=";
     
     private $LOGGER;
     private $container;
     
-    private $abbreviationKeys;
-    private $abbreviationValues;
+    private $mapping = [];
     
     public function __construct($container)
     {
         $this->container = $container;
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
-        $this->createAbbreviationsMap();
+        $this->loadMapping();
     }
     
     //@TODO: Add unification for "?", "keine Angabe", "keine An gabe", "Unbekannt", leer
-    private function createAbbreviationsMap(){
-        $abbreviationsMap = [];
-        
+    private function loadMapping(){
         $path = $this->get('kernel')->locateResource(self::CSV_FILE);
        
         $lines = file($path);
@@ -42,23 +39,19 @@ class NormalizationService {
         foreach($lines as $line)
         {
             $splittedLine = explode(self::DELIMITER,$line);
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            $this->mapping[trim($splittedLine[0])] = trim($splittedLine[1]);
         }
-        
-        $keys = array_map('strlen', array_keys($abbreviationsMap));
-        array_multisort($keys, SORT_DESC, $abbreviationsMap);
-        
-        $this->abbreviationKeys = array_keys($abbreviationsMap);
-        $this->abbreviationValues = array_values($abbreviationsMap);
     }
     
     private function get($identifier){
         return $this->container->get($identifier);
     }
     
-    public function writeOutAbbreviations($string){
-        return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
+    public function getTerritoryForLocation($location){
+        if(array_key_exists($location,$this->mapping)){
+            return $this->mapping[$location];
+        }
+        
+        return null;
     }
-    
-    //@TODO: Add GND Database?
 }

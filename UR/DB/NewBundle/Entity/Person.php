@@ -126,6 +126,15 @@ class Person extends BasePerson  {
     public function __construct()
     {
         $this->sources = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->educations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->honours = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ranks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->religions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->residences = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roadOfLife = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->works = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -151,15 +160,7 @@ class Person extends BasePerson  {
     public function removeSource(\UR\DB\NewBundle\Entity\Source $source)
     {
         $this->sources->removeElement($source);
-        $this->educations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->honours = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->ranks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->religions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->residences = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->roadOfLife = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->works = new \Doctrine\Common\Collections\ArrayCollection();
+
     }
 
     /**
