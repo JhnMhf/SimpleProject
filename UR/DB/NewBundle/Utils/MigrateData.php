@@ -127,6 +127,10 @@ class MigrateData
             if($locationName == "" || $locationName == null){
                 return null;
             }
+            
+            //normalize locationName a second time...
+            $locationName = $this->normalize($locationName);
+            
             //returns null if no information are in the database
             $territoryName = $this->locationToTerritoryService->getTerritoryForLocation($locationName);
             
