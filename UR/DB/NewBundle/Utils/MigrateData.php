@@ -1061,5 +1061,9 @@ class MigrateData
 
         return $person;
     }
-
+    
+    
+    public function clearProxyCache(){
+        $this->newDBManager->clear();
+    }
 }

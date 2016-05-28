@@ -50,16 +50,11 @@ class MigrateController extends Controller
 
         $person = $this->migratePerson($ID);
         
-        //print_r("Normalisiert: ".$this->get("normalization.service")->writeOutAbbreviations("Du bist mein Mamaschaf. Mein bayer. Mamaschaf! Und du besitzt eine Batt.. Und hast einen adl. Adj.!")."\n");
-
         if(is_null($person)){
             return new Response("Invalid ID");
         }
-
-        /*
-        return new Response(
-            'Migrated Database entry: '.$person->getId()
-        );*/
+        
+        $this->migrationService->clearProxyCache();
         
         return $this->forward('NewBundle:Default:json', array(
             'type' => 'id',
