@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Territory
 {
+    public function __toString (){
+        return "Territory '".$this->getName()."' with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

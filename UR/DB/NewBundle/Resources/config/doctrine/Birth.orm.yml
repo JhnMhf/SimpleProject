@@ -59,8 +59,6 @@ UR\DB\NewBundle\Entity\Birth:
             options:
                 fixed: false
     manyToOne:
-        person:
-            targetEntity: BasePerson
         originCountry:
             targetEntity: Country
             fetch: EAGER
@@ -68,6 +66,7 @@ UR\DB\NewBundle\Entity\Birth:
                 name: origin_countryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         originTerritory:
             targetEntity: Territory
             fetch: EAGER
@@ -75,6 +74,7 @@ UR\DB\NewBundle\Entity\Birth:
                 name: origin_territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         originLocation:
             targetEntity: Location
             fetch: EAGER
@@ -82,13 +82,15 @@ UR\DB\NewBundle\Entity\Birth:
                 name: origin_locationID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         birthCountry:
             targetEntity: Country
             fetch: EAGER
             joinColumn:
                 name: birth_countryID
                 referencedColumnName: ID
-                nullable: true        
+                nullable: true
+            cascade: ["persist"]
         birthTerritory:
             targetEntity: Territory
             fetch: EAGER
@@ -96,11 +98,13 @@ UR\DB\NewBundle\Entity\Birth:
                 name: birth_territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         birthLocation:
             targetEntity: Location
             fetch: EAGER
             joinColumn:
                 name: birth_locationID
                 referencedColumnName: ID
-                nullable: true        
+                nullable: true
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

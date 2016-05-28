@@ -69,6 +69,7 @@ UR\DB\NewBundle\Entity\Rank:
     manyToOne:
         person:
             targetEntity: BasePerson
+            cascade: ["persist"]
         country:
             targetEntity: Country
             fetch: EAGER
@@ -76,6 +77,7 @@ UR\DB\NewBundle\Entity\Rank:
                 name: countryID
                 referencedColumnName: ID
                 nullable: true        
+            cascade: ["persist"]
         territory:
             targetEntity: Territory
             fetch: EAGER
@@ -83,11 +85,13 @@ UR\DB\NewBundle\Entity\Rank:
                 name: territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         location:
             targetEntity: Location
             fetch: EAGER
             joinColumn:
                 name: locationID
                 referencedColumnName: ID
-                nullable: true              
+                nullable: true      
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

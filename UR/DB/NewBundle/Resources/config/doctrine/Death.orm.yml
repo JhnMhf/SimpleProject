@@ -64,15 +64,14 @@ UR\DB\NewBundle\Entity\Death:
             column: funeral_dateId
             nullable: true
     manyToOne:
-        person:
-            targetEntity: BasePerson
         deathCountry:
             targetEntity: Country
             fetch: EAGER
             joinColumn:
                 name: death_countryID
                 referencedColumnName: ID
-                nullable: true        
+                nullable: true
+            cascade: ["persist"]
         territoryOfDeath:
             targetEntity: Territory
             fetch: EAGER
@@ -80,6 +79,7 @@ UR\DB\NewBundle\Entity\Death:
                 name: territory_of_deathID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         deathLocation:
             targetEntity: Location
             fetch: EAGER
@@ -93,5 +93,6 @@ UR\DB\NewBundle\Entity\Death:
             joinColumn:
                 name: funeral_locationID
                 referencedColumnName: ID
-                nullable: true        
+                nullable: true
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

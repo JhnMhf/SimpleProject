@@ -89,6 +89,7 @@ UR\DB\NewBundle\Entity\BasePerson:
                 name: jobID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         jobClass:
             targetEntity: JobClass
             fetch: EAGER
@@ -96,5 +97,6 @@ UR\DB\NewBundle\Entity\BasePerson:
                 name: job_classID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
     
     lifecycleCallbacks: {  }

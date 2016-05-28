@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class JobClass
 {
+    public function __toString (){
+        return "JobClass '".$this->getLabel()."' with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

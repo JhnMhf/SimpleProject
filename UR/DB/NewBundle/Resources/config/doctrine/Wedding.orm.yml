@@ -102,6 +102,7 @@ UR\DB\NewBundle\Entity\Wedding:
                 name: wedding_territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         weddingLocation:
             targetEntity: Location
             fetch: EAGER
@@ -109,4 +110,5 @@ UR\DB\NewBundle\Entity\Wedding:
                 name: wedding_locationID
                 referencedColumnName: ID
                 nullable: true     
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

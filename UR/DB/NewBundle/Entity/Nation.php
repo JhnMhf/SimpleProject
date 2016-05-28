@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Nation
 {
+    public function __toString (){
+        return "Nation '".$this->getName()."' with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

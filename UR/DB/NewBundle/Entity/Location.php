@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Location
 {
+    public function __toString (){
+        return "Location '".$this->getName()."' with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

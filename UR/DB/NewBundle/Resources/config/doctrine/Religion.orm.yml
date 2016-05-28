@@ -48,4 +48,5 @@ UR\DB\NewBundle\Entity\Religion:
     manyToOne:
         person:
             targetEntity: BasePerson
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

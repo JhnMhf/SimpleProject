@@ -1,2 +1,35 @@
-
+//get id for oid
 SELECT * FROM `person` WHERE ID=(SELECT ID FROM ids WHERE OID=22779)
+
+//get mother references which have a religion entry. (can be changed for other references/ entries)
+SELECT * 
+FROM religion 
+WHERE ID IN 
+(SELECT ids.ID FROM ids 
+JOIN mutter 
+ON ids.oid =`mutter`.`mutter_id-nr` 
+WHERE mutter.`mutter_id-nr` IS NOT NULL)
+
+Used for tests:
+4
+9
+39
+41
+48
+88
+331
+831
+897
+1700
+2828
+3037
+3345
+5691
+12128
+13840
+44572
+52739
+69390
+69955
+79476
+95279

@@ -75,6 +75,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
     manyToOne:
         person:
             targetEntity: BasePerson
+            cascade: ["persist"]
         originCountry:
             targetEntity: Country
             fetch: EAGER
@@ -82,6 +83,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
                 name: origin_countryID
                 referencedColumnName: ID
                 nullable: true        
+            cascade: ["persist"]
         originTerritory:
             targetEntity: Territory
             fetch: EAGER
@@ -89,6 +91,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
                 name: origin_territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         job:
             targetEntity: Job
             fetch: EAGER
@@ -96,13 +99,15 @@ UR\DB\NewBundle\Entity\RoadOfLife:
                 name: jobID
                 referencedColumnName: ID
                 nullable: true        
+            cascade: ["persist"]
         country:
             targetEntity: Country
             fetch: EAGER
             joinColumn:
                 name: countryID
                 referencedColumnName: ID
-                nullable: true        
+                nullable: true     
+            cascade: ["persist"]
         territory:
             targetEntity: Territory
             fetch: EAGER
@@ -110,6 +115,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
                 name: territoryID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
         location:
             targetEntity: Location
             fetch: EAGER
@@ -117,4 +123,5 @@ UR\DB\NewBundle\Entity\RoadOfLife:
                 name: locationID
                 referencedColumnName: ID
                 nullable: true     
+            cascade: ["persist"]
     lifecycleCallbacks: {  }

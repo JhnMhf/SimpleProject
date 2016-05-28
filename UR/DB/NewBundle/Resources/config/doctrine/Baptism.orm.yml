@@ -23,8 +23,6 @@ UR\DB\NewBundle\Entity\Baptism:
                 unsigned: false
             column: baptism_locationID
     manyToOne:
-        person:
-            targetEntity: BasePerson
         baptismLocation:
             targetEntity: Location
             fetch: EAGER
@@ -32,6 +30,7 @@ UR\DB\NewBundle\Entity\Baptism:
                 name: baptism_locationID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
                 
     lifecycleCallbacks:
         #postLoad: [loadDates]

@@ -20,7 +20,7 @@ UR\DB\NewBundle\Entity\Relative:
             referencedColumnName: ID
             nullable: true
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         baptism:
           targetEntity: Baptism
           joinColumn:
@@ -28,7 +28,7 @@ UR\DB\NewBundle\Entity\Relative:
             referencedColumnName: ID
             nullable: true
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         death:
           targetEntity: Death
           joinColumn:
@@ -36,62 +36,62 @@ UR\DB\NewBundle\Entity\Relative:
             referencedColumnName: ID
             nullable: true
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
     oneToMany:
         educations:
           orderBy: { 'educationOrder': 'ASC' }
           targetEntity: Education
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         honours:
           orderBy: { 'honourOrder': 'ASC' }
           targetEntity: Honour
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         properties:
           orderBy: { 'propertyOrder': 'ASC' }
           targetEntity: Property
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         ranks:
           orderBy: { 'rankOrder': 'ASC' }
           targetEntity: Rank
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         religions:
           orderBy: { 'religionOrder': 'ASC' }
           targetEntity: Religion
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         residences:
           orderBy: { 'residenceOrder': 'ASC' }
           targetEntity: Residence
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         roadOfLife:
           orderBy: { 'roadOfLifeOrder': 'ASC' }
           targetEntity: RoadOfLife
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         stati:
           orderBy: { 'statusOrder': 'ASC' }
           targetEntity: Status
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
         works:
           orderBy: { 'worksOrder': 'ASC' }
           targetEntity: Works
           mappedBy: person
           fetch: EAGER
-          cascade: ["remove"]
+          cascade: ["persist","remove"]
     manyToOne:
         nation:
             targetEntity: Nation
@@ -99,4 +99,5 @@ UR\DB\NewBundle\Entity\Relative:
             joinColumn:
                 name: nationID
                 referencedColumnName: ID
-                nullable: true            
+                nullable: true          
+            cascade: ["persist"]
