@@ -308,27 +308,27 @@ class PersonMerger {
                 return $this->compareService->matchingDeath($dataMasterEntry, $toBeDeletedEntry);
              */
             case PersonInformation::EDUCATION:
-                return $this->compareService->matchingEducation($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingEducation($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::HONOUR:
-                return $this->compareService->matchingHonour($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingHonour($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::PROPERTY:
-                return $this->compareService->matchingProperty($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingProperty($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::RANK:
-                return $this->compareService->matchingRank($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingRank($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::RELIGION:
-                return $this->compareService->matchingReligion($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingReligion($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::RESIDENCE:
-                return $this->compareService->matchingResidence($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingResidence($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::ROAD_OF_LIFE:
-                return $this->compareService->matchingRoadOfLife($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingRoadOfLife($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::STATUS:
-                return $this->compareService->matchingStatus($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingStatus($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::WORK:
-                return $this->compareService->matchingWork($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingWork($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::DATE:
-                return $this->compareService->matchingDates($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingDates($dataMasterEntry, $toBeDeletedEntry, true);
             case PersonInformation::SOURCE:
-                return $this->compareService->matchingSource($dataMasterEntry, $toBeDeletedEntry);
+                return $this->compareService->matchingSource($dataMasterEntry, $toBeDeletedEntry, true);
             default:
                 $this->LOGGER->error("Unknown Type: ".$type);
                 return $dataMasterEntry == $toBeDeletedEntry;
