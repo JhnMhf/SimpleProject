@@ -29,4 +29,5 @@ class PersonInformation extends BasicEnum {
     const STATUS = "status";
     const WORK = "work";
     const DATE = "date";
+    const SOURCE = "source";
 }

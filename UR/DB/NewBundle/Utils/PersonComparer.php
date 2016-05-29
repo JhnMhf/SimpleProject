@@ -39,7 +39,7 @@ class PersonComparer {
     }
     
     //ignores comments and source!!!!!!!
-    public function comparePersons($personOne, $personTwo){
+    public function comparePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne,\UR\DB\NewBundle\Entity\BasePerson  $personTwo){
         $this->LOGGER->info("Person 1: ".$personOne);
         $this->LOGGER->info("Person 2: ".$personTwo);
         
@@ -147,6 +147,8 @@ class PersonComparer {
         return $person->getOriginalNation();
     }
 
+    //@TODO: Extend matching functionality for education, works, etc. so that it is
+    // possible to use a parameter to allow less informations to match (one has a date the other doesn't ==> still matches)
     
     private function unmatchedArrays($arrayOne, $arrayTwo, $type){
         if($arrayOne == null && $arrayTwo == null){
@@ -231,7 +233,7 @@ class PersonComparer {
         return false;
     }
     
-    public function matchingBirth($birthOne, $birthTwo){
+    public function matchingBirth(\UR\DB\NewBundle\Entity\Birth $birthOne,\UR\DB\NewBundle\Entity\Birth  $birthTwo){
         if($birthOne->getOriginCountry() != $birthTwo->getOriginCountry()){
             return false;
         }
@@ -263,7 +265,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingBaptism($baptismOne, $baptismTwo){
+    public function matchingBaptism(\UR\DB\NewBundle\Entity\Baptism $baptismOne,\UR\DB\NewBundle\Entity\Baptism  $baptismTwo){
         if($baptismOne->getBaptismLocation() != $baptismTwo->getBaptismLocation()){
             return false;
         }
@@ -275,7 +277,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingDeath($deathOne, $deathTwo){
+    public function matchingDeath(\UR\DB\NewBundle\Entity\Death $deathOne,\UR\DB\NewBundle\Entity\Death  $deathTwo){
         if($deathOne->getDeathLocation() != $deathTwo->getDeathLocation()){
             return false;
         }
@@ -311,7 +313,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingEducation($educationOne, $educationTwo){
+    public function matchingEducation(\UR\DB\NewBundle\Entity\Education $educationOne,\UR\DB\NewBundle\Entity\Education  $educationTwo){
         if($educationOne->getLabel() != $educationTwo->getLabel()){
             return false;
         }
@@ -355,7 +357,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingHonour($honourOne, $honourTwo){
+    public function matchingHonour(\UR\DB\NewBundle\Entity\Honour $honourOne,\UR\DB\NewBundle\Entity\Honour  $honourTwo){
         if($honourOne->getLabel() != $honourTwo->getLabel()){
             return false;
         }
@@ -387,7 +389,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingProperty($propertyOne, $propertyTwo){
+    public function matchingProperty(\UR\DB\NewBundle\Entity\Property $propertyOne,\UR\DB\NewBundle\Entity\Property  $propertyTwo){
         if($propertyOne->getLabel() != $propertyTwo->getLabel()){
             return false;
         }
@@ -419,7 +421,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingRank($rankOne, $rankTwo){
+    public function matchingRank(\UR\DB\NewBundle\Entity\Rank $rankOne,\UR\DB\NewBundle\Entity\Rank  $rankTwo){
         if($rankOne->getLabel() != $rankTwo->getLabel()){
             return false;
         }
@@ -455,7 +457,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingReligion($religionOne, $religionTwo){
+    public function matchingReligion(\UR\DB\NewBundle\Entity\Religion $religionOne,  \UR\DB\NewBundle\Entity\Religion  $religionTwo){
         if($religionOne->getName() != $religionTwo->getName()){
             return false;
         }
@@ -475,7 +477,7 @@ class PersonComparer {
         return true;
     }
           
-    public function matchingResidence($residenceOne, $residenceTwo){
+    public function matchingResidence(\UR\DB\NewBundle\Entity\Residence $residenceOne,  \UR\DB\NewBundle\Entity\Residence  $residenceTwo){
         if($residenceOne->getResidenceCountry() != $residenceTwo->getResidenceCountry()){
             return false;
         }
@@ -491,7 +493,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingRoadOfLife($roadOfLifeOne, $roadOfLifeTwo){
+    public function matchingRoadOfLife(\UR\DB\NewBundle\Entity\RoadOfLife $roadOfLifeOne,  \UR\DB\NewBundle\Entity\RoadOfLife  $roadOfLifeTwo){
         if($roadOfLifeOne->getJob() != $roadOfLifeTwo->getJob()){
             return false;
         }
@@ -531,7 +533,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingStatus($statusOne, $statusTwo){
+public function matchingStatus(\UR\DB\NewBundle\Entity\Status  $statusOne,\UR\DB\NewBundle\Entity\Status  $statusTwo){
         if($statusOne->getLabel() != $statusTwo->getLabel()){
             return false;
         }
@@ -563,7 +565,7 @@ class PersonComparer {
         return true;
     }
     
-    public function matchingWork($workOne, $workTwo){
+    public function matchingWork(\UR\DB\NewBundle\Entity\Works $workOne,\UR\DB\NewBundle\Entity\Works  $workTwo){
         if($workOne->getLabel() != $workTwo->getLabel()){
             return false;
         }
@@ -595,8 +597,23 @@ class PersonComparer {
         return true;
     }
 
+    public function matchingSource(\UR\DB\NewBundle\Entity\Source $sourceOne,\UR\DB\NewBundle\Entity\Source $sourceTwo){
+        if($sourceOne->getLabel() != $sourceTwo->getLabel()){
+            return false;
+        }
+        
+        if($sourceOne->getPlaceOfDiscovery() != $sourceTwo->getPlaceOfDiscovery()){
+            return false;
+        }
+        
+        if($sourceOne->getRemark() != $sourceTwo->getRemark()){
+            return false;
+        }
+        
+        return true;
+    }
     
-    public function matchingDates($dateOne, $dateTwo){
+    public function matchingDates(\UR\DB\NewBundle\Entity\Date $dateOne,\UR\DB\NewBundle\Entity\Date  $dateTwo){
 
         if($dateOne->getDay() != $dateTwo->getDay()){
             return false;

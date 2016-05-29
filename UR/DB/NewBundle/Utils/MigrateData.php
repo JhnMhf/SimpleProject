@@ -85,6 +85,8 @@ class MigrateData
         return $this->normalizationService->writeOutAbbreviations($string);
     }
 
+    //@TODO: Extract things like -im Orginial from Country, Location, Territory, Nation, Job,JobClass
+    // and move them to the comment
 
     public function getCountry($countryName, $comment = null){
 
