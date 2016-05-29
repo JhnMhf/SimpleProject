@@ -66,6 +66,8 @@ class MigrateData
     private $normalizationService;
     private $locationToTerritoryService;
     
+    
+    //@TODO: Check if abbrevations are checked at all necessary places!
     public function __construct($container)
     {
         $this->container = $container;
@@ -461,10 +463,6 @@ class MigrateData
 
             return "undefined";
         }
-    }
-    
-    public function flush(){
-        $this->newDBManager->flush();
     }
 
     /* end helper method */
@@ -937,6 +935,7 @@ class MigrateData
     }
 
     public function savePerson($person){
+        $this->LOGGER->info("persisting and flushing the person to the new db: ".$person);
         $this->newDBManager->persist($person);
         $this->newDBManager->flush();
     }

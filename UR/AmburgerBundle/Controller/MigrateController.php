@@ -9,7 +9,6 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use UR\DB\OldDBBundle\Entity\Person;
 use UR\DB\NewDBBundle\Utils\MigrateData;
 
-
 class MigrateController extends Controller
 {
 
@@ -150,7 +149,8 @@ class MigrateController extends Controller
 
         // migrate GrandChild after marriagepartners of child
         
-        $this->getMigrationService()->flush();
+        $this->LOGGER->info("Saving the person at the end again: ".$newPerson);
+        $this->getMigrationService()->savePerson($newPerson);
 
         return $newPerson;
     }

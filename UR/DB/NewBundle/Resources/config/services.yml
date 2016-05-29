@@ -26,3 +26,11 @@ services:
         class: UR\DB\NewBundle\Utils\PersonComparer
         arguments: 
            container: "@service_container"
+           
+# listener/ subscriber
+    fixDBOrder.subscriber:
+            class: UR\DB\NewBundle\Utils\FixDBOrdersEventSubscriber
+            arguments: 
+                container: "@service_container"
+            tags:
+                - { name: doctrine.event_subscriber, connection: new }

@@ -9,7 +9,6 @@ class DefaultController extends Controller
 {
     public function jsonAction($type, $ID)
     {
-        //@TODO: Check why birth, death, etc. somethings are missing in the json? (maybe because they are defined in the base person?)
         return $this->get("response_builder.service")->getJSONResponse($this->loadPersonByID($type, $ID));
     }
     

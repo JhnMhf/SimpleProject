@@ -26,8 +26,6 @@ class PersonMerger {
         return $this->container->get($identifier);
     }
     
-    //@TODO: How to handle the orders? currently they are ignored....
-    
     
     //@TODO: Finish Personmergin/ fusion
     //Its not only necessary to finish the method but to call it from MigrateController
@@ -223,8 +221,12 @@ class PersonMerger {
                 "' with size '".count($toBeDeletedArray)."' into "
                 . "'".$dataMaster."' with size '".count($dataMasterArray)."'");
         
-        //@TODO: Merge based on order or on best matching?
-        //Generell Algorithm:
+        if(count($toBeDeletedArray) == 0 && count($dataMasterArray) == 0){
+            $this->LOGGER->info("No fusing necessary, since no data is present");
+            return;
+        }
+        
+        //General Algorithm:
         //1. Find matching entries and merge them?
         //2. Find all entries which were not merged
         //3. Build list of merged entries and unmerged entries?
@@ -290,8 +292,8 @@ class PersonMerger {
             //@TODO: Check if necessary or if the doctrine handles it correctly already
             //$toBeDeleted->removeReligion($unmatchedToBeDeletedEntries[$i]);
         }
-        
-        //fix orders?
+
+        //orders are getting fixed by doctrine updates
     }
     
     private function compareEntries($dataMasterEntry, $toBeDeletedEntry, $type){
@@ -466,7 +468,6 @@ class PersonMerger {
         return $dataMasterStatus;
     }
     
-    //@TODO: Merge source?
     private function mergeSource(\UR\DB\NewBundle\Entity\BasePerson $dataMaster,\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
         $this->LOGGER->info("Fusing Source of '".$toBeDeleted . "' into ".$dataMaster);
         
