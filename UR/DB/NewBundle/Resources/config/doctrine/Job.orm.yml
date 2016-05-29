@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Job:
     type: entity
     table: job
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     id:
         id:
             type: integer

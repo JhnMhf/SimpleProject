@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Wedding:
     type: entity
     table: wedding
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         wedding_order:
             columns:

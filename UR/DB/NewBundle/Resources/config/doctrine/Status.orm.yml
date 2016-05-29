@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Status:
     type: entity
     table: status
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     id:
         id:
             type: integer

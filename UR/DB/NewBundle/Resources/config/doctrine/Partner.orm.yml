@@ -2,6 +2,9 @@
 UR\DB\NewBundle\Entity\Partner:
     type: entity
     table: partner
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     inheritance:
         type: concrete
         extends: Entities\BasePerson 

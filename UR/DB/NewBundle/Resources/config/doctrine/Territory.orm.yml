@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Territory:
     type: entity
     table: territory
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     id:
         id:
             type: integer

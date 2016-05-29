@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\IsParentInLaw:
     type: entity
     table: is_parent_in_law
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         child_in_lawID:
             columns:

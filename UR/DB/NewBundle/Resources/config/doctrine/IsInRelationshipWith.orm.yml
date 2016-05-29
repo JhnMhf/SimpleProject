@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\IsInRelationshipWith:
     type: entity
     table: is_in_relationship_with
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         first_partnerID:
             columns:

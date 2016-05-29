@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\IsParent:
     type: entity
     table: is_parent
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         childID:
             columns:

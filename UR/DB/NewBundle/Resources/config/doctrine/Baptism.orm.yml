@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Baptism:
     type: entity
     table: baptism
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     id:
         id:
             type: integer

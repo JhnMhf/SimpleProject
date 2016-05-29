@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\Honour:
     type: entity
     table: honour
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     id:
         id:
             type: integer

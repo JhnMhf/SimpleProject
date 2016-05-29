@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\IsSibling:
     type: entity
     table: is_sibling
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         sibling_oneID:
             columns:

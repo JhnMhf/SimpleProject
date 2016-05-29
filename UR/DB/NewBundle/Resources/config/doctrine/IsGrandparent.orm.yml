@@ -1,6 +1,9 @@
 UR\DB\NewBundle\Entity\IsGrandparent:
     type: entity
     table: is_grandparent
+    options:
+        collate: utf8_general_ci
+        charset: utf8
     uniqueConstraints:
         grand_parentID:
             columns:
