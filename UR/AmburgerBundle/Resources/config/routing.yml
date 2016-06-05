@@ -50,3 +50,8 @@ addUser:
     path: /user/
     defaults: { _controller: AmburgerBundle:User:addUser }    
     methods: [POST]
+    
+# gnd
+gnd_subject:
+    path: /gnd/subject/{name}
+    defaults: { _controller: AmburgerBundle:GND:subject }    
