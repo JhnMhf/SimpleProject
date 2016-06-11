@@ -273,6 +273,8 @@ class PersonMerger {
         
         //find missing entries
         
+        
+        //TODO: Error: Object of class UR\DB\NewBundle\Entity\Rank could not be converted to string 
         //do nothing with datamasterentries they are already
         $unmatchedDataMasterEntries = array_diff($dataMasterArray, $listOfMatchingEntriesOfDatamaster);
         

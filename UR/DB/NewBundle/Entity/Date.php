@@ -7,6 +7,29 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Date
 {
+    
+    public function __toString (){
+        $dateString = "";
+        
+        if($this->getDay() != null){
+            $dateString.=$this->getDay();
+        }
+        
+        $dateString .= "/";
+        
+        if($this->getMonth() != null){
+            $dateString.=$this->getMonth();
+        }
+        
+        $dateString .= "/";
+        
+        if($this->getYear() != null){
+            $dateString.=$this->getYear();
+        }
+        
+        return "Date '".$dateString."' with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

@@ -47,47 +47,47 @@ class PersonComparer {
 
         $this->LOGGER->debug("Gender the same");
 
-        if ($this->compareStrings($personOne->getFirstName(), $personTwo->getFirstName(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getFirstName(), $personTwo->getFirstName(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->compareStrings($personOne->getPatronym(), $personTwo->getPatronym(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getPatronym(), $personTwo->getPatronym(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->compareStrings($personOne->getLastName(), $personTwo->getLastName(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getLastName(), $personTwo->getLastName(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->compareStrings($personOne->getForeName(), $personTwo->getForeName(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getForeName(), $personTwo->getForeName(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->compareStrings($personOne->getBirthName(), $personTwo->getBirthName(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getBirthName(), $personTwo->getBirthName(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->compareStrings($personOne->getBornInMarriage(), $personTwo->getBornInMarriage(), $allowLessInformation)) {
+        if (!$this->compareStrings($personOne->getBornInMarriage(), $personTwo->getBornInMarriage(), $allowLessInformation)) {
             return false;
         }
 
         $this->LOGGER->debug("Strings the same");
 
-        if ($this->getNation($personOne) != $this->getNation($personTwo)) {
+        if (!$this->compareNations($this->getNation($personOne), $this->getNation($personTwo))) {
             return false;
         }
 
         $this->LOGGER->debug("Nation the same");
 
-        if ($this->unmatchedArrays($personOne->getBirth(), $personTwo->getBirth(), "birth", $allowLessInformation)) {
+        if (!$this->matchingBirth($personOne->getBirth(), $personTwo->getBirth(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->unmatchedArrays($personOne->getBaptism(), $personTwo->getBaptism(), "baptism", $allowLessInformation)) {
+        if (!$this->matchingBaptism($personOne->getBaptism(), $personTwo->getBaptism(), $allowLessInformation)) {
             return false;
         }
 
-        if ($this->unmatchedArrays($personOne->getDeath(), $personTwo->getDeath(), "death", $allowLessInformation)) {
+        if (!$this->matchingDeath($personOne->getDeath(), $personTwo->getDeath(), $allowLessInformation)) {
             return false;
         }
 
@@ -133,25 +133,25 @@ class PersonComparer {
     }
 
     private function compareStrings($stringOne, $stringTwo, $allowLessInformation = false) {
-        if(!$allowLessInformation){
-            return $stringOne != $stringTwo;
+        $this->LOGGER->debug("Comparing '".$stringOne."' with '".$stringTwo."'");
+        if (!$allowLessInformation) {
+            return $stringOne == $stringTwo;
         } else {
-            if($stringOne != null && $stringTwo != null){
+            if ($stringOne != null && $stringTwo != null) {
                 $lowerCaseStringOne = strtolower($stringOne);
                 $lowerCaseStringTwo = strtolower($stringTwo);
-            
-                if(strpos($lowerCaseStringOne, $lowerCaseStringTwo) !== false){
+
+                if (strpos($lowerCaseStringOne, $lowerCaseStringTwo) !== false) {
                     return true;
-                } else if(strpos($lowerCaseStringOne,$lowerCaseStringTwo) !== false){
+                } else if (strpos($lowerCaseStringOne, $lowerCaseStringTwo) !== false) {
                     return true;
-                } 
-                
-                return $lowerCaseStringOne != $lowerCaseStringTwo;
+                }
+
+                return $lowerCaseStringOne == $lowerCaseStringTwo;
             } else {
                 return true;
             }
         }
-        
     }
 
     private function getNation($person) {
@@ -166,6 +166,7 @@ class PersonComparer {
     //@TODO: Move allowLessInformation to the compareStrings method... and change it so that es is used everywhere
 
     private function unmatchedArrays($arrayOne, $arrayTwo, $type, $allowLessInformation = false) {
+        $this->LOGGER->info("Checking arrays of type '" . $type . "'.");
         if ($arrayOne == null && $arrayTwo == null) {
             $this->LOGGER->info("Given arrays for type '" . $type . "' are both null.");
             return false;
@@ -187,15 +188,6 @@ class PersonComparer {
                 switch ($type) {
                     case "date":
                         $found = $this->matchingDates($elementOne, $elementTwo, $allowLessInformation);
-                        break;
-                    case "birth":
-                        $found = $this->matchingBirth($elementOne, $elementTwo, $allowLessInformation);
-                        break;
-                    case "baptism":
-                        $found = $this->matchingBaptism($elementOne, $elementTwo, $allowLessInformation);
-                        break;
-                    case "death":
-                        $found = $this->matchingDeath($elementOne, $elementTwo, $allowLessInformation);
                         break;
                     case "education":
                         $found = $this->matchingEducation($elementOne, $elementTwo, $allowLessInformation);
@@ -231,7 +223,7 @@ class PersonComparer {
 
                 //found matching element
                 if ($found) {
-                    continue;
+                    break;
                 }
             }
 
@@ -247,41 +239,38 @@ class PersonComparer {
         return false;
     }
 
-    public function matchingBirth(\UR\DB\NewBundle\Entity\Birth $birthOne, \UR\DB\NewBundle\Entity\Birth $birthTwo, $allowLessInformation = false) {
-        if ($birthOne->getOriginCountry() != $birthTwo->getOriginCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getOriginCountry(), $birthTwo->getOriginCountry())) {
-                return false;
+    public function matchingBirth($birthOne, $birthTwo, $allowLessInformation = false) {
+        $this->LOGGER->info("Checking if births are the same");
+        
+        if ($birthOne == null || $birthTwo == null) {
+            if ($allowLessInformation) {
+                return true;
+            } else {
+                return $birthOne == $birthTwo;
             }
         }
-
-        if ($birthOne->getOriginTerritory() != $birthTwo->getOriginTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getOriginTerritory(), $birthTwo->getOriginTerritory())) {
-                return false;
-            }
+        if (!$this->compareCountries($birthOne->getOriginCountry(), $birthTwo->getOriginCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($birthOne->getOriginLocation() != $birthTwo->getOriginLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getOriginLocation(), $birthTwo->getOriginLocation())) {
-                return false;
-            }
+        if (!$this->compareTerritories($birthOne->getOriginTerritory(), $birthTwo->getOriginTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($birthOne->getBirthCountry() != $birthTwo->getBirthCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getBirthCountry(), $birthTwo->getBirthCountry())) {
-                return false;
-            }
+        if (!$this->compareLocations($birthOne->getOriginLocation(), $birthTwo->getOriginLocation(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($birthOne->getBirthTerritory() != $birthTwo->getBirthTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getBirthTerritory(), $birthTwo->getBirthTerritory())) {
-                return false;
-            }
+        if (!$this->compareCountries($birthOne->getBirthCountry(), $birthTwo->getBirthCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($birthOne->getBirthLocation() != $birthTwo->getBirthLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($birthOne->getBirthLocation(), $birthTwo->getBirthLocation())) {
-                return false;
-            }
+        if (!$this->compareTerritories($birthOne->getBirthTerritory(), $birthTwo->getBirthTerritory(), $allowLessInformation)) {
+            return false;
+        }
+
+        if (!$this->compareLocations($birthOne->getBirthLocation(), $birthTwo->getBirthLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($birthOne->getBirthDate(), $birthTwo->getBirthDate(), "date", $allowLessInformation)) {
@@ -291,55 +280,61 @@ class PersonComparer {
         return true;
     }
 
-    public function matchingBaptism(\UR\DB\NewBundle\Entity\Baptism $baptismOne, \UR\DB\NewBundle\Entity\Baptism $baptismTwo, $allowLessInformation = false) {
-        if ($baptismOne->getBaptismLocation() != $baptismTwo->getBaptismLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($baptismOne->getBaptismLocation(), $baptismTwo->getBaptismLocation())) {
-                return false;
+    public function matchingBaptism($baptismOne, $baptismTwo, $allowLessInformation = false) {
+        $this->LOGGER->info("Checking if baptisms are the same");
+        
+        if ($baptismOne == null || $baptismTwo == null) {
+            if ($allowLessInformation) {
+                return true;
+            } else {
+                return $baptismOne == $baptismTwo;
             }
+        }
+
+        if (!$this->compareLocations($baptismOne->getBaptismLocation(), $baptismTwo->getBaptismLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($baptismOne->getBaptismDate(), $baptismTwo->getBaptismDate(), "date", $allowLessInformation)) {
             return false;
         }
-
+        
         return true;
     }
 
-    public function matchingDeath(\UR\DB\NewBundle\Entity\Death $deathOne, \UR\DB\NewBundle\Entity\Death $deathTwo, $allowLessInformation = false) {
-        if ($deathOne->getDeathLocation() != $deathTwo->getDeathLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getDeathLocation(), $deathTwo->getDeathLocation())) {
-                return false;
+    public function matchingDeath($deathOne, $deathTwo, $allowLessInformation = false) {
+        $this->LOGGER->info("Checking if deaths are the same.");
+        
+        if ($deathOne == null || $deathTwo == null) {
+            if ($allowLessInformation) { 
+                return true;
+            } else {
+                return $deathOne == $deathTwo;
             }
         }
 
-        if ($deathOne->getDeathCountry() != $deathTwo->getDeathCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getDeathCountry(), $deathTwo->getDeathCountry())) {
-                return false;
-            }
+        if (!$this->compareLocations($deathOne->getDeathLocation(), $deathTwo->getDeathLocation(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($deathOne->getCauseOfDeath() != $deathTwo->getCauseOfDeath()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getCauseOfDeath(), $deathTwo->getCauseOfDeath())) {
-                return false;
-            }
+        if (!$this->compareCountries($deathOne->getDeathCountry(), $deathTwo->getDeathCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($deathOne->getTerritoryOfDeath() != $deathTwo->getTerritoryOfDeath()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getTerritoryOfDeath(), $deathTwo->getTerritoryOfDeath())) {
-                return false;
-            }
+        if (!$this->compareStrings($deathOne->getCauseOfDeath(), $deathTwo->getCauseOfDeath(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($deathOne->getGraveyard() != $deathTwo->getGraveyard()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getGraveyard(), $deathTwo->getGraveyard())) {
-                return false;
-            }
+        if (!$this->compareTerritories($deathOne->getTerritoryOfDeath(), $deathTwo->getTerritoryOfDeath(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($deathOne->getFuneralLocation() != $deathTwo->getFuneralLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($deathOne->getFuneralLocation(), $deathTwo->getFuneralLocation())) {
-                return false;
-            }
+        if (!$this->compareStrings($deathOne->getGraveyard(), $deathTwo->getGraveyard(), $allowLessInformation)) {
+            return false;
+        }
+
+        if (!$this->compareLocations($deathOne->getFuneralLocation(), $deathTwo->getFuneralLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($deathOne->getDeathDate(), $deathTwo->getDeathDate(), "date", $allowLessInformation)) {
@@ -354,28 +349,20 @@ class PersonComparer {
     }
 
     public function matchingEducation(\UR\DB\NewBundle\Entity\Education $educationOne, \UR\DB\NewBundle\Entity\Education $educationTwo, $allowLessInformation = false) {
-        if ($educationOne->getLabel() != $educationTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getLabel(), $educationTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($educationOne->getLabel(), $educationTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($educationOne->getCountry() != $educationTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getCountry(), $educationTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($educationOne->getCountry(), $educationTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($educationOne->getTerritory() != $educationTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getTerritory(), $educationTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($educationOne->getTerritory(), $educationTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($educationOne->getLocation() != $educationTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getLocation(), $educationTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($educationOne->getLocation(), $educationTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($educationOne->getFromDate(), $educationTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -390,16 +377,12 @@ class PersonComparer {
             return false;
         }
 
-        if ($educationOne->getGraduationLabel() != $educationTwo->getGraduationLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getGraduationLabel(), $educationTwo->getGraduationLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($educationOne->getGraduationLabel(), $educationTwo->getGraduationLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($educationOne->getGraduationLocation() != $educationTwo->getGraduationLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($educationOne->getGraduationLocation(), $educationTwo->getGraduationLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($educationOne->getGraduationLocation(), $educationTwo->getGraduationLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($educationOne->getGraduationDate(), $educationTwo->getGraduationDate(), "date")) {
@@ -412,28 +395,20 @@ class PersonComparer {
     }
 
     public function matchingHonour(\UR\DB\NewBundle\Entity\Honour $honourOne, \UR\DB\NewBundle\Entity\Honour $honourTwo, $allowLessInformation = false) {
-        if ($honourOne->getLabel() != $honourTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($honourOne->getLabel(), $honourTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($honourOne->getLabel(), $honourTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($honourOne->getCountry() != $honourTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($honourOne->getCountry(), $honourTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($honourOne->getCountry(), $honourTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($honourOne->getTerritory() != $honourTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($honourOne->getTerritory(), $honourTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($honourOne->getTerritory(), $honourTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($honourOne->getLocation() != $honourTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($honourOne->getLocation(), $honourTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($honourOne->getLocation(), $honourTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($honourOne->getFromDate(), $honourTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -452,28 +427,20 @@ class PersonComparer {
     }
 
     public function matchingProperty(\UR\DB\NewBundle\Entity\Property $propertyOne, \UR\DB\NewBundle\Entity\Property $propertyTwo, $allowLessInformation = false) {
-        if ($propertyOne->getLabel() != $propertyTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($propertyOne->getLabel(), $propertyTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($propertyOne->getLabel(), $propertyTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($propertyOne->getCountry() != $propertyTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($propertyOne->getCountry(), $propertyTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($propertyOne->getCountry(), $propertyTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($propertyOne->getTerritory() != $propertyTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($propertyOne->getTerritory(), $propertyTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($propertyOne->getTerritory(), $propertyTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($propertyOne->getLocation() != $propertyTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($propertyOne->getLocation(), $propertyTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($propertyOne->getLocation(), $propertyTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($propertyOne->getFromDate(), $propertyTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -492,34 +459,24 @@ class PersonComparer {
     }
 
     public function matchingRank(\UR\DB\NewBundle\Entity\Rank $rankOne, \UR\DB\NewBundle\Entity\Rank $rankTwo, $allowLessInformation = false) {
-        if ($rankOne->getLabel() != $rankTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($rankOne->getLabel(), $rankTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($rankOne->getLabel(), $rankTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($rankOne->getClass() != $rankTwo->getClass()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($rankOne->getClass(), $rankTwo->getClass())) {
-                return false;
-            }
+        if (!$this->compareStrings($rankOne->getClass(), $rankTwo->getClass(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($rankOne->getCountry() != $rankTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($rankOne->getCountry(), $rankTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($rankOne->getCountry(), $rankTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($rankOne->getTerritory() != $rankTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($rankOne->getTerritory(), $rankTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($rankOne->getTerritory(), $rankTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($rankOne->getLocation() != $rankTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($rankOne->getLocation(), $rankTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($rankOne->getLocation(), $rankTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($rankOne->getFromDate(), $rankTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -538,17 +495,14 @@ class PersonComparer {
     }
 
     public function matchingReligion(\UR\DB\NewBundle\Entity\Religion $religionOne, \UR\DB\NewBundle\Entity\Religion $religionTwo, $allowLessInformation = false) {
-        if ($religionOne->getName() != $religionTwo->getName()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($religionOne->getName(), $religionTwo->getName())) {
-                return false;
-            }
+        if (!$this->compareStrings($religionOne->getName(), $religionTwo->getName(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($religionOne->getChangeOfReligion() != $religionTwo->getChangeOfReligion()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($religionOne->getChangeOfReligion(), $religionTwo->getChangeOfReligion())) {
-                return false;
-            }
+        if (!$this->compareStrings($religionOne->getChangeOfReligion(), $religionTwo->getChangeOfReligion(), $allowLessInformation)) {
+            return false;
         }
+
 
         if ($this->unmatchedArrays($religionOne->getFromDate(), $religionTwo->getFromDate(), "date", $allowLessInformation)) {
             return false;
@@ -562,62 +516,44 @@ class PersonComparer {
     }
 
     public function matchingResidence(\UR\DB\NewBundle\Entity\Residence $residenceOne, \UR\DB\NewBundle\Entity\Residence $residenceTwo, $allowLessInformation = false) {
-        if ($residenceOne->getResidenceCountry() != $residenceTwo->getResidenceCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($residenceOne->getResidenceCountry(), $residenceTwo->getResidenceCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($residenceOne->getResidenceCountry(), $residenceTwo->getResidenceCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($residenceOne->getResidenceTerritory() != $residenceTwo->getResidenceTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($residenceOne->getResidenceTerritory(), $residenceTwo->getResidenceTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($residenceOne->getResidenceTerritory(), $residenceTwo->getResidenceTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($residenceOne->getResidenceLocation() != $residenceTwo->getResidenceLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($residenceOne->getResidenceLocation(), $residenceTwo->getResidenceLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($residenceOne->getResidenceLocation(), $residenceTwo->getResidenceLocation(), $allowLessInformation)) {
+            return false;
         }
 
         return true;
     }
 
     public function matchingRoadOfLife(\UR\DB\NewBundle\Entity\RoadOfLife $roadOfLifeOne, \UR\DB\NewBundle\Entity\RoadOfLife $roadOfLifeTwo, $allowLessInformation = false) {
-        if ($roadOfLifeOne->getJob() != $roadOfLifeTwo->getJob()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getJob(), $roadOfLifeOne->getJob())) {
-                return false;
-            }
+        if (!$this->compareStrings($roadOfLifeOne->getJob(), $roadOfLifeTwo->getJob(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($roadOfLifeOne->getOriginCountry() != $roadOfLifeTwo->getOriginCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getOriginCountry(), $roadOfLifeOne->getOriginCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($roadOfLifeOne->getOriginCountry(), $roadOfLifeTwo->getOriginCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($roadOfLifeOne->getOriginTerritory() != $roadOfLifeTwo->getOriginTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getOriginTerritory(), $roadOfLifeOne->getOriginTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($roadOfLifeOne->getOriginTerritory(), $roadOfLifeTwo->getOriginTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($roadOfLifeOne->getCountry() != $roadOfLifeTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getCountry(), $roadOfLifeOne->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($roadOfLifeOne->getCountry(), $roadOfLifeTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($roadOfLifeOne->getTerritory() != $roadOfLifeTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getTerritory(), $roadOfLifeOne->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($roadOfLifeOne->getTerritory(), $roadOfLifeTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($roadOfLifeOne->getLocation() != $roadOfLifeTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($roadOfLifeOne->getLocation(), $roadOfLifeOne->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($roadOfLifeOne->getLocation(), $roadOfLifeTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($roadOfLifeOne->getFromDate(), $roadOfLifeTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -636,28 +572,20 @@ class PersonComparer {
     }
 
     public function matchingStatus(\UR\DB\NewBundle\Entity\Status $statusOne, \UR\DB\NewBundle\Entity\Status $statusTwo, $allowLessInformation = false) {
-        if ($statusOne->getLabel() != $statusTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($statusOne->getLabel(), $statusTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($statusOne->getLabel(), $statusTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($statusOne->getCountry() != $statusTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($statusOne->getCountry(), $statusTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($statusOne->getCountry(), $statusTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($statusOne->getTerritory() != $statusTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($statusOne->getTerritory(), $statusTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($statusOne->getTerritory(), $statusTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($statusOne->getLocation() != $statusTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($statusOne->getLocation(), $statusTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($statusOne->getLocation(), $statusTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($statusOne->getFromDate(), $statusTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -676,28 +604,20 @@ class PersonComparer {
     }
 
     public function matchingWork(\UR\DB\NewBundle\Entity\Works $workOne, \UR\DB\NewBundle\Entity\Works $workTwo, $allowLessInformation = false) {
-        if ($workOne->getLabel() != $workTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($workOne->getLabel(), $workTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($workOne->getLabel(), $workTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($workOne->getCountry() != $workTwo->getCountry()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($workOne->getCountry(), $workTwo->getCountry())) {
-                return false;
-            }
+        if (!$this->compareCountries($workOne->getCountry(), $workTwo->getCountry(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($workOne->getTerritory() != $workTwo->getTerritory()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($workOne->getTerritory(), $workTwo->getTerritory())) {
-                return false;
-            }
+        if (!$this->compareTerritories($workOne->getTerritory(), $workTwo->getTerritory(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($workOne->getLocation() != $workTwo->getLocation()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($workOne->getLocation(), $workTwo->getLocation())) {
-                return false;
-            }
+        if (!$this->compareLocations($workOne->getLocation(), $workTwo->getLocation(), $allowLessInformation)) {
+            return false;
         }
 
         if ($this->unmatchedArrays($workOne->getFromDate(), $workTwo->getFromDate(), "date", $allowLessInformation)) {
@@ -716,70 +636,150 @@ class PersonComparer {
     }
 
     public function matchingSource(\UR\DB\NewBundle\Entity\Source $sourceOne, \UR\DB\NewBundle\Entity\Source $sourceTwo, $allowLessInformation = false) {
-        if ($sourceOne->getLabel() != $sourceTwo->getLabel()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($sourceOne->getLabel(), $sourceTwo->getLabel())) {
-                return false;
-            }
+        if (!$this->compareStrings($sourceOne->getLabel(), $sourceTwo->getLabel(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($sourceOne->getPlaceOfDiscovery() != $sourceTwo->getPlaceOfDiscovery()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($sourceOne->getPlaceOfDiscovery(), $sourceTwo->getPlaceOfDiscovery())) {
-                return false;
-            }
+        if (!$this->compareStrings($sourceOne->getPlaceOfDiscovery(), $sourceTwo->getPlaceOfDiscovery(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($sourceOne->getRemark() != $sourceTwo->getRemark()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($sourceOne->getRemark(), $sourceTwo->getRemark())) {
-                return false;
-            }
+        if (!$this->compareStrings($sourceOne->getRemark(), $sourceTwo->getRemark(), $allowLessInformation)) {
+            return false;
         }
 
         return true;
     }
 
     public function matchingDates(\UR\DB\NewBundle\Entity\Date $dateOne, \UR\DB\NewBundle\Entity\Date $dateTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing '".$dateOne."' with '".$dateTwo."'");
+        
+        if(!$allowLessInformation){
+            if ($dateOne->getDay() != $dateTwo->getDay()) {
+                return false;
+            }
 
-        if ($dateOne->getDay() != $dateTwo->getDay()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getDay(), $dateTwo->getDay())) {
+            if ($dateOne->getMonth() != $dateTwo->getMonth()) {
+                return false;
+            }
+
+            if($dateOne->getYear() != $dateTwo->getYear()) {
+                return false;
+            }
+        }else {
+            if ($dateOne->getDay() == null || $dateTwo->getDay() == null) {
+                return true;
+            } else if ($dateOne->getDay() != $dateTwo->getDay()) {
+                return false;
+            }
+            
+            if ($dateOne->getMonth() == null || $dateTwo->getMonth() == null) {
+                return true;
+            } else if ($dateOne->getMonth() != $dateTwo->getMonth()) {
+                return false;
+            }
+
+            if ($dateOne->getYear() == null || $dateTwo->getYear() == null) {
+                return true;
+            } else if ($dateOne->getYear() != $dateTwo->getYear()) {
                 return false;
             }
         }
+        
 
-        if ($dateOne->getMonth() != $dateTwo->getMonth()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getMonth(), $dateTwo->getMonth())) {
-                return false;
-            }
+        if (!$this->compareStrings($dateOne->getWeekday(), $dateTwo->getWeekday(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($dateOne->getYear() != $dateTwo->getYear()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getYear(), $dateTwo->getYear())) {
-                return false;
-            }
+        if (!$this->compareStrings($dateOne->getBeforeDate(), $dateTwo->getBeforeDate(), $allowLessInformation)) {
+            return false;
         }
 
-        if ($dateOne->getWeekday() != $dateTwo->getWeekday()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getWeekday(), $dateTwo->getWeekday())) {
-                return false;
-            }
+        if (!$this->compareStrings($dateOne->getAfterDate(), $dateTwo->getAfterDate(), $allowLessInformation)) {
+            return false;
         }
-
-        if ($dateOne->getBeforeDate() != $dateTwo->getBeforeDate()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getBeforeDate(), $dateTwo->getBeforeDate())) {
-                return false;
-            }
-        }
-
-        if ($dateOne->getAfterDate() != $dateTwo->getAfterDate()) {
-            if (!$allowLessInformation || $this->checkIfOneValueContainsMoreInformation($dateOne->getAfterDate(), $dateTwo->getAfterDate())) {
-                return false;
-            }
-        }
+        
+        $this->LOGGER->debug("Dates are matching");
 
         return true;
     }
 
-    private function checkIfOneValueContainsMoreInformation($valueOne, $valueTwo) {
-        return $valueOne != null && $valueTwo != null;
+    private function compareNations($nationOne, $nationTwo, $allowLessInformation = false) {
+        if ($nationOne == null || $nationTwo != null) {
+            if ($nationOne == null && $nationTwo != null) {
+                return $allowLessInformation;
+            } else if ($nationOne != null && $nationTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        } else {
+            return $this->compareStrings($nationOne->getName(), $nationTwo->getName(), $allowLessInformation);
+        }
+    }
+
+    private function compareCountries($countryOne, $countryTwo, $allowLessInformation = false) {
+        if ($countryOne == null || $countryTwo != null) {
+            if ($countryOne == null && $countryTwo != null) {
+                return $allowLessInformation;
+            } else if ($countryOne != null && $countryTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        } else {
+            return $this->compareStrings($countryOne->getName(), $countryTwo->getName(), $allowLessInformation);
+        }
+    }
+
+    private function compareTerritories($territoryOne, $territoryTwo, $allowLessInformation = false) {
+        if ($territoryOne == null || $territoryTwo != null) {
+            if ($territoryOne == null && $territoryTwo != null) {
+                return $allowLessInformation;
+            } else if ($territoryOne != null && $territoryTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        }else {
+            return $this->compareStrings($territoryOne->getName(), $territoryTwo->getName(), $allowLessInformation);
+        }
+    }
+
+    private function compareLocations($locationOne, $locationTwo, $allowLessInformation = false) {
+        if ($locationOne == null || $locationTwo != null) {
+            if ($locationOne == null && $locationTwo != null) {
+                return $allowLessInformation;
+            } else if ($locationOne != null && $locationTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        } else {
+            return $this->compareStrings($locationOne->getName(), $locationTwo->getName(), $allowLessInformation);
+        }
+    }
+
+    private function compareJobs($jobOne, $jobTwo, $allowLessInformation = false) {
+        if ($jobOne == null || $jobTwo != null) {
+            if ($jobOne == null && $jobTwo != null) {
+                return $allowLessInformation;
+            } else if ($jobOne != null && $jobTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        }else {
+            return $this->compareStrings($jobOne->getLabel(), $jobTwo->getLabel(), $allowLessInformation);
+        }
+    }
+
+    private function compareJobClasses($jobClassOne, $jobClassTwo, $allowLessInformation = false) {
+        if ($jobClassOne == null || $jobClassTwo != null) {
+            if ($jobClassOne == null && $jobClassTwo != null) {
+                return $allowLessInformation;
+            } else if ($jobClassOne != null && $jobClassTwo == null) {
+                return $allowLessInformation;
+            }
+            return true;
+        }else {
+            return $this->compareStrings($jobClassOne->getLabel(), $jobClassTwo->getLabel(), $allowLessInformation);
+        }
     }
 
 }
