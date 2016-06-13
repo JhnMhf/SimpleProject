@@ -849,7 +849,7 @@ class MigrateData
 
     public function migrateTerritory($name, $comment=null){
         //insert into new data
-        return $this->getTerritory($name, $comment);
+        return $this->getTerritory($name,null, $comment);
     }
 
     public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate=null, $weddingLocation=null, $weddingTerritory=null, $bannsDate=null, $breakupReason=null, $breakupDate=null, $marriageComment=null, $beforeAfter=null, $comment=null){

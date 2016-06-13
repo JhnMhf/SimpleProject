@@ -13,6 +13,7 @@ class PersonMerger {
     private $container;
     private $newDBManager;
     private $compareService;
+    private $migrateData;
 
     public function __construct($container)
     {
@@ -20,6 +21,7 @@ class PersonMerger {
         $this->newDBManager = $this->get('doctrine')->getManager('new');
         $this->LOGGER = $this->get('monolog.logger.personMerging');
         $this->compareService = $this->get("comparer.service");
+        $this->migrateData = $this->get("migrate_data.service");
     }
 
     private function get($identifier){
@@ -725,9 +727,6 @@ class PersonMerger {
         return $this->mergeStrings($dataMasterComment, $toBeDeletedComment);
     }
     
-    //@TODO: Enhance merge job, jobclass, country, location, territory to reuse 
-    // existing entries and not create new ones...
-    
     private function mergeJobObject($dataMasterJob,$toBeDeletedJob){
         $this->LOGGER->debug("Fusing Jobs... '".$dataMasterJob."' with '".$toBeDeletedJob."'");
         
@@ -740,10 +739,7 @@ class PersonMerger {
                 || strcasecmp($dataMasterJob->getComment(), $toBeDeletedJob->getComment()) != 0){
             $resultLabel = $this->mergeStrings($dataMasterJob->getLabel(),$toBeDeletedJob->getLabel());
             $resultComment = $this->mergeComment($dataMasterJob->getComment(),$toBeDeletedJob->getComment());
-            $newJob = new \UR\DB\NewBundle\Entity\Job();
-            $newJob->setLabel($resultLabel);
-            $newJob->setComment($resultComment);
-            $result = $newJob;
+            $result = $this->migrateData->getJob($resultLabel, $resultComment);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -761,9 +757,7 @@ class PersonMerger {
             $result = $toBeDeletedJobClass;
         } else if(strcasecmp($dataMasterJobClass->getLabel(), $toBeDeletedJobClass->getLabel()) != 0){
             $resultLabel = $this->mergeStrings($dataMasterJobClass->getLabel(),$toBeDeletedJobClass->getLabel());
-            $newJobClass = new \UR\DB\NewBundle\Entity\JobClass();
-            $newJobClass->setLabel($resultLabel);
-            $result = $newJobClass;
+            $result = $this->migrateData->getJobClass($resultLabel);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -781,12 +775,9 @@ class PersonMerger {
             $result = $toBeDeletedNation;
         } else if(strcasecmp($dataMasterNation->getName(), $toBeDeletedNation->getName()) != 0
                 || strcasecmp($dataMasterNation->getComment(), $toBeDeletedNation->getComment()) != 0){
-            $resultName = $dataMasterNation->getName() . " ODER ".$toBeDeletedNation->getName();
-            $resultComment = $dataMasterNation->getComment() . " ODER ".$toBeDeletedNation->getComment();
-            $newNation = new \UR\DB\NewBundle\Entity\Nation();
-            $newNation->setLabel($resultName);
-            $newNation->setComment($resultComment);
-            $result = $newNation;
+            $resultName = $this->mergeStrings($dataMasterNation->getName(),$toBeDeletedNation->getName());
+            $resultComment = $this->mergeComment($dataMasterNation->getComment(),$toBeDeletedNation->getComment());
+            $result = $this->migrateData->getNation($resultName, $resultComment);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -806,10 +797,8 @@ class PersonMerger {
                 || strcasecmp($dataMasterCountry->getComment(), $toBeDeletedCountry->getComment()) != 0){
             $resultName = $this->mergeStrings($dataMasterCountry->getName(),$toBeDeletedCountry->getName());
             $resultComment = $this->mergeComment($dataMasterCountry->getComment(),$toBeDeletedCountry->getComment());
-            $newCountry = new \UR\DB\NewBundle\Entity\Country();
-            $newCountry->setName($resultName);
-            $newCountry->setComment($resultComment);
-            $result = $newCountry;
+            
+            $result = $this->migrateData->getCountry($resultName, $resultComment);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -829,10 +818,7 @@ class PersonMerger {
                 || strcasecmp($dataMasterTerritory->getComment(), $toBeDeletedTerritory->getComment()) != 0){
             $resultName = $this->mergeStrings($dataMasterTerritory->getName(),$toBeDeletedTerritory->getName());
             $resultComment = $this->mergeComment($dataMasterTerritory->getComment(),$toBeDeletedTerritory->getComment());
-            $newTerritory = new \UR\DB\NewBundle\Entity\Territory();
-            $newTerritory->setName($resultName);
-            $newTerritory->setComment($resultComment);
-            $result = $newTerritory;
+            $result = $this->migrateData->getTerritory($resultName,null, $resultComment);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -852,10 +838,7 @@ class PersonMerger {
                 || strcasecmp($dataMasterLocation->getComment(), $toBeDeletedLocation->getComment()) != 0){
             $resultName = $this->mergeStrings($dataMasterLocation->getName(),$toBeDeletedLocation->getName());
             $resultComment = $this->mergeComment($dataMasterLocation->getComment(),$toBeDeletedLocation->getComment());
-            $newLocation = new \UR\DB\NewBundle\Entity\Location();
-            $newLocation->setName($resultName);
-            $newLocation->setComment($resultComment);
-            $result = $newLocation;
+            $result = $this->migrateData->getLocation($resultName, $resultComment);
         }
         
         $this->LOGGER->debug("Merged to '".$result."'");
@@ -863,7 +846,6 @@ class PersonMerger {
         return $result;
     }
     
-    //@TODO: Implement Date Reference merge!
     private function mergeDateReference($dataMasterDateArray,$toBeDeletedDateArray){
         //merge date!
         //and mind 0.0.1800 and similar dates!
