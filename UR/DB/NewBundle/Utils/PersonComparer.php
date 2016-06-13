@@ -162,9 +162,6 @@ class PersonComparer {
         return $person->getOriginalNation();
     }
 
-    //@TODO: Improve matching of location, territory, etc. (own methods)
-    //@TODO: Move allowLessInformation to the compareStrings method... and change it so that es is used everywhere
-
     private function unmatchedArrays($arrayOne, $arrayTwo, $type, $allowLessInformation = false) {
         $this->LOGGER->info("Checking arrays of type '" . $type . "'.");
         if ($arrayOne == null && $arrayTwo == null) {

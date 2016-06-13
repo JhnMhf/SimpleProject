@@ -274,7 +274,7 @@ class PersonMerger {
         //find missing entries
         
         
-        //TODO: Error: Object of class UR\DB\NewBundle\Entity\Rank could not be converted to string 
+        //@TODO: Error: Object of class UR\DB\NewBundle\Entity\Rank could not be converted to string 
         //do nothing with datamasterentries they are already
         $unmatchedDataMasterEntries = array_diff($dataMasterArray, $listOfMatchingEntriesOfDatamaster);
         
@@ -284,15 +284,17 @@ class PersonMerger {
         $this->LOGGER->debug("Size of unmatching DataMaster entries ".count($unmatchedDataMasterEntries));
         $this->LOGGER->debug("Size of unmatching toBeDeleted entries ".count($unmatchedToBeDeletedEntries));
         
-        for($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++){
-            //add to datamaster
-            //$dataMaster->addReligion($unmatchedToBeDeletedReligions[$i]);
-            
-            $unmatchedToBeDeletedEntries->setPerson($dataMaster);
-            
-            //remove religion from toBeDeleted
-            //@TODO: Check if necessary or if the doctrine handles it correctly already
-            //$toBeDeleted->removeReligion($unmatchedToBeDeletedEntries[$i]);
+        if($type != PersonInformation::DATE){
+            for($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++){
+                //add to datamaster
+                //$dataMaster->addReligion($unmatchedToBeDeletedReligions[$i]);
+
+                $unmatchedToBeDeletedEntries->setPerson($dataMaster);
+
+                //remove religion from toBeDeleted
+                //@TODO: Check if necessary or if the doctrine handles it correctly already
+                //$toBeDeleted->removeReligion($unmatchedToBeDeletedEntries[$i]);
+            }
         }
 
         //orders are getting fixed by doctrine updates
@@ -367,7 +369,7 @@ class PersonMerger {
             case PersonInformation::WORK:
                 return $this->mergeWorkObjects($dataMasterEntry, $toBeDeletedEntry);
             case PersonInformation::DATE:
-                return $this->mergeDateReference($dataMasterEntry, $toBeDeletedEntry);
+                return $this->mergeDateObjects($dataMasterEntry, $toBeDeletedEntry);
             case PersonInformation::SOURCE:
                 return $this->mergeSourceObjects($dataMasterEntry, $toBeDeletedEntry);
             default:
@@ -861,22 +863,97 @@ class PersonMerger {
         return $result;
     }
     
-    //@TODO: Implement Data Reference merge!
+    //@TODO: Implement Date Reference merge!
     private function mergeDateReference($dataMasterDateArray,$toBeDeletedDateArray){
         //merge date!
         //and mind 0.0.1800 and similar dates!
         //if one date is "genauer" als the other, use it!
         //btw. ignore comments just merge them if necessary!
         
+        $this->LOGGER->info("Merging dateReferences. Count of dataMaster '".count($dataMasterDateArray)
+                . "'. Count of toBeDeleted '".count($toBeDeletedDateArray)."'");
+        
+        if(count($toBeDeletedDateArray) == 0 && count($dataMasterDateArray) == 0){
+            $this->LOGGER->info("No fusing necessary, since no data is present");
+            return;
+        }
+        
+        //General Algorithm:
+        //1. Find matching entries and merge them?
+        //2. Find all entries which were not merged
+        //3. Build list of merged entries and unmerged entries?
+        
+        $listOfMatchingEntriesOfDatamaster = [];
+        $listOfMatchingEntriesOfToBeDeleted = [];
+        
+        for($i = 0; $i < count($dataMasterDateArray); $i++){
+            $dataMasterEntry = $dataMasterDateArray[$i];
+            
+            
+            for($j = 0; $j < count($toBeDeletedDateArray); $j++){
+                $toBeDeletedEntry = $toBeDeletedDateArray[$j];
+                
+                //check if this element already found a match
+                if(!in_array($toBeDeletedEntry, $listOfMatchingEntriesOfToBeDeleted)){
+                    
+                    //check if the two elements are similar
+                    if($this->compareEntries($dataMasterEntry, $toBeDeletedEntry, PersonInformation::DATE)){
+                        $listOfMatchingEntriesOfDatamaster[] = $dataMasterEntry;
+                        $listOfMatchingEntriesOfToBeDeleted[] = $toBeDeletedEntry;
+                        continue;
+                    }
+                }
+            }
+        }
+        
+        $this->LOGGER->debug("Size of matching DataMaster matching Entries ".count($listOfMatchingEntriesOfDatamaster));
+        $this->LOGGER->debug("Size of matching toBeDeleted matching Entries  ".count($listOfMatchingEntriesOfToBeDeleted));
+        
+        //fuse all matching entries and add the fused to the datamaster
+        for($i = 0; $i < count($listOfMatchingEntriesOfDatamaster); $i++){
+            //do nothing with the fused elements since they are already in the list of datamaster dates
+            $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], PersonInformation::DATE);
+            //TODO: Remove deleted entries?
+        }
+        
+        //find missing entries
+        $unmatchedDataMasterEntries = array_diff($dataMasterDateArray, $listOfMatchingEntriesOfDatamaster);
+        
+        //move unmatched entries from toBeDeleted to Datamaster
+        $unmatchedToBeDeletedEntries = array_diff($toBeDeletedDateArray, $listOfMatchingEntriesOfToBeDeleted);
+        
+        $this->LOGGER->debug("Size of unmatching DataMaster entries ".count($unmatchedDataMasterEntries));
+        $this->LOGGER->debug("Size of unmatching toBeDeleted entries ".count($unmatchedToBeDeletedEntries));
+        
+        //add unmatched to be deleted to datamaster array
+        
+        for($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++){
+            $dataMasterDateArray[] = $unmatchedToBeDeletedEntries[$i];
+        }
+        
+        
+        $this->LOGGER->info("End size of dataMasterArray ".count($dataMasterDateArray));
+        
         return $dataMasterDateArray;
     }
     
-    private function mergeDateObjects($dataMasterDate,$toBeDeletedDate){
+    private function mergeDateObjects(\UR\DB\NewBundle\Entity\Date $dataMasterDate,\UR\DB\NewBundle\Entity\Date $toBeDeletedDate){
         //merge date!
         //and mind 0.0.1800 and similar dates!
         //if one date is "genauer" als the other, use it!
         //btw. ignore comments just merge them if necessary!
         
+        
+        //@TODO: Nice to have! Allow with lessInformation such cases with before in the comparer and adapt the merger to recognize and merge them
+
+        //easiest case just merge, if data is missing in one case
+        $dataMasterDate->setDay($this->mergeStrings($dataMasterDate->getDay(), $toBeDeletedDate->getDay()));
+        $dataMasterDate->setMonth($this->mergeStrings($dataMasterDate->getMonth(), $toBeDeletedDate->getMonth()));
+        $dataMasterDate->setYear($this->mergeStrings($dataMasterDate->getYear(), $toBeDeletedDate->getYear()));
+
+        $dataMasterDate->setWeekday($this->mergeStrings($dataMasterDate->getWeekday(), $toBeDeletedDate->getWeekday()));
+
+        $dataMasterDate->setComment($this->mergeComment($dataMasterDate->getComment(), $toBeDeletedDate->getComment())); 
     }
     
     private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference){
