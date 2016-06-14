@@ -87,9 +87,6 @@ class MigrateData
         return $this->normalizationService->writeOutAbbreviations($string);
     }
 
-    //@TODO: Extract things like -im Orginial from Country, Location, Territory, Nation, Job,JobClass
-    // and move them to the comment
-
     public function getCountry($countryName, $comment = null){
 
         if($countryName == "" || $countryName == null){
@@ -100,6 +97,10 @@ class MigrateData
 
         // check if country exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($countryName);
+            $countryName = $result[0];
+            $comment = $result[1];
+            
             $country = $this->newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
 
             if($country != null){
@@ -148,6 +149,10 @@ class MigrateData
 
         // check if territory exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($territoryName);
+            $territoryName = $result[0];
+            $comment = $result[1];
+            
             $territory = $this->newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
 
             if($territory != null){
@@ -182,6 +187,10 @@ class MigrateData
 
         // check if location exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($locationName);
+            $locationName = $result[0];
+            $comment = $result[1];
+            
             $location = $this->newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
 
             if($location != null){
@@ -217,6 +226,10 @@ class MigrateData
 
         // check if location exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($nationName);
+            $nationName = $result[0];
+            $comment = $result[1];
+            
             $nation = $this->newDBManager->getRepository('NewBundle:Nation')->findOneByName($nationName);
 
             if($nation != null){
@@ -253,12 +266,18 @@ class MigrateData
 
         // check if job exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($jobLabel);
+            $jobLabel = $result[0];
+            $comment = $result[1];
+            
             $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
 
             if($job != null){
                 return $job;
             }
         }else{
+
+            
             $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
 
             if($job != null){
@@ -288,6 +307,10 @@ class MigrateData
 
         // check if jobClass exists
         if($comment == null || $comment == ""){
+            $result = $this->tryExtractingNameAndCommentFromString($jobClassLabel);
+            $jobClassLabel = $result[0];
+            $comment = $result[1];
+            
             $jobClass = $this->newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
 
             if($jobClass != null){
@@ -310,6 +333,27 @@ class MigrateData
         $this->newDBManager->flush();
 
         return $newJobClass;
+    }
+    
+    //@TODO: add more possible comments to extract
+    //@TODO: Check if this method should be used for other things (like rank etc.)
+    //and how the extracted comment can be combined with existing comments
+    private function tryExtractingNameAndCommentFromString($string){
+        $this->LOGGER->debug("Try extraing name and comment from string" .$string);
+        $lowerCaseString = strtolower($string);
+        
+        $result = [$string, null];
+        
+        $containsImOriginal = strpos($lowerCaseString, strtolower("- im Original"));
+        if($containsImOriginal !== false){
+            $this->LOGGER->debug("Found -im Original in" .$string);
+            $result[0] = substr($string, 0, $containsImOriginal);
+            $result[1] = substr($string, $containsImOriginal);
+            
+        }
+        
+        $this->LOGGER->debug("Extracted Name '".$result[0]."' and comment '".$result[1]."'");
+        return $result;
     }
 
     //returns 0-many date objects
@@ -357,8 +401,7 @@ class MigrateData
 
         return $datesArray;
     }
-
-
+    
     //@TODO: 31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
