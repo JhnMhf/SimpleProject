@@ -30,6 +30,7 @@ use UR\DB\NewBundle\Entity\Status;
 use UR\DB\NewBundle\Entity\Territory;
 use UR\DB\NewBundle\Entity\Wedding;
 use UR\DB\NewBundle\Entity\Works;
+use UR\DB\NewBundle\Utils\DateRange;
 
 
 abstract class RelationTypes
@@ -370,9 +371,8 @@ class MigrateData
         for($i = 0; $i < count($datesArray); $i++){
             $currDateString = $datesArray[$i];
 
-            $newDate = $this->createRealDateFromString($currDateString);
+            $newDate = $this->extractDateObjFromString($currDateString);
             $newDatesArray[] = $newDate;
-            $this->newDBManager->persist($newDate);
         }
 
         //first flush to get ids later
@@ -405,25 +405,23 @@ class MigrateData
     //@TODO: 31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
-    //@TODO: Check how -1990 gets persisted
-    private function createRealDateFromString($dateString){
-        //echo "real date: ".$dateString;
-
-        $dateString = trim($dateString);
+    private function extractDateObjFromString($string, $inner=false){
+        if($inner){
+            $this->LOGGER->debug("Probably searching for a date range.");
+        }
+        
+        $dateString = trim($string);
 
         preg_match(self::DATE_REGEX, $dateString, $date);
-
-        //print_r($date);
-
-        // create a date object
         $newDate = new Date();
-
         if(count($date) > 0){
+            $secondDate = null;
+            
             if(strpos($date[1], "- im Original")){
                 $newDate->setComment($date[0]);
                 return $newDate;
             }
-
+            
             //found date, do the right things...
             if($date[2] != "0"){
                 $newDate->setDay($date[2]);
@@ -440,19 +438,28 @@ class MigrateData
             $commentString = "";
 
             if($date[1] != ""){
-                if($date[1] == "-"){
+                if($date[1] == "-" && !$inner){
                     $newDate->setBeforeDate(1);
                 } else{
                     $commentString .= trim($date[1]);
                 }
             }
-
+            
             if($date[5] != ""){
-                if($date[5] == "-"){
+                if($date[5] == "-" && !$inner){
                     $newDate->setAfterDate(1);
                 } else if(substr($date[5],0,1) == "-"){
-                    $newDate->setAfterDate(1);
-                     $commentString .= trim(substr($date[5],1));
+                    //check for daterange
+                    $this->LOGGER->debug("Check for a daterange");
+                    $secondDate = $this->extractDateObjFromString($date[5]);  
+                    
+                    if($secondDate == null){
+                        if(!$inner){
+                            $newDate->setAfterDate(1);
+                        }
+                        
+                        $commentString .= trim(substr($date[5],1));
+                    } 
                 } else{
                     $commentString .= trim($date[5]);
                 }
@@ -461,12 +468,20 @@ class MigrateData
             if($commentString != ""){
                 $newDate->setComment($this->normalize($commentString));
             }
+            
+            $this->newDBManager->persist($newDate);
+            
+            if($secondDate != null){
+                $this->newDBManager->persist($secondDate);
+                return new DateRange($newDate, $secondDate);
+            }
 
+            return $newDate;
         }else{
             $newDate->setComment("ERROR: " . $dateString);
+            $this->newDBManager->persist($newDate);
+            return $newDate;
         }
-
-        return $newDate;
     }
 
 

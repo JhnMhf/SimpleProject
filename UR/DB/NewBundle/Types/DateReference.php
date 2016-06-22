@@ -11,6 +11,7 @@ namespace UR\DB\NewBundle\Types;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use UR\DB\NewBundle\Utils\DateRange;
 
 /**
  * Description of DateReference
@@ -55,8 +56,12 @@ class DateReference extends Type
         $dateIdArray = [];
 
         for($i = 0; $i < count($value); $i++){
-            $dateId = $value[$i]->getId();
-            $dateIdArray[] = $dateId;
+            if($value[$i] instanceof UR\DB\NewBundle\Utils\DateRange){
+                $dateIdArray[] = $value[$i]->toDateReferenString();
+            } else {
+                $dateId = $value[$i]->getId();
+                $dateIdArray[] = $dateId;
+            }
         }
 
         return $this->createStringFromIdArray($dateIdArray);
@@ -82,8 +87,15 @@ class DateReference extends Type
         
         $objArray = [];
         
+        $repository = $this->newDBManager->getRepository("NewBundle:Date");
+        
         for($i = 0; $i < count($datesArray); $i++){
-            $objArray[] = $this->newDBManager->getRepository("NewBundle:Date")->findOneById($datesArray[$i]);
+            if(DateRange::isDateRange($datesArray[$i])){
+                $objArray[] = DateRange::createDateRange($datesArray[$i], $repository);
+            }else{
+                $objArray[] = $repository->findOneById($datesArray[$i]);
+            }
+            
         }
         
         return $objArray;
