@@ -405,7 +405,6 @@ class MigrateData
     //@TODO: 31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
-    //@TODO: 0.0.1752 Remove 0.0?
     //@TODO: Check how -1990 gets persisted
     private function createRealDateFromString($dateString){
         //echo "real date: ".$dateString;
@@ -426,9 +425,17 @@ class MigrateData
             }
 
             //found date, do the right things...
-            $newDate->setDay($date[2]);
-            $newDate->setMonth($date[3]);
-            $newDate->setYear($date[4]);
+            if($date[2] != "0"){
+                $newDate->setDay($date[2]);
+            }
+            
+            if($date[3] != "0"){
+                $newDate->setMonth($date[3]);
+            }
+            
+            if($date[4] != "0"){
+                $newDate->setYear($date[4]);
+            }
 
             $commentString = "";
 
