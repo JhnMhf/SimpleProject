@@ -371,7 +371,7 @@ class PersonMerger {
             case PersonInformation::WORK:
                 return $this->mergeWorkObjects($dataMasterEntry, $toBeDeletedEntry);
             case PersonInformation::DATE:
-                return $this->mergeDateObjects($dataMasterEntry, $toBeDeletedEntry);
+                return $this->mergeDates($dataMasterEntry, $toBeDeletedEntry);
             case PersonInformation::SOURCE:
                 return $this->mergeSourceObjects($dataMasterEntry, $toBeDeletedEntry);
             default:
@@ -917,6 +917,22 @@ class PersonMerger {
         $this->LOGGER->info("End size of dataMasterArray ".count($dataMasterDateArray));
         
         return $dataMasterDateArray;
+    }
+    
+    private function mergeDates($dataMasterDate, $toBeDeletedDate){
+        if($dataMasterDate instanceof \UR\DB\NewBundle\Entity\Date && $toBeDeletedDate instanceof \UR\DB\NewBundle\Entity\Date){
+            $this->mergeDateObjects($dataMasterDate, $toBeDeletedDate);
+        }
+        
+        if($dataMasterDate instanceof \UR\DB\NewBundle\Utils\DateRange && $toBeDeletedDate instanceof \UR\DB\NewBundle\Utils\DateRange){
+            $this->mergeDateRanges($dataMasterDate, $toBeDeletedDate);
+        }
+    }
+    
+    private function mergeDateRanges(\UR\DB\NewBundle\Utils\DateRange  $dataMasterDateRange,\UR\DB\NewBundle\Utils\DateRange  $toBeDeletedDateRange){
+        $dataMasterDateRange->setFrom($this->mergeDateObjects($dataMasterDateRange->getFrom(), $toBeDeletedDateRange->getFrom()));
+        
+        $dataMasterDateRange->setTo($this->mergeDateObjects($dataMasterDateRange->getTo(), $toBeDeletedDateRange->getTo()));
     }
     
     private function mergeDateObjects(\UR\DB\NewBundle\Entity\Date $dataMasterDate,\UR\DB\NewBundle\Entity\Date $toBeDeletedDate){

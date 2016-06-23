@@ -648,13 +648,40 @@ class PersonComparer {
         return true;
     }
 
-    /* @TODO: Fix Matching Dates (and propably compare too?) TestId: 69955
+    /* TestId: 69955
      * Catchable Fatal Error: Argument 2 passed to UR\DB\NewBundle\Utils\PersonComparer::matchingDates() must 
      * be an instance of UR\DB\NewBundle\Entity\Date, instance of UR\DB\NewBundle\Utils\DateRange given, called 
      *  in /home/johanna/Masterarbeit/Symfony/amburger/src/UR/DB/NewBundle/Utils/PersonMerger.php on line 335 and defined 
      */
-
-    public function matchingDates(\UR\DB\NewBundle\Entity\Date $dateOne, \UR\DB\NewBundle\Entity\Date $dateTwo, $allowLessInformation = false) {
+    public function matchingDates($dateElementOne, $dateElementTwo, $allowLessInformation = false){
+        if($dateElementOne instanceof \UR\DB\NewBundle\Entity\Date && $dateElementTwo instanceof \UR\DB\NewBundle\Entity\Date){
+            return $this->matchingDateObj($dateElementOne, $dateElementTwo, $allowLessInformation);
+        }
+        
+        if($dateElementOne instanceof \UR\DB\NewBundle\Utils\DateRange && $dateElementTwo instanceof \UR\DB\NewBundle\Utils\DateRange){
+            return $this->matchingDateRanges($dateElementOne, $dateElementTwo, $allowLessInformation);
+        }
+        
+        return false;
+    }
+    
+    public function matchingDateRanges(\UR\DB\NewBundle\Utils\DateRange $dateRangeOne, \UR\DB\NewBundle\Utils\DateRange $dateRangeTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing '".$dateRangeOne."' with '".$dateRangeTwo."'");
+        
+        if($this->matchingDates($dateRangeOne->getFrom(), $dateRangeTwo->getFrom(), $allowLessInformation)){
+            return false;
+        }
+                
+        if($this->matchingDates($dateRangeOne->getTo(), $dateRangeTwo->getTo(), $allowLessInformation)){
+            return false;
+        }
+        
+        $this->LOGGER->debug("DateRanges are matching");
+      
+        return true;
+    }
+    
+    public function matchingDateObj(\UR\DB\NewBundle\Entity\Date $dateOne, \UR\DB\NewBundle\Entity\Date $dateTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing '".$dateOne."' with '".$dateTwo."'");
         
         if(!$allowLessInformation){
