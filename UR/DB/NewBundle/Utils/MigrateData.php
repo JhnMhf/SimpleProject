@@ -405,6 +405,7 @@ class MigrateData
     //@TODO: 31.12.1793-1.1.1796   
     // for things like this return array with dates?? but how to persist between?
     //OLD DB ID => 204
+    //Merged death date of 69955. Position switched? and before set?
     private function extractDateObjFromString($string, $inner=false){
         if($inner){
             $this->LOGGER->debug("Probably searching for a date range.");
@@ -449,9 +450,11 @@ class MigrateData
                 if($date[5] == "-" && !$inner){
                     $newDate->setAfterDate(1);
                 } else if(substr($date[5],0,1) == "-"){
+                    //persist first date before searching for second date!
+                    $this->newDBManager->persist($newDate);
                     //check for daterange
                     $this->LOGGER->debug("Check for a daterange");
-                    $secondDate = $this->extractDateObjFromString($date[5]);  
+                    $secondDate = $this->extractDateObjFromString($date[5], true);  
                     
                     if($secondDate == null){
                         if(!$inner){
