@@ -696,6 +696,9 @@ class MigrateData
     }
 
     public function migrateIsSibling($siblingOne, $siblineTwo, $comment=null){ 
+        //@TODO: Check that the relationship does not already exist even 
+        //with switched positions
+        
         //insert into new data
         $newIsSibling = new IsSibling();
 
