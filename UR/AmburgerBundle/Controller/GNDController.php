@@ -11,6 +11,8 @@ class GNDController extends Controller
 {
     private $LOGGER;
     
+    //@TODO: Finish and use GNDController/ GND Logic?
+    
     public function getLogger(){
         if($this->LOGGER == null){
             $this->LOGGER = $this->LOGGER = $this->get('monolog.logger.personMerging');
