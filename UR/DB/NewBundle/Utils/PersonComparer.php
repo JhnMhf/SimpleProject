@@ -40,8 +40,13 @@ class PersonComparer {
     public function comparePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne, \UR\DB\NewBundle\Entity\BasePerson $personTwo, $allowLessInformation = false) {
         $this->LOGGER->info("Person 1: " . $personOne);
         $this->LOGGER->info("Person 2: " . $personTwo);
+        
+        if($personOne->getId() == $personTwo->getId()){
+            $this->LOGGER->info("They got the same ID, should be the same person or the database has an error");
+            return true;
+        }
 
-        if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != self::GENDER_UNKNOWN && $personTwo != self::GENDER_UNKNOWN) {
+        if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != self::GENDER_UNKNOWN && $personTwo->getGender() != self::GENDER_UNKNOWN) {
             return false;
         }
 

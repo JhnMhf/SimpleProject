@@ -695,9 +695,6 @@ class MigrateData
     }
 
     public function migrateIsSibling($siblingOne, $siblingTwo, $comment=null){ 
-        //@TODO: Check that the relationship does not already exist even 
-        //with switched positions
-        
         if($this->isSiblingRelationAlreadyExists($siblingOne, $siblingTwo)){
             $this->LOGGER->debug("Sibling relation already exists");
             return;
@@ -719,21 +716,7 @@ class MigrateData
         return $newIsSibling->getId();
     }
     
-    //@TODO: Add Similar Checks for isGrandparent, etc.
-    private function isSiblingRelationAlreadyExists($siblingOne, $siblingTwo){
-        $this->LOGGER->info("Checking if SiblingRelationShip already exists between ".$siblingOne." and ".$siblingTwo);
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
-        $siblingEntries = $queryBuilder
-                ->where('(s.siblingOneid = :idOne AND s.siblingTwoid = :idTwo) '
-                        . 'OR (s.siblingOneid = :idTwo AND s.siblingTwoid = :idOne)')
-                ->setParameter('idOne', $siblingOne->getId())
-                ->setParameter('idTwo', $siblingTwo->getId())
-                ->getQuery()
-                ->getResult();
-        
-        return count($siblingEntries) != 0;
-    }
 
     public function migrateJob($label, $comment=null){
         //insert into new data
@@ -1086,6 +1069,21 @@ class MigrateData
             $this->LOGGER->debug("Found existing grandchild <-> grandparent Relation");
             return true;
         }
+    }
+    
+    public function isSiblingRelationAlreadyExists($siblingOne, $siblingTwo){
+        $this->LOGGER->info("Checking if SiblingRelationShip already exists between ".$siblingOne." and ".$siblingTwo);
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
+        $siblingEntries = $queryBuilder
+                ->where('(s.siblingOneid = :idOne AND s.siblingTwoid = :idTwo) '
+                        . 'OR (s.siblingOneid = :idTwo AND s.siblingTwoid = :idOne)')
+                ->setParameter('idOne', $siblingOne->getId())
+                ->setParameter('idTwo', $siblingTwo->getId())
+                ->getQuery()
+                ->getResult();
+        
+        return count($siblingEntries) != 0;
     }
 
     // to check if unknown returns wrong marriage partners...

@@ -3,7 +3,7 @@ Vater + Mutter ==> vater/mutter_id-nr
 
 Anderer Partner (alte DB) ==> anderer Partner der EHEPARTNER
 
-Prüfen, ob IsInRelationshipWith Tabelle überhaupt notwendig ist.
+Prüfen, ob IsInRelationshipWith Tabelle überhaupt notwendig ist. ==> Vermutlich nicht, wird derzeit nicht verwendet
 
 Großeltern order verknüpfen prüfen.
 

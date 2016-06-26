@@ -161,24 +161,94 @@ class PersonMerger {
             return;
         }
 
-        $dataMasterArrayOfSiblings = $this->extractSiblingObjects($dataMaster->getId(), $dataMasterIsSiblingEntries);
-        $toBeDeletedArrayOfSiblings = $this->extractSiblingObjects($toBeDeleted->getId(), $toBeDeletedIsSiblingEntries);
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsSiblingEntries, $toBeDeletedIsSiblingEntries, PersonRelations::SIBLING);
+
+        /*
+          $dataMasterArrayOfSiblings = $this->extractSiblingObjects($dataMaster->getId(), $dataMasterIsSiblingEntries);
+          $toBeDeletedArrayOfSiblings = $this->extractSiblingObjects($toBeDeleted->getId(), $toBeDeletedIsSiblingEntries);
+         */
     }
 
-    private function extractSiblingObjects($idOfPerson, $listOfSiblingEntries) {
-        $arrayOfSiblingObjects = array();
+    private function mergeRelation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $dataMasterRelatedPersons, $toBeDeletedRelatedPersons, $type) {
+        $this->LOGGER->info("Fusing  " . count($dataMasterRelatedPersons) . " Relations of dataMaster "
+                . "with " . count($toBeDeletedRelatedPersons) . " Relations of toBeDeleted of Type: " . $type);
 
-        for ($i = 0; $i < count($listOfSiblingEntries); $i++) {
-            $siblingId = $listOfSiblingEntries[$i]->getSiblingOneId();
-
-            if ($listOfSiblingEntries[$i]->getSiblingOneId() == $idOfPerson) {
-                $siblingId = $listOfSiblingEntries[$i]->getSiblingTwoId();
-            }
-
-            $arrayOfSiblingObjects = $this->loadPerson($siblingId);
+        if (count($dataMasterRelatedPersons) == 0 && count($toBeDeletedRelatedPersons) == 0) {
+            $this->LOGGER->info("No fusing necessary, since no data is present");
+            return;
         }
 
-        return $arrayOfSiblingObjects;
+        //General Algorithm:
+        //1. Find matching entries and merge them?
+        //2. Find all entries which were not merged
+        //3. Build list of merged entries and unmerged entries?
+
+        $listOfMatchingDataMasterRelatedPersons = [];
+        $listOfMatchingToBeDeletedRelatedPersons = [];
+
+        $listOfMatchingDataMasterRelationEntries = [];
+        $listOfMatchingToBeDeletedRelationEntries = [];
+
+        for ($i = 0; $i < count($dataMasterRelatedPersons); $i++) {
+            $dataMasterEntry = $dataMasterRelatedPersons[$i];
+
+            $dataMasterRelatedPersonId = $this->extractRelatedPersonId($dataMaster->getId(), $dataMasterEntry, $type);
+
+            $dataMasterRelatedPersonObj = $this->loadPerson($dataMasterRelatedPersonId);
+
+
+            for ($j = 0; $j < count($toBeDeletedRelatedPersons); $j++) {
+                $toBeDeletedEntry = $toBeDeletedRelatedPersons[$j];
+
+                //check if this element already found a match
+                if (!in_array($toBeDeletedEntry, $listOfMatchingToBeDeletedRelationEntries)) {
+
+                    $toBeDeletedRelatedPersonId = $this->extractRelatedPersonId($toBeDeleted->getId(), $toBeDeletedEntry, $type);
+
+                    $toBeDeletedRelatedPersonObj = $this->loadPerson($toBeDeletedRelatedPersonId);
+
+                    //check if the two elements are similar
+                    if ($this->compareService->comparePersons($dataMasterRelatedPersonObj, $toBeDeletedRelatedPersonObj, true)) {
+                        $listOfMatchingDataMasterRelatedPersons[] = $dataMasterRelatedPersonObj;
+                        $listOfMatchingToBeDeletedRelatedPersons[] = $toBeDeletedRelatedPersonObj;
+
+                        $listOfMatchingDataMasterRelationEntries[] = $dataMasterEntry;
+                        $listOfMatchingToBeDeletedRelationEntries[] = $toBeDeletedEntry;
+                        continue;
+                    }
+                }
+            }
+        }
+
+        $this->LOGGER->debug("Size of matching DataMaster matching Entries " . count($listOfMatchingDataMasterRelatedPersons));
+        $this->LOGGER->debug("Size of matching toBeDeleted matching Entries  " . count($listOfMatchingToBeDeletedRelatedPersons));
+
+        //fuse all matching entries and add the fused to the datamaster
+        for ($i = 0; $i < count($listOfMatchingDataMasterRelatedPersons); $i++) {
+            //do nothing with the fused religino since its already a datamaster religion
+            $this->mergeRelationEntries($dataMaster, $listOfMatchingDataMasterRelationEntries[$i], $listOfMatchingToBeDeletedRelationEntries[$i], $listOfMatchingDataMasterRelatedPersons[$i], $listOfMatchingToBeDeletedRelatedPersons[$i], $type);
+        }
+    }
+
+    private function extractRelatedPersonId($idOfPerson, $entry, $type) {
+        switch ($type) {
+            case PersonRelations::SIBLING:
+                return $this->extractSiblingId($idOfPerson, $entry);
+            default:
+                $this->LOGGER->error("Unknown Type: " . $type);
+                return null;
+        }
+    }
+
+    private function extractSiblingId($idOfPerson, $siblingEntry) {
+
+        $siblingId = $siblingEntry->getSiblingOneId();
+
+        if ($siblingEntry->getSiblingOneId() == $idOfPerson) {
+            $siblingId = $siblingEntry->getSiblingTwoId();
+        }
+
+        return $siblingId;
     }
 
     private function loadPerson($id) {
@@ -196,50 +266,44 @@ class PersonMerger {
             //throw exception
         }
 
-        $this->LOGGER->debug("Loaded Person: ".$person);
-        
+        $this->LOGGER->debug("Loaded Person: " . $person);
+
         return $person;
     }
 
-    private function mergeRelation($dataMasterRelatedPersons, $toBeDeletedRelatedPersons) {
-        $this->LOGGER->info("Fusing " . count($dataMasterRelatedPersons) . " Relations of dataMaster "
-                . "with " . count($toBeDeletedRelatedPersons) . " Relations of toBeDeleted");
+    private function mergeRelationEntries(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, $dataMasterRelationEntry, $toBeDeletedRelationEntry, $dataMasterRelatedPerson, $toBeDeletedRelatedPerson, $type) {
 
-        if (count($dataMasterRelatedPersons) == 0 && count($toBeDeletedRelatedPersons) == 0) {
-            $this->LOGGER->info("No fusing necessary, since no data is present");
-            return;
-        }
+        $this->LOGGER->info("Merging relationship entries of type " . $type);
 
-        //General Algorithm:
-        //1. Find matching entries and merge them?
-        //2. Find all entries which were not merged
-        //3. Build list of merged entries and unmerged entries?
+        if ($dataMasterRelatedPerson->getId() == $toBeDeletedRelatedPerson->getId()) {
+            $this->LOGGER->info("Already the same person just removing the toBeDeleted Relation.");
+            $this->newDBManager->remove($toBeDeletedRelationEntry);
+            $this->newDBManager->flush();
+        } else {
+            //get combined comment
+            $mergedComment = $this->mergeComment($dataMasterRelationEntry->getComment(), $toBeDeletedRelationEntry->getComment());
 
-        $listOfMatchingEntriesOfDatamaster = [];
-        $listOfMatchingEntriesOfToBeDeleted = [];
-
-        for ($i = 0; $i < count($dataMasterRelatedPersons); $i++) {
-            $dataMasterEntry = $dataMasterRelatedPersons[$i];
+            //first remove entries for now from the db
+            $this->newDBManager->remove($dataMasterRelationEntry);
+            $this->newDBManager->remove($toBeDeletedRelationEntry);
+            $this->newDBManager->flush();
 
 
-            for ($j = 0; $j < count($toBeDeletedRelatedPersons); $j++) {
-                $toBeDeletedEntry = $toBeDeletedRelatedPersons[$j];
+            //merge persons
 
-                //check if this element already found a match
-                if (!in_array($toBeDeletedEntry, $listOfMatchingEntriesOfToBeDeleted)) {
+            $mergedPerson = $this->mergePersons($dataMasterRelatedPerson, $toBeDeletedRelatedPerson);
 
-                    //check if the two elements are similar
-                    if ($this->compareService->comparePersons($dataMasterEntry, $toBeDeletedEntry, true)) {
-                        $listOfMatchingEntriesOfDatamaster[] = $dataMasterEntry;
-                        $listOfMatchingEntriesOfToBeDeleted[] = $toBeDeletedEntry;
-                        continue;
-                    }
-                }
+            $this->LOGGER->info("Merged person for relationship of Type: " . $type . " result is " . $mergedPerson);
+
+            $newRelationEntry = null;
+
+            switch ($type) {
+                case PersonRelations::SIBLING:
+                    $this->migrateData->migrateIsSibling($dataMaster, $mergedPerson, $mergedComment);
+                default:
+                    $this->LOGGER->error("Unknown Type: " . $type);
             }
         }
-
-        $this->LOGGER->debug("Size of matching DataMaster matching Entries " . count($listOfMatchingEntriesOfDatamaster));
-        $this->LOGGER->debug("Size of matching toBeDeleted matching Entries  " . count($listOfMatchingEntriesOfToBeDeleted));
     }
 
     private function mergeBirth(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
