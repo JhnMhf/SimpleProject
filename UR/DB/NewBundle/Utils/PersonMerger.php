@@ -133,6 +133,8 @@ class PersonMerger {
          */
 
         $this->mergeSiblings($dataMaster, $toBeDeleted);
+        $this->mergeParents($dataMaster, $toBeDeleted);
+        $this->mergeChildren($dataMaster, $toBeDeleted);
     }
 
     private function mergeSiblings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -150,7 +152,7 @@ class PersonMerger {
 
         $toBeDeletedIsSiblingEntries = $queryBuilder
                 ->where('s.siblingOneid = :id OR s.siblingTwoid = :id')
-                ->setParameter('id', $dataMaster->getId())
+                ->setParameter('id', $toBeDeleted->getId())
                 ->getQuery()
                 ->getResult();
 
@@ -162,11 +164,64 @@ class PersonMerger {
         }
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsSiblingEntries, $toBeDeletedIsSiblingEntries, PersonRelations::SIBLING);
+    }
+    
+    private function mergeParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging parents");
 
-        /*
-          $dataMasterArrayOfSiblings = $this->extractSiblingObjects($dataMaster->getId(), $dataMasterIsSiblingEntries);
-          $toBeDeletedArrayOfSiblings = $this->extractSiblingObjects($toBeDeleted->getId(), $toBeDeletedIsSiblingEntries);
-         */
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('p.childID = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('p.childID = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::PARENT);
+    }
+    
+    private function mergeChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging children");
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('p.parentID = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('p.parentID = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::CHILD);
     }
 
     private function mergeRelation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $dataMasterRelatedPersons, $toBeDeletedRelatedPersons, $type) {
@@ -228,12 +283,22 @@ class PersonMerger {
             //do nothing with the fused religino since its already a datamaster religion
             $this->mergeRelationEntries($dataMaster, $listOfMatchingDataMasterRelationEntries[$i], $listOfMatchingToBeDeletedRelationEntries[$i], $listOfMatchingDataMasterRelatedPersons[$i], $listOfMatchingToBeDeletedRelatedPersons[$i], $type);
         }
+        
+        //@TODO: Still missing the migration of toBeDeletedEntries which don't match to the dataMaster!
     }
 
     private function extractRelatedPersonId($idOfPerson, $entry, $type) {
         switch ($type) {
             case PersonRelations::SIBLING:
                 return $this->extractSiblingId($idOfPerson, $entry);
+            case PersonRelations::PARENT:
+                return $entry->getParentID();
+            case PersonRelations::CHILD:
+                return $entry->getChildID();
+            case PersonRelations::GRANDPARENT:
+                return $entry->getGrandParentID();
+            case PersonRelations::GRANDCHILD:
+                return $entry->getGrandChildID();
             default:
                 $this->LOGGER->error("Unknown Type: " . $type);
                 return null;
@@ -300,6 +365,19 @@ class PersonMerger {
             switch ($type) {
                 case PersonRelations::SIBLING:
                     $this->migrateData->migrateIsSibling($dataMaster, $mergedPerson, $mergedComment);
+                    break;
+                case PersonRelations::PARENT:
+                    $this->migrateData->migrateIsParent($dataMaster, $mergedPerson, $mergedComment);
+                    break;
+                case PersonRelations::CHILD:
+                    $this->migrateData->migrateIsParent($mergedPerson,$dataMaster,$mergedComment);
+                    break;
+                case PersonRelations::GRANDPARENT:
+                    //$this->migrateData->
+                    break;
+                case PersonRelations::GRANDCHILD:
+                    //$this->migrateData->
+                    break;
                 default:
                     $this->LOGGER->error("Unknown Type: " . $type);
             }

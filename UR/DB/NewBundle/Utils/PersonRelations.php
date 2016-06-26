@@ -17,7 +17,9 @@ class PersonRelations extends BasicEnum {
     const __default = self::PARENT;
     
     const PARENT = "parent";
+    const CHILD = "child";
     const GRANDPARENT = "grandparent";
+    const GRANDCHILD = "grandchild";
     const SIBLING = "sibling";
     const MARRIAGE = "marriage";
     const PARENT_IN_LAW = "parentInLaw";
