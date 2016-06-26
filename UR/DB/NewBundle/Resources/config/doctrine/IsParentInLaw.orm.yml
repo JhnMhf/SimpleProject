@@ -9,7 +9,6 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
             columns:
                 - child_in_lawID
                 - parent_in_lawID
-                - relation_type
     id:
         id:
             type: integer
@@ -35,13 +34,6 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
                 unsigned: false
                 default: '0'
             column: parent_in_lawID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
         comment:
             type: text
             nullable: true

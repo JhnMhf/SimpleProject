@@ -9,7 +9,6 @@ UR\DB\NewBundle\Entity\IsSibling:
             columns:
                 - sibling_oneID
                 - sibling_twoID
-                - relation_type
     id:
         id:
             type: integer
@@ -35,13 +34,6 @@ UR\DB\NewBundle\Entity\IsSibling:
                 unsigned: false
                 default: '0'
             column: sibling_twoID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
         comment:
             type: text
             nullable: true

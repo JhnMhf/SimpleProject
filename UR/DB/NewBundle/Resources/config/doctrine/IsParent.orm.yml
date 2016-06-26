@@ -9,7 +9,6 @@ UR\DB\NewBundle\Entity\IsParent:
             columns:
                 - childID
                 - parentID
-                - relation_type
     id:
         id:
             type: integer
@@ -35,13 +34,6 @@ UR\DB\NewBundle\Entity\IsParent:
                 unsigned: false
                 default: '0'
             column: parentID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
         comment:
             type: text
             nullable: true

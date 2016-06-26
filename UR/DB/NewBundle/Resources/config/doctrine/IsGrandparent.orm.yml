@@ -9,7 +9,6 @@ UR\DB\NewBundle\Entity\IsGrandparent:
             columns:
                 - grandparentID
                 - grandchildID
-                - relation_type
     id:
         id:
             type: integer
@@ -35,13 +34,6 @@ UR\DB\NewBundle\Entity\IsGrandparent:
                 unsigned: false
                 default: '0'
             column: grandchildID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
         isPaternal:
             type: boolean
             nullable: false

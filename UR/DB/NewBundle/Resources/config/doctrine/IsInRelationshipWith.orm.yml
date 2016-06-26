@@ -9,7 +9,6 @@ UR\DB\NewBundle\Entity\IsInRelationshipWith:
             columns:
                 - first_partnerID
                 - second_partnerID
-                - relation_type
     id:
         id:
             type: integer
@@ -35,13 +34,6 @@ UR\DB\NewBundle\Entity\IsInRelationshipWith:
                 unsigned: false
                 default: '0'
             column: second_partnerID
-        relationType:
-            type: string
-            nullable: true
-            length: 200
-            options:
-                fixed: false
-            column: relation_type
         comment:
             type: text
             nullable: true
