@@ -23,4 +23,5 @@ class PersonRelations extends BasicEnum {
     const SIBLING = "sibling";
     const MARRIAGE = "marriage";
     const PARENT_IN_LAW = "parentInLaw";
+    const CHILD_IN_LAW = "childInLaw";
 }

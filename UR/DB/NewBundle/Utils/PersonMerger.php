@@ -135,6 +135,10 @@ class PersonMerger {
         $this->mergeSiblings($dataMaster, $toBeDeleted);
         $this->mergeParents($dataMaster, $toBeDeleted);
         $this->mergeChildren($dataMaster, $toBeDeleted);
+        $this->mergeGrandParents($dataMaster, $toBeDeleted);
+        $this->mergeGrandChildren($dataMaster, $toBeDeleted);
+        $this->mergeParentsInLaw($dataMaster, $toBeDeleted);
+        $this->mergeChildrenInLaw($dataMaster, $toBeDeleted);
     }
 
     private function mergeSiblings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -223,6 +227,122 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::CHILD);
     }
+    
+    private function mergeGrandParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging grandparents");
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('gp.grandChildID = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('gp.grandChildID = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::GRANDPARENT);
+    }
+    
+    private function mergeGrandChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging grandchildren");
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('gp.grandParentID = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('gp.grandParentID = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::GRANDCHILD);
+    }
+    
+    private function mergeParentsInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging parents in law");
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('p.childInLawid = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('p.childInLawid = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::PARENT_IN_LAW);
+    }
+    
+    private function mergeChildrenInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
+        $this->LOGGER->info("Merging children in law");
+
+        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
+
+        $dataMasterIsParentEntries = $queryBuilder
+                ->where('p.parentInLawid = :id')
+                ->setParameter('id', $dataMaster->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
+
+        $toBeDeletedIsParentEntries = $queryBuilder
+                ->where('p.parentInLawid = :id')
+                ->setParameter('id', $toBeDeleted->getId())
+                ->getQuery()
+                ->getResult();
+
+        $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
+
+        if (count($toBeDeletedIsParentEntries) == 0) {
+            $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
+            return;
+        }
+
+        $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::CHILD_IN_LAW);
+    }
 
     private function mergeRelation(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $dataMasterRelatedPersons, $toBeDeletedRelatedPersons, $type) {
         $this->LOGGER->info("Fusing  " . count($dataMasterRelatedPersons) . " Relations of dataMaster "
@@ -285,6 +405,23 @@ class PersonMerger {
         }
         
         //@TODO: Still missing the migration of toBeDeletedEntries which don't match to the dataMaster!
+        
+        //find missing entries
+        //do nothing with datamasterentries they are already
+        //$unmatchedDataMasterEntries = array_diff($dataMasterArray, $listOfMatchingDataMasterRelationEntries);
+
+        //move unmatched entries from toBeDeleted to Datamaster
+        $unmatchedToBeDeletedEntries = array_diff($toBeDeletedArray, $listOfMatchingToBeDeletedRelationEntries);
+
+        $this->LOGGER->debug("Size of unmatching DataMaster entries " . count($unmatchedDataMasterEntries));
+        $this->LOGGER->debug("Size of unmatching toBeDeleted entries " . count($unmatchedToBeDeletedEntries));
+
+        for ($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++) {
+            //$unmatchedToBeDeletedEntries->setPerson($dataMaster);
+            $this->migrateEntriesToDataMaster($dataMaster,$toBeDeleted, $unmatchedToBeDeletedEntries[$i], $type);
+        }
+
+        $this->newDBManager->flush();
     }
 
     private function extractRelatedPersonId($idOfPerson, $entry, $type) {
@@ -299,6 +436,10 @@ class PersonMerger {
                 return $entry->getGrandParentID();
             case PersonRelations::GRANDCHILD:
                 return $entry->getGrandChildID();
+            case PersonRelations::PARENT_IN_LAW:
+                return $entry->getParentInLawid();
+            case PersonRelations::CHILD_IN_LAW:
+                return $entry->getChildInLawid();
             default:
                 $this->LOGGER->error("Unknown Type: " . $type);
                 return null;
@@ -315,7 +456,51 @@ class PersonMerger {
 
         return $siblingId;
     }
+    
+    private function migrateEntriesToDataMaster(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $entry, $type){
+        $this->LOGGER->debug("Migrating entry: ".$entry." from ".$toBeDeleted." to ".$dataMaster);
+        
+         switch ($type) {
+            case PersonRelations::SIBLING:
+                $this->replaceSibling($toBeDeleted->getId(), $dataMaster->getId(), $entry);
+                break;
+            case PersonRelations::PARENT:
+                $entry->setChildID($dataMaster->getId());
+                break;
+            case PersonRelations::CHILD:
+                $entry->setParentID($dataMaster->getId());
+                break;
+            case PersonRelations::GRANDPARENT:
+                $entry->setGrandChildID($dataMaster->getId());
+                break;
+            case PersonRelations::GRANDCHILD:
+                $entry->setGrandParentID($dataMaster->getId());
+                break;
+            case PersonRelations::PARENT_IN_LAW:
+                $entry->setChildInLawid($dataMaster->getId());
+                break;
+            case PersonRelations::CHILD_IN_LAW:
+                $entry->setParentInLawid($dataMaster->getId());
+                break;
+            default:
+                $this->LOGGER->error("Unknown Type: " . $type);
+        }
+        
+        $this->newDBManager->persist($entry);
+    }
+    
+    private function replaceSibling($currentId, $newId, $siblingEntry) {
 
+        if ($siblingEntry->getSiblingOneId() == $currentId) {
+            $siblingEntry->setSiblingOneId($newId);
+        } else if($siblingEntry->getSiblingTwoId() == $currentId){
+            $siblingEntry->setSiblingTwoId($newId);
+        } else{
+            $this->LOGGER->error("Merging wrong sibling entites?");
+        }
+    }
+    
+    
     private function loadPerson($id) {
         $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
 
@@ -361,6 +546,8 @@ class PersonMerger {
             $this->LOGGER->info("Merged person for relationship of Type: " . $type . " result is " . $mergedPerson);
 
             $newRelationEntry = null;
+            
+            //@TODO: Check if orders or maternal/ paternal have to be checked?
 
             switch ($type) {
                 case PersonRelations::SIBLING:
@@ -373,10 +560,16 @@ class PersonMerger {
                     $this->migrateData->migrateIsParent($mergedPerson,$dataMaster,$mergedComment);
                     break;
                 case PersonRelations::GRANDPARENT:
-                    //$this->migrateData->
+                    $this->migrateData->migrateIsGrandparent($dataMaster, $mergedPerson,$dataMasterRelationEntry->getIsPaternal(),$mergedComment);
                     break;
                 case PersonRelations::GRANDCHILD:
-                    //$this->migrateData->
+                    $this->migrateData->migrateIsGrandparent($mergedPerson,$dataMaster,$dataMasterRelationEntry->getIsPaternal(), $mergedComment);
+                    break;
+                case PersonRelations::PARENT_IN_LAW:
+                     $this->migrateData->migrateIsParentInLaw($dataMaster, $mergedPerson, $mergedComment);
+                    break;
+                case PersonRelations::CHILD_IN_LAW:
+                    $this->migrateData->migrateIsParentInLaw($mergedPerson,$dataMaster,$mergedComment);
                     break;
                 default:
                     $this->LOGGER->error("Unknown Type: " . $type);
