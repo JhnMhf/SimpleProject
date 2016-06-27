@@ -934,15 +934,15 @@ class MigrateData
             $husband = $personOne;
             $wife = $personTwo;
 
-            if($personTwo->getGender() == 1
-                || $personOne->getGender() == 2){
+            if(($personTwo != null && $personTwo->getGender() == 1)
+                || ($personOne != null && $personOne->getGender() == 2)){
                 //personTwo is husband, since he is male or personOne is female
                 $husband = $personTwo;
                 $wife = $personOne;
             }
 
-            $newWedding->setHusbandId($husband->getId());
-            $newWedding->setWifeId($wife->getId());
+            $newWedding->setHusbandId($husband != null ? $husband->getId() : null);
+            $newWedding->setWifeId($wife != null ? $wife->getId() : null);
 
             $newWedding->setWeddingOrder($weddingOrder);
             $newWedding->setWeddingDate($this->getDate($weddingDate));
@@ -958,14 +958,15 @@ class MigrateData
             $this->newDBManager->persist($newWedding);
             $this->newDBManager->flush();
         }
+        //@TODO: Check if wedding data must be merged here? would be better...
     }
 
     public function checkIfWeddingAlreadyExists($weddingOrder, $personOne, $personTwo){
         $husband = $personOne;
         $wife = $personTwo;
 
-        if($personTwo->getGender() == 1
-            || $personOne->getGender() == 2){
+        if(($personTwo != null && $personTwo->getGender() == 1)
+                || ($personOne != null && $personOne->getGender() == 2)){
             //personTwo is husband, since he is male or personOne is female
             $husband = $personTwo;
             $wife = $personOne;
@@ -976,8 +977,8 @@ class MigrateData
 
         $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
             ->findOneBy( array('weddingOrder' => $weddingOrder, 
-                                'husbandId' => $husband->getId(),
-                                'wifeId' => $wife->getId()
+                                'husbandId' => $husband != null ? $husband->getId() : null,
+                                'wifeId' => $wife != null ? $wife->getId() : null
                                 ));
 
         if(is_null($wedding)){

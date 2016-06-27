@@ -135,9 +135,9 @@ class MigrateController extends Controller
 
 
         //migrate relations (including data about relatives)
-        $this->migrateMother($newPerson, $ID, $oldDBManager);
+        $mother = $this->migrateMother($newPerson, $ID, $oldDBManager);
 
-        $this->migrateFather($newPerson, $ID, $oldDBManager);
+        $this->migrateFather($newPerson, $ID,$mother, $oldDBManager);
 
         $this->migrateSibling($newPerson, $ID, $oldDBManager);
 
@@ -606,11 +606,13 @@ class MigrateController extends Controller
     public function migrateMother($newPerson, $oldPersonID, $oldDBManager){
        
         $mothers = $this->getMotherWithNativeQuery($oldPersonID, $oldDBManager);
+        
+        $this->LOGGER->debug("Loaded ".count($mothers). " mother entries");
+        
+        if(count($mothers) == 1){
+            $oldMother = $mothers[0];
 
-        for($i = 0; $i < count($mothers); $i++){
-            $oldMother = $mothers[$i];
-
-            $newMother = $this->createMother($oldMother);;
+            $newMother = $this->createMother($oldMother);
             //check if reference to person
             if(!is_null($oldMother["mutter_id-nr"])){
 
@@ -639,8 +641,11 @@ class MigrateController extends Controller
 
             //partners of mother
             $this->migratePartnersOfMother($newMother, $oldPersonID, $oldDBManager);
+            
+            return $newMother;
         }
-
+        
+        return null;
     }
 
     private function createMother($oldMother){
@@ -767,13 +772,15 @@ class MigrateController extends Controller
         return false;
     }
 
-    private function migrateFather($newPerson, $oldPersonID, $oldDBManager){
+    private function migrateFather($newPerson, $oldPersonID, $mother, $oldDBManager){
         //non paternal
         $fathers = $this->getFatherWithNativeQuery($oldPersonID, $oldDBManager);
+        
+        $this->LOGGER->debug("Loaded ".count($fathers). " father entries");
 
-        for($i = 0; $i < count($fathers); $i++){
-            $oldFather = $fathers[$i];
-            $newFather = $this->createFather($oldFather);
+        if(count($fathers) == 1){
+            $oldFather = $fathers[0];
+            $newFather = $this->createFather($oldFather, $mother);
 
             //check if reference to person
             if(!is_null($oldFather["vater_id-nr"])){
@@ -795,7 +802,7 @@ class MigrateController extends Controller
 
     }
 
-    private function createFather($oldFather){
+    private function createFather($oldFather, $mother){
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
 
@@ -884,8 +891,9 @@ class MigrateController extends Controller
             $father->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldFather["ehelich"]));
         }
         
-        //@TODO: hochzeitagstag?
-
+        //wedding with mother
+        $this->getMigrationService()->migrateWedding(1, $father, $mother, $oldFather['hochzeitstag']);
+        
         return $father;
     }
 

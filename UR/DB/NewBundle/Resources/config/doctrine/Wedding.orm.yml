@@ -29,14 +29,14 @@ UR\DB\NewBundle\Entity\Wedding:
             column: wedding_order
         husbandId:
             type: integer
-            nullable: false
+            nullable: true
             options:
                 unsigned: false
                 default: '0'
             column: husband_ID
         wifeId:
             type: integer
-            nullable: false
+            nullable: true
             options:
                 unsigned: false
                 default: '0'
