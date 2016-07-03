@@ -27,11 +27,18 @@ class PersonMerger {
         return $this->container->get($identifier);
     }
 
-    //@TODO: Finish Personmergin/ fusion
     public function mergePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne, \UR\DB\NewBundle\Entity\BasePerson $personTwo) {
         $this->LOGGER->info("Request for fusing two persons.");
         $this->LOGGER->info("Person 1: " . $personOne);
         $this->LOGGER->info("Person 2: " . $personTwo);
+        
+        if($personOne == null && $personTwo == null){
+            return null;
+        } else if($personOne == null){
+            return $personTwo;
+        } else if($personTwo == null){
+            return $personOne;
+        }
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo != Gender::UNKNOWN) {
             $this->LOGGER->warn("Trying to merge a man with a woman, is this really right?");
@@ -137,7 +144,7 @@ class PersonMerger {
         $this->mergeGrandChildren($dataMaster, $toBeDeleted);
         $this->mergeParentsInLaw($dataMaster, $toBeDeleted);
         $this->mergeChildrenInLaw($dataMaster, $toBeDeleted);
-        
+
         $this->mergeWeddings($dataMaster, $toBeDeleted);
     }
 
@@ -169,7 +176,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsSiblingEntries, $toBeDeletedIsSiblingEntries, PersonRelations::SIBLING);
     }
-    
+
     private function mergeParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents");
 
@@ -198,7 +205,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::PARENT);
     }
-    
+
     private function mergeChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children");
 
@@ -227,7 +234,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentEntries, $toBeDeletedIsParentEntries, PersonRelations::CHILD);
     }
-    
+
     private function mergeGrandParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandparents");
 
@@ -256,7 +263,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsGrandparentEntries, $toBeDeletedIsGrandparentEntries, PersonRelations::GRANDPARENT);
     }
-    
+
     private function mergeGrandChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandchildren");
 
@@ -285,7 +292,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsGrandparentEntries, $toBeDeletedIsGrandparentEntries, PersonRelations::GRANDCHILD);
     }
-    
+
     private function mergeParentsInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents in law");
 
@@ -314,7 +321,7 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentInLawEntries, $toBeDeletedIsParentInLawEntries, PersonRelations::PARENT_IN_LAW);
     }
-    
+
     private function mergeChildrenInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children in law");
 
@@ -343,9 +350,8 @@ class PersonMerger {
 
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterIsParentInLawEntries, $toBeDeletedIsParentInLawEntries, PersonRelations::CHILD_IN_LAW);
     }
-    
-    private function mergeWeddings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted){
-        //@TODO: Finish merging of weddings
+
+    private function mergeWeddings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging weddings");
 
         $queryBuilder = $this->newDBManager->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
@@ -370,7 +376,7 @@ class PersonMerger {
             $this->LOGGER->info("No entries of toBeDeleted for merging or migrating found");
             return;
         }
-        
+
         $this->mergeRelation($dataMaster, $toBeDeleted, $dataMasterWeddingEntries, $toBeDeletedWeddingEntries, PersonRelations::WEDDING);
     }
 
@@ -412,16 +418,23 @@ class PersonMerger {
 
                     $toBeDeletedRelatedPersonObj = $this->loadPerson($toBeDeletedRelatedPersonId);
 
-                    //@TODO: In Case of wedding additional checks here?
-                    
-                    //check if the two elements are similar
-                    if ($this->compareService->comparePersons($dataMasterRelatedPersonObj, $toBeDeletedRelatedPersonObj, true)) {
-                        $listOfMatchingDataMasterRelatedPersons[] = $dataMasterRelatedPersonObj;
-                        $listOfMatchingToBeDeletedRelatedPersons[] = $toBeDeletedRelatedPersonObj;
 
-                        $listOfMatchingDataMasterRelationEntries[] = $dataMasterEntry;
-                        $listOfMatchingToBeDeletedRelationEntries[] = $toBeDeletedEntry;
-                        continue;
+                    // in case of wedding check wedding first
+                    if ($type != PersonRelations::WEDDING 
+                            || $this->compareService->matchingWedding($dataMasterEntry, $toBeDeletedEntry, true)) {
+                        
+                        //check if the two elements are similar
+                        if ($this->compareService->comparePersons($dataMasterRelatedPersonObj, $toBeDeletedRelatedPersonObj, true)) {
+
+
+
+                            $listOfMatchingDataMasterRelatedPersons[] = $dataMasterRelatedPersonObj;
+                            $listOfMatchingToBeDeletedRelatedPersons[] = $toBeDeletedRelatedPersonObj;
+
+                            $listOfMatchingDataMasterRelationEntries[] = $dataMasterEntry;
+                            $listOfMatchingToBeDeletedRelationEntries[] = $toBeDeletedEntry;
+                            continue;
+                        }
                     }
                 }
             }
@@ -435,20 +448,19 @@ class PersonMerger {
             //do nothing with the fused religino since its already a datamaster religion
             $this->mergeRelationEntries($dataMaster, $listOfMatchingDataMasterRelationEntries[$i], $listOfMatchingToBeDeletedRelationEntries[$i], $listOfMatchingDataMasterRelatedPersons[$i], $listOfMatchingToBeDeletedRelatedPersons[$i], $type);
         }
-        
+
         //find missing entries
         //do nothing with datamasterentries they are already
         //$unmatchedDataMasterEntries = array_diff($dataMasterArray, $listOfMatchingDataMasterRelationEntries);
-
         //move unmatched entries from toBeDeleted to Datamaster
-        $unmatchedToBeDeletedEntries = array_diff($toBeDeletedArray, $listOfMatchingToBeDeletedRelationEntries);
+        $unmatchedToBeDeletedEntries = array_diff($toBeDeletedRelatedPersons, $listOfMatchingToBeDeletedRelationEntries);
 
-        $this->LOGGER->debug("Size of unmatching DataMaster entries " . count($unmatchedDataMasterEntries));
+        //$this->LOGGER->debug("Size of unmatching DataMaster entries " . count($unmatchedDataMasterEntries));
         $this->LOGGER->debug("Size of unmatching toBeDeleted entries " . count($unmatchedToBeDeletedEntries));
 
         for ($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++) {
             //$unmatchedToBeDeletedEntries->setPerson($dataMaster);
-            $this->migrateEntriesToDataMaster($dataMaster,$toBeDeleted, $unmatchedToBeDeletedEntries[$i], $type);
+            $this->migrateEntriesToDataMaster($dataMaster, $toBeDeleted, $unmatchedToBeDeletedEntries[$i], $type);
         }
 
         $this->newDBManager->flush();
@@ -488,7 +500,7 @@ class PersonMerger {
 
         return $siblingId;
     }
-    
+
     private function extractWeddingPartnerId($idOfPerson, $weddingEntry) {
 
         $partnerId = $weddingEntry->getWifeId();
@@ -499,11 +511,11 @@ class PersonMerger {
 
         return $partnerId;
     }
-    
-    private function migrateEntriesToDataMaster(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $entry, $type){
-        $this->LOGGER->debug("Migrating entry: ".$entry." from ".$toBeDeleted." to ".$dataMaster);
-        
-         switch ($type) {
+
+    private function migrateEntriesToDataMaster(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted, $entry, $type) {
+        $this->LOGGER->debug("Migrating entry: " . $entry . " from " . $toBeDeleted . " to " . $dataMaster);
+
+        switch ($type) {
             case PersonRelations::SIBLING:
                 $this->replaceSibling($toBeDeleted->getId(), $dataMaster->getId(), $entry);
                 break;
@@ -531,32 +543,32 @@ class PersonMerger {
             default:
                 $this->LOGGER->error("Unknown Type: " . $type);
         }
-        
+
         $this->newDBManager->persist($entry);
     }
-    
+
     private function replaceWeddingPartner($currentId, $newId, $weddingEntry) {
 
         if ($weddingEntry->getWifeId() == $currentId) {
             $weddingEntry->setWifeId($newId);
-        } else if($weddingEntry->getHusbandId() == $currentId){
+        } else if ($weddingEntry->getHusbandId() == $currentId) {
             $weddingEntry->setHusbandId($newId);
-        } else{
+        } else {
             $this->LOGGER->error("Merging wrong wedding entities?");
         }
     }
-    
+
     private function replaceSibling($currentId, $newId, $siblingEntry) {
 
         if ($siblingEntry->getSiblingOneId() == $currentId) {
             $siblingEntry->setSiblingOneId($newId);
-        } else if($siblingEntry->getSiblingTwoId() == $currentId){
+        } else if ($siblingEntry->getSiblingTwoId() == $currentId) {
             $siblingEntry->setSiblingTwoId($newId);
-        } else{
+        } else {
             $this->LOGGER->error("Merging wrong sibling entities?");
         }
-    }   
-    
+    }
+
     private function loadPerson($id) {
         $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
 
@@ -601,8 +613,6 @@ class PersonMerger {
 
             $this->LOGGER->info("Merged person for relationship of Type: " . $type . " result is " . $mergedPerson);
 
-            $newRelationEntry = null;
-            
             //@TODO: Check if orders or maternal/ paternal have to be checked?
 
             switch ($type) {
@@ -613,27 +623,49 @@ class PersonMerger {
                     $this->migrateData->migrateIsParent($dataMaster, $mergedPerson, $mergedComment);
                     break;
                 case PersonRelations::CHILD:
-                    $this->migrateData->migrateIsParent($mergedPerson,$dataMaster,$mergedComment);
+                    $this->migrateData->migrateIsParent($mergedPerson, $dataMaster, $mergedComment);
                     break;
                 case PersonRelations::GRANDPARENT:
-                    $this->migrateData->migrateIsGrandparent($dataMaster, $mergedPerson,$dataMasterRelationEntry->getIsPaternal(),$mergedComment);
+                    $this->migrateData->migrateIsGrandparent($dataMaster, $mergedPerson, $dataMasterRelationEntry->getIsPaternal(), $mergedComment);
                     break;
                 case PersonRelations::GRANDCHILD:
-                    $this->migrateData->migrateIsGrandparent($mergedPerson,$dataMaster,$dataMasterRelationEntry->getIsPaternal(), $mergedComment);
+                    $this->migrateData->migrateIsGrandparent($mergedPerson, $dataMaster, $dataMasterRelationEntry->getIsPaternal(), $mergedComment);
                     break;
                 case PersonRelations::PARENT_IN_LAW:
-                     $this->migrateData->migrateIsParentInLaw($dataMaster, $mergedPerson, $mergedComment);
+                    $this->migrateData->migrateIsParentInLaw($dataMaster, $mergedPerson, $mergedComment);
                     break;
                 case PersonRelations::CHILD_IN_LAW:
-                    $this->migrateData->migrateIsParentInLaw($mergedPerson,$dataMaster,$mergedComment);
+                    $this->migrateData->migrateIsParentInLaw($mergedPerson, $dataMaster, $mergedComment);
                     break;
                 case PersonRelations::WEDDING:
-                    //@TODO: Merge wedding here
+                    $newWedding = $this->createMergedWeddingObj($dataMaster, $mergedPerson, $dataMasterRelationEntry, $toBeDeletedRelationEntry);
+                    
+                    $this->setHusbandAndWife($dataMaster, $mergedPerson, $newWedding);
+                    
+                    $this->newDBManager->persist($newWedding);
+                    $this->newDBManager->flush();
                     break;
                 default:
                     $this->LOGGER->error("Unknown Type: " . $type);
             }
         }
+    }
+    
+    private function setHusbandAndWife(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, 
+            \UR\DB\NewBundle\Entity\BasePerson $mergedPerson, \UR\DB\NewBundle\Entity\Wedding $newWedding){
+        
+            $husband = $dataMaster;
+            $wife = $mergedPerson;
+
+            if(($mergedPerson != null && $mergedPerson->getGender() == 1)
+                || ($dataMaster != null && $personOne->$dataMaster() == 2)){
+                //personTwo is husband, since he is male or personOne is female
+                $husband = $mergedPerson;
+                $wife = $dataMaster;
+            }
+        
+            $newWedding->setHusbandId($husband != null ? $husband->getId() : null);
+            $newWedding->setWifeId($wife != null ? $wife->getId() : null);
     }
 
     private function mergeBirth(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -1168,6 +1200,22 @@ class PersonMerger {
         $dataMasterResidence->setResidenceLocation($this->mergeLocationObject($dataMasterResidence->getResidenceLocation(), $toBeDeletedResidence->getResidenceLocation()));
 
         return $dataMasterResidence;
+    }
+
+    private function createMergedWeddingObj(\UR\DB\NewBundle\Entity\Wedding $dataMasterWedding, \UR\DB\NewBundle\Entity\Wedding $toBeDeletedWedding) {
+        //husband/ wife?
+        $dataMasterWedding->setWeddingDate($this->mergeDateReference($dataMasterWedding->getWeddingDate(), $toBeDeletedWedding->getWeddingDate()));
+        $dataMasterWedding->setWeddingLocation($this->mergeLocationObject($dataMasterWedding->getWeddingLocation(), $toBeDeletedWedding->getWeddingLocation()));
+        $dataMasterWedding->setWeddingTerritory($this->mergeTerritoryObject($dataMasterWedding->getWeddingTerritory(), $toBeDeletedWedding->getWeddingTerritory()));
+
+        $dataMasterWedding->setBannsDate($this->mergeDateReference($dataMasterWedding->getBannsDate(), $toBeDeletedWedding->getBannsDate()));
+        $dataMasterWedding->setBreakupReason($this->mergeStrings($dataMasterWedding->getBreakupReason(), $toBeDeletedWedding->getBreakupReason()));
+        $dataMasterWedding->setBreakupDate($this->mergeDateReference($dataMasterWedding->getBreakupDate(), $toBeDeletedWedding->getBreakupDate()));
+        $dataMasterWedding->setMarriageComment($this->mergeComment($dataMasterWedding->getMarriageComment(), $toBeDeletedWedding->getMarriageComment()));
+        $dataMasterWedding->setBeforeAfter($this->mergeStrings($dataMasterWedding->getBeforeAfter(), $toBeDeletedWedding->getBeforeAfter()));
+        $dataMasterWedding->setComment($this->mergeComment($dataMasterWedding->getComment(), $toBeDeletedWedding->getComment()));
+
+        return $dataMasterWedding;
     }
 
     private function mergeStrings($dataMasterString, $toBeDeletedString) {

@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Wedding
 {
+    public function __toString (){
+        return "Wedding with ID '".$this->getId(). "' between '".$this->getHusbandId(). "' and '".$this->getWifeId()."'";
+    }
     /**
      * @var integer
      */

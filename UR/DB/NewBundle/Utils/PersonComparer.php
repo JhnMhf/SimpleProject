@@ -41,6 +41,14 @@ class PersonComparer {
         $this->LOGGER->info("Person 1: " . $personOne);
         $this->LOGGER->info("Person 2: " . $personTwo);
         
+        if($personOne == null && $personTwo == null){
+            return true;
+        } else if($personOne == null){
+            return true;
+        } else if($personTwo == null){
+            return true;
+        }
+        
         if($personOne->getId() == $personTwo->getId()){
             $this->LOGGER->info("They got the same ID, should be the same person or the database has an error");
             return true;
@@ -174,7 +182,7 @@ class PersonComparer {
             return false;
         }
 
-        if (count($arrayOne) != count($arrayTwo)) {
+        if (count($arrayOne) != count($arrayTwo) && !$allowLessInformation) {
             $this->LOGGER->info("Given arrays have different size.");
             return true;
         }
@@ -232,7 +240,11 @@ class PersonComparer {
             if (!$found) {
                 $this->LOGGER->info("Arrays of type '" . $type . "' are not the same.");
                 $this->LOGGER->debug("Did not find element: " . $elementOne->getId());
-                return true;
+                if(!$allowLessInformation){
+                    return true;
+                } else {
+                    $this->LOGGER->debug("Continuing since less informations are accepted");
+                }
             }
         }
 
@@ -242,6 +254,7 @@ class PersonComparer {
     }
 
     public function matchingBirth($birthOne, $birthTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$birthOne. " with ".$birthTwo);
         $this->LOGGER->info("Checking if births are the same");
         
         if ($birthOne == null || $birthTwo == null) {
@@ -283,6 +296,7 @@ class PersonComparer {
     }
 
     public function matchingBaptism($baptismOne, $baptismTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$baptismOne. " with ".$baptismTwo);
         $this->LOGGER->info("Checking if baptisms are the same");
         
         if ($baptismOne == null || $baptismTwo == null) {
@@ -305,6 +319,8 @@ class PersonComparer {
     }
 
     public function matchingDeath($deathOne, $deathTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$deathOne. " with ".$deathTwo);
+        
         $this->LOGGER->info("Checking if deaths are the same.");
         
         if ($deathOne == null || $deathTwo == null) {
@@ -351,6 +367,7 @@ class PersonComparer {
     }
 
     public function matchingEducation(\UR\DB\NewBundle\Entity\Education $educationOne, \UR\DB\NewBundle\Entity\Education $educationTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$educationOne. " with ".$educationTwo);
         if (!$this->compareStrings($educationOne->getLabel(), $educationTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -397,6 +414,7 @@ class PersonComparer {
     }
 
     public function matchingHonour(\UR\DB\NewBundle\Entity\Honour $honourOne, \UR\DB\NewBundle\Entity\Honour $honourTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$honourOne. " with ".$honourTwo);
         if (!$this->compareStrings($honourOne->getLabel(), $honourTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -429,6 +447,7 @@ class PersonComparer {
     }
 
     public function matchingProperty(\UR\DB\NewBundle\Entity\Property $propertyOne, \UR\DB\NewBundle\Entity\Property $propertyTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$propertyOne. " with ".$propertyTwo);
         if (!$this->compareStrings($propertyOne->getLabel(), $propertyTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -461,6 +480,7 @@ class PersonComparer {
     }
 
     public function matchingRank(\UR\DB\NewBundle\Entity\Rank $rankOne, \UR\DB\NewBundle\Entity\Rank $rankTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$rankOne. " with ".$rankTwo);
         if (!$this->compareStrings($rankOne->getLabel(), $rankTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -497,6 +517,7 @@ class PersonComparer {
     }
 
     public function matchingReligion(\UR\DB\NewBundle\Entity\Religion $religionOne, \UR\DB\NewBundle\Entity\Religion $religionTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$religionOne. " with ".$religionTwo);
         if (!$this->compareStrings($religionOne->getName(), $religionTwo->getName(), $allowLessInformation)) {
             return false;
         }
@@ -518,6 +539,7 @@ class PersonComparer {
     }
 
     public function matchingResidence(\UR\DB\NewBundle\Entity\Residence $residenceOne, \UR\DB\NewBundle\Entity\Residence $residenceTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$residenceOne. " with ".$residenceTwo);
         if (!$this->compareCountries($residenceOne->getResidenceCountry(), $residenceTwo->getResidenceCountry(), $allowLessInformation)) {
             return false;
         }
@@ -534,6 +556,7 @@ class PersonComparer {
     }
 
     public function matchingRoadOfLife(\UR\DB\NewBundle\Entity\RoadOfLife $roadOfLifeOne, \UR\DB\NewBundle\Entity\RoadOfLife $roadOfLifeTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$roadOfLifeOne. " with ".$roadOfLifeTwo);
         if (!$this->compareStrings($roadOfLifeOne->getJob(), $roadOfLifeTwo->getJob(), $allowLessInformation)) {
             return false;
         }
@@ -574,6 +597,7 @@ class PersonComparer {
     }
 
     public function matchingStatus(\UR\DB\NewBundle\Entity\Status $statusOne, \UR\DB\NewBundle\Entity\Status $statusTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$statusOne. " with ".$statusTwo);
         if (!$this->compareStrings($statusOne->getLabel(), $statusTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -606,6 +630,7 @@ class PersonComparer {
     }
 
     public function matchingWork(\UR\DB\NewBundle\Entity\Works $workOne, \UR\DB\NewBundle\Entity\Works $workTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$workOne. " with ".$workTwo);
         if (!$this->compareStrings($workOne->getLabel(), $workTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -636,8 +661,46 @@ class PersonComparer {
 
         return true;
     }
+    
+    public function matchingWedding(\UR\DB\NewBundle\Entity\Wedding $weddingOne, \UR\DB\NewBundle\Entity\Wedding $weddingTwo, $allowLessInformation = false){
+        $this->LOGGER->debug("Comparing ".$weddingOne. " with ".$weddingTwo);
+        
+        if ($this->unmatchedArrays($weddingOne->getWeddingDate(), $weddingTwo->getWeddingDate(), "date", $allowLessInformation)) {
+            return false;
+        }
+        
+        if (!$this->compareTerritories($weddingOne->getWeddingTerritory(), $weddingTwo->getWeddingTerritory(), $allowLessInformation)) {
+            return false;
+        }
+
+        if (!$this->compareLocations($weddingOne->getWeddingLocation(), $weddingTwo->getWeddingLocation(), $allowLessInformation)) {
+            return false;
+        }
+       
+        if ($this->unmatchedArrays($weddingOne->getBannsDate(), $weddingTwo->getBannsDate(), "date", $allowLessInformation)) {
+            return false;
+        }
+        
+        if (!$this->compareStrings($weddingOne->getBreakupReason(), $weddingTwo->getBreakupReason(), $allowLessInformation)) {
+            return false;
+        }
+
+        if ($this->unmatchedArrays($weddingOne->getBreakupDate(), $weddingTwo->getBreakupDate(), "date", $allowLessInformation)) {
+            return false;
+        }
+        
+        
+        if (!$this->compareStrings($weddingOne->getBeforeAfter(), $weddingTwo->getBeforeAfter(), $allowLessInformation)) {
+            return false;
+        }
+
+        //marriage comment?
+        return true;
+    }
 
     public function matchingSource(\UR\DB\NewBundle\Entity\Source $sourceOne, \UR\DB\NewBundle\Entity\Source $sourceTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$sourceOne. " with ".$sourceTwo);
+        
         if (!$this->compareStrings($sourceOne->getLabel(), $sourceTwo->getLabel(), $allowLessInformation)) {
             return false;
         }
@@ -740,6 +803,7 @@ class PersonComparer {
     }
 
     private function compareNations($nationOne, $nationTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$nationOne. " with ".$nationTwo);
         if ($nationOne == null || $nationTwo != null) {
             if ($nationOne == null && $nationTwo != null) {
                 return $allowLessInformation;
@@ -753,6 +817,7 @@ class PersonComparer {
     }
 
     private function compareCountries($countryOne, $countryTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$countryOne. " with ".$countryTwo);
         if ($countryOne == null || $countryTwo != null) {
             if ($countryOne == null && $countryTwo != null) {
                 return $allowLessInformation;
@@ -766,6 +831,7 @@ class PersonComparer {
     }
 
     private function compareTerritories($territoryOne, $territoryTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$territoryOne. " with ".$territoryTwo);
         if ($territoryOne == null || $territoryTwo != null) {
             if ($territoryOne == null && $territoryTwo != null) {
                 return $allowLessInformation;
@@ -779,6 +845,7 @@ class PersonComparer {
     }
 
     private function compareLocations($locationOne, $locationTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$locationOne. " with ".$locationTwo);
         if ($locationOne == null || $locationTwo != null) {
             if ($locationOne == null && $locationTwo != null) {
                 return $allowLessInformation;
@@ -792,6 +859,7 @@ class PersonComparer {
     }
 
     private function compareJobs($jobOne, $jobTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$jobOne. " with ".$jobTwo);
         if ($jobOne == null || $jobTwo != null) {
             if ($jobOne == null && $jobTwo != null) {
                 return $allowLessInformation;
@@ -805,6 +873,7 @@ class PersonComparer {
     }
 
     private function compareJobClasses($jobClassOne, $jobClassTwo, $allowLessInformation = false) {
+        $this->LOGGER->debug("Comparing ".$jobClassOne. " with ".$jobClassTwo);
         if ($jobClassOne == null || $jobClassTwo != null) {
             if ($jobClassOne == null && $jobClassTwo != null) {
                 return $allowLessInformation;
