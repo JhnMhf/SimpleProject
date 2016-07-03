@@ -24,7 +24,7 @@ class SessionRequestProcessor
             }
             $this->token .= '-' . substr(uniqid(), -8);
         }
-        $record['extra']['token'] = $this->token;
+        $record['token'] = $this->token;
 
         return $record;
     }
