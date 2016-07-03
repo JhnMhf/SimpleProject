@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Source
 {
+    public function __toString (){
+        return "Source with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

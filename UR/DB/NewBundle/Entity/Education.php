@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Education
 {
+    public function __toString (){
+        return "Education with ID: ".$this->getId();
+    }    
     /**
      * @var integer
      */

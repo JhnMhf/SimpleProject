@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Status
 {
+    public function __toString (){
+        return "Status with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

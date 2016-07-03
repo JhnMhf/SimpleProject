@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Birth
 {
+    public function __toString (){
+        return "Birth with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

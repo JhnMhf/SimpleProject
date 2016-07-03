@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Property
 {
+    public function __toString (){
+        return "Property with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

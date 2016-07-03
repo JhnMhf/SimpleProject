@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Baptism
 {
+    public function __toString (){
+        return "Baptism with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

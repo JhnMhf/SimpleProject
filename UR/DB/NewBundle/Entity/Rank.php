@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Rank
 {
+    public function __toString (){
+        return "Rank with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

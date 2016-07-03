@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Works
 {
+    public function __toString (){
+        return "Works with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */

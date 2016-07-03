@@ -796,7 +796,6 @@ class PersonMerger {
         }
 
         //find missing entries
-        //@TODO: Error: Object of class UR\DB\NewBundle\Entity\Rank could not be converted to string 
         //do nothing with datamasterentries they are already
         $unmatchedDataMasterEntries = array_diff($dataMasterArray, $listOfMatchingEntriesOfDatamaster);
 
@@ -1466,8 +1465,6 @@ class PersonMerger {
         //and mind 0.0.1800 and similar dates!
         //if one date is "genauer" als the other, use it!
         //btw. ignore comments just merge them if necessary!
-        //@TODO: Nice to have! Allow with lessInformation such cases with before in the comparer and adapt the merger to recognize and merge them
-        //easiest case just merge, if data is missing in one case
         $dataMasterDate->setDay($this->mergeStrings($dataMasterDate->getDay(), $toBeDeletedDate->getDay()));
         $dataMasterDate->setMonth($this->mergeStrings($dataMasterDate->getMonth(), $toBeDeletedDate->getMonth()));
         $dataMasterDate->setYear($this->mergeStrings($dataMasterDate->getYear(), $toBeDeletedDate->getYear()));

@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class Death
 {
+    public function __toString (){
+        return "Death with ID: ".$this->getId();
+    }
+    
     /**
      * @var integer
      */

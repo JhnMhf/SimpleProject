@@ -7,6 +7,9 @@ namespace UR\DB\NewBundle\Entity;
  */
 class RoadOfLife
 {
+    public function __toString (){
+        return "RoadOfLife with ID: ".$this->getId();
+    }
     /**
      * @var integer
      */
