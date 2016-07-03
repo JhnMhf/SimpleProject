@@ -27,7 +27,7 @@ class PersonMerger {
         return $this->container->get($identifier);
     }
 
-    public function mergePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne, \UR\DB\NewBundle\Entity\BasePerson $personTwo) {
+    public function mergePersons($personOne, $personTwo) {
         $this->LOGGER->info("Request for fusing two persons.");
         $this->LOGGER->info("Person 1: " . $personOne);
         $this->LOGGER->info("Person 2: " . $personTwo);
@@ -593,7 +593,7 @@ class PersonMerger {
 
         $this->LOGGER->info("Merging relationship entries of type " . $type);
 
-        if ($dataMasterRelatedPerson->getId() == $toBeDeletedRelatedPerson->getId()) {
+        if (!is_null($toBeDeletedRelatedPerson) && !is_null($dataMasterRelatedPerson) && $dataMasterRelatedPerson->getId() == $toBeDeletedRelatedPerson->getId()) {
             $this->LOGGER->info("Already the same person just removing the toBeDeleted Relation.");
             $this->newDBManager->remove($toBeDeletedRelationEntry);
             $this->newDBManager->flush();
@@ -638,7 +638,7 @@ class PersonMerger {
                     $this->migrateData->migrateIsParentInLaw($mergedPerson, $dataMaster, $mergedComment);
                     break;
                 case PersonRelations::WEDDING:
-                    $newWedding = $this->createMergedWeddingObj($dataMaster, $mergedPerson, $dataMasterRelationEntry, $toBeDeletedRelationEntry);
+                    $newWedding = $this->createMergedWeddingObj($dataMasterRelationEntry, $toBeDeletedRelationEntry);
                     
                     $this->setHusbandAndWife($dataMaster, $mergedPerson, $newWedding);
                     
@@ -658,7 +658,7 @@ class PersonMerger {
             $wife = $mergedPerson;
 
             if(($mergedPerson != null && $mergedPerson->getGender() == 1)
-                || ($dataMaster != null && $personOne->$dataMaster() == 2)){
+                || ($dataMaster != null && $dataMaster->getGender() == 2)){
                 //personTwo is husband, since he is male or personOne is female
                 $husband = $mergedPerson;
                 $wife = $dataMaster;
@@ -1201,7 +1201,7 @@ class PersonMerger {
         return $dataMasterResidence;
     }
 
-    private function createMergedWeddingObj(\UR\DB\NewBundle\Entity\Wedding $dataMasterWedding, \UR\DB\NewBundle\Entity\Wedding $toBeDeletedWedding) {
+    public function createMergedWeddingObj(\UR\DB\NewBundle\Entity\Wedding $dataMasterWedding, \UR\DB\NewBundle\Entity\Wedding $toBeDeletedWedding) {
         //husband/ wife?
         $dataMasterWedding->setWeddingDate($this->mergeDateReference($dataMasterWedding->getWeddingDate(), $toBeDeletedWedding->getWeddingDate()));
         $dataMasterWedding->setWeddingLocation($this->mergeLocationObject($dataMasterWedding->getWeddingLocation(), $toBeDeletedWedding->getWeddingLocation()));
@@ -1379,10 +1379,14 @@ class PersonMerger {
 
         $this->LOGGER->info("Merging dateReferences. Count of dataMaster '" . count($dataMasterDateArray)
                 . "'. Count of toBeDeleted '" . count($toBeDeletedDateArray) . "'");
+        
+        if($toBeDeletedDateArray == null){
+            return $dataMasterDateArray;
+        }
 
         if (count($toBeDeletedDateArray) == 0 && count($dataMasterDateArray) == 0) {
             $this->LOGGER->info("No fusing necessary, since no data is present");
-            return;
+            return $dataMasterDateArray;
         }
 
         //General Algorithm:

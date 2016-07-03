@@ -48,6 +48,8 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     }
     
     //@TODO: Check and fix, still not working correctly. Only loading one entry, if it loads any matching entries :(
+    //propably this is the problem: https://stackoverflow.com/a/21587507
+    //the mapping in the db...
     private function fixOrders(LifecycleEventArgs $event){
         $entity = $event->getEntity();
 

@@ -37,16 +37,16 @@ class PersonComparer {
     }
 
     //ignores comments and source!!!!!!!
-    public function comparePersons(\UR\DB\NewBundle\Entity\BasePerson $personOne, \UR\DB\NewBundle\Entity\BasePerson $personTwo, $allowLessInformation = false) {
+    public function comparePersons($personOne, $personTwo, $allowLessInformation = false) {
         $this->LOGGER->info("Person 1: " . $personOne);
         $this->LOGGER->info("Person 2: " . $personTwo);
         
         if($personOne == null && $personTwo == null){
             return true;
         } else if($personOne == null){
-            return true;
+            return $allowLessInformation;
         } else if($personTwo == null){
-            return true;
+            return $allowLessInformation;
         }
         
         if($personOne->getId() == $personTwo->getId()){
@@ -804,7 +804,7 @@ class PersonComparer {
 
     private function compareNations($nationOne, $nationTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$nationOne. " with ".$nationTwo);
-        if ($nationOne == null || $nationTwo != null) {
+        if ($nationOne == null || $nationTwo == null) {
             if ($nationOne == null && $nationTwo != null) {
                 return $allowLessInformation;
             } else if ($nationOne != null && $nationTwo == null) {
@@ -818,7 +818,7 @@ class PersonComparer {
 
     private function compareCountries($countryOne, $countryTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$countryOne. " with ".$countryTwo);
-        if ($countryOne == null || $countryTwo != null) {
+        if ($countryOne == null || $countryTwo == null) {
             if ($countryOne == null && $countryTwo != null) {
                 return $allowLessInformation;
             } else if ($countryOne != null && $countryTwo == null) {
@@ -832,7 +832,7 @@ class PersonComparer {
 
     private function compareTerritories($territoryOne, $territoryTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$territoryOne. " with ".$territoryTwo);
-        if ($territoryOne == null || $territoryTwo != null) {
+        if ($territoryOne == null || $territoryTwo == null) {
             if ($territoryOne == null && $territoryTwo != null) {
                 return $allowLessInformation;
             } else if ($territoryOne != null && $territoryTwo == null) {
@@ -846,7 +846,7 @@ class PersonComparer {
 
     private function compareLocations($locationOne, $locationTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$locationOne. " with ".$locationTwo);
-        if ($locationOne == null || $locationTwo != null) {
+        if ($locationOne == null || $locationTwo == null) {
             if ($locationOne == null && $locationTwo != null) {
                 return $allowLessInformation;
             } else if ($locationOne != null && $locationTwo == null) {
@@ -860,7 +860,7 @@ class PersonComparer {
 
     private function compareJobs($jobOne, $jobTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$jobOne. " with ".$jobTwo);
-        if ($jobOne == null || $jobTwo != null) {
+        if ($jobOne == null || $jobTwo == null) {
             if ($jobOne == null && $jobTwo != null) {
                 return $allowLessInformation;
             } else if ($jobOne != null && $jobTwo == null) {
@@ -874,7 +874,7 @@ class PersonComparer {
 
     private function compareJobClasses($jobClassOne, $jobClassTwo, $allowLessInformation = false) {
         $this->LOGGER->debug("Comparing ".$jobClassOne. " with ".$jobClassTwo);
-        if ($jobClassOne == null || $jobClassTwo != null) {
+        if ($jobClassOne == null || $jobClassTwo == null) {
             if ($jobClassOne == null && $jobClassTwo != null) {
                 return $allowLessInformation;
             } else if ($jobClassOne != null && $jobClassTwo == null) {
