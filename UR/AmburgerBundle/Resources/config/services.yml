@@ -2,3 +2,11 @@ services:
 #    amburger.example:
 #        class: UR\AmburgerBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+    migration_process.service:
+        class: UR\AmburgerBundle\Util\MigrateProcess
+        arguments: 
+           container: "@service_container"
+    migration_util.service:
+        class: UR\AmburgerBundle\Util\MigrationUtil
+        arguments: 
+           container: "@service_container"

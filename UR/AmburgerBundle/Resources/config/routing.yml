@@ -55,3 +55,7 @@ addUser:
 gnd_subject:
     path: /gnd/subject/{name}
     defaults: { _controller: AmburgerBundle:GND:subject }    
+    
+migrate_process:
+    path: /migration/process
+    defaults: { _controller: AmburgerBundle:Default:migrateProcess }

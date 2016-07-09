@@ -3,6 +3,7 @@
 namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -28,4 +29,12 @@ class DefaultController extends Controller
     public function loginAction(){
         return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>true, 'show_password_notice'=>true));
     }
+    
+    public function migrateProcessAction()
+    {
+        $numberOfMigratedPersons = $this->get("migration_process.service")->run();
+        
+        return new Response("Number of migrated persons: ".$numberOfMigratedPersons);
+    }
+    
 }
