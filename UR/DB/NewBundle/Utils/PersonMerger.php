@@ -783,16 +783,12 @@ class PersonMerger {
 
         //fuse all matching entries and add the fused to the datamaster
         for ($i = 0; $i < count($listOfMatchingEntriesOfDatamaster); $i++) {
-            //do nothing with the fused religino since its already a datamaster religion
-            $fusedEntry = $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], $type);
+            $this->LOGGER->debug("Entry which should be be fused entry ".$listOfMatchingEntriesOfDatamaster[$i]);
+            $this->LOGGER->debug("Entry which should be removed: ".$listOfMatchingEntriesOfToBeDeleted[$i]);
 
-            /*
-              //add new fused religion
-              $dataMaster->addReligion($fusedReligion);
+           
+            $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], $type);
 
-              //remove old religion from datamaster (and database?)
-              $dataMaster->removeReligion($listOfMatchingEntriesOfDatamaster[$i]);
-             */
         }
 
         //find missing entries
@@ -808,14 +804,11 @@ class PersonMerger {
         if ($type != PersonInformation::DATE) {
             for ($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++) {
                 //add to datamaster
-                //$dataMaster->addReligion($unmatchedToBeDeletedReligions[$i]);
-
-                $unmatchedToBeDeletedEntries->setPerson($dataMaster);
-
-                //remove religion from toBeDeleted
-                //@TODO: Check if necessary or if the doctrine handles it correctly already
-                //$toBeDeleted->removeReligion($unmatchedToBeDeletedEntries[$i]);
+                $this->LOGGER->debug("Entry which was migrated to dataMaster ".$unmatchedToBeDeletedEntries[$i]);
+                $unmatchedToBeDeletedEntries[$i]->setPerson($dataMaster);
             }
+        } else{
+            throw new Exception("This should never happen anymore?");
         }
 
         //orders are getting fixed by doctrine updates
@@ -1422,6 +1415,8 @@ class PersonMerger {
 
         //fuse all matching entries and add the fused to the datamaster
         for ($i = 0; $i < count($listOfMatchingEntriesOfDatamaster); $i++) {
+            $this->LOGGER->debug("DateReferenceEntry which should be be fused entry ".$listOfMatchingEntriesOfDatamaster[$i]);
+            $this->LOGGER->debug("DateReferenceEntry which should be removed: ".$listOfMatchingEntriesOfToBeDeleted[$i]);
             //do nothing with the fused elements since they are already in the list of datamaster dates
             $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], PersonInformation::DATE);
             //TODO: Remove deleted entries?
@@ -1439,6 +1434,7 @@ class PersonMerger {
         //add unmatched to be deleted to datamaster array
 
         for ($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++) {
+            $this->LOGGER->debug("DateReferenceEntry which was migrated to dataMaster ".$unmatchedToBeDeletedEntries[$i]);
             $dataMasterDateArray[] = $unmatchedToBeDeletedEntries[$i];
         }
 
