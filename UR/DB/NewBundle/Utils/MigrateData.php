@@ -947,7 +947,7 @@ class MigrateData {
             //merge with existing wedding
             $this->LOGGER->info("Merging new wedding with existing wedding.");
 
-            $this->get("person_merging.service")->createMergedWeddingObj($existingWedding, $newWedding);
+            $existingWedding = $this->get("person_merging.service")->createMergedWeddingObj($existingWedding, $newWedding);
 
             $this->newDBManager->persist($existingWedding);
             $this->newDBManager->flush();
