@@ -1,6 +1,10 @@
 //get id for oid
 SELECT * FROM `person` WHERE ID=(SELECT ID FROM ids WHERE OID=22779)
 
+//SELECT * FROM `kind` WHERE geschlecht != 'männlich' AND geschlecht != "weiblich"
+
+//SELECT geschlecht,count(*) FROM `kind` GROUP BY geschlecht ORDER BY count(*) DESC
+
 //get mother references which have a religion entry. (can be changed for other references/ entries)
 SELECT * 
 FROM religion 
@@ -29,6 +33,7 @@ Used for tests:
 5691
 12128
 13840
+14598
 44572
 52739
 69390

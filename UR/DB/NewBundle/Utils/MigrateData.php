@@ -247,7 +247,6 @@ class MigrateData {
         return $newNation;
     }
 
-    //@TODO: Berufsbezeichnungen??? vllt mit Synonymvergleich, Problem unter anderem die Schreibfehler
     //Perhaps it belongs to the jobclass and not the job?
     public function getJob($jobLabel, $comment = null) {
         if ($jobLabel == "" || $jobLabel == null) {
@@ -335,9 +334,14 @@ class MigrateData {
         $lowerCaseString = strtolower($string);
 
         $result = [$string, null];
-
+        
+        $containsAnmerkung = strpos($lowerCaseString, strtolower("- Anmerkung:"));
         $containsImOriginal = strpos($lowerCaseString, strtolower("- im Original"));
-        if ($containsImOriginal !== false) {
+        if ($containsAnmerkung !== false) {
+            $this->LOGGER->debug("Found -Anmerkung: in" . $string);
+            $result[0] = substr($string, 0, $containsAnmerkung);
+            $result[1] = substr($string, $containsAnmerkung);
+        } else if ($containsImOriginal !== false) {
             $this->LOGGER->debug("Found -im Original in" . $string);
             $result[0] = substr($string, 0, $containsImOriginal);
             $result[1] = substr($string, $containsImOriginal);
@@ -476,6 +480,16 @@ class MigrateData {
         }
     }
 
+    //@TODO: Handle other entries: 
+    //SELECT geschlecht,count(*) FROM `kind` GROUP BY geschlecht ORDER BY count(*) DESC
+    public function extractGenderAndGenderComment($genderString){
+        $result = $this->tryExtractingNameAndCommentFromString($genderString);
+        
+        $result[0] = $this->getGender($result[0]);
+        
+        return $result;
+    }
+    
     public function getGender($gender) {
         //undefined = 0, male = 1, female = 2
 
@@ -726,7 +740,9 @@ class MigrateData {
         $newPartner->setFirstName($this->normalize($firstName));
         $newPartner->setPatronym($this->normalize($patronym));
         $newPartner->setLastName($this->normalize($lastName));
-        $newPartner->setGender($this->getGender($gender));
+        $genderResult = $this->extractGenderAndGenderComment($gender);
+        $newPartner->setGender($genderResult[0]);
+        $newPartner->setGenderComment($genderResult[1]);
         $newPartner->setOriginalNation($this->getNation($nation));
 
         $newPartner->setComment($this->normalize($comment));
@@ -752,7 +768,9 @@ class MigrateData {
         $newPerson->setLastName($this->normalize($lastName));
         $newPerson->setForeName($this->normalize($foreName));
         $newPerson->setBirthName($this->normalize($birthName));
-        $newPerson->setGender($this->getGender($gender));
+        $genderResult = $this->extractGenderAndGenderComment($gender);
+        $newPerson->setGender($genderResult[0]);
+        $newPerson->setGenderComment($genderResult[1]);
         $newPerson->setJobClass($this->getJobClass($jobClass));
         $newPerson->setComment($this->normalize($comment));
 
@@ -808,7 +826,9 @@ class MigrateData {
         $newRelative->setFirstName($this->normalize($firstName));
         $newRelative->setPatronym($this->normalize($patronym));
         $newRelative->setLastName($this->normalize($lastName));
-        $newRelative->setGender($this->getGender($gender));
+        $genderResult = $this->extractGenderAndGenderComment($gender);
+        $newRelative->setGender($genderResult[0]);
+        $newRelative->setGenderComment($genderResult[1]);
         $newRelative->setNation($this->getNation($nation));
 
         $newRelative->setComment($this->normalize($comment));

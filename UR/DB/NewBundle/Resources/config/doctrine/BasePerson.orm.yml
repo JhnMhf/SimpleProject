@@ -54,6 +54,12 @@ UR\DB\NewBundle\Entity\BasePerson:
                 unsigned: false
                 comment: '0 = undefined, 1 = male, 2 = female'
                 default: '0'
+        genderComment:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
         comment:
             type: text
             nullable: true
@@ -68,18 +74,16 @@ UR\DB\NewBundle\Entity\BasePerson:
                 fixed: false
             column: born_in_marriage
         jobClassid:
-            type: string
+            type: integer
             nullable: true
-            length: 200
             options:
-                fixed: false
+                unsigned: false
             column: job_classID
         jobid:
-            type: string
+            type: integer
             nullable: true
-            length: 200
             options:
-                fixed: false
+                unsigned: false
             column: jobID
     manyToOne:
         job:

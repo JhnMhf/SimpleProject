@@ -371,4 +371,33 @@ class BasePerson
     {
         return $this->jobid;
     }
+    /**
+     * @var string
+     */
+    private $genderComment = '0';
+
+
+    /**
+     * Set genderComment
+     *
+     * @param string $genderComment
+     *
+     * @return BasePerson
+     */
+    public function setGenderComment($genderComment)
+    {
+        $this->genderComment = $genderComment;
+
+        return $this;
+    }
+
+    /**
+     * Get genderComment
+     *
+     * @return string
+     */
+    public function getGenderComment()
+    {
+        return $this->genderComment;
+    }
 }
