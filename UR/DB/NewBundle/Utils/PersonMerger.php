@@ -104,6 +104,7 @@ class PersonMerger {
         $dataMaster->setBirthName($this->mergeStrings($dataMaster->getBirthName(), $toBeDeleted->getBirthName()));
 
         $this->mergeGender($dataMaster, $toBeDeleted);
+        $dataMaster->setGenderComment($this->mergeComment($dataMaster->getGenderComment(), $toBeDeleted->getGenderComment()));
         $dataMaster->setComment($this->mergeComment($dataMaster->getComment(), $toBeDeleted->getComment()));
         $dataMaster->setBornInMarriage($this->mergeStrings($dataMaster->getBornInMarriage(), $toBeDeleted->getBornInMarriage()));
 
