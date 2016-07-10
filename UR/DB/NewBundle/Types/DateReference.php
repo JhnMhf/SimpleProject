@@ -29,6 +29,11 @@ class DateReference extends Type
     const DATE_REFERENCE = 'date_reference';
     
     private $newDBManager;
+    private $referencedValue;
+    
+    public function __toString (){
+        return "DateReferenceObj: ".$this->referencedValue;
+    }
 
     public function setEntityManager($em){
         $this->newDBManager = $em;
@@ -48,6 +53,7 @@ class DateReference extends Type
     {
         //expects list of date objects
         //returns comma separated string
+        $this->referencedValue = $value;
         
         if(is_null($value) || count($value) == 0){
             return null;
@@ -78,6 +84,7 @@ class DateReference extends Type
     {
         //expects comma separated string
         //returns list of csv objects
+        $this->referencedValue = $value;
         
         if(is_null($value) || $value == ""){
             return [];

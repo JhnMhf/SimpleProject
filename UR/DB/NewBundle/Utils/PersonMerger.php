@@ -1419,7 +1419,8 @@ class PersonMerger {
             $this->LOGGER->debug("DateReferenceEntry which should be removed: ".$listOfMatchingEntriesOfToBeDeleted[$i]);
             //do nothing with the fused elements since they are already in the list of datamaster dates
             $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], PersonInformation::DATE);
-            //TODO: Remove deleted entries?
+
+            $this->newDBManager->remove($listOfMatchingEntriesOfToBeDeleted[$i]);
         }
 
         //find missing entries

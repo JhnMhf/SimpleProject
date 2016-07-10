@@ -24,6 +24,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     
     private $LOGGER;
     private $container;
+    private $em;
     
     public function __construct($container)
     {
@@ -33,6 +34,14 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     
     private function get($identifier){
         return $this->container->get($identifier);
+    }
+    
+    private function getEm(){
+        if(is_null($this->em)){
+            $this->em = $this->get('doctrine')->getManager('new');
+        }
+        
+        return $this->em;
     }
     
     public function postUpdate(LifecycleEventArgs $event)
@@ -46,10 +55,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         $this->LOGGER->debug("postPersist called!");
         $this->fixOrders($event);
     }
-    
-    //@TODO: Check and fix, still not working correctly. Only loading one entry, if it loads any matching entries :(
-    //propably this is the problem: https://stackoverflow.com/a/21587507
-    //the mapping in the db...
+
     private function fixOrders(LifecycleEventArgs $event){
         $entity = $event->getEntity();
 
@@ -61,7 +67,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         
         $this->LOGGER->info("Fixing orders for ID: ".$personId);
         
-        $em = $this->get('doctrine')->getManager('new');
+        $em = $this->getEm();
         
         $education = $em->getRepository('NewBundle:Education')
                 ->findBy(array('person' => $personId), array('educationOrder' => 'ASC'));
@@ -112,7 +118,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         }
          $em->flush();
     }
-    
+
     private function fixArray($em,$array, $type){
         $this->LOGGER->info("Fixing collection of '".$type. "' with size '".count($array)."'");
         for($i = 0; $i < count($array); $i++){

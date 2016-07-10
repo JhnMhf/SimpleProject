@@ -68,4 +68,8 @@ class DateRange {
         
         return new DateRange($from, $to);
     }
+    
+    public function __toString (){
+        return "DateRange from Date with ID: ".$this->getFrom(). " to Date with ID: ".$this->getTo();
+    }
 }
