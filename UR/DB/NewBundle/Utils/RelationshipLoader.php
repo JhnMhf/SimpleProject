@@ -42,15 +42,30 @@ class RelationshipLoader {
         return $this->newDBManager;
     }
     
-    //@TODO: Adapt it to do "breath" first instead of "depth" first
-    //in other words load the relations of the main person first
-    //then go through all direct relatives and load their relations
-    //continue doing this till its finished
+    //@TODO: Relation between children and other parent?
     public function loadRelatives($id, $skipRelativesForPersons = true){
-        $alreadyLoaded[] = array();
-        $alreadyLoaded[] = $id;
+        $alreadyLoaded = array();
+        $relatives = $this->internalLoadRelatives($id, $alreadyLoaded, $skipRelativesForPersons);
         
-        $relatives[] = array();
+        $this->loadClosestRelatives($relatives, $alreadyLoaded, $skipRelativesForPersons);
+        
+        $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
+        
+        do{
+            $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
+            $this->loadRelativesWhichWereNotLoadedYet($relatives, $alreadyLoaded, $skipRelativesForPersons);
+        } while($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
+        
+        
+        return $relatives;
+    }
+    
+    private function internalLoadRelatives($id, $alreadyLoaded , $skipRelativesForPersons = true){
+        if(!in_array($id, $alreadyLoaded)){
+            $alreadyLoaded[] = $id;
+        }
+        
+        $relatives = array();
         
         $relatives["parents"] = $this->loadParents($id,$alreadyLoaded, $skipRelativesForPersons);
         $relatives["children"] = $this->loadChildren($id,$alreadyLoaded, $skipRelativesForPersons);
@@ -197,6 +212,9 @@ class RelationshipLoader {
         
         for ($i = 0; $i < count($relativesIds); $i++) {
             $idOfRelative = $this->getRelativeId($id, $relativesIds[$i]);
+            $entry = array();
+            $entry["id"] = $idOfRelative;
+            $entry["relation"] = $relativesIds[$i];
             
             if(!in_array($idOfRelative, $alreadyLoaded)){
                 $this->getLogger()->info("Loading Id ".$idOfRelative);
@@ -204,22 +222,14 @@ class RelationshipLoader {
                 $person = $this->loadPersonByID($idOfRelative);
             
                 if($person != null){
-                    $entry = array();
-                    $entry["relation"] = $relativesIds[$i];
+                    $entry["class"] = get_class($person);
                     $entry["person"] = $person;
-
-                    //if the person is no "person" or skipRelativesForPersons is deactivated
-                    if(get_class($person) != PersonClasses::PERSON_CLASS || !$skipRelativesForPersons){
-                        $entry["relatives"] = $this->loadRelatives($idOfRelative, $skipRelativesForPersons);
-                    }
-
-                   $relativesArray[] = $entry;
                 }
             } else{
                 $this->getLogger()->info("ID ".$idOfRelative. " was already loaded.");
             }
             
-
+            $relativesArray[] = $entry;
         }
         
         return $relativesArray;
@@ -228,6 +238,49 @@ class RelationshipLoader {
     private function loadWeddingData($idOne, $idTwo){
         //@TODO: Load wedding data
         return "weddingData";
+    }
+    
+    //@TODO: If additional relatives get loaded, this does not get saved/ returned right
+    //Checkable in new schema id 291... old schema id 3019 with oid 3087
+    private function loadClosestRelatives($relatives, $alreadyLoaded, $skipRelativesForPersons){
+        $this->getLogger()->info("Loading Closest Relatives");
+        foreach($relatives as $key => $value){
+            for($i = 0; $i < count($value); $i++){
+                $person = $value[$i]["person"];
+                $idOfRelative = $value[$i]["id"];
+                
+                //if the person is no "person" or skipRelativesForPersons is deactivated
+                if(get_class($person) != PersonClasses::PERSON_CLASS || !$skipRelativesForPersons){
+                   $this->getLogger()->info("Loading relatives of ".$person);
+                   $value[$i]["relatives"] = $this->internalLoadRelatives($idOfRelative,$alreadyLoaded, $skipRelativesForPersons);
+                } else{
+                    $this->getLogger()->info("Skipping loading relatives of ".$person);
+                }
+            }
+        }
+    }
+    
+    private function loadRelativesWhichWereNotLoadedYet($relatives, $alreadyLoaded, $skipRelativesForPersons){
+        $this->getLogger()->info("Called loadRelativesWhichWereNotLoadedYet");
+        foreach($relatives as $key => $value){
+            for($i = 0; $i < count($value); $i++){
+                $person = $value[$i]["person"];
+                $idOfRelative = $value[$i]["id"];
+                
+                if(array_key_exists("relatives", $value[$i])){
+                    $this->getLogger()->debug("Going on step deeper");
+                    $this->loadRelativesWhichWereNotLoadedYet($value[$i]["relatives"], $alreadyLoaded, $skipRelativesForPersons);
+                } else {
+                    //if the person is no "person" or skipRelativesForPersons is deactivated
+                    if(get_class($person) != PersonClasses::PERSON_CLASS || !$skipRelativesForPersons){
+                       $this->getLogger()->info("Loading relatives of ".$person);
+                       $value[$i]["relatives"] = $this->internalLoadRelatives($idOfRelative,$alreadyLoaded, $skipRelativesForPersons);
+                    } else{
+                        $this->getLogger()->info("Skipping loading relatives of ".$person);
+                    }
+                }
+            }
+        }
     }
     
     private function getRelativeId($id, $relationShipObj){
