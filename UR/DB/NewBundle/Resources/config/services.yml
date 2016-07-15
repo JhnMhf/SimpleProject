@@ -27,6 +27,11 @@ services:
         arguments: 
            container: "@service_container"
            
+    relationship_loader.service:
+        class: UR\DB\NewBundle\Utils\RelationshipLoader
+        arguments: 
+           container: "@service_container"
+           
 # listener/ subscriber
     fixDBOrder.subscriber:
             class: UR\DB\NewBundle\Utils\FixDBOrdersEventSubscriber

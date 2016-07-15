@@ -10,3 +10,7 @@ clearDatabase:
 compareTest:
     path: /compare/{firstPersonOID}/{secondPersonOID}
     defaults: { _controller: NewBundle:Default:comparePerson }
+    
+relatives:
+    path: /relatives/{ID}
+    defaults: { _controller: NewBundle:Relative:id }
