@@ -152,21 +152,11 @@ class PersonMerger {
     private function mergeSiblings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging siblings");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
-
-        $dataMasterIsSiblingEntries = $queryBuilder
-                ->where('s.siblingOneid = :id OR s.siblingTwoid = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
-
+        $dataMasterIsSiblingEntries = $this->newDBManager->getRepository('NewBundle:IsSibling')->loadSiblings($dataMaster->getId());
+        
         $this->LOGGER->debug("Found " . count($dataMasterIsSiblingEntries) . " entries for datamaster");
 
-        $toBeDeletedIsSiblingEntries = $queryBuilder
-                ->where('s.siblingOneid = :id OR s.siblingTwoid = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsSiblingEntries = $this->newDBManager->getRepository('NewBundle:IsSibling')->loadSiblings($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsSiblingEntries) . " entries for toBeDeleted");
 
@@ -181,21 +171,11 @@ class PersonMerger {
     private function mergeParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
-
-        $dataMasterIsParentEntries = $queryBuilder
-                ->where('p.childID = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadParents($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentEntries = $queryBuilder
-                ->where('p.childID = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadParents($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
 
@@ -210,21 +190,11 @@ class PersonMerger {
     private function mergeChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
-
-        $dataMasterIsParentEntries = $queryBuilder
-                ->where('p.parentID = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadChildren($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentEntries = $queryBuilder
-                ->where('p.parentID = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadChildren($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
 
@@ -239,21 +209,11 @@ class PersonMerger {
     private function mergeGrandParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandparents");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
-
-        $dataMasterIsGrandparentEntries = $queryBuilder
-                ->where('gp.grandChildID = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandparents($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsGrandparentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsGrandparentEntries = $queryBuilder
-                ->where('gp.grandChildID = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandparents($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsGrandparentEntries) . " entries for toBeDeleted");
 
@@ -268,21 +228,11 @@ class PersonMerger {
     private function mergeGrandChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandchildren");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
-
-        $dataMasterIsGrandparentEntries = $queryBuilder
-                ->where('gp.grandParentID = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsGrandparentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsGrandparentEntries = $queryBuilder
-                ->where('gp.grandParentID = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsGrandparentEntries) . " entries for toBeDeleted");
 
@@ -297,21 +247,11 @@ class PersonMerger {
     private function mergeParentsInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents in law");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
-
-        $dataMasterIsParentInLawEntries = $queryBuilder
-                ->where('p.childInLawid = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentInLawEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentInLawEntries = $queryBuilder
-                ->where('p.childInLawid = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentInLawEntries) . " entries for toBeDeleted");
 
@@ -326,21 +266,11 @@ class PersonMerger {
     private function mergeChildrenInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children in law");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
-
-        $dataMasterIsParentInLawEntries = $queryBuilder
-                ->where('p.parentInLawid = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentInLawEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentInLawEntries = $queryBuilder
-                ->where('p.parentInLawid = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentInLawEntries) . " entries for toBeDeleted");
 
@@ -355,21 +285,11 @@ class PersonMerger {
     private function mergeWeddings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging weddings");
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
-
-        $dataMasterWeddingEntries = $queryBuilder
-                ->where('w.husbandId = :id OR w.wifeId = :id')
-                ->setParameter('id', $dataMaster->getId())
-                ->getQuery()
-                ->getResult();
+        $dataMasterWeddingEntries = $this->newDBManager->getRepository('NewBundle:Wedding')->loadMarriagePartners($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterWeddingEntries) . " entries for datamaster");
 
-        $toBeDeletedWeddingEntries = $queryBuilder
-                ->where('w.husbandId = :id OR w.wifeId = :id')
-                ->setParameter('id', $toBeDeleted->getId())
-                ->getQuery()
-                ->getResult();
+        $toBeDeletedWeddingEntries = $this->newDBManager->getRepository('NewBundle:Wedding')->loadMarriagePartners($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedWeddingEntries) . " entries for toBeDeleted");
 

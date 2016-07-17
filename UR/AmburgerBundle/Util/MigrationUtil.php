@@ -1334,6 +1334,7 @@ class MigrationUtil {
 
             $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
 
+            //@TODO: Sometimes there are multiple entries (concated with ; )?
             //check if reference to person
             if(!is_null($oldChild["kind_id-nr"])){
                 //check it?
