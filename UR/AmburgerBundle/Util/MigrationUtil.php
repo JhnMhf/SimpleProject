@@ -487,21 +487,10 @@ class MigrationUtil {
 
         for($i = 0; $i < count($grandfathers); $i++){
             $oldGrandfather = $grandfathers[$i];
-
-            //check if reference to person
-            if(!is_null($oldGrandfather["mütterl_großvater_id-nr"])){
-                $grandfathersOID = $oldGrandfather["mütterl_großvater_id-nr"];
-
-                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
-
-                $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
-
-
-                $this->getMigrationService()->migrateIsGrandparent($newPerson, $newGrandfather, false, $oldGrandfather["kommentar"]);
-            }else{
-                $grandfather = $this->getMigrationService()->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
-
-                //insert additional data
+            
+            $grandfather = $this->getMigrationService()->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
+                
+//insert additional data
                 if(!is_null($oldGrandfather["beruf"])){
                     $jobID = $this->getMigrationService()->migrateJob($oldGrandfather["beruf"]);
 
@@ -516,10 +505,18 @@ class MigrationUtil {
                     $this->getMigrationService()->migrateDeath($grandfather,null,$oldGrandfather["gestorben"]);
                 }
 
-                $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, false);
+            //check if reference to person
+            if(!is_null($oldGrandfather["mütterl_großvater_id-nr"])){
+                $grandfathersOID = $oldGrandfather["mütterl_großvater_id-nr"];
+
+                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+
+                $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
+                
+                $grandfather = $this->get("person_merging.service")->mergePersons($grandfather,$newGrandfather);
             }
 
-
+            $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, false);
         }
 
         //paternal
@@ -625,7 +622,7 @@ class MigrationUtil {
                     $this->getLogger()->info("Child reference found...");
                     // child reference found what to do now?
 
-                    //for now just insert the data... perhaps in future create one relative and reference to it from all childs?
+                    //TODO: Not happening? for now just insert the data... perhaps in future create one relative and reference to it from all childs?
                     //$newMother = $this->createMother($oldMother);
                 }else{
                     $this->getLogger()->info("Mother reference found...");
@@ -2254,7 +2251,7 @@ class MigrationUtil {
 
             //check if reference to person
             if(!is_null($oldMarriagePartner["kindespartner_id-nr"])){
-                // think about special case 88558<->87465
+                //TODO: think about special case 88558<->87465
                 //check it?
                 $marriagePartnerOID = $oldMarriagePartner["kindespartner_id-nr"];
 

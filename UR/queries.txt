@@ -34,3 +34,64 @@ WHERE ID IN
 JOIN mutter 
 ON ids.oid =`mutter`.`mutter_id-nr` 
 WHERE mutter.`mutter_id-nr` IS NOT NULL)
+
+//check if oids contain other things than numbers
+SELECT DISTINCT oids.id as mainPersonId, oids.type, oids.referenceOid
+FROM (
+          SELECT `kind_id-nr` as referenceOid, id as id, "kind" as type
+          FROM kind
+          WHERE `kind_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `mütterl_großvater_id-nr` as referenceOid, id as id, "großvater_muetterlich" as type
+          FROM `großvater_muetterlicherseits`
+          WHERE `mütterl_großvater_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `vät_großvater_id-nr` as referenceOid, id as id, "großvater_vaeterlich" as type
+          FROM `großvater_vaeterlicherseits`
+          WHERE `vät_großvater_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `mutter_id-nr` as referenceOid, id as id, "mutter" as type
+          FROM `mutter`
+          WHERE `mutter_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `vater_id-nr` as referenceOid, id as id, "vater" as type
+          FROM `vater`
+          WHERE `vater_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `geschwister_id-nr` as referenceOid, id as id, "geschwister" as type
+          FROM `geschwister`
+          WHERE `geschwister_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `ehepartner_id-nr` as referenceOid, id as id, "ehepartner" as type
+          FROM `ehepartner`
+          WHERE `ehepartner_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `partnerpartner_id-nr` as referenceOid, id as id, "partnerpartner" as type
+          FROM `ehepartner`
+          WHERE `partnerpartner_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `schwiegervater_id-nr` as referenceOid, id as id, "schwiegervater" as type
+          FROM `schwiegervater`
+          WHERE `schwiegervater_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `partnerpartner_id-nr` as referenceOid, id as id, "partnerpartner" as type
+          FROM `anderer_partner`
+          WHERE `partnerpartner_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `geschwisterpartner_id-nr` as referenceOid, id as id, "geschwisterpartner" as type
+          FROM `ehepartner_des_geschwisters`
+          WHERE `geschwisterpartner_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `kindespartner_id-nr` as referenceOid, id as id, "kindespartner" as type
+          FROM `ehepartner_des_kindes`
+          WHERE `kindespartner_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `geschwistervater_id-nr` as referenceOid, id as id, "geschwistervater" as type
+          FROM `vater des geschwisters`
+          WHERE `geschwistervater_id-nr` NOT REGEXP '^-?[0-9]+$'
+          UNION ALL
+          SELECT `enkel_id-nr` as referenceOid, id as id, "enkelkind" as type
+          FROM `enkelkind`
+          WHERE `enkel_id-nr` NOT REGEXP '^-?[0-9]+$'
+) as oids
+ORDER BY type
