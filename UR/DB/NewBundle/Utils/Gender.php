@@ -17,6 +17,6 @@ class Gender extends BasicEnum {
     const __default = self::UNKNOWN;
     
     const UNKNOWN = 0;
-    const MALE = 2;
-    const FEMALE = 3;
+    const MALE = 1;
+    const FEMALE = 2;
 }

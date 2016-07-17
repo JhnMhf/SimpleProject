@@ -345,7 +345,12 @@ class MigrateData {
             $this->LOGGER->debug("Found -im Original in" . $string);
             $result[0] = substr($string, 0, $containsImOriginal);
             $result[1] = substr($string, $containsImOriginal);
+        } else if (substr($lowerCaseString,-1) == "?"){
+            $this->LOGGER->debug("Found an '?' at the end of " . $string);
+            $result[0] = substr($string, 0, count($string) -1);
+            $result[1] = "?";
         }
+
 
         $this->LOGGER->debug("Extracted Name '" . $result[0] . "' and comment '" . $result[1] . "'");
         return $result;
@@ -483,32 +488,67 @@ class MigrateData {
     //@TODO: Handle other entries: 
     //SELECT geschlecht,count(*) FROM `kind` GROUP BY geschlecht ORDER BY count(*) DESC
     public function extractGenderAndGenderComment($genderString){
+        if(trim($genderString) == ""){
+            $this->LOGGER->debug("Empty genderstring.");
+            return [Gender::UNKNOWN, null];
+        }
+        
         $result = $this->tryExtractingNameAndCommentFromString($genderString);
         
-        $result[0] = $this->getGender($result[0]);
+        if(trim($result[0]) == ""){
+            $guessedGender = $this->getGender($result[0]);
+        
+            // if the gender is unknown
+            if($guessedGender == Gender::UNKNOWN){
+
+                // and the name is not null or empty
+                if(!is_null($result[0]) || trim($result[0]) != ""){
+
+                    if(is_null($result[1]) || trim($result[1]) == ""){
+                        // if the comment is empty, fill the comment with the name
+                        $result[1] = $result[0];
+                    } else{
+                        // if the comment is already filled, use the original string as comment
+                        $result[1] = $genderString;
+                    }
+                }
+            } 
+            
+            $result[0] = $guessedGender;
+        } else{
+            $result[0] = Gender::UNKNOWN;
+        }
+        
+        
+        
+        
         
         return $result;
     }
     
     public function getGender($gender) {
         //undefined = 0, male = 1, female = 2
+        
+        $gender = strtolower(trim($gender));
 
         if (is_numeric($gender)) {
-            if ($gender == 1) {
-                return 1;
-            } else if ($gender == 2) {
-                return 2;
+            if ($gender == Gender::MALE) {
+                return Gender::MALE;
+            } else if ($gender == Gender::FEMALE) {
+                return Gender::FEMALE;
             }
 
-            return 0;
+            return Gender::UNKNOWN;
         } else {
-            if ($gender == "männlich") {
-                return 1;
-            } else if ($gender == "weiblich") {
-                return 2;
+            if ($gender == "männlich" || $gender == "m" || $gender == "mm") {
+                return Gender::MALE;
+            } else if ($gender == "weiblich" || $gender == "f") {
+                return Gender::FEMALE;
             }
+            
+            $this->LOGGER->debug("Could not identify gender: ".$gender);
 
-            return 0;
+            return Gender::UNKNOWN;
         }
     }
 
@@ -516,19 +556,21 @@ class MigrateData {
         //undefined = 0, male = 1, female = 2
 
         if (is_numeric($gender)) {
-            if ($gender == 1) {
-                return 2;
-            } else if ($gender == 2) {
-                return 1;
+            if ($gender == Gender::MALE) {
+                return Gender::FEMALE;
+            } else if ($gender == Gender::FEMALE) {
+                return Gender::MALE;
             }
 
-            return 0;
+            return Gender::UNKNOWN;
         } else {
-            if ($gender == "männlich") {
+            if ($gender == "männlich" || $gender == "m" || $gender == "mm") {
                 return "weiblich";
-            } else if ($gender == "weiblich") {
+            } else if ($gender == "weiblich" || $gender == "f") {
                 return "männlich";
             }
+            
+            $this->LOGGER->debug("Could not identify opposite gender: ".$gender);
 
             return "undefined";
         }

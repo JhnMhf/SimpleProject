@@ -1,19 +1,19 @@
 //summary of values in gender
-SELECT gender.geschlecht,count(*) 
+SELECT type, gender.geschlecht,count(*) 
 FROM ( 
-      SELECT geschlecht 
+      SELECT geschlecht, "enkelkind" as type
       FROM `enkelkind` 
       UNION ALL
-      SELECT geschlecht 
+      SELECT geschlecht, "geschwister" as type 
       FROM `geschwister` 
       UNION ALL
-      SELECT geschlecht 
+      SELECT geschlecht, "geschwisterkind" as type 
       FROM `geschwisterkind`
       UNION ALL
-      SELECT geschlecht 
+      SELECT geschlecht, "kind" as type 
       FROM `kind` 
       UNION ALL
-      SELECT geschlecht 
+      SELECT geschlecht, "person" as type 
       FROM `person` 
 ) gender
 GROUP BY geschlecht 
