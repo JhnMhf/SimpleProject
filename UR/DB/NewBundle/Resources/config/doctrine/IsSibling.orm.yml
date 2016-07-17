@@ -1,6 +1,7 @@
 UR\DB\NewBundle\Entity\IsSibling:
     type: entity
     table: is_sibling
+    repositoryClass: UR\DB\NewBundle\Entity\IsSiblingRepository
     options:
         collate: utf8_general_ci
         charset: utf8

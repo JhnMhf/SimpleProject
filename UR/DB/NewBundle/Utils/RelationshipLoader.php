@@ -85,13 +85,7 @@ class RelationshipLoader {
     private function loadParents($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading parents for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
-
-        $parentIds = $queryBuilder
-                ->where('p.childID = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        $parentIds = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadParents($id);
 
         $this->getLogger()->info("Found  " . count($parentIds) . " parents");
 
@@ -101,14 +95,8 @@ class RelationshipLoader {
     private function loadChildren($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading children for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
-
-        $childrenIds = $queryBuilder
-                ->where('p.parentID = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
-
+        $childrenIds = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadChildren($id);
+        
         $this->getLogger()->info("Found  " . count($childrenIds) . " children");
 
         return $this->generateRelativesEntry($id, $alreadyLoaded, $childrenIds, $skipRelativesForPersons);
@@ -117,13 +105,7 @@ class RelationshipLoader {
     private function loadGrandparents($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading grandparents for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
-
-        $grandparentIds = $queryBuilder
-                ->where('gp.grandChildID = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        $grandparentIds = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandparents($id);
 
         $this->getLogger()->info("Found  " . count($grandparentIds) . " grandparents");
 
@@ -133,13 +115,7 @@ class RelationshipLoader {
     private function loadGrandchildren($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading grandchildren for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->createQueryBuilder('gp');
-
-        $grandchildrenIds = $queryBuilder
-                ->where('gp.grandParentID = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        $grandchildrenIds = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($id);
 
         $this->getLogger()->info("Found  " . count($grandchildrenIds) . " grandchildren");
 
@@ -149,13 +125,7 @@ class RelationshipLoader {
     private function loadSiblings($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading siblings for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
-
-        $siblingIds = $queryBuilder
-                ->where('s.siblingOneid = :id OR s.siblingTwoid = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        $siblingIds = $this->getDBManager()->getRepository('NewBundle:IsSibling')->loadSiblings($id);
 
         $this->getLogger()->info("Found  " . count($siblingIds) . " siblings");
 
@@ -164,14 +134,8 @@ class RelationshipLoader {
 
     private function loadMarriagePartners($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading marriage partners for id: " . $id);
-
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
-
-        $marriagePartnerIds = $queryBuilder
-                ->where('w.husbandId = :id OR w.wifeId = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        
+        $marriagePartnerIds = $this->getDBManager()->getRepository('NewBundle:Wedding')->loadMarriagePartners($id);
 
         $this->getLogger()->info("Found  " . count($marriagePartnerIds) . " marriage partners");
 
@@ -181,14 +145,8 @@ class RelationshipLoader {
     private function loadParentsInLaw($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading parentInLaw for id: " . $id);
 
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
-
-        $parentsInLawIds = $queryBuilder
-                ->where('p.childInLawid = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
-
+        $parentsInLawIds = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($id);
+        
         $this->getLogger()->info("Found  " . count($parentsInLawIds) . " parentInLaw");
 
         return $this->generateRelativesEntry($id, $alreadyLoaded, $parentsInLawIds, $skipRelativesForPersons);
@@ -196,14 +154,8 @@ class RelationshipLoader {
 
     private function loadChildrenInLaw($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Loading childrenInLaw for id: " . $id);
-
-        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->createQueryBuilder('p');
-
-        $childrenInLawIds = $queryBuilder
-                ->where('p.parentInLawid = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
+        
+        $childrenInLawIds = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($id);
 
         $this->getLogger()->info("Found  " . count($childrenInLawIds) . " childrenInLaw");
 

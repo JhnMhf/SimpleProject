@@ -1,6 +1,7 @@
 UR\DB\NewBundle\Entity\Wedding:
     type: entity
     table: wedding
+    repositoryClass: UR\DB\NewBundle\Entity\WeddingRepository
     options:
         collate: utf8_general_ci
         charset: utf8

@@ -1,6 +1,7 @@
 UR\DB\NewBundle\Entity\IsParentInLaw:
     type: entity
     table: is_parent_in_law
+    repositoryClass: UR\DB\NewBundle\Entity\IsParentInLawRepository
     options:
         collate: utf8_general_ci
         charset: utf8

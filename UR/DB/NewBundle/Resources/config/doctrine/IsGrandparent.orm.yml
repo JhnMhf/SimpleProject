@@ -1,6 +1,7 @@
 UR\DB\NewBundle\Entity\IsGrandparent:
     type: entity
     table: is_grandparent
+    repositoryClass: UR\DB\NewBundle\Entity\IsGrandparentRepository
     options:
         collate: utf8_general_ci
         charset: utf8
