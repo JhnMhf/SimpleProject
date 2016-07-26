@@ -494,7 +494,7 @@ class MigrateData {
         
         $result = $this->tryExtractingNameAndCommentFromString($genderString);
         
-        if(trim($result[0]) == ""){
+        if(trim($result[0]) != ""){
             $guessedGender = $this->getGender($result[0]);
         
             // if the gender is unknown

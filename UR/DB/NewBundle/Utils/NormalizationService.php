@@ -57,6 +57,7 @@ class NormalizationService {
     }
     
     public function writeOutAbbreviations($string){
+        //@TODO: Andreas Michaußeretatmäßig should not happen.
         return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
     }
     
