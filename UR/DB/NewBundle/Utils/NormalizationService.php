@@ -42,7 +42,9 @@ class NormalizationService {
         foreach($lines as $line)
         {
             $splittedLine = explode(self::DELIMITER,$line);
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            //first trim, to remove more than one empty space, then add one at 
+            //the start and the end, to prevent replacing inside of an word
+            $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -57,7 +59,6 @@ class NormalizationService {
     }
     
     public function writeOutAbbreviations($string){
-        //@TODO: Andreas Michaußeretatmäßig should not happen.
         return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
     }
     
