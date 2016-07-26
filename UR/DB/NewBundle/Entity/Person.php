@@ -1,22 +1,16 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace UR\DB\NewBundle\Entity;
 
 /**
- * Description of Person
- *
- * @author johanna
+ * Person
  */
-class Person extends BasePerson  {
+class Person extends BasePerson
+{
     public function __toString (){
         return "Person with ID: ".$this->getId();
     }
+    
     /**
      * @var integer
      */
@@ -32,6 +26,72 @@ class Person extends BasePerson  {
      */
     private $complete;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $sources;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $educations;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $honours;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $properties;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $ranks;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $religions;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $residences;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $roadOfLife;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stati;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $works;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->sources = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->educations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->honours = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ranks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->religions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->residences = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roadOfLife = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->works = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Set oid
@@ -106,39 +166,6 @@ class Person extends BasePerson  {
     }
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $sources;
-
-
-    /**
-     * Get sources
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSources()
-    {
-        return $this->sources;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->sources = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->educations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->honours = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->ranks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->religions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->residences = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->roadOfLife = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->works = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-
-    /**
      * Add source
      *
      * @param \UR\DB\NewBundle\Entity\Source $source
@@ -160,53 +187,17 @@ class Person extends BasePerson  {
     public function removeSource(\UR\DB\NewBundle\Entity\Source $source)
     {
         $this->sources->removeElement($source);
-
     }
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * Get sources
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
-    private $educations;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $honours;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $properties;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $ranks;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $religions;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $residences;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $roadOfLife;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $stati;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $works;
+    public function getSources()
+    {
+        return $this->sources;
+    }
 
     /**
      * Add education
@@ -513,149 +504,5 @@ class Person extends BasePerson  {
     {
         return $this->works;
     }
-    /**
-     * @var \UR\DB\NewBundle\Entity\Nation
-     */
-    private $originalNation;
-
-
-    /**
-     * Set originalNation
-     *
-     * @param \UR\DB\NewBundle\Entity\Nation $originalNation
-     *
-     * @return Person
-     */
-    public function setOriginalNation(\UR\DB\NewBundle\Entity\Nation $originalNation = null)
-    {
-        $this->originalNation = $originalNation;
-
-        return $this;
-    }
-
-    /**
-     * Get originalNation
-     *
-     * @return \UR\DB\NewBundle\Entity\Nation
-     */
-    public function getOriginalNation()
-    {
-        return $this->originalNation;
-    }
-    /**
-     * @var integer
-     */
-    private $originalNationid;
-
-
-    /**
-     * Set originalNationid
-     *
-     * @param integer $originalNationid
-     *
-     * @return Person
-     */
-    public function setOriginalNationid($originalNationid)
-    {
-        $this->originalNationid = $originalNationid;
-
-        return $this;
-    }
-
-    /**
-     * Get originalNationid
-     *
-     * @return integer
-     */
-    public function getOriginalNationid()
-    {
-        return $this->originalNationid;
-    }
-    /**
-     * @var \UR\DB\NewBundle\Entity\Birth
-     */
-    private $birth;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Baptism
-     */
-    private $baptism;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Death
-     */
-    private $death;
-
-
-    /**
-     * Set birth
-     *
-     * @param \UR\DB\NewBundle\Entity\Birth $birth
-     *
-     * @return Person
-     */
-    public function setBirth(\UR\DB\NewBundle\Entity\Birth $birth = null)
-    {
-        $this->birth = $birth;
-
-        return $this;
-    }
-
-    /**
-     * Get birth
-     *
-     * @return \UR\DB\NewBundle\Entity\Birth
-     */
-    public function getBirth()
-    {
-        return $this->birth;
-    }
-
-    /**
-     * Set baptism
-     *
-     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
-     *
-     * @return Person
-     */
-    public function setBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism = null)
-    {
-        $this->baptism = $baptism;
-
-        return $this;
-    }
-
-    /**
-     * Get baptism
-     *
-     * @return \UR\DB\NewBundle\Entity\Baptism
-     */
-    public function getBaptism()
-    {
-        return $this->baptism;
-    }
-
-    /**
-     * Set death
-     *
-     * @param \UR\DB\NewBundle\Entity\Death $death
-     *
-     * @return Person
-     */
-    public function setDeath(\UR\DB\NewBundle\Entity\Death $death = null)
-    {
-        $this->death = $death;
-
-        return $this;
-    }
-
-    /**
-     * Get death
-     *
-     * @return \UR\DB\NewBundle\Entity\Death
-     */
-    public function getDeath()
-    {
-        return $this->death;
-    }
 }
+

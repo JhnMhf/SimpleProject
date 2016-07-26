@@ -1,52 +1,16 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace UR\DB\NewBundle\Entity;
 
 /**
- * Description of Partner
- *
- * @author johanna
+ * Partner
  */
-class Partner extends BasePerson  {
+class Partner extends BasePerson
+{
     public function __toString (){
         return "Partner with ID: ".$this->getId();
     }
-    /**
-     * @var integer
-     */
-    private $originalNationid;
-
-
-    /**
-     * Set originalNationid
-     *
-     * @param integer $originalNationid
-     *
-     * @return Partner
-     */
-    public function setOriginalNationid($originalNationid)
-    {
-        $this->originalNationid = $originalNationid;
-
-        return $this;
-    }
-
-    /**
-     * Get originalNationid
-     *
-     * @return integer
-     */
-    public function getOriginalNationid()
-    {
-        return $this->originalNationid;
-    }
-   
+    
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -91,11 +55,6 @@ class Partner extends BasePerson  {
      * @var \Doctrine\Common\Collections\Collection
      */
     private $works;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Nation
-     */
-    private $originalNation;
 
     /**
      * Constructor
@@ -418,115 +377,5 @@ class Partner extends BasePerson  {
     {
         return $this->works;
     }
-
-    /**
-     * Set originalNation
-     *
-     * @param \UR\DB\NewBundle\Entity\Nation $originalNation
-     *
-     * @return Partner
-     */
-    public function setOriginalNation(\UR\DB\NewBundle\Entity\Nation $originalNation = null)
-    {
-        $this->originalNation = $originalNation;
-
-        return $this;
-    }
-
-    /**
-     * Get originalNation
-     *
-     * @return \UR\DB\NewBundle\Entity\Nation
-     */
-    public function getOriginalNation()
-    {
-        return $this->originalNation;
-    }
-    /**
-     * @var \UR\DB\NewBundle\Entity\Birth
-     */
-    private $birth;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Baptism
-     */
-    private $baptism;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Death
-     */
-    private $death;
-
-
-    /**
-     * Set birth
-     *
-     * @param \UR\DB\NewBundle\Entity\Birth $birth
-     *
-     * @return Partner
-     */
-    public function setBirth(\UR\DB\NewBundle\Entity\Birth $birth = null)
-    {
-        $this->birth = $birth;
-
-        return $this;
-    }
-
-    /**
-     * Get birth
-     *
-     * @return \UR\DB\NewBundle\Entity\Birth
-     */
-    public function getBirth()
-    {
-        return $this->birth;
-    }
-
-    /**
-     * Set baptism
-     *
-     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
-     *
-     * @return Partner
-     */
-    public function setBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism = null)
-    {
-        $this->baptism = $baptism;
-
-        return $this;
-    }
-
-    /**
-     * Get baptism
-     *
-     * @return \UR\DB\NewBundle\Entity\Baptism
-     */
-    public function getBaptism()
-    {
-        return $this->baptism;
-    }
-
-    /**
-     * Set death
-     *
-     * @param \UR\DB\NewBundle\Entity\Death $death
-     *
-     * @return Partner
-     */
-    public function setDeath(\UR\DB\NewBundle\Entity\Death $death = null)
-    {
-        $this->death = $death;
-
-        return $this;
-    }
-
-    /**
-     * Get death
-     *
-     * @return \UR\DB\NewBundle\Entity\Death
-     */
-    public function getDeath()
-    {
-        return $this->death;
-    }
 }
+

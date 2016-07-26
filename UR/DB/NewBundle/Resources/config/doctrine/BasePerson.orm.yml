@@ -19,6 +19,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             length: 100
             options:
                 fixed: false
+                default: null
             column: first_name
         patronym:
             type: string
@@ -26,12 +27,14 @@ UR\DB\NewBundle\Entity\BasePerson:
             length: 100
             options:
                 fixed: false
+                default: null
         lastName:
             type: string
             nullable: true
             length: 100
             options:
                 fixed: false
+                default: null
             column: last_name
         foreName:
             type: string
@@ -39,6 +42,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             length: 100
             options:
                 fixed: false
+                default: null
             column: fore_name
         birthName:
             type: string
@@ -46,6 +50,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             length: 100
             options:
                 fixed: false
+                default: null
             column: birth_name
         gender:
             type: integer
@@ -60,31 +65,47 @@ UR\DB\NewBundle\Entity\BasePerson:
             length: 200
             options:
                 fixed: false
+                default: null
         comment:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+                default: null
         bornInMarriage:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+                default: null
             column: born_in_marriage
-        jobClassid:
-            type: integer
+    oneToOne:
+        birth:
+          targetEntity: Birth
+          joinColumn:
+            name: birth_id
+            referencedColumnName: ID
             nullable: true
-            options:
-                unsigned: false
-            column: job_classID
-        jobid:
-            type: integer
+          fetch: EAGER
+          cascade: ["persist","remove"]
+        baptism:
+          targetEntity: Baptism
+          joinColumn:
+            name: baptism_id
+            referencedColumnName: ID
             nullable: true
-            options:
-                unsigned: false
-            column: jobID
+          fetch: EAGER
+          cascade: ["persist","remove"]
+        death:
+          targetEntity: Death
+          joinColumn:
+            name: death_id
+            referencedColumnName: ID
+            nullable: true
+          fetch: EAGER
+          cascade: ["persist","remove"]
     manyToOne:
         job:
             targetEntity: Job
@@ -101,6 +122,14 @@ UR\DB\NewBundle\Entity\BasePerson:
                 name: job_classID
                 referencedColumnName: ID
                 nullable: true
+            cascade: ["persist"]
+        nation:
+            targetEntity: Nation
+            fetch: EAGER
+            joinColumn:
+                name: nationID
+                referencedColumnName: ID
+                nullable: true          
             cascade: ["persist"]
     
     lifecycleCallbacks: {  }

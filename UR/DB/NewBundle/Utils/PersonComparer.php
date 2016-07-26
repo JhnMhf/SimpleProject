@@ -168,11 +168,7 @@ class PersonComparer {
     }
 
     private function getNation($person) {
-        if (get_class($person) == self::RELATIVE_CLASS) {
-            return $person->getNation();
-        }
-
-        return $person->getOriginalNation();
+        return $person->getNation();
     }
 
     private function unmatchedArrays($arrayOne, $arrayTwo, $type, $allowLessInformation = false) {

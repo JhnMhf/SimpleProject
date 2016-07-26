@@ -1,51 +1,16 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace UR\DB\NewBundle\Entity;
 
 /**
- * Description of Relative
- *
- * @author johanna
+ * Relative
  */
-class Relative extends BasePerson {
+class Relative  extends BasePerson
+{
     public function __toString (){
         return "Relative with ID: ".$this->getId();
     }
-    /**
-     * @var integer
-     */
-    private $nationid;
-
-
-    /**
-     * Set nationid
-     *
-     * @param integer $nationid
-     *
-     * @return Relative
-     */
-    public function setNationid($nationid)
-    {
-        $this->nationid = $nationid;
-
-        return $this;
-    }
-
-    /**
-     * Get nationid
-     *
-     * @return integer
-     */
-    public function getNationid()
-    {
-        return $this->nationid;
-    }
+    
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -92,11 +57,6 @@ class Relative extends BasePerson {
     private $works;
 
     /**
-     * @var \UR\DB\NewBundle\Entity\Nation
-     */
-    private $nation;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -111,7 +71,7 @@ class Relative extends BasePerson {
         $this->stati = new \Doctrine\Common\Collections\ArrayCollection();
         $this->works = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Add education
      *
@@ -417,115 +377,5 @@ class Relative extends BasePerson {
     {
         return $this->works;
     }
-
-    /**
-     * Set nation
-     *
-     * @param \UR\DB\NewBundle\Entity\Nation $nation
-     *
-     * @return Relative
-     */
-    public function setNation(\UR\DB\NewBundle\Entity\Nation $nation = null)
-    {
-        $this->nation = $nation;
-
-        return $this;
-    }
-
-    /**
-     * Get nation
-     *
-     * @return \UR\DB\NewBundle\Entity\Nation
-     */
-    public function getNation()
-    {
-        return $this->nation;
-    }
-    /**
-     * @var \UR\DB\NewBundle\Entity\Birth
-     */
-    private $birth;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Baptism
-     */
-    private $baptism;
-
-    /**
-     * @var \UR\DB\NewBundle\Entity\Death
-     */
-    private $death;
-
-
-    /**
-     * Set birth
-     *
-     * @param \UR\DB\NewBundle\Entity\Birth $birth
-     *
-     * @return Relative
-     */
-    public function setBirth(\UR\DB\NewBundle\Entity\Birth $birth = null)
-    {
-        $this->birth = $birth;
-
-        return $this;
-    }
-
-    /**
-     * Get birth
-     *
-     * @return \UR\DB\NewBundle\Entity\Birth
-     */
-    public function getBirth()
-    {
-        return $this->birth;
-    }
-
-    /**
-     * Set baptism
-     *
-     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
-     *
-     * @return Relative
-     */
-    public function setBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism = null)
-    {
-        $this->baptism = $baptism;
-
-        return $this;
-    }
-
-    /**
-     * Get baptism
-     *
-     * @return \UR\DB\NewBundle\Entity\Baptism
-     */
-    public function getBaptism()
-    {
-        return $this->baptism;
-    }
-
-    /**
-     * Set death
-     *
-     * @param \UR\DB\NewBundle\Entity\Death $death
-     *
-     * @return Relative
-     */
-    public function setDeath(\UR\DB\NewBundle\Entity\Death $death = null)
-    {
-        $this->death = $death;
-
-        return $this;
-    }
-
-    /**
-     * Get death
-     *
-     * @return \UR\DB\NewBundle\Entity\Death
-     */
-    public function getDeath()
-    {
-        return $this->death;
-    }
 }
+

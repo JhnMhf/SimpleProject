@@ -113,7 +113,7 @@ class MigrationUtil {
 
         $this->migrateReligionController($newPerson, $ID, $oldDBManager);
 
-        $this->migrateOriginalNation($newPerson, $person);
+        $this->migrateNation($newPerson, $person);
 
         $this->migrateSource($newPerson, $ID, $oldDBManager);
 
@@ -236,12 +236,12 @@ class MigrationUtil {
         return $stmt->fetchAll();
     }
 
-    private function migrateOriginalNation($newPerson, $person){
+    private function migrateNation($newPerson, $person){
 
         if(!is_null($person->getUrspNation())){
             $nationId = $this->getMigrationService()->migrateNation($person->getUrspNation(), "");
 
-            $newPerson->setOriginalNation($nationId);
+            $newPerson->setNation($nationId);
         }
     }
 

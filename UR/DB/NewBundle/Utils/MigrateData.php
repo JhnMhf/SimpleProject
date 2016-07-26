@@ -786,7 +786,7 @@ class MigrateData {
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newPartner->setGender($genderResult[0]);
         $newPartner->setGenderComment($genderResult[1]);
-        $newPartner->setOriginalNation($this->getNation($nation));
+        $newPartner->setNation($this->getNation($nation));
 
         $newPartner->setComment($this->normalize($comment));
         $newPartner->setJob(null);

@@ -400,4 +400,120 @@ class BasePerson
     {
         return $this->genderComment;
     }
+    /**
+     * @var \UR\DB\NewBundle\Entity\Birth
+     */
+    private $birth;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Baptism
+     */
+    private $baptism;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Death
+     */
+    private $death;
+
+    /**
+     * @var \UR\DB\NewBundle\Entity\Nation
+     */
+    private $nation;
+
+
+    /**
+     * Set birth
+     *
+     * @param \UR\DB\NewBundle\Entity\Birth $birth
+     *
+     * @return BasePerson
+     */
+    public function setBirth(\UR\DB\NewBundle\Entity\Birth $birth = null)
+    {
+        $this->birth = $birth;
+
+        return $this;
+    }
+
+    /**
+     * Get birth
+     *
+     * @return \UR\DB\NewBundle\Entity\Birth
+     */
+    public function getBirth()
+    {
+        return $this->birth;
+    }
+
+    /**
+     * Set baptism
+     *
+     * @param \UR\DB\NewBundle\Entity\Baptism $baptism
+     *
+     * @return BasePerson
+     */
+    public function setBaptism(\UR\DB\NewBundle\Entity\Baptism $baptism = null)
+    {
+        $this->baptism = $baptism;
+
+        return $this;
+    }
+
+    /**
+     * Get baptism
+     *
+     * @return \UR\DB\NewBundle\Entity\Baptism
+     */
+    public function getBaptism()
+    {
+        return $this->baptism;
+    }
+
+    /**
+     * Set death
+     *
+     * @param \UR\DB\NewBundle\Entity\Death $death
+     *
+     * @return BasePerson
+     */
+    public function setDeath(\UR\DB\NewBundle\Entity\Death $death = null)
+    {
+        $this->death = $death;
+
+        return $this;
+    }
+
+    /**
+     * Get death
+     *
+     * @return \UR\DB\NewBundle\Entity\Death
+     */
+    public function getDeath()
+    {
+        return $this->death;
+    }
+
+    /**
+     * Set nation
+     *
+     * @param \UR\DB\NewBundle\Entity\Nation $nation
+     *
+     * @return BasePerson
+     */
+    public function setNation(\UR\DB\NewBundle\Entity\Nation $nation = null)
+    {
+        $this->nation = $nation;
+
+        return $this;
+    }
+
+    /**
+     * Get nation
+     *
+     * @return \UR\DB\NewBundle\Entity\Nation
+     */
+    public function getNation()
+    {
+        return $this->nation;
+    }
 }

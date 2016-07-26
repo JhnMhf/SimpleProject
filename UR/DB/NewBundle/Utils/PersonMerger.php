@@ -855,19 +855,11 @@ class PersonMerger {
     }
 
     private function getNation(\UR\DB\NewBundle\Entity\BasePerson $person) {
-        if (get_class($person) == PersonClasses::RELATIVE_CLASS) {
-            return $person->getNation();
-        }
-
-        return $person->getOriginalNation();
+        return $person->getNation();
     }
 
     private function setNation(\UR\DB\NewBundle\Entity\BasePerson $person, \UR\DB\NewBundle\Entity\Nation $nation) {
-        if (get_class($person) == PersonClasses::RELATIVE_CLASS) {
-            $person->setNation($nation);
-        }
-
-        $person->setOriginalNation($nation);
+        $person->setNation($nation);
     }
 
     private function mergeWorks(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {

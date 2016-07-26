@@ -9,37 +9,6 @@ UR\DB\NewBundle\Entity\Relative:
         type: concrete
         extends: Entities\BasePerson 
     fields:
-        nationid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: nationID
-    oneToOne:
-        birth:
-          targetEntity: Birth
-          joinColumn:
-            name: birth_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
-        baptism:
-          targetEntity: Baptism
-          joinColumn:
-            name: baptism_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
-        death:
-          targetEntity: Death
-          joinColumn:
-            name: death_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
     oneToMany:
         educations:
           orderBy: { 'educationOrder': 'ASC' }
@@ -95,12 +64,3 @@ UR\DB\NewBundle\Entity\Relative:
           mappedBy: person
           fetch: EAGER
           cascade: ["persist","remove"]
-    manyToOne:
-        nation:
-            targetEntity: Nation
-            fetch: EAGER
-            joinColumn:
-                name: nationID
-                referencedColumnName: ID
-                nullable: true          
-            cascade: ["persist"]

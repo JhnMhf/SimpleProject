@@ -18,12 +18,6 @@ UR\DB\NewBundle\Entity\Person:
             options:
                 unsigned: false
             column: OID
-        originalNationid:
-            type: integer
-            nullable: true
-            options:
-                unsigned: false
-            column: original_nationID
         control:
             type: text
             nullable: true
@@ -36,31 +30,6 @@ UR\DB\NewBundle\Entity\Person:
             length: 65535
             options:
                 fixed: false
-    oneToOne:
-        birth:
-          targetEntity: Birth
-          joinColumn:
-            name: birth_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
-        baptism:
-          targetEntity: Baptism
-          joinColumn:
-            name: baptism_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
-        death:
-          targetEntity: Death
-          joinColumn:
-            name: death_id
-            referencedColumnName: ID
-            nullable: true
-          fetch: EAGER
-          cascade: ["persist","remove"]
     oneToMany:
         sources:
           orderBy: { 'sourceOrder': 'ASC' }
@@ -122,12 +91,3 @@ UR\DB\NewBundle\Entity\Person:
           mappedBy: person
           fetch: EAGER
           cascade: ["persist","remove"]
-    manyToOne:
-        originalNation:
-            targetEntity: Nation
-            fetch: EAGER
-            joinColumn:
-                name: original_nationID
-                referencedColumnName: ID
-                nullable: true
-            cascade: ["persist"]
