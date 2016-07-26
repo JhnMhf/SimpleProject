@@ -39,6 +39,9 @@ class PersonMerger {
         } else if($personTwo == null){
             return $personOne;
         }
+        
+        //flush at start to have clean state
+        $this->newDBManager->flush();
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo != Gender::UNKNOWN) {
             $this->LOGGER->warn("Trying to merge a man with a woman, is this really right?");
@@ -88,10 +91,16 @@ class PersonMerger {
         $this->LOGGER->info("Now removing: " . $toBeDeleted);
         //remove obj itself
         $this->newDBManager->remove($toBeDeleted);
+        $this->migrateData->remove($toBeDeleted);
 
         //remove like birth should be removed automatically by removing the person
         //
         //all relationships should already be removed/ migrated
+        $this->newDBManager->detach($toBeDeleted);
+        $this->migrateData->detach($toBeDeleted);
+        
+        
+        $this->migrateData->flush($toBeDeleted);
     }
 
     private function mergeBasicPerson(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -124,6 +133,8 @@ class PersonMerger {
         $this->mergeJobClass($dataMaster, $toBeDeleted);
         $this->mergeResidence($dataMaster, $toBeDeleted);
         $this->mergeSource($dataMaster, $toBeDeleted);
+        
+        $this->newDBManager->flush();
     }
 
     private function mergeRelationships(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -147,6 +158,8 @@ class PersonMerger {
         $this->mergeChildrenInLaw($dataMaster, $toBeDeleted);
 
         $this->mergeWeddings($dataMaster, $toBeDeleted);
+        
+        $this->newDBManager->flush();
     }
 
     private function mergeSiblings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -388,6 +401,7 @@ class PersonMerger {
     }
 
     private function extractRelatedPersonId($idOfPerson, $entry, $type) {
+        $this->LOGGER->debug("Get related person Id for: ".$entry . " with main person being: ".$idOfPerson);
         switch ($type) {
             case PersonRelations::SIBLING:
                 return $this->extractSiblingId($idOfPerson, $entry);
@@ -429,6 +443,8 @@ class PersonMerger {
         if ($weddingEntry->getWifeId() == $idOfPerson) {
             $partnerId = $weddingEntry->getHusbandId();
         }
+        
+        //@TODO: Wedding partner could not befilled (father migration but without mother?)
 
         return $partnerId;
     }
@@ -466,6 +482,7 @@ class PersonMerger {
         }
 
         $this->newDBManager->persist($entry);
+        $this->newDBManager->flush($entry);
     }
 
     private function replaceWeddingPartner($currentId, $newId, $weddingEntry) {
@@ -491,6 +508,7 @@ class PersonMerger {
     }
 
     private function loadPerson($id) {
+        $this->LOGGER->debug("Trying to load person with id: " . $id);
         $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
 
         if (is_null($person)) {
@@ -503,6 +521,7 @@ class PersonMerger {
 
         if (is_null($person)) {
             //throw exception
+            throw new \Exception("Could not find person with ID: ".$id);
         }
 
         $this->LOGGER->debug("Loaded Person: " . $person);

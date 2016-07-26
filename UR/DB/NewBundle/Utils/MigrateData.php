@@ -249,6 +249,7 @@ class MigrateData {
 
     //Perhaps it belongs to the jobclass and not the job?
     public function getJob($jobLabel, $comment = null) {
+        $this->LOGGER->debug("Getting job: ".$jobLabel);
         if ($jobLabel == "" || $jobLabel == null) {
             return null;
         }
@@ -485,8 +486,6 @@ class MigrateData {
         }
     }
 
-    //@TODO: Handle other entries: 
-    //SELECT geschlecht,count(*) FROM `kind` GROUP BY geschlecht ORDER BY count(*) DESC
     public function extractGenderAndGenderComment($genderString){
         if(trim($genderString) == ""){
             $this->LOGGER->debug("Empty genderstring.");
@@ -593,7 +592,6 @@ class MigrateData {
         $newBirth->setBirthDate($this->getDate($birthDate));
 
         $this->newDBManager->persist($newBirth);
-
         $person->setBirth($newBirth);
         $this->newDBManager->flush();
     }
@@ -721,6 +719,8 @@ class MigrateData {
             $this->newDBManager->persist($newIsParent);
             $this->newDBManager->flush();
         }
+        
+         $this->LOGGER->info("Finished adding childParentRelation with... Child: '" . $child . "' Parent: '" . $parent . "'");
     }
 
     public function migrateIsParentInLaw($childInLaw, $parentInLaw, $comment = null) {
@@ -776,6 +776,7 @@ class MigrateData {
     }
 
     public function migratePartner($firstName, $patronym, $lastName, $gender, $nation = null, $comment = null) {
+        $this->LOGGER->debug("Migrating Partner: ".$firstName." ".$lastName);
         //insert into new data
         $newPartner = new Partner();
 
@@ -793,7 +794,8 @@ class MigrateData {
 
         $this->newDBManager->persist($newPartner);
         $this->newDBManager->flush();
-
+        
+        $this->LOGGER->debug("Finished migrating Partner: ".$newPartner);
         return $newPartner;
     }
 
@@ -801,6 +803,7 @@ class MigrateData {
     //born_in_marriage (from mother/ father?)
     //weddingID
     public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $jobClass, $comment = null) {
+        $this->LOGGER->debug("Migrating Person with oid '".$oid."' : ".$firstName." ".$lastName);
         //insert into new data
         $newPerson = new Person();
 
@@ -818,7 +821,8 @@ class MigrateData {
 
         $this->newDBManager->persist($newPerson);
         $this->newDBManager->flush();
-
+        
+        $this->LOGGER->debug("Finished migrating Person: ".$newPerson);
         return $newPerson;
     }
 
@@ -862,6 +866,7 @@ class MigrateData {
     }
 
     public function migrateRelative($firstName, $patronym, $lastName, $gender, $nation = null, $comment = null) {
+        $this->LOGGER->debug("Migrating Relative: ".$firstName." ".$lastName);
         //insert into new data
         $newRelative = new Relative();
 
@@ -872,11 +877,14 @@ class MigrateData {
         $newRelative->setGender($genderResult[0]);
         $newRelative->setGenderComment($genderResult[1]);
         $newRelative->setNation($this->getNation($nation));
-
+        
+        
         $newRelative->setComment($this->normalize($comment));
 
         $this->newDBManager->persist($newRelative);
         $this->newDBManager->flush();
+        
+        $this->LOGGER->debug("Finished migrating Relative: ".$newRelative);
 
         return $newRelative;
     }
@@ -1061,9 +1069,9 @@ class MigrateData {
         $this->newDBManager->flush();
     }
 
-    public function savePerson($person) {
-        $this->LOGGER->info("persisting and flushing the person to the new db: " . $person);
-        $this->newDBManager->persist($person);
+    public function saveObject($object) {
+        $this->LOGGER->info("persisting and flushing the person to the new db: " . $object);
+        $this->newDBManager->merge($object);
         $this->newDBManager->flush();
     }
 
@@ -1209,4 +1217,23 @@ class MigrateData {
         $this->newDBManager->clear();
     }
 
+    public function flush(){
+        $this->LOGGER->info("Explizit flush called!");
+        $this->newDBManager->flush();
+    }
+    
+    public function remove($obj){
+        $this->LOGGER->info("Explizit remove called: ".$obj);
+        $this->newDBManager->remove($obj);
+    }
+    
+    public function detach($obj){
+        $this->LOGGER->info("Explizit detach called: ".$obj);
+        if($this->newDBManager->contains($obj)){
+            $this->LOGGER->debug("Object IS managed by this entitymanager");
+            $this->newDBManager->detach($obj);
+        } else {
+            $this->LOGGER->debug("Object IS NOT managed by this entitymanager");
+        }
+    }
 }

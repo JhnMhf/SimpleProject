@@ -99,7 +99,7 @@ class MigrationUtil {
             //person already migrated, so just return it
             return $existingPerson;
         }
-        $this->getLogger()->info("Person does not already exists... migratin person.");
+        $this->getLogger()->info("Person does not already exists... migrating person.");
 
         $newPerson = $this->getMigrationService()->migratePerson($OID, $person->getVornamen(), $person->getRussVornamen(), $person->getName(), $person->getRufnamen(),$person->getGeburtsname(), $person->getGeschlecht(), $person->getBerufsklasse(), $person->getKommentar());
 
@@ -134,7 +134,7 @@ class MigrationUtil {
 
         //save updated newPerson to database
 
-        $this->getMigrationService()->savePerson($newPerson);
+        $this->getMigrationService()->saveObject($newPerson);
 
 
         //migrate relations (including data about relatives)
@@ -153,7 +153,7 @@ class MigrationUtil {
         // migrate GrandChild after marriagepartners of child
         
         $this->LOGGER->info("Saving the person at the end again: ".$newPerson);
-        $this->getMigrationService()->savePerson($newPerson);
+        $this->getMigrationService()->saveObject($newPerson);
 
         return $newPerson;
     }
@@ -795,6 +795,8 @@ class MigrationUtil {
                 $newFather = $this->get("person_merging.service")->mergePersons($newFatherObj,$newFather);
             }
             
+            //@TODO: Exception with inserting person with id: 2692 propably occurs because the person merger uses another db manager than the migrate data...
+            
             $this->getMigrationService()->migrateIsParent($newPerson, $newFather);
 
             $this->migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager);
@@ -803,6 +805,7 @@ class MigrationUtil {
     }
 
     private function createFather($oldFather, $mother){
+        $this->LOGGER->info("Creating Father for ".$oldFather["vornamen"]. " " .$oldFather["name"]);
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
 
@@ -869,9 +872,9 @@ class MigrationUtil {
 
         //job
         if(!is_null($oldFather["beruf"])){
-            $jobID = $this->getMigrationService()->migrateJob($oldFather["beruf"]);
+            $job = $this->getMigrationService()->migrateJob($oldFather["beruf"]);
 
-            $father->setJob($jobID);
+            $father->setJob($job);
         }
 
         //education
@@ -892,7 +895,15 @@ class MigrationUtil {
         }
         
         //wedding with mother
-        $this->getMigrationService()->migrateWedding(1, $father, $mother, $oldFather['hochzeitstag']);
+        if(!is_null( $oldFather['hochzeitstag']) || !is_null($mother)){
+            $this->getMigrationService()->migrateWedding(1, $father, $mother, $oldFather['hochzeitstag']);
+        } else {
+            $this->getLogger()->debug("Skipping wedding creation, since neither mother nor weddingday is set.");
+        }
+        
+        $this->getMigrationService()->saveObject($father);
+        
+        $this->LOGGER->info("Created father: ".$father);
         
         return $father;
     }
@@ -1328,27 +1339,47 @@ class MigrationUtil {
 
         for($i = 0; $i < count($children); $i++){
             $oldChild = $children[$i];
-
-            $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
-
+            
             //@TODO: Sometimes there are multiple entries (concated with ; )?
             //check if reference to person
             if(!is_null($oldChild["kind_id-nr"])){
-                //check it?
-                $childsOID = $oldChild["kind_id-nr"];
-
-                $childsMainId = $this->getIDForOID($childsOID, $oldDBManager);
-
-                $newChildObj = $this->migratePerson($childsMainId, $childsOID);
                 
-                $newChild = $this->get("person_merging.service")->mergePersons($newChild,$newChildObj);
+                $result = $this->separateReferenceIdsAndComment($oldChild["kind_id-nr"]);
+                
+                $referenceIds = $this->extractReferenceIdsArray($result[0]);
+                
+                if(count($referenceIds) > 0){            
+                    for($j = 0; $j < count($referenceIds); $j++){
+                        $childsOID = $referenceIds[$j];
+
+                        $childToMerge = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+
+                        $childsMainId = $this->getIDForOID($childsOID, $oldDBManager);
+
+                        $newChildObj = $this->migratePerson($childsMainId, $childsOID);
+
+                        $mergedChild = $this->get("person_merging.service")->mergePersons($childToMerge,$newChildObj);
+                        
+                        $this->getMigrationService()->migrateIsParent($mergedChild, $newPerson, $result[1]);
+                        $this->getMigrationService()->migrateIsParent($mergedChild, $newMarriagePartner, $result[1]);
+                    }
+                    //don't try to load marriage partners etc. because there won't be any and it would not be possible to related them
+                } else{
+                    $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+                     
+                    $this->getMigrationService()->migrateIsParent($newChild, $newPerson, $oldChild["kind_id-nr"]);
+                    $this->getMigrationService()->migrateIsParent($newChild, $newMarriagePartner, $oldChild["kind_id-nr"]);
+
+                    $this->migrateMarriagePartnersOfChildren($newPerson,$newChild,$marriageOrder,$oldChild['order2'], $oldPersonID, $oldDBManager);
+                }
+            } else{
+                $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+                
+                $this->getMigrationService()->migrateIsParent($newChild, $newPerson);
+                $this->getMigrationService()->migrateIsParent($newChild, $newMarriagePartner);
+
+                $this->migrateMarriagePartnersOfChildren($newPerson,$newChild,$marriageOrder,$oldChild['order2'], $oldPersonID, $oldDBManager);
             }
-            
-            $this->getMigrationService()->migrateIsParent($newChild, $newPerson);
-            $this->getMigrationService()->migrateIsParent($newChild, $newMarriagePartner);
-
-            $this->migrateMarriagePartnersOfChildren($newPerson,$newChild,$marriageOrder,$oldChild['order2'], $oldPersonID, $oldDBManager);
-
             //grandchild etc.
         }
     }
@@ -1972,6 +2003,7 @@ class MigrationUtil {
 
     //other marriage partners of the father of the person
     private function migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager){
+        $this->LOGGER->info("Migratin partners of ".$newFather);
         $partnersOfFather = $this->getPartnersOfFatherWithNativeQuery($oldPersonID, $oldDBManager);
 
         for($i = 0; $i < count($partnersOfFather); $i++){
@@ -2699,5 +2731,66 @@ class MigrationUtil {
 
 
         return $stmt->fetchAll();
+    }
+    
+    private function separateReferenceIdsAndComment($stringOfReferenceIds){
+        if(is_null($stringOfReferenceIds)){
+            return [];
+        }
+        
+        $trimmedReferenceIds = trim($stringOfReferenceIds);
+        
+        if(count($trimmedReferenceIds) == 0){
+            return [];
+        }
+          
+        $lowerCaseReferenceIds = strtolower($trimmedReferenceIds);
+        
+        $containsAnmerkung = strpos($lowerCaseReferenceIds, strtolower("- Anmerkung:"));
+        $containsImOriginal = strpos($lowerCaseReferenceIds, strtolower("- im Original"));
+        
+        $result = [$stringOfReferenceIds, null];
+        
+        if ($containsAnmerkung !== false) {
+            $this->LOGGER->debug("Found -Anmerkung: in" . $stringOfReferenceIds);
+            $result[0] = substr($stringOfReferenceIds, 0, $containsAnmerkung);
+            $result[1] = substr($stringOfReferenceIds, $containsAnmerkung);
+        } else if ($containsImOriginal !== false) {
+            $this->LOGGER->debug("Found -im Original in" . $stringOfReferenceIds);
+            $result[0] = substr($stringOfReferenceIds, 0, $containsImOriginal);
+            $result[1] = substr($stringOfReferenceIds, $containsImOriginal);
+        } else if (substr($lowerCaseReferenceIds,-1) == "?"){
+            $this->LOGGER->debug("Found an '?' at the end of " . $stringOfReferenceIds);
+            $result[0] = substr($stringOfReferenceIds, 0, count($stringOfReferenceIds) -1);
+            $result[1] = "?";
+        }
+        
+        $this->LOGGER->debug("Separated '".$stringOfReferenceIds. "' into ids: '".$result[0]."' and comment '".$result[1]."'");
+        return $result;
+    }
+    
+    private function extractReferenceIdsArray($stringOfReferenceIds){
+        if(is_null($stringOfReferenceIds)){
+            return [];
+        }
+        
+        $trimmedReferenceIds = trim($stringOfReferenceIds);
+        
+        if(count($trimmedReferenceIds) == 0){
+            return [];
+        }
+        
+        $lowerCaseReferenceIds = strtolower($trimmedReferenceIds);
+        
+        //@TODO: add oder, bzw, evtl (at front and end), commatas and semicolon mixed
+        $containsSemicolon = strpos($lowerCaseReferenceIds, ";");
+        $containsCommata = strpos($lowerCaseReferenceIds, ",");
+        if ($containsSemicolon !== false) {
+            return explode(";", $stringOfReferenceIds);
+        } else if ($containsCommata !== false) {
+            return explode(",", $stringOfReferenceIds);
+        }
+        
+        return [$stringOfReferenceIds];
     }
 }

@@ -65,7 +65,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         
         $personId = $entity->getId();
         
-        $this->LOGGER->info("Fixing orders for ID: ".$personId);
+        $this->LOGGER->debug("Fixing orders for ID: ".$personId);
         
         $em = $this->getEm();
         
@@ -120,7 +120,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     }
 
     private function fixArray($em,$array, $type){
-        $this->LOGGER->info("Fixing collection of '".$type. "' with size '".count($array)."'");
+        $this->LOGGER->debug("Fixing collection of '".$type. "' with size '".count($array)."'");
         for($i = 0; $i < count($array); $i++){
             $position = $i+1;
             $entity = $array[$i];
@@ -128,7 +128,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
             //update order only if necessary
             if($this->getOrder($entity, $type) != $position){
                 $this->setOrder($entity,$position, $type);
-                $em->persist($entity);
+                $em->merge($entity);
             }else {
                 $this->LOGGER->debug("No updated needed for '".$type. "' and position '".$position."'");
             }
