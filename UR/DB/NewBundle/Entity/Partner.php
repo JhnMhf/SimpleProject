@@ -378,4 +378,3 @@ class Partner extends BasePerson
         return $this->works;
     }
 }
-

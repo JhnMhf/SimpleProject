@@ -84,4 +84,91 @@ class Location
     {
         return $this->comment;
     }
+    /**
+     * @var string
+     */
+    private $latitude;
+
+    /**
+     * @var string
+     */
+    private $longitute;
+
+
+    /**
+     * Set latitude
+     *
+     * @param string $latitude
+     *
+     * @return Location
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * Get latitude
+     *
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitute
+     *
+     * @param string $longitute
+     *
+     * @return Location
+     */
+    public function setLongitute($longitute)
+    {
+        $this->longitute = $longitute;
+
+        return $this;
+    }
+
+    /**
+     * Get longitute
+     *
+     * @return string
+     */
+    public function getLongitute()
+    {
+        return $this->longitute;
+    }
+    /**
+     * @var string
+     */
+    private $longitude;
+
+
+    /**
+     * Set longitude
+     *
+     * @param string $longitude
+     *
+     * @return Location
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
 }

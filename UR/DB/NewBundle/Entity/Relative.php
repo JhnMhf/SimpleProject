@@ -378,4 +378,3 @@ class Relative  extends BasePerson
         return $this->works;
     }
 }
-

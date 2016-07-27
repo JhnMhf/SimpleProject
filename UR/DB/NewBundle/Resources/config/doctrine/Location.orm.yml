@@ -27,4 +27,14 @@ UR\DB\NewBundle\Entity\Location:
             length: 65535
             options:
                 fixed: false
+        latitude:
+            type: decimal
+            nullable: true
+            precision: 18
+            scale: 6
+        longitude:
+            type: decimal
+            nullable: true
+            precision: 18
+            scale: 6
     lifecycleCallbacks: {  }

@@ -505,4 +505,3 @@ class Person extends BasePerson
         return $this->works;
     }
 }
-
