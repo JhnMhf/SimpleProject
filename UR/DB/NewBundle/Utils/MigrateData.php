@@ -348,7 +348,7 @@ class MigrateData {
             $result[1] = substr($string, $containsImOriginal);
         } else if (substr($lowerCaseString,-1) == "?"){
             $this->LOGGER->debug("Found an '?' at the end of " . $string);
-            $result[0] = substr($string, 0, count($string) -1);
+            $result[0] = substr($string, 0, strlen($string) -1);
             $result[1] = "?";
         }
 
@@ -799,6 +799,7 @@ class MigrateData {
         return $newPartner;
     }
 
+    //@TODO: Check
     //add additional stuff?
     //born_in_marriage (from mother/ father?)
     //weddingID
@@ -992,6 +993,8 @@ class MigrateData {
             $husband = $personTwo;
             $wife = $personOne;
         }
+        
+        $this->LOGGER->info("Adding wedding between Husband: ". $husband. " and Wife: ".$wife. " at order: ".$weddingOrder);
 
         $newWedding->setHusbandId($husband != null ? $husband->getId() : null);
         $newWedding->setWifeId($wife != null ? $wife->getId() : null);
