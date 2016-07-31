@@ -27,18 +27,22 @@ base:
 start:
     path:     /start/
     defaults: { _controller: AmburgerBundle:CorrectionStart:index }
+    methods: [GET]
     
 checkOID:
     path:     /start/{OID}/check
     defaults: { _controller: AmburgerBundle:CorrectionStart:check }
+    methods: [GET]
 
 nextOID:
     path:     /start/next
     defaults: { _controller: AmburgerBundle:CorrectionStart:next }
+    methods: [GET]
 
 startWork:
     path:     /start/{OID}
     defaults: { _controller: AmburgerBundle:CorrectionStart:startWork }
+    methods: [POST]
 
 # duplicate
 

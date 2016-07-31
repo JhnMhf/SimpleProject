@@ -2,7 +2,7 @@
     An object used for retrieving information with ajax from the backend.
 */
 
-PersonCorrection.AjaxController = (function(){
+PersonCorrection.AjaxLoader = (function(){
     var that = {},
 
 

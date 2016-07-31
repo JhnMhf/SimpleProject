@@ -16,8 +16,17 @@ class CorrectionStartController extends Controller
     public function nextAction(){
         $response = array();
         
-        //@TODO: Load next oid
-        $response["oid"] = 1;
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $query = $systemDBManager->getRepository('AmburgerBundle:PersonData')->createQueryBuilder('p')
+            ->where('p.currentlyInProcess = false AND p.completed = false')
+            ->getQuery();
+        $personData = $query->getOneOrNullResult();
+        
+        if(is_null($personData)){
+            throw $this->createNotFoundException("There exists no uncorrected person anymore.");
+        }
+        
+        $response["oid"] = $personData->getOid();
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');
@@ -50,6 +59,7 @@ class CorrectionStartController extends Controller
     }
     
     public function startWorkAction($OID){
+        //@TODO: Persist loggedin user
         $systemDBManager = $this->get('doctrine')->getManager('system');
         $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByOid($OID);
         
