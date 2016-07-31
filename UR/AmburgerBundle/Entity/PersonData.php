@@ -32,7 +32,6 @@ class PersonData
      */
     private $modified;
 
-
     /**
      * Get oid
      *
@@ -138,5 +137,16 @@ class PersonData
     {
         return $this->modified;
     }
-}
 
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function updateCreatedAndModified()
+    {
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime());
+        }
+        $this->setModified(new \DateTime());
+    }
+}

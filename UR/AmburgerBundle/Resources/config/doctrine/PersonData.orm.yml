@@ -27,4 +27,5 @@ UR\AmburgerBundle\Entity\PersonData:
         modified:
             type: datetime
             nullable: false
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks:
+        preFlush: [updateCreatedAndModified]
