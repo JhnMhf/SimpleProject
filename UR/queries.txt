@@ -95,3 +95,6 @@ FROM (
           WHERE `enkel_id-nr` NOT REGEXP '^-?[0-9]+$'
 ) as oids
 ORDER BY type
+
+/* get all comments which contain a digit */
+SELECT ID,kommentar FROM `person` WHERE kommentar REGEXP '[0-9]' GROUP BY kommentar ORDER BY count(*) 

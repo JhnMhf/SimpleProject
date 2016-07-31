@@ -1,0 +1,28 @@
+{% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="large-6 columns large-centered center">
+            <p>Kurze Erklärung wofür das Tool gut ist. (Für Nicht-ITler)</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-6 columns large-centered center">
+            <a href="../correction/duplicate/"<button id="random-dataset-button" class="round button" type="submit"">Neuen Datensatz bearbeiten</button></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-6 columns large-centered center">
+            <p>Bestimmten Datensatz bearbeiten</p>
+            Bitte geben Sie die OID des gewünschten Datensatzes ein.
+            
+            <input name="selected-oid" type="text" id="selected-oid" class="form-contro" placeholder="z.B. 1234">
+            <a href="../correction/duplicate/"><button id="selected-dataset-button" class="round button" type="submit">Pfeil...</button></a>
+        </div>
+    </div>
+     <div class="row">
+        <div class="large-6 columns large-centered center">
+            Bereits bearbeitete Datensätze
+            <p>Prozentuale Anzeige </p>
+        </div>
+    </div>
+{% endblock %}

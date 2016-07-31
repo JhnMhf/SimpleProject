@@ -18,10 +18,47 @@ overview:
     path:     /overview/
     defaults: { _controller: AmburgerBundle:Default:overview }
     
+
 base:
     path:     /base/
     defaults: { _controller: AmburgerBundle:Default:base }    
     
+    
+start:
+    path:     /start/
+    defaults: { _controller: AmburgerBundle:CorrectionStart:index }
+    
+checkOID:
+    path:     /start/{OID}/check
+    defaults: { _controller: AmburgerBundle:CorrectionStart:check }
+
+nextOID:
+    path:     /start/next
+    defaults: { _controller: AmburgerBundle:CorrectionStart:next }
+
+startWork:
+    path:     /start/{OID}
+    defaults: { _controller: AmburgerBundle:CorrectionStart:startWork }
+
+# duplicate
+
+duplicate:
+    path:    /correction/{OID}/duplicate/
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:index } 
+    
+duplicate_load:
+    path:    /correction/{OID}/duplicate/load
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:load } 
+    
+# person correction
+
+person:
+    path:    /correction/{OID}/person/
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:index } 
+    
+person_load:
+    path:    /correction/{OID}/person/load
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:load } 
 
 # login
 

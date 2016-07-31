@@ -47,7 +47,7 @@ class LoginController extends Controller
             $value = $session->getId(); // get session id
             $session->set('name', $username);
             $session->set('userid', $user->getId());
-            return $this->redirect($this->generateUrl('overview'));
+            return $this->redirect($this->generateUrl('start'));
         }
     }
     /* 
