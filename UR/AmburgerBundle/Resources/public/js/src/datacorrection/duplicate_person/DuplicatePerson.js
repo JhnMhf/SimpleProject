@@ -5,7 +5,7 @@
 var DuplicatePerson = {
 
     init: function() {
-        this.DuplicatePersonnController.init();
+        this.DuplicatePersonController.init();
     }
 };
 

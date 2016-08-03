@@ -20,7 +20,7 @@ Start.AjaxLoader = (function () {
                 })
                         .always(function (data, textStatus, jqXHR) {
                             if (jqXHR.status == "200") {
-                                var oid = null;
+                                var oid = data['oid'];
 
                                 $(that).trigger("nextPerson", [oid]);
 

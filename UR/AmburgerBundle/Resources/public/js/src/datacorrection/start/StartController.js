@@ -81,8 +81,17 @@ Start.StartController = (function(){
     onWorkStarted = function(event, responseCode){
         console.log("onWorkStarted", responseCode);
         if(responseCode == "200"){
-            //move to next step
+            var currentUrl = window.location.href;
+            var newUrl = currentUrl.replace("start", "correction");
             
+            if(newUrl.substr(newUrl.length - 1) !== "/"){
+                newUrl += "/";
+            }
+            
+            newUrl += currentOid +"/duplicate/";
+            
+            //move to next step
+            window.location.href = newUrl;
         } else { 
             //problem during work started
             startView.showErrorMessage("Es gab ein Problem während die Bearbeitung der Person gestartet werden sollte.");

@@ -3,7 +3,7 @@
 namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CorrectionDuplicateController extends Controller
 {
@@ -14,8 +14,13 @@ class CorrectionDuplicateController extends Controller
     
     public function loadAction($OID)
     {
-        // return json response
+        $response["duplicate_persons"] = array();
         
-        return new Response("{duplicate_persons: []}");
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($response, 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+        
+        return $jsonResponse;
     }
 }

@@ -1,20 +1,20 @@
 
-DuplicatePerson.PersonModel = (function(){
+DuplicatePerson.DuplicatePersonView = (function(){
     var that = {},
     
     /* 
         Initialises the object and sets default values.
     */
     init = function() {
-
+        $('#save-button').on("click", save);
+        
+        
         return that;
     },
-
-    /* 
-        Sets the person from a given json string.
-    */
-    createFromJson = function(json){
-
+    
+    
+    save = function(){
+        $(that).trigger('save');
     };
 
 

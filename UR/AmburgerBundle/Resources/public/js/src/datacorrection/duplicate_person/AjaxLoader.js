@@ -18,13 +18,14 @@ DuplicatePerson.AjaxLoader = (function(){
     loadDuplicatePersons = function(oid){
         $.ajax({
             type: "GET",
-            url: ''+oid,
+            url: 'load',
             dataType: 'json',
             data: {
             },
             success: function(data){
-                //@TODO: Handle list of duplicate persons
-                $(that).trigger("duplicatePersonsLoaded", []);
+                //@TODO: Handle json?
+                console.log(data);
+                $(that).trigger("duplicatePersonsLoaded", data['duplicate_persons']);
             },
             error: function(data){
                 if(data.status == 200){
@@ -35,6 +36,6 @@ DuplicatePerson.AjaxLoader = (function(){
 };
 
     that.init = init;
-    that.loadCorrectedPerson = loadCorrectedPerson;
+    that.loadDuplicatePersons = loadDuplicatePersons;
     return that;
 })();

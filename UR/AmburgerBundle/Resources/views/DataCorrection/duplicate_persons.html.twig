@@ -6,3 +6,32 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Start #}
+    <script src="{{asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePerson.js')}}"></script>
+
+    {# Models #}
+
+     {# Views #}
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonView.js') }}"></script>
+
+
+     {# Manager #}
+
+
+     {# Controllers #}
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/AjaxLoader.js') }}"></script>
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonController.js') }}"></script>
+
+
+
+     {# As last init the Start #}
+     <script>
+        $(document).ready(function(){
+          DuplicatePerson.init();
+        });
+     </script>
+
+{% endblock %}
