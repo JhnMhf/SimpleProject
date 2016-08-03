@@ -18,9 +18,12 @@ class CorrectionPersonController extends Controller
         // return json response, with old, new and final in one?
         $response = array();
         
+        //@TODO: Load person from old db and format like json of new db
         $response["old"] = array();
         $response["new"] = $this->loadNewPersonByOID($OID);
-        $response["final"] = array();
+        
+        //@TODO: Load person from final db
+        $response["final"] = $response["new"];
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');

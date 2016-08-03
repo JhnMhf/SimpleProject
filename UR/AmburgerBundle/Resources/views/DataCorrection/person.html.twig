@@ -16,3 +16,33 @@
         <button id="save-button" class="round button" type="submit">Speichern und weiter</button>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Start #}
+    <script src="{{asset('bundles/amburger/js/src/datacorrection/person/PersonCorrection.js')}}"></script>
+
+    {# Models #}
+        <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/PersonModel.js') }}"></script>
+
+     {# Views #}
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/PersonCorrectionView.js') }}"></script>
+
+
+     {# Manager #}
+
+
+     {# Controllers #}
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/AjaxLoader.js') }}"></script>
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/PersonCorrectionController.js') }}"></script>
+
+
+
+     {# As last init the Start #}
+     <script>
+        $(document).ready(function(){
+          PersonCorrection.init();
+        });
+     </script>
+
+{% endblock %}

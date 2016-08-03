@@ -14,11 +14,12 @@ PersonCorrection.PersonModel = (function(){
         Sets the person from a given json string.
     */
     createFromJson = function(json){
-
+        console.log(json);
     };
 
 
     that.init = init;
+    that.createFromJson = createFromJson;
 
     return that;
 })();
