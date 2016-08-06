@@ -2,6 +2,8 @@
 
 namespace UR\DB\NewBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Wedding
  */
@@ -289,11 +291,13 @@ class Wedding
     }
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $weddingDate;
 
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $bannsDate;
 
@@ -434,6 +438,7 @@ class Wedding
     }
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $breakupDate;
 

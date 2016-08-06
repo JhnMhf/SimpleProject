@@ -2,6 +2,8 @@
 
 namespace UR\DB\NewBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Death
  */
@@ -463,11 +465,13 @@ class Death
     }
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $deathDate;
 
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $funeralDate;
 

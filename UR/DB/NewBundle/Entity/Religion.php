@@ -2,14 +2,17 @@
 
 namespace UR\DB\NewBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Religion
  */
-class Religion
-{
-    public function __toString (){
-        return "Religion with ID: ".$this->getId();
+class Religion {
+
+    public function __toString() {
+        return "Religion with ID: " . $this->getId();
     }
+
     /**
      * @var integer
      */
@@ -45,14 +48,12 @@ class Religion
      */
     private $changeOfReligion;
 
-
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -63,8 +64,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -75,8 +75,7 @@ class Religion
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -87,8 +86,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setComment($comment)
-    {
+    public function setComment($comment) {
         $this->comment = $comment;
 
         return $this;
@@ -99,8 +97,7 @@ class Religion
      *
      * @return string
      */
-    public function getComment()
-    {
+    public function getComment() {
         return $this->comment;
     }
 
@@ -111,8 +108,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setReligionOrder($religionOrder)
-    {
+    public function setReligionOrder($religionOrder) {
         $this->religionOrder = $religionOrder;
 
         return $this;
@@ -123,8 +119,7 @@ class Religion
      *
      * @return boolean
      */
-    public function getReligionOrder()
-    {
+    public function getReligionOrder() {
         return $this->religionOrder;
     }
 
@@ -135,8 +130,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setProvenDateid($provenDateid)
-    {
+    public function setProvenDateid($provenDateid) {
         $this->provenDateid = $provenDateid;
 
         return $this;
@@ -147,8 +141,7 @@ class Religion
      *
      * @return string
      */
-    public function getProvenDateid()
-    {
+    public function getProvenDateid() {
         return $this->provenDateid;
     }
 
@@ -159,8 +152,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setFromDateid($fromDateid)
-    {
+    public function setFromDateid($fromDateid) {
         $this->fromDateid = $fromDateid;
 
         return $this;
@@ -171,8 +163,7 @@ class Religion
      *
      * @return string
      */
-    public function getFromDateid()
-    {
+    public function getFromDateid() {
         return $this->fromDateid;
     }
 
@@ -183,8 +174,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setChangeOfReligion($changeOfReligion)
-    {
+    public function setChangeOfReligion($changeOfReligion) {
         $this->changeOfReligion = $changeOfReligion;
 
         return $this;
@@ -195,15 +185,14 @@ class Religion
      *
      * @return string
      */
-    public function getChangeOfReligion()
-    {
+    public function getChangeOfReligion() {
         return $this->changeOfReligion;
     }
+
     /**
      * @var integer
      */
     private $personID;
-
 
     /**
      * Set personID
@@ -212,8 +201,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setPersonID($personID)
-    {
+    public function setPersonID($personID) {
         $this->personID = $personID;
 
         return $this;
@@ -224,15 +212,14 @@ class Religion
      *
      * @return integer
      */
-    public function getPersonID()
-    {
+    public function getPersonID() {
         return $this->personID;
     }
+
     /**
      * @var \UR\DB\NewBundle\Entity\BasePerson
      */
     private $person;
-
 
     /**
      * Set person
@@ -241,8 +228,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setPerson(\UR\DB\NewBundle\Entity\BasePerson $person = null)
-    {
+    public function setPerson(\UR\DB\NewBundle\Entity\BasePerson $person = null) {
         $this->person = $person;
 
         return $this;
@@ -253,20 +239,21 @@ class Religion
      *
      * @return \UR\DB\NewBundle\Entity\BasePerson
      */
-    public function getPerson()
-    {
+    public function getPerson() {
         return $this->person;
     }
+
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $fromDate;
 
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $toDate;
-
 
     /**
      * Set fromDate
@@ -275,8 +262,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setFromDate($fromDate)
-    {
+    public function setFromDate($fromDate) {
         $this->fromDate = $fromDate;
 
         return $this;
@@ -287,8 +273,7 @@ class Religion
      *
      * @return date_reference
      */
-    public function getFromDate()
-    {
+    public function getFromDate() {
         return $this->fromDate;
     }
 
@@ -299,8 +284,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setToDate($toDate)
-    {
+    public function setToDate($toDate) {
         $this->toDate = $toDate;
 
         return $this;
@@ -311,15 +295,15 @@ class Religion
      *
      * @return date_reference
      */
-    public function getToDate()
-    {
+    public function getToDate() {
         return $this->toDate;
     }
+
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $provenDate;
-
 
     /**
      * Set provenDate
@@ -328,8 +312,7 @@ class Religion
      *
      * @return Religion
      */
-    public function setProvenDate($provenDate)
-    {
+    public function setProvenDate($provenDate) {
         $this->provenDate = $provenDate;
 
         return $this;
@@ -340,8 +323,8 @@ class Religion
      *
      * @return date_reference
      */
-    public function getProvenDate()
-    {
+    public function getProvenDate() {
         return $this->provenDate;
     }
+
 }

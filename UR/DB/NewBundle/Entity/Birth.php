@@ -2,6 +2,8 @@
 
 namespace UR\DB\NewBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Birth
  */
@@ -491,7 +493,9 @@ class Birth
     }
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
+    
     private $birthDate;
 
 

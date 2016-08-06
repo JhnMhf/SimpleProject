@@ -2,6 +2,8 @@
 
 namespace UR\DB\NewBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Rank
  */
@@ -462,16 +464,19 @@ class Rank
     }
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $fromDate;
 
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $toDate;
 
     /**
      * @var date_reference
+     * @Type("UR\DB\NewBundle\Types\DateReference")
      */
     private $provenDate;
 
