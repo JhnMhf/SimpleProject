@@ -90,6 +90,7 @@ UR\DB\NewBundle\Entity\Death:
                 name: death_locationID
                 referencedColumnName: ID
                 nullable: true        
+            cascade: ["persist"]    
         funeralLocation:
             targetEntity: Location
             fetch: EAGER

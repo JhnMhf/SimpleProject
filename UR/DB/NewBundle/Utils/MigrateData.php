@@ -209,6 +209,9 @@ class MigrateData {
         return $newLocation;
     }
 
+    //@TODO: Move check if existing location,territory,nation etc. exists into db eventhandler for new and final.
+    //This should be done to prevent someone from changing it in the person correction for all persons
+    //Thus it is necessary to ignore the ids for this fields during serialization
     public function getNation($nationName, $comment = null) {
         if ($nationName == "" || $nationName == null) {
             return null;

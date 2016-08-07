@@ -12,6 +12,7 @@ PersonCorrection.AjaxLoader = (function () {
 
                 return that;
             },
+            
             loadPersonToCorrect = function () {
                 $.ajax({
                     type: "GET",
@@ -28,21 +29,37 @@ PersonCorrection.AjaxLoader = (function () {
                         }
                     }
                 }).always(function (data, textStatus, jqXHR) {
+                    console.log(data,textStatus, jqXHR);
+
+                    $(that).trigger("personLoaded", [data['old'], data['new'], data['final']]);
+                });
+            },
+            
+            saveFinalPerson = function(finalPerson){
+                //@TODO: Save
+                $.ajax({
+                    type: "POST",
+                    url: 'save',
+                    dataType: 'json',
+                    data: finalPerson,
+                    success: function (data) {
+
+                    },
+                    error: function (data) {
+                        if (data.status == 200) {
+                            //data.responseText
+                        }
+                    }
+                }).always(function (data, textStatus, jqXHR) {
                     console.log(data);
-                    var oldPerson = PersonCorrection.PersonModel.init();
-                    oldPerson.createFromJson(data['old']);
-
-                    var newPerson = PersonCorrection.PersonModel.init();
-                    newPerson.createFromJson(data['new']);
-
-                    var finalPerson = PersonCorrection.PersonModel.init();
-                    finalPerson.createFromJson(data['final']);
-
-                    $(that).trigger("personLoaded", [oldPerson, newPerson, finalPerson]);
+                    //@TODO: Handle errors etc.?
+                    $(that).trigger("saveFinished");
                 });
             };
 
     that.init = init;
     that.loadPersonToCorrect = loadPersonToCorrect;
+    that.saveFinalPerson = saveFinalPerson;
+    
     return that;
 })();

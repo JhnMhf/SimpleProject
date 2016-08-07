@@ -39,4 +39,40 @@ class CorrectionPersonController extends Controller
         
         return $newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
     }
+    
+    private function loadFinalPersonByOID($OID){
+        
+        $finalDBManager = $this->get('doctrine')->getManager('final');
+        
+        return $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+    }
+    
+    public function saveAction($OID){
+        //@TODO: Validate if this user is currently working on this person
+        $content = $this->get("request")->getContent();
+        
+        //@TODO: Add error if no content is found.
+        if (!empty($content))
+        {
+            //http://jmsyst.com/libs/serializer/master/usage
+            
+            //Alternative: http://symfony.com/doc/current/components/serializer.html#deserializing-an-object
+            $serializer = $this->get('serializer');
+            $personEntity = $serializer->deserialize($content,'UR\DB\NewBundle\Entity\Person', 'json');
+            
+            //print_r($personEntity);
+            
+            //@TODO: check if oids are matching
+            
+            $finalDBManager = $this->get('doctrine')->getManager('final');
+        
+            $finalDBManager->persist($personEntity);
+            $finalDBManager->flush();
+        }
+        
+        $response = new Response();
+        $response->setStatusCode("202");
+        
+        return $response;
+    }
 }

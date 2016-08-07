@@ -1,0 +1,45 @@
+http://jmsyst.com/libs/serializer
+
+ @Type("UR\DB\NewBundle\Types\DateReference")
+
+ use JMS\Serializer\Annotation\Type;
+
+ works for "You must define a type for UR\DB\NewBundle\Entity\Death::$deathDate. "
+
+
+Handler for deserialization etc.:
+http://jmsyst.com/libs/serializer/master/handlers
+
+
+
+ Alternative:
+ http://stackoverflow.com/questions/18796755/jmsserializerbundle-mixing-auto-detection-and-explicit-directories
+
+ http://johnkary.net/blog/deserializing-xml-with-jms-serializer-bundle/
+
+ https://github.com/FriendsOfSymfony/FOSUserBundle/issues/1090
+
+ http://stackoverflow.com/questions/13636180/jmsserializerbundle-runtimeexception-you-must-define-a-type-for-entityfield
+
+ http://jmsyst.com/libs/serializer/master/reference/annotations#type
+
+ http://stackoverflow.com/questions/16003016/fosuserbundle-deserialization-to-user-object-throws-you-must-define-a-type
+
+
+
+//Entity mit \ Angeben....
+ http://stackoverflow.com/questions/18563305/jmsserializer-expected-end-of-input-but-got-of-type-t-none
+
+
+ Sonstiges:
+
+ http://jmsyst.com/libs/serializer/master/handlers
+ http://jmsyst.com/libs/serializer
+ http://jmsyst.com/libs/serializer/master/event_system
+ http://jmsyst.com/libs/serializer/master/configuration
+ http://jmsyst.com/bundles/JMSSerializerBundle
+ https://github.com/schmittjoh/JMSSerializerBundle/blob/master/DependencyInjection/Compiler/CustomHandlersPass.php
+ http://jmsyst.com/bundles/JMSSerializerBundle/master/configuration
+ http://stackoverflow.com/questions/27475801/custom-handler-on-jmsserializerbundle-is-ignored
+ http://stackoverflow.com/questions/15007281/add-extra-fields-using-jms-serializer-bundle
+ http://stackoverflow.com/questions/18240809/creating-a-jms-serializer-handler-in-symfony2

@@ -39,3 +39,11 @@ services:
                 container: "@service_container"
             tags:
                 - { name: doctrine.event_subscriber, connection: new }
+                
+                
+    datereference_jms_handler:
+        class: UR\DB\NewBundle\Utils\DateReferenceDeserializationHandler
+        arguments: 
+                container: "@service_container"
+        tags:
+            - { name: jms_serializer.subscribing_handler }

@@ -49,20 +49,29 @@ startWork:
 duplicate:
     path:    /correction/{OID}/duplicate/
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:index } 
+    methods: [GET]
     
 duplicate_load:
     path:    /correction/{OID}/duplicate/load
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:load } 
+    methods: [GET]
     
 # person correction
 
 person:
     path:    /correction/{OID}/person/
     defaults: { _controller: AmburgerBundle:CorrectionPerson:index } 
+    methods: [GET]
     
 person_load:
     path:    /correction/{OID}/person/load
     defaults: { _controller: AmburgerBundle:CorrectionPerson:load } 
+    methods: [GET]
+    
+person_save:
+    path:    /correction/{OID}/person/save
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 
+    methods: [POST]
 
 # login
 
