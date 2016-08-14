@@ -28,15 +28,15 @@ class DateReference extends Type
 {
     const DATE_REFERENCE = 'date_reference';
     
-    private $newDBManager;
     private $referencedValue;
+    private $LOGGER;
     
     public function __toString (){
         return "DateReferenceObj: ".$this->referencedValue;
     }
-
-    public function setEntityManager($em){
-        $this->newDBManager = $em;
+    
+    public function setLogger($logger){
+        $this->LOGGER = $logger;
     }
  
     public function getName()
@@ -51,6 +51,7 @@ class DateReference extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        $this->LOGGER->debug("convertToDatabaseValue called");
         //expects list of date objects
         //returns comma separated string
         $this->referencedValue = $value;
@@ -63,7 +64,7 @@ class DateReference extends Type
 
         for($i = 0; $i < count($value); $i++){
             if($value[$i] instanceof UR\DB\NewBundle\Utils\DateRange){
-                $dateIdArray[] = $value[$i]->toDateReferenString();
+                $dateIdArray[] = $value[$i]->toDateReferenceString();
             } else {
                 $dateId = $value[$i]->getId();
                 $dateIdArray[] = $dateId;
@@ -82,29 +83,19 @@ class DateReference extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
+        $this->LOGGER->debug("convertToPHPValue called");
         //expects comma separated string
         //returns list of csv objects
         $this->referencedValue = $value;
         
         if(is_null($value) || $value == ""){
-            return [];
+            return array();
         }
         
         $datesArray = explode(",", $value);
-        
-        $objArray = [];
-        
-        $repository = $this->newDBManager->getRepository("NewBundle:Date");
-        
-        for($i = 0; $i < count($datesArray); $i++){
-            if(DateRange::isDateRange($datesArray[$i])){
-                $objArray[] = DateRange::createDateRange($datesArray[$i], $repository);
-            }else{
-                $objArray[] = $repository->findOneById($datesArray[$i]);
-            }
-            
-        }
-        
-        return $objArray;
+
+        return $datesArray;
     }
+
+    
 }

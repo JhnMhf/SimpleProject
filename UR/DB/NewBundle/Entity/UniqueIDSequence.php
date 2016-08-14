@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class UniqueIDSequence
 {
+    public function __toString (){
+        return "UniqueID Current Highest: ".$this->getCurrentHighestId();
+    }
+    
     /**
      * @var integer
      */

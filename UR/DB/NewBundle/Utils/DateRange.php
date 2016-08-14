@@ -43,10 +43,10 @@ class DateRange {
     }
     
     public function getId(){
-        return $this->toDateReferenString();
+        return $this->toDateReferenceString();
     }
     
-    public function toDateReferenString(){
+    public function toDateReferenceString(){
         return $this->from->getId().self::RANGE_DELIMITER.$this->to->getId();
     }
     

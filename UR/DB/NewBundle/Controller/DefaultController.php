@@ -93,7 +93,7 @@ class DefaultController extends Controller
         
         return new Response('Truncated the whole new database!');
     }
-    
+
     public function comparePersonAction($firstPersonOID, $secondPersonOID){
         $comparerService = $this->get('comparer.service');
         $newDBManager = $this->get('doctrine')->getManager('new');

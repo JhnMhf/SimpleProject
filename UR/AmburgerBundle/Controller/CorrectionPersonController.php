@@ -22,8 +22,11 @@ class CorrectionPersonController extends Controller
         $response["old"] = array();
         $response["new"] = $this->loadNewPersonByOID($OID);
         
-        //@TODO: Load person from final db
-        $response["final"] = $response["new"];
+        $response["final"] = $this->loadFinalPersonByOID($OID);
+        
+        if(is_null($response["final"])){
+            $response["final"] = $response["new"];
+        }
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');
@@ -48,12 +51,17 @@ class CorrectionPersonController extends Controller
     }
     
     public function saveAction($OID){
+        $response = new Response();
+
         //@TODO: Validate if this user is currently working on this person
         $content = $this->get("request")->getContent();
+        
+        
         
         //@TODO: Add error if no content is found.
         if (!empty($content))
         {
+            //@TODO: Check for right content? oid etc?
             //http://jmsyst.com/libs/serializer/master/usage
             
             //Alternative: http://symfony.com/doc/current/components/serializer.html#deserializing-an-object
@@ -65,14 +73,40 @@ class CorrectionPersonController extends Controller
             //@TODO: check if oids are matching
             
             $finalDBManager = $this->get('doctrine')->getManager('final');
+            
+            //@TODO: Necessary only for testing?
+            
+            //@TODO: New dates are still not getting saved.
+            //Maybe add doctrine pre persist listener, which checks for dateReferences and saves the dates?
+            
+            //@TODO: Current highest oid?
+            //@TODO: Ids not being set by serializer...
+            if($this->loadFinalPersonByOID($OID) != null){
+                $finalDBManager->merge($personEntity);
+            }else  {
+                $finalDBManager->persist($personEntity);
+            }
         
-            $finalDBManager->persist($personEntity);
             $finalDBManager->flush();
+            
+            $response->setStatusCode("202");
+        } else {
+            $response->setContent("{Missing Content.");
+            $response->setStatusCode("406");
         }
-        
-        $response = new Response();
-        $response->setStatusCode("202");
-        
+
         return $response;
+    }
+    
+    
+    public function dateSerializeAction(){
+        $content = $this->get("request")->getContent();
+        
+        $serializer = $this->get('serializer');
+        $entity = $serializer->deserialize($content,'UR\DB\NewBundle\Types\DateReference', 'json');
+        
+        print_r($entity);
+        
+        return new Response();
     }
 }

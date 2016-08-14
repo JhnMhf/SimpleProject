@@ -7,6 +7,10 @@ namespace UR\DB\NewBundle\Entity;
  */
 class IsSibling
 {
+    public function __toString (){
+        return get_class($this);
+    }
+    
     /**
      * @var integer
      */

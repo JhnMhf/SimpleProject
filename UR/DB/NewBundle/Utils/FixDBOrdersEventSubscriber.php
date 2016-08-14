@@ -24,7 +24,6 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     
     private $LOGGER;
     private $container;
-    private $em;
     
     public function __construct($container)
     {
@@ -34,14 +33,6 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
     
     private function get($identifier){
         return $this->container->get($identifier);
-    }
-    
-    private function getEm(){
-        if(is_null($this->em)){
-            $this->em = $this->get('doctrine')->getManager('new');
-        }
-        
-        return $this->em;
     }
     
     public function postUpdate(LifecycleEventArgs $event)
@@ -67,7 +58,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         
         $this->LOGGER->debug("Fixing orders for ID: ".$personId);
         
-        $em = $this->getEm();
+        $em = $event->getEntityManager();
         
         $education = $em->getRepository('NewBundle:Education')
                 ->findBy(array('person' => $personId), array('educationOrder' => 'ASC'));

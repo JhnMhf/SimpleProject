@@ -40,9 +40,17 @@ services:
             tags:
                 - { name: doctrine.event_subscriber, connection: new }
                 
+    persistDates.subscriber:
+            class: UR\DB\NewBundle\Utils\DateReferenceSubscriber
+            arguments: 
+                container: "@service_container"
+            tags:
+                - { name: doctrine.event_subscriber, connection: new }
+                - { name: doctrine.event_subscriber, connection: final }
+                
                 
     datereference_jms_handler:
-        class: UR\DB\NewBundle\Utils\DateReferenceDeserializationHandler
+        class: UR\DB\NewBundle\Utils\DateReferenceSerializationHandler
         arguments: 
                 container: "@service_container"
         tags:

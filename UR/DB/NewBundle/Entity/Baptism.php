@@ -175,7 +175,7 @@ class Baptism
     }
     /**
      * @var date_reference
-     * @Type("UR\DB\NewBundle\Types\DateReference")
+     * @Type("array<UR\DB\NewBundle\Types\DateReference>")
      */
     private $baptismDate;
 

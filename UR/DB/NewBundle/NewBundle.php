@@ -17,10 +17,8 @@ class NewBundle extends Bundle
 
     public function boot()
     {
-        $entityManager = $this->container->get('doctrine')->getManager('new');
-
         $customType = Type::getType('date_reference');
-
-        $customType->setEntityManager($entityManager);
+        
+        $customType->setLogger($this->container->get('monolog.logger.default'));
     }
 }

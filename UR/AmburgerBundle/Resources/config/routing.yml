@@ -109,3 +109,7 @@ gnd_subject:
 migrate_process:
     path: /migration/process
     defaults: { _controller: AmburgerBundle:Default:migrateProcess }
+    
+dateSerializeTest:
+    path: /date/serialize
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:dateSerialize }

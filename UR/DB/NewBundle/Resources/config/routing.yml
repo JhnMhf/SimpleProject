@@ -4,7 +4,7 @@ json:
 xml:
     path:     /xml/{type}/{ID}
     defaults: { _controller: NewBundle:Default:xml }    
-clearDatabase:
+newClearDatabase:
     path: /database/truncate
     defaults: { _controller: NewBundle:Default:clearDatabase }
 compareTest:

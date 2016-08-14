@@ -435,19 +435,19 @@ class Works
     }
     /**
      * @var date_reference
-     * @Type("UR\DB\NewBundle\Types\DateReference")
+     * @Type("array<UR\DB\NewBundle\Types\DateReference>")
      */
     private $fromDate;
 
     /**
      * @var date_reference
-     * @Type("UR\DB\NewBundle\Types\DateReference")
+     * @Type("array<UR\DB\NewBundle\Types\DateReference>")
      */
     private $toDate;
 
     /**
      * @var date_reference
-     * @Type("UR\DB\NewBundle\Types\DateReference")
+     * @Type("array<UR\DB\NewBundle\Types\DateReference>")
      */
     private $provenDate;
 
