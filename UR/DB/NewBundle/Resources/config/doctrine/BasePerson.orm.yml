@@ -89,7 +89,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             referencedColumnName: ID
             nullable: true
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist", "merge","remove"]
         baptism:
           targetEntity: Baptism
           joinColumn:
@@ -105,7 +105,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             referencedColumnName: ID
             nullable: true
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
     manyToOne:
         job:
             targetEntity: Job

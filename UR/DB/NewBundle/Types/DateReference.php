@@ -51,7 +51,7 @@ class DateReference extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        $this->LOGGER->debug("convertToDatabaseValue called");
+        //$this->LOGGER->debug("convertToDatabaseValue called");
         //expects list of date objects
         //returns comma separated string
         $this->referencedValue = $value;
@@ -83,7 +83,7 @@ class DateReference extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        $this->LOGGER->debug("convertToPHPValue called");
+        //$this->LOGGER->debug("convertToPHPValue called");
         //expects comma separated string
         //returns list of csv objects
         $this->referencedValue = $value;

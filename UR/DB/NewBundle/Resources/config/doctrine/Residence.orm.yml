@@ -42,7 +42,7 @@ UR\DB\NewBundle\Entity\Residence:
     manyToOne:
         person:
             targetEntity: BasePerson
-            cascade: ["persist"]
+            cascade: ["persist", "merge"]
         residenceCountry:
             targetEntity: Country
             fetch: EAGER

@@ -49,5 +49,5 @@ UR\DB\NewBundle\Entity\Source:
     manyToOne:
         person:
             targetEntity: BasePerson
-            cascade: ["persist"]
+            cascade: ["persist", "merge"]
     lifecycleCallbacks: {  }

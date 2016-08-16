@@ -78,7 +78,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
     manyToOne:
         person:
             targetEntity: BasePerson
-            cascade: ["persist"]
+            cascade: ["persist", "merge"]
         originCountry:
             targetEntity: Country
             fetch: EAGER

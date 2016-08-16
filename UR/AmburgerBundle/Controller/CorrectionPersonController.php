@@ -40,7 +40,9 @@ class CorrectionPersonController extends Controller
         
         $newDBManager = $this->get('doctrine')->getManager('new');
         
-        return $newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        
+        return !is_null($person) ? $person : array();
     }
     
     private function loadFinalPersonByOID($OID){
@@ -79,15 +81,20 @@ class CorrectionPersonController extends Controller
             //@TODO: New dates are still not getting saved.
             //Maybe add doctrine pre persist listener, which checks for dateReferences and saves the dates?
             
-            //@TODO: Current highest oid?
-            //@TODO: Ids not being set by serializer...
-            if($this->loadFinalPersonByOID($OID) != null){
-                $finalDBManager->merge($personEntity);
-            }else  {
+            //@TODO: Current highest id?
+            //@TODO: Person Ids not being set by serializer...
+            //@TODO: Perhaps the merging of One-To-Many Relations has to be done manually.
+            if(is_null($this->loadFinalPersonByOID($OID))){
+                //first persist if not existant
                 $finalDBManager->persist($personEntity);
+                $finalDBManager->flush();
             }
-        
+                            
+            //merge necessary to set relations right/ update the values
+
+            $finalDBManager->merge($personEntity);
             $finalDBManager->flush();
+
             
             $response->setStatusCode("202");
         } else {

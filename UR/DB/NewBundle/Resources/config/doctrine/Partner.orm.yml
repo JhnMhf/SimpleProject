@@ -15,52 +15,52 @@ UR\DB\NewBundle\Entity\Partner:
           targetEntity: Education
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         honours:
           orderBy: { 'honourOrder': 'ASC' }
           targetEntity: Honour
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         properties:
           orderBy: { 'propertyOrder': 'ASC' }
           targetEntity: Property
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         ranks:
           orderBy: { 'rankOrder': 'ASC' }
           targetEntity: Rank
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         religions:
           orderBy: { 'religionOrder': 'ASC' }
           targetEntity: Religion
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         residences:
           orderBy: { 'residenceOrder': 'ASC' }
           targetEntity: Residence
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         roadOfLife:
           orderBy: { 'roadOfLifeOrder': 'ASC' }
           targetEntity: RoadOfLife
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         stati:
           orderBy: { 'statusOrder': 'ASC' }
           targetEntity: Status
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]
         works:
           orderBy: { 'worksOrder': 'ASC' }
           targetEntity: Works
           mappedBy: person
           fetch: EAGER
-          cascade: ["persist","remove"]
+          cascade: ["persist","merge","remove"]

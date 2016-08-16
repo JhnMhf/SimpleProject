@@ -72,7 +72,7 @@ UR\DB\NewBundle\Entity\Rank:
     manyToOne:
         person:
             targetEntity: BasePerson
-            cascade: ["persist"]
+            cascade: ["persist", "merge"]
         country:
             targetEntity: Country
             fetch: EAGER

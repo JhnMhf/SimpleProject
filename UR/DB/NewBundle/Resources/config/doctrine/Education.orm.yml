@@ -83,7 +83,7 @@ UR\DB\NewBundle\Entity\Education:
     manyToOne:
         person:
             targetEntity: BasePerson
-            cascade: ["persist"]
+            cascade: ["persist", "merge"]
         country:
             targetEntity: Country
             fetch: EAGER
