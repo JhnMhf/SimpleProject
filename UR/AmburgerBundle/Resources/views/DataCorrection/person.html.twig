@@ -1,13 +1,14 @@
 {% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
 {% block body %}
      <div class="row">
-        <div class="large-2 columns">
+        <div class="large-2 columns" id="old">
             <p>Alter Datensatz</p>
         </div>
-        <div class="large-2 columns">
+        <div class="large-2 columns" id="new">
             <p>Normalisierter Datensatz</p>
+                
         </div>
-        <div class="large-2 columns">
+        <div class="large-2 columns" id="final">
             <p>Neuer Datenbank-Eintrag</p>
         </div>
       </div>
@@ -49,4 +50,264 @@
         });
      </script>
 
+{% endblock %}
+
+
+{% block templates %}
+    <script type="text/template" id="basePerson">
+        <div class="row">
+            <div class="large-4 columns">
+                <input type="hidden" name="id"> 
+                <label>OID<input type="text" name="oid" value="<%=oid %>"/></label>
+                <label>Vorname<input type="text" name="firstName" value="<%=firstName %>"/></label>
+                <label>Vatersname<input type="text" name="patronym" value="<%=patronym %>" /></label>
+                <label>Nachname<input type="text" name="lastName" value="<%=lastName %>"/></label>
+                <label>Rufname<input type="text" name="foreName"  value="<%=foreName %>"/></label>
+                <label>Geburtsname<input type="text" name="birthName" value="<%=birthName %>"/></label>
+                <label>Geschlecht<select name="gender" size="3">
+                    <option>Unbekannt</option>
+                    <option>Männlich</option> 
+                    <option>eiblich</option>
+                    </select>
+                    <input type="text" name="genderComment"/>
+                </label>
+                <label>ehelig<input type="text" name="bornInMarriage"/></label>
+                <!-- //@TODO: Complex objects for job, jobclass, nation, territory, location, country? -->
+                <label>Job<input type="text" name="job"/></label>
+                <label>Jobklasse<input type="text" name="jobClass"/></label>
+                <label>Nation<input type="text" name="nation"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+
+            </div>
+        </div>
+
+    </script>
+    
+    <script type="text/template" id="baptism">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <label>Taufort<input type="text" name="baptismLocation"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>Taufdatum<input type="text" name="baptismDate"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="birth">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <label>Herkunftsland<input type="text" name="originCountry"/></label>
+                <label>Herkunftsterritorium<input type="text" name="originTerritory"/></label>
+                <label>Herkunftsort<input type="text" name="originLocation"/></label>
+        
+                <label>Geburtsland<input type="text" name="birthCountry"/></label>
+                <label>Geburtsterritorium<input type="text" name="birthTerritory"/></label>
+                <label>Geburtsort<input type="text" name="birthLocation"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>Geburtsdatum<input type="text" name="birthDate"/></label>
+
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+
+    
+    <script type="text/template" id="death">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <label>Todesland<input type="text" name="deathCountry"/></label>
+                <label>Todesterritorium<input type="text" name="territoryOfDeath"/></label>
+                <label>Todesort<input type="text" name="deathLocation"/></label>
+        
+                <label>Todesgrund<input type="text" name="causeOfDeath"/></label>
+                <label>Todesdatum<input type="text" name="deathDate"/></label>
+        
+                <label>Friedhof<input type="text" name="graveyard"/></label>
+                <label>Begräbnisort<input type="text" name="funeralLocation"/></label>
+                <label>Begräbnisdatum<input type="text" name="funeralDate"/></label>
+        
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+
+    
+     <script type="text/template" id="education">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="educationOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Abschluss<input type="text" name="graduationLabel"/></label>
+                <label>Abschlussdatum<input type="text" name="graduationDate"/></label>
+                <label>Abschlussort<input type="text" name="graduationLocation"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="honour">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <input type="hidden" name="honourOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="property">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <input type="hidden" name="propertyOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="rank">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <input type="hidden" name="rankOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Klasse<input type="text" name="class"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="religion">
+        <div class="row">
+            <div class="large-2 columns">
+               <input type="hidden" name="id"> 
+                <input type="hidden" name="religionOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Religionswechsel<input type="text" name="changeOfReligion"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="residence">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="residenceOrder">
+                <label>Wohnland<input type="text" name="residenceCountry"/></label>
+                <label>Wohnterritorium<input type="text" name="residenceTerritory"/></label>
+                <label>Wohnort<input type="text" name="residenceLocation"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="roadOfLife">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="roadOfLifeOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Herkunftsland<input type="text" name="originCountry"/></label>
+                <label>Herkunftsterritorium<input type="text" name="originTerritory"/></label>
+                <label>Job<input type="text" name="job"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="source">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="sourceOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Fundort<input type="text" name="placeOfDiscovery"/></label>
+                <label>Bemerkung<input type="text" name="remark"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>    
+        
+    <script type="text/template" id="status">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="statusOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>p
+            </div>
+        </div>
+    </script>
+    
+        
+    <script type="text/template" id="works">
+        <div class="row">
+            <div class="large-2 columns">
+                <input type="hidden" name="id"> 
+                <input type="hidden" name="worksOrder">
+                <label>Name<input type="text" name="label"/></label>
+                <label>Land<input type="text" name="country"/></label>
+                <label>Territorium<input type="text" name="territory"/></label>
+                <label>Ort<input type="text" name="location"/></label>
+                <!--//@TODO: Timestamp own formatting? --!>
+                <label>von<input type="text" name="fromDate"/></label>
+                <label>bis<input type="text" name="toDate"/></label>
+                <label>belegt<input type="text" name="provenDate"/></label>
+                <label>Kommentar<input type="text" name="comment"/></label>
+            </div>
+        </div>
+    </script>
+    
 {% endblock %}

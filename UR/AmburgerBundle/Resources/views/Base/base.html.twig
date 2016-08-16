@@ -59,6 +59,7 @@
         <script src="{{asset('bundles/amburger/js/lib/vendor/jquery.js')}}"></script>
         <script src="{{asset('bundles/amburger/js/lib/vendor/jquery-ui.min.js')}}"></script>
         <script src="{{asset('bundles/amburger/js/lib/foundation.min.js')}}"></script>
+        <script src="{{asset('bundles/amburger/js/lib/vendor/underscore-min.js')}}"></script>
         <script>
             $(document).foundation();
         </script>
@@ -67,6 +68,11 @@
 
     <div id="dialogs">    
         {% block dialogs %}
+        {% endblock %}
+    </div>
+    
+    <div id="templates">    
+        {% block templates %}
         {% endblock %}
     </div>
 </html>

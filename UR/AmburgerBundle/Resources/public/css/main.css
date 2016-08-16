@@ -30,6 +30,12 @@
     display: none;
 }
 
+/* dialogs */
+
+#templates {
+    display: none;
+}
+
 /* login */
 
 .welcome-header{
