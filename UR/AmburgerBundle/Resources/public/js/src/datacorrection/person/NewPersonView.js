@@ -2,30 +2,18 @@
 PersonCorrection.NewPersonView = (function(){
     var that = {},
     
+    personViewGenerator = null,
+    
     /* 
         Initialises the object and sets default values.
     */
     init = function() {
-
+        personViewGenerator = PersonCorrection.BasePersonViewGenerator.init();
         return that;
     },
     
     displayPerson = function(personData){
-        displayBasePerson(personData);
-    },
-    
-    displayBasePerson = function(personData){
-        console.log(personData);
-        var template = _.template($("script#basePerson").html());
-        console.log("template", template);
-        $("#new").append(template({
-            oid:personData['oid'], 
-            firstName:personData['first_name'],
-            patronym:personData['patronym'],
-            lastName:personData['last_name'],
-            foreName:personData['fore_name'],
-            birthName:personData['birth_name']
-        }));
+        personViewGenerator.displayPerson("#new", personData);
     };
 
     that.init = init;
