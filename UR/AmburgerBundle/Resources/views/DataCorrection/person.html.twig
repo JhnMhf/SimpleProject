@@ -274,11 +274,13 @@
                 <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geschlecht
-                    <select name="gender" size="3" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>>
-                        <option>Unbekannt</option>
-                        <option>Männlich</option> 
-                        <option>Weiblich</option>
+                    <select name="gender" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>>
+                        <option value="0" <%= gender == '0' ?  'selected' : '' %>>Unbekannt</option>
+                        <option value="1" <%= gender == '1' ?  'selected' : '' %>>Männlich</option> 
+                        <option value="2" <%= gender == '2' ?  'selected' : '' %>>Weiblich</option>
                     </select>
+                </label>
+                <label>Geschlechtskommentar
                     <input type="text" name="genderComment" value="<%= typeof(gender_comment) !== 'undefined' ?  gender_comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
                 </label>
                 <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>

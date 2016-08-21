@@ -19,19 +19,25 @@ PersonCorrection.PersonCorrectionView = (function(){
     collapse = function(args){
         console.log(args);
         
-        var clickedContainer = extractClickedContainer(args.currentTarget.className);
-        
-        console.log(clickedContainer);
-        
-        var elements = $("."+clickedContainer);
-        
-        if(elements.hasClass('collapsed')){
-            elements.removeClass('collapsed');
-        } else{
-            elements.addClass('collapsed');
+        if(args.target.localName !== 'input' 
+                && args.target.localName !== 'label' 
+                && args.target.localName  !== 'select'
+                 && args.target.localName  !== 'option'){             
+            var clickedContainer = extractClickedContainer(args.currentTarget.className);
+
+            console.log(clickedContainer);
+
+            if(clickedContainer !== undefined){
+                var elements = $("."+clickedContainer);
+
+                if(elements.hasClass('collapsed')){
+                    elements.removeClass('collapsed');
+                } else{
+                    elements.addClass('collapsed');
+                }
+            }
         }
-        
-        
+
     },
     
     extractClickedContainer = function(classes){
