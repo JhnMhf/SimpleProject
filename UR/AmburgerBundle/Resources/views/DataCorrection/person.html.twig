@@ -264,6 +264,7 @@
 
 
 {% block templates %}
+    {% verbatim %}
     <script type="text/template" id="basePerson">
         <div class="row">
                 <input type="hidden" name="id"> 
@@ -302,7 +303,26 @@
                <input type="hidden" name="id"> 
                 <label>Taufort<input type="text" name="baptismLocation" value="<%= typeof(baptism_location) !== 'undefined' ?  baptism_location['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <!--//@TODO: Timestamp own formatting? --!>
-                <label>Taufdatum<input type="text" name="baptismDate"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                <label>Taufdatum
+                <% 
+                        if(typeof(baptism_date) !== 'undefined') { 
+                            console.log("baptism_date found");
+                            var dateReferenceTemplate = _.template($("script#dateReference").html());
+                            console.log("Template: ", dateReferenceTemplate);
+                            
+                            var array = [];
+                            
+                            array['dateReference'] = baptism_date;
+                            
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+                        
+                        <%= dateReferenceTemplate(array) %>
+                        
+                    <%  } %>
+            </label>
         </div>
     </script>
     
@@ -317,7 +337,26 @@
                 <label>Geburtsterritorium<input type="text" name="birthTerritory" value="<%= typeof(birth_territory) !== 'undefined' ?  birth_territory['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsort<input type="text" name="birthLocation" value="<%= typeof(birth_location) !== 'undefined' ?  birth_location['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <!--//@TODO: Timestamp own formatting? --!>
-                <label>Geburtsdatum<input type="text" name="birthDate" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geburtsdatum
+                    <% 
+                        if(typeof(birth_date) !== 'undefined') { 
+                            console.log("birth_date found");
+                            var dateReferenceTemplate = _.template($("script#dateReference").html());
+                            console.log("Template: ", dateReferenceTemplate);
+                            
+                            var array = [];
+                            
+                            array['dateReference'] = birth_date;
+                            
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+                        
+                        <%= dateReferenceTemplate(array) %>
+                        
+                    <%  } %>
+                </label>
 
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
@@ -333,11 +372,49 @@
                 <label>Todesort<input type="text" name="deathLocation" value="<%= typeof(death_location) !== 'undefined' ?  death_location['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         
                 <label>Todesgrund<input type="text" name="causeOfDeath" value="<%= typeof(cause_of_death) !== 'undefined' ?  cause_of_death : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Todesdatum<input type="text" name="deathDate"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesdatum
+                    <% 
+                            if(typeof(death_date) !== 'undefined') { 
+                                console.log("death_date found");
+                                var dateReferenceTemplate = _.template($("script#dateReference").html());
+                                console.log("Template: ", dateReferenceTemplate);
+
+                                var array = [];
+
+                                array['dateReference'] = death_date;
+
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+
+                            <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
         
                 <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Begräbnisort<input type="text" name="funeralLocation" value="<%= typeof(funeral_location) !== 'undefined' ?  funeral_location['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Begräbnisdatum<input type="text" name="funeralDate"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Begräbnisdatum
+                        <% 
+                            if(typeof(funeral_date) !== 'undefined') { 
+                                console.log("funeral_date found");
+                                var dateReferenceTemplate = _.template($("script#dateReference").html());
+                                console.log("Template: ", dateReferenceTemplate);
+
+                                var array = [];
+
+                                array['dateReference'] = funeral_date;
+
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+
+                            <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
         
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
@@ -498,4 +575,48 @@
         </div>
     </script>
     
+    <script type="text/template" id="dateReference">
+        <% 
+            console.log("datereference template called.", dateReference);
+            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
+            _.forEach(dateReference, function (date,i) { 
+                console.log("date found", date);
+                        if(typeof(date['from']) !== 'undefined') {
+                            var dateTemplate = _.template($("script#date").html()); 
+                            
+                            if(typeof(enabled) !== 'undefined') { 
+                                date['from']['enabled'] = true; 
+                                date['to']['enabled'] = true; 
+                            }
+                    %>
+                            
+                            <%= dateTemplate(date['from']) %>
+                                bis
+                            <%= dateTemplate(date['to']) %>
+                        <% } else { 
+                        
+                            var dateTemplate = _.template($("script#date").html());
+                            
+                            if(typeof(enabled) !== 'undefined') { 
+                                date['enabled'] = true; 
+                            }
+                            %>
+                            
+                            <%= dateTemplate(date) %>
+                        <% } 
+            }) %>
+        </script>
+    
+    <script type="text/template" id="date">
+        <div class="input-group">
+            <input type="hidden" name="dateId"> 
+            <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="month" value="<%= typeof(month)!== 'undefined' ?  month : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="year" value="<%= typeof(year)!== 'undefined' ?  year : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+        </div>
+    </script>
+    {% endverbatim %}
 {% endblock %}
