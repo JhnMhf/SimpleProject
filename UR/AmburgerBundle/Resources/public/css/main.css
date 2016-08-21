@@ -36,6 +36,20 @@
     display: none;
 }
 
+/* collapsible */
+
+.collapsible.collapsed > .row {
+    display: none;
+}
+
+.collapsible > .header:before {
+    content: "-";
+}
+
+.collapsible.collapsed > .header:before {
+    content: "+";
+}
+
 /* login */
 
 .welcome-header{
