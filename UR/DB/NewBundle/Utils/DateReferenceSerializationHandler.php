@@ -23,6 +23,11 @@ use JMS\Serializer\SerializationContext;
 //http://jmsyst.com/libs/serializer
 //http://jmsyst.com/libs/serializer/master/handlers
 //https://github.com/schmittjoh/JMSSerializerBundle/blob/master/DependencyInjection/Compiler/CustomHandlersPass.php
+//http://blog.spdionis.com/symfony/jmsserializer/2014/11/27/add-data-to-serialized-entity.html
+//http://stackoverflow.com/questions/15007281/add-extra-fields-using-jms-serializer-bundle/16675627#16675627
+//http://blog.logicexception.com/2012/06/creating-custom-jmsserializerbundle.html
+
+//Alternative: http://thomas.jarrand.fr/blog/serialization/
 
 class DateReferenceSerializationHandler implements SubscribingHandlerInterface {
 
@@ -58,6 +63,7 @@ class DateReferenceSerializationHandler implements SubscribingHandlerInterface {
         );
     }
 
+    //@TODO: Check if deserialization still works right
     public function deserializeJsonToDateReference(JsonDeserializationVisitor $visitor, $json, array $type, DeserializationContext $context) {
         if (array_key_exists("from", $json)) {
             $from = $this->createDateObj($json['from']);
@@ -70,14 +76,24 @@ class DateReferenceSerializationHandler implements SubscribingHandlerInterface {
         }
     }
 
+    //Example: https://github.com/schmittjoh/serializer/blob/master/src/JMS/Serializer/Handler/ArrayCollectionHandler.php
     public function serializeDateReferenceToJson(JsonSerializationVisitor $visitor, $obj, array $type, SerializationContext $context) {
         $this->LOGGER->debug("Serializing DateReference: " . print_r($obj, true));
+        
+        $type['name'] = 'array';
 
         if (get_class($obj) == "UR\DB\NewBundle\Utils\DateRange") {
             //date range found
-            return $this->dateRangeToJson($obj);
+            $dateRangeArray = array();
+
+            $dateRangeArray['from'] = $this->dateToArray($obj->getFrom());
+            $dateRangeArray['to'] = $this->dateToArray($obj->getTo());
+            
+            return $visitor->visitArray($dateRangeArray, $type, $context);
         } else {
-            return $this->dateToJson($obj);
+            $dateArray = $this->dateToArray($obj);
+            
+            return $visitor->visitArray($dateArray, $type, $context);
         }
     }
 
@@ -109,20 +125,6 @@ class DateReferenceSerializationHandler implements SubscribingHandlerInterface {
 
 
         return $dateArray;
-    }
-
-    private function dateToJson($date) {
-        return json_encode($this->dateToArray($date), true);
-    }
-
-    private function dateRangeToJson($dateRange) {
-
-        $dateRangeArray = array();
-
-        $dateRangeArray['from'] = $this->dateToArray($dateRange->getFrom());
-        $dateRangeArray['to'] = $this->dateToArray($dateRange->getTo());
-
-        return json_encode($dateRangeArray, true);
     }
 
     private function createDateObj($dateArrayFromJson) {
