@@ -30,7 +30,6 @@ PersonCorrection.OldPersonViewGenerator = (function(){
             displayDeath(insertId, personData['tod'] , enabled);
         }
         
-        /*
         displayEducations(insertId, personData['educations'], enabled);
         displayHonours(insertId, personData['honours'], enabled);
         displayProperties(insertId, personData['properties'], enabled);
@@ -41,8 +40,6 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         displaySource(insertId, personData['sources'], enabled);
         displayStatus(insertId, personData['stati'], enabled);
         displayWorks(insertId, personData['works'], enabled);
-        
-        */
     },
     
     displayBasePerson = function(insertId, personData, enabled){
@@ -154,11 +151,11 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     },
     
     displayEducations = function(insertId, educationsData, enabled){
-        var template = _.template($("script#education").html());
+        var template = _.template($("script#education-old").html());
 
         var data = [];
         
-        data['educations'] = educationsData;
+        data['educations'] = extractPersonDataForEducations(educationsData);
         
         if(enabled){
             data['enabled'] = true;
@@ -166,13 +163,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         
         $(insertId  + " .educations-container").append(template(data));
     },
+     
+    extractPersonDataForEducations = function(educationsData){
+        var data = [];
+        
+
+        
+        return data;
+    },
     
     displayHonours = function(insertId, honoursData, enabled){
-        var template = _.template($("script#honour").html());
+        var template = _.template($("script#honour-old").html());
 
         var data = [];
         
-        data['honours'] = honoursData;
+        data['honours'] = extractPersonDataForHonours(honoursData);
         
         if(enabled){
             data['enabled'] = true;
@@ -180,13 +185,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         
         $(insertId  + " .honours-container").append(template(data));
     },
+     
+    extractPersonDataForHonours = function(honoursData){
+        var data = [];
+        
+
+        
+        return data;
+    },
     
     displayProperties = function(insertId, propertiesData, enabled){
-        var template = _.template($("script#property").html());
+        var template = _.template($("script#property-old").html());
 
         var data = [];
         
-        data['properties'] = propertiesData;
+        data['properties'] = extractPersonDataForProperties(propertiesData);
         
         if(enabled){
             data['enabled'] = true;
@@ -195,12 +208,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .properties-container").append(template(data));
     },
     
+    extractPersonDataForProperties = function(propertiesData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displayRanks = function(insertId, ranksData, enabled){
-        var template = _.template($("script#rank").html());
+        var template = _.template($("script#rank-old").html());
 
         var data = [];
         
-        data['ranks'] = ranksData;
+        data['ranks'] = extractPersonDataForRanks(ranksData);
         
         if(enabled){
             data['enabled'] = true;
@@ -208,13 +229,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         
         $(insertId  + " .rank-container").append(template(data));
     },
+    
+    extractPersonDataForRanks = function(ranksData){
+        var data = [];
+        
+
+        
+        return data;
+    },
        
     displayReligion = function(insertId, religionData, enabled){
-        var template = _.template($("script#religion").html());
+        var template = _.template($("script#religion-old").html());
 
         var data = [];
         
-        data['religions'] = religionData;
+        data['religions'] = extractPersonDataForReligion(religionData);
         
         if(enabled){
             data['enabled'] = true;
@@ -223,12 +252,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .religion-container").append(template(data));
     },
     
+    extractPersonDataForReligion = function(religionData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displayResidence = function(insertId, residenceData, enabled){
-        var template = _.template($("script#residence").html());
+        var template = _.template($("script#residence-old").html());
 
         var data = [];
         
-        data['residences'] = residenceData;
+        data['residences'] = extractPersonDataForResidence(residenceData);
         
         if(enabled){
             data['enabled'] = true;
@@ -237,12 +274,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .residence-container").append(template(data));
     },
     
+    extractPersonDataForResidence = function(residenceData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displayRoadOfLife = function(insertId, roadOfLifeData, enabled){
-        var template = _.template($("script#roadOfLife").html());
+        var template = _.template($("script#roadOfLife-old").html());
 
         var data = [];
         
-        data['roadOfLifes'] = roadOfLifeData;
+        data['roadOfLifes'] = extractPersonDataForRoadOfLife(roadOfLifeData);
         
         if(enabled){
             data['enabled'] = true;
@@ -251,12 +296,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .road-of-life-container").append(template(data));
     },
     
+    extractPersonDataForRoadOfLife = function(roadOfLifeData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displaySource = function(insertId, sourceData, enabled){
         var template = _.template($("script#source").html());
 
         var data = [];
         
-        data['sources'] = sourceData;
+        data['sources'] = extractPersonDataForSource(sourceData);
         
         if(enabled){
             data['enabled'] = true;
@@ -265,12 +318,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .source-container").append(template(data));
     },
     
+    extractPersonDataForSource = function(sourceData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displayStatus = function(insertId, statusData, enabled){
-        var template = _.template($("script#status").html());
+        var template = _.template($("script#status-old").html());
 
         var data = [];
         
-        data['stati'] = statusData;
+        data['stati'] = extractPersonDataForStatus(statusData);
         
         if(enabled){
             data['enabled'] = true;
@@ -279,18 +340,34 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         $(insertId  + " .status-container").append(template(data));
     },
     
+    extractPersonDataForStatus = function(statusData){
+        var data = [];
+        
+
+        
+        return data;
+    },
+    
     displayWorks = function(insertId, worksData, enabled){
-        var template = _.template($("script#works").html());
+        var template = _.template($("script#works-old").html());
 
         var data = [];
         
-        data['works'] = worksData;
+        data['works'] = extractPersonDataForWorks(worksData);
         
         if(enabled){
             data['enabled'] = true;
         }
         
         $(insertId  + " .works-container").append(template(data));
+    },
+    
+    extractPersonDataForWorks = function(worksData){
+        var data = [];
+        
+
+        
+        return data;
     };
 
     that.init = init;
