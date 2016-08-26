@@ -1,5 +1,5 @@
 
-PersonCorrection.BasePersonViewGenerator = (function(){
+PersonCorrection.OldPersonViewGenerator = (function(){
     var that = {},
     
     /* 
@@ -17,20 +17,20 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         
         console.log("Building person for:",insertId, personData, enabled);
         displayBasePerson(insertId,personData, enabled);
-        
-        if(personData['baptism'] !== undefined){
-            displayBaptism(insertId, personData['baptism'], enabled);
+
+        if(personData['herkunft'] !== undefined){
+            displayBaptism(insertId, personData['herkunft'], enabled);
         }
         
-        
-        if(personData['birth'] !== undefined){
-            displayBirth(insertId, personData['birth'], enabled);
+        if(personData['herkunft'] !== undefined){
+            displayBirth(insertId, personData['herkunft'], enabled);
         }
         
-        if(personData['death'] !== undefined){
-            displayDeath(insertId, personData['death'] , enabled);
+        if(personData['tod'] !== undefined){
+            displayDeath(insertId, personData['tod'] , enabled);
         }
         
+        /*
         displayEducations(insertId, personData['educations'], enabled);
         displayHonours(insertId, personData['honours'], enabled);
         displayProperties(insertId, personData['properties'], enabled);
@@ -41,12 +41,14 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         displaySource(insertId, personData['sources'], enabled);
         displayStatus(insertId, personData['stati'], enabled);
         displayWorks(insertId, personData['works'], enabled);
+        
+        */
     },
     
     displayBasePerson = function(insertId, personData, enabled){
-        var template = _.template($("script#basePerson").html());
+        var template = _.template($("script#basePerson-old").html());
 
-        var data = personData;
+        var data = extractPersonDataForBasePerson(personData);
         
         if(enabled){
             data['enabled'] = true;
@@ -54,11 +56,30 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         
         $(insertId + " .base-person-container").append(template(data));
     },
+    
+    extractPersonDataForBasePerson = function(personData){
+        var data = [];
+        
+        data['oid'] = personData['oid'];
+        data['first_name'] = personData['person']['vornamen'];
+        data['patronym'] = personData['person']['russ_vornamen'];
+        data['last_name'] = personData['person']['name'];
+        data['fore_name'] = personData['person']['rufname'];
+        data['birth_name'] = personData['person']['geburtsname'];
+        data['gender'] = personData['person']['geschlecht'];
+        data['job'] = personData['person']['beruf'];
+        data['born_in_marriage'] = personData['person']['ehelich'];
+        data['jobclass'] = personData['person']['berufsklasse'];
+        data['nation'] = personData['person']['ursp_nation'];
+        data['comment'] = personData['person']['kommentar'];
+        
+        return data;
+    },
         
     displayBaptism = function(insertId, baptismData, enabled){
-        var template = _.template($("script#baptism").html());
+        var template = _.template($("script#baptism-old").html());
 
-        var data = baptismData;
+        var data = extractPersonDataForBaptism(baptismData);
         
         if(enabled){
             data['enabled'] = true;
@@ -67,10 +88,19 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         $(insertId + " .baptism-container").append(template(data));
     },
     
+    extractPersonDataForBaptism = function(baptismData){
+        var data = [];
+        
+        data['baptism_location'] = baptismData['taufort'];
+        data['baptism_date'] = baptismData['getauft'];
+        
+        return data;
+    },
+    
     displayBirth = function(insertId, birthData, enabled){
-        var template = _.template($("script#birth").html());
+        var template = _.template($("script#birth-old").html());
 
-        var data = birthData;
+        var data = extractPersonDataForBirth(birthData);
         
         if(enabled){
             data['enabled'] = true;
@@ -79,16 +109,48 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         $(insertId + " .birth-container").append(template(data));
     },
     
+    extractPersonDataForBirth = function(birthData){
+        var data = [];
+        
+        data['origin_location'] = birthData['herkunftsort'];
+        data['origin_territory'] = birthData['herkunftsterritorium'];
+        data['origin_country'] = birthData['herkunftsland'];
+        data['birth_location'] = birthData['geburtsort'];
+        data['birth_territory'] = birthData['geburtsterritorium'];
+        data['birth_country'] = birthData['geburtsland'];
+        data['birth_date'] = birthData['geboren'];
+        data['comment'] = birthData['kommentar'];
+        
+        return data;
+    },
+    
+    
     displayDeath = function(insertId, deathData, enabled){
-        var template = _.template($("script#death").html());
+        var template = _.template($("script#death-old").html());
 
-        var data = deathData;
+        var data = extractPersonDataForDeath(deathData);
         
         if(enabled){
             data['enabled'] = true;
         }
         
         $(insertId  + " .death-container").append(template(data));
+    },
+    
+    extractPersonDataForDeath = function(deathData){
+        var data = [];
+        
+        data['death_location'] = deathData['todesort'];
+        data['death_date'] = deathData['gestorben'];        
+        data['cause_of_death'] = deathData['todesursache'];        
+        data['death_territory'] = deathData['todesterritorium'];        
+        data['graveyard'] = deathData['friedhof'];
+        data['funeral_location'] = deathData['begräbnisort'];
+        data['funeral_date'] = deathData['begraben'];
+        data['death_country'] = deathData['todesland'];
+        data['comment'] = deathData['kommentar'];
+        
+        return data;
     },
     
     displayEducations = function(insertId, educationsData, enabled){

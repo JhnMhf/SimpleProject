@@ -19,9 +19,8 @@ class CorrectionPersonController extends Controller
         $response = array();
         
         //@TODO: Load person from old db and format like json of new db
-        $response["old"] = array();
+        $response["old"] = $this->loadOldPersonByOID($OID);
         $response["new"] = $this->loadNewPersonByOID($OID);
-        
         $response["final"] = $this->loadFinalPersonByOID($OID);
         
         if(is_null($response["final"])){
@@ -34,6 +33,23 @@ class CorrectionPersonController extends Controller
         $jsonResponse->setContent($json);
         
         return $jsonResponse;
+    }
+    
+    private function loadOldPersonByOID($OID){
+        $data = array();        
+        
+        $oldDBManager = $this->get('doctrine')->getManager('old');
+        
+        $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneByOid($OID);
+
+        $ID = $IDData->getId();
+        
+        $data['oid'] = $OID;
+        $data['person'] = $oldDBManager->getRepository('OldBundle:Person')->findOneById($ID);
+        $data['herkunft'] = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($ID);
+        $data['tod'] = $oldDBManager->getRepository('OldBundle:Tod')->findOneById($ID);
+        
+        return $data;
     }
     
     private function loadNewPersonByOID($OID){

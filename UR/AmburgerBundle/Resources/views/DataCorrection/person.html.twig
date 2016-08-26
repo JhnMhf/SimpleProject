@@ -1,7 +1,7 @@
 {% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
 {% block body %}
      <div class="row">
-        <div class="large-2 columns" id="old">
+        <div class="large-4 columns" id="old">
             <p>Alter Datensatz</p>
                 <div class="base-person-container collapsible">
                     <h3 class="header">
@@ -74,7 +74,7 @@
                     </h3>
                 </div>
         </div>
-        <div class="large-2 columns" id="new">
+        <div class="large-4 columns" id="new">
             <p>Normalisierter Datensatz</p>
                 <div class="base-person-container collapsible">
                     <h3 class="header">
@@ -236,6 +236,7 @@
 
      {# Views #}
      <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/BasePersonViewGenerator.js') }}"></script>
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/OldPersonViewGenerator.js') }}"></script>
      <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/PersonCorrectionView.js') }}"></script>
      <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/FinalPersonView.js') }}"></script>
      <script src="{{ asset('bundles/amburger/js/src/datacorrection/person/NewPersonView.js') }}"></script>
@@ -285,7 +286,6 @@
                     <input type="text" name="genderComment" value="<%= typeof(gender_comment) !== 'undefined' ?  gender_comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
                 </label>
                 <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <!-- //@TODO: Complex objects for job, jobclass, nation, territory, location, country? -->
                 <label>Job
                     <% 
                         if(typeof(job) !== 'undefined') { 
@@ -346,9 +346,25 @@
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
 
         </div>
-
     </script>
     
+    <script type="text/template" id="basePerson-old">
+        <div class="row">
+                <input type="hidden" name="id"> 
+                <label>OID<input type="text" name="oid" value="<%=oid %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Vorname<input type="text" name="firstName" value="<%= typeof(first_name) !== 'undefined' ?  first_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Vatersname<input type="text" name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Nachname<input type="text" name="lastName" value="<%= typeof(last_name) !== 'undefined' ?  last_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geschlecht<input type="text" name="oid" value="<%= typeof(gender) !== 'undefined' ?  gender : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Job<input type="text" name="job" value="<%= typeof(job) !== 'undefined' ?  job : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Jobklasse<input type="text" name="jobclass" value="<%= typeof(jobclass) !== 'undefined' ?  jobclass : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Nation<input type="text" name="nation" value="<%= typeof(nation) !== 'undefined' ?  nation : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        </div>
+    </script>
     <script type="text/template" id="baptism">
         <div class="row">
                <input type="hidden" name="id"> 
@@ -374,9 +390,7 @@
                 <label>Taufdatum
                 <% 
                         if(typeof(baptism_date) !== 'undefined') { 
-                            console.log("baptism_date found");
                             var dateReferenceTemplate = _.template($("script#dateReference").html());
-                            console.log("Template: ", dateReferenceTemplate);
                             
                             var array = [];
                             
@@ -391,6 +405,14 @@
                         
                     <%  } %>
             </label>
+        </div>
+    </script>
+    
+    <script type="text/template" id="baptism-old">
+        <div class="row">
+               <input type="hidden" name="id"> 
+                <label>Taufort<input type="text" name="baptismLocation" value="<%= typeof(baptism_location) !== 'undefined' ?  baptism_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Taufdatum<input type="text" name="baptismDate" value="<%= typeof(baptism_date) !== 'undefined' ?  baptism_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
     
@@ -513,9 +535,7 @@
                 <label>Geburtsdatum
                     <% 
                         if(typeof(birth_date) !== 'undefined') { 
-                            console.log("birth_date found");
                             var dateReferenceTemplate = _.template($("script#dateReference").html());
-                            console.log("Template: ", dateReferenceTemplate);
                             
                             var array = [];
                             
@@ -535,7 +555,19 @@
         </div>
     </script>
     
-
+<script type="text/template" id="birth-old">
+        <div class="row">
+               <input type="hidden" name="id"> 
+                <label>Herkunftsland<input type="text" name="originCountry" value="<%= typeof(origin_country) !== 'undefined' ?  origin_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Herkunftsterritory<input type="text" name="originTerritory" value="<%= typeof(origin_territory) !== 'undefined' ?  origin_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Herkunftsort<input type="text" name="originLocation" value="<%= typeof(origin_location) !== 'undefined' ?  origin_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geburtsland<input type="text" name="birthCountry" value="<%= typeof(birth_country) !== 'undefined' ?  birth_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>    
+                <label>Geburtsterritorium<input type="text" name="birthTerritory" value="<%= typeof(birth_territory) !== 'undefined' ?  birth_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geburtsort<input type="text" name="birthLocation" value="<%= typeof(birth_location) !== 'undefined' ?  birth_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Geburtsdatum<input type="text" name="birthDate" value="<%= typeof(birth_date) !== 'undefined' ?  birth_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        </div>
+    </script>
     
     <script type="text/template" id="death">
         <div class="row">
@@ -598,9 +630,7 @@
                 <label>Todesdatum
                     <% 
                             if(typeof(death_date) !== 'undefined') { 
-                                console.log("death_date found");
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
-                                console.log("Template: ", dateReferenceTemplate);
 
                                 var array = [];
 
@@ -638,9 +668,7 @@
                 <label>Begräbnisdatum
                         <% 
                             if(typeof(funeral_date) !== 'undefined') { 
-                                console.log("funeral_date found");
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
-                                console.log("Template: ", dateReferenceTemplate);
 
                                 var array = [];
 
@@ -661,10 +689,23 @@
     </script>
 
     
+    <script type="text/template" id="death-old">
+        <div class="row">
+                <input type="hidden" name="id"> 
+                <label>Todesland<input type="text" name="deathCountry" value="<%= typeof(death_country) !== 'undefined' ?  death_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesterritorium<input type="text" name="deathTerritory" value="<%= typeof(death_territory) !== 'undefined' ?  death_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesort<input type="text" name="deathLocation" value="<%= typeof(death_location) !== 'undefined' ?  death_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesgrund<input type="text" name="causeOfDeath" value="<%= typeof(cause_of_death) !== 'undefined' ?  cause_of_death : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesdatum<input type="text" name="deathDate" value="<%= typeof(death_date) !== 'undefined' ?  death_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Begräbnisort<input type="text" name="funeralLocation" value="<%= typeof(funeral_location) !== 'undefined' ?  funeral_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Begräbnisdatum<input type="text" name="funeralDate" value="<%= typeof(funeral_date) !== 'undefined' ?  funeral_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        </div>
+    </script>
+    
      <script type="text/template" id="education">
         <% 
-            console.log("educations:", educations);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(educations, function (educationObj,i) {       
                 
         %>
@@ -825,8 +866,6 @@
     
     <script type="text/template" id="honour">
          <% 
-            console.log("honour:", honours);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(honours, function (honourObj,i) {       
                 
         %>
@@ -950,8 +989,6 @@
     
     <script type="text/template" id="property">
         <% 
-            console.log("properties:", properties);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(properties, function (propertyObj,i) {       
                 
         %>
@@ -1075,8 +1112,6 @@
     
     <script type="text/template" id="rank">
         <% 
-            console.log("ranks:", ranks);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(ranks, function (rankObj,i) {       
                 
         %>
@@ -1201,8 +1236,6 @@
     
     <script type="text/template" id="religion">
         <% 
-            console.log("religions:", religions);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(religions, function (religionObj,i) {       
                 
         %>
@@ -1257,8 +1290,6 @@
     
     <script type="text/template" id="residence">
         <% 
-            console.log("residences:", residences);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(residences, function (residenceObj,i) {       
                 
         %>
@@ -1325,8 +1356,7 @@
     
     <script type="text/template" id="roadOfLife">
         <% 
-            console.log("roadOfLifes:", roadOfLifes);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
+
             _.forEach(roadOfLifes, function (roadOfLifeObj,i) {       
                 
         %>
@@ -1503,8 +1533,6 @@
     
     <script type="text/template" id="source">
         <% 
-            console.log("sources:", sources);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(sources, function (sourceObj,i) {       
                 
         %>
@@ -1521,8 +1549,6 @@
         
     <script type="text/template" id="status">
         <% 
-            console.log("stati:", stati);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(stati, function (statusObj,i) {       
                 
         %>
@@ -1648,8 +1674,6 @@
         
     <script type="text/template" id="works">
         <% 
-            console.log("works:", works);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(works, function (worksObj,i) {       
                 
         %>
@@ -1774,10 +1798,7 @@
     
     <script type="text/template" id="dateReference">
         <% 
-            console.log("datereference template called.", dateReference);
-            console.log("Enabled?", typeof(enabled) !== 'undefined' ? enabled : 'undefined');
             _.forEach(dateReference, function (date,i) { 
-                console.log("date found", date);
                         if(typeof(date['from']) !== 'undefined') {
                             var dateTemplate = _.template($("script#date").html()); 
                             
