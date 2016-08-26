@@ -1,4 +1,5 @@
 services:
-#    old.example:
-#        class: UR\DB\OldBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    old_db_loader.service:
+        class: UR\DB\OldBundle\Util\OldPersonLoader
+        arguments: 
+           container: "@service_container"

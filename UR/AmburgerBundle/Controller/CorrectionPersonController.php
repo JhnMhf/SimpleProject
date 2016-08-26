@@ -36,20 +36,7 @@ class CorrectionPersonController extends Controller
     }
     
     private function loadOldPersonByOID($OID){
-        $data = array();        
-        
-        $oldDBManager = $this->get('doctrine')->getManager('old');
-        
-        $IDData = $oldDBManager->getRepository('OldBundle:Ids')->findOneByOid($OID);
-
-        $ID = $IDData->getId();
-        
-        $data['oid'] = $OID;
-        $data['person'] = $oldDBManager->getRepository('OldBundle:Person')->findOneById($ID);
-        $data['herkunft'] = $oldDBManager->getRepository('OldBundle:Herkunft')->findOneById($ID);
-        $data['tod'] = $oldDBManager->getRepository('OldBundle:Tod')->findOneById($ID);
-        
-        return $data;
+        return $this->get('old_db_loader.service')->loadPersonByOID($OID);
     }
     
     private function loadNewPersonByOID($OID){
