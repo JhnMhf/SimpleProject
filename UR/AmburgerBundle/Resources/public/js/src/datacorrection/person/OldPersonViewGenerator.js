@@ -18,28 +18,23 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         console.log("Building person for:",insertId, personData, enabled);
         displayBasePerson(insertId,personData, enabled);
 
-        if(personData['herkunft'] !== undefined){
-            displayBaptism(insertId, personData['herkunft'], enabled);
+        displayBaptism(insertId, personData['herkunft'], enabled);
+        displayBirth(insertId, personData['herkunft'], enabled);
+        displayDeath(insertId, personData['tod'] , enabled);
+        displayEducations(insertId, personData['ausbildung'], enabled);
+        displayHonours(insertId, personData['ehre'], enabled);
+        displayProperties(insertId, personData['eigentum'], enabled);
+        displayRanks(insertId, personData['rang'], enabled);
+        displayReligion(insertId, personData['religion'], enabled);
+        
+        if(personData['wohnung'] !== undefined){
+            displayResidence(insertId, personData['wohnung'], enabled);
         }
         
-        if(personData['herkunft'] !== undefined){
-            displayBirth(insertId, personData['herkunft'], enabled);
-        }
-        
-        if(personData['tod'] !== undefined){
-            displayDeath(insertId, personData['tod'] , enabled);
-        }
-        
-        displayEducations(insertId, personData['educations'], enabled);
-        displayHonours(insertId, personData['honours'], enabled);
-        displayProperties(insertId, personData['properties'], enabled);
-        displayRanks(insertId, personData['ranks'], enabled);
-        displayReligion(insertId, personData['religions'], enabled);
-        displayResidence(insertId, personData['residences'], enabled);
-        displayRoadOfLife(insertId, personData['road_of_life'], enabled);
-        displaySource(insertId, personData['sources'], enabled);
-        displayStatus(insertId, personData['stati'], enabled);
-        displayWorks(insertId, personData['works'], enabled);
+        displayRoadOfLife(insertId, personData['lebensweg'], enabled);
+        displaySource(insertId, personData['quellen'], enabled);
+        displayStatus(insertId, personData['status'], enabled);
+        displayWorks(insertId, personData['werke'], enabled);
     },
     
     displayBasePerson = function(insertId, personData, enabled){
@@ -167,7 +162,23 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForEducations = function(educationsData){
         var data = [];
         
-
+        for(var i = 0; i < educationsData.length; i++){
+            var educationElement = [];
+            
+            educationElement['label'] = educationsData[i]['ausbildung'];
+            educationElement['country'] = educationsData[i]['land'];
+            educationElement['territory'] = educationsData[i]['territorium'];
+            educationElement['location'] = educationsData[i]['ort'];
+            educationElement['from_date'] = educationsData[i]['von-ab'];
+            educationElement['to_date'] = educationsData[i]['bis'];
+            educationElement['proven_date'] = educationsData[i]['belegt'];
+            educationElement['graduation_label'] = educationsData[i]['bildungsabschluss'];
+            educationElement['graduation_date'] = educationsData[i]['bildungsabschlussdatum'];
+            educationElement['graduation_location'] = educationsData[i]['bildungsabschlussort'];
+            educationElement['comment'] = educationsData[i]['kommentar'];
+            
+            data[i] = educationElement;
+        }
         
         return data;
     },
@@ -189,7 +200,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForHonours = function(honoursData){
         var data = [];
         
-
+        for(var i = 0; i < honoursData.length; i++){
+            var honoursElement = [];
+            
+            honoursElement['label'] = honoursData[i]['ehren'];
+            honoursElement['country'] = honoursData[i]['land'];
+            honoursElement['territory'] = honoursData[i]['territorium'];
+            honoursElement['location'] = honoursData[i]['ort'];
+            honoursElement['from_date'] = honoursData[i]['von-ab'];
+            honoursElement['to_date'] = honoursData[i]['bis'];
+            honoursElement['proven_date'] = honoursData[i]['belegt'];
+            honoursElement['comment'] = honoursData[i]['kommentar'];
+            
+            data[i] = honoursElement;
+        }
+        
         
         return data;
     },
@@ -211,7 +236,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForProperties = function(propertiesData){
         var data = [];
         
-
+        for(var i = 0; i < propertiesData.length; i++){
+            var propertiesElement = [];
+            
+            propertiesElement['label'] = propertiesData[i]['besitz'];
+            propertiesElement['country'] = propertiesData[i]['land'];
+            propertiesElement['territory'] = propertiesData[i]['territorium'];
+            propertiesElement['location'] = propertiesData[i]['ort'];
+            propertiesElement['from_date'] = propertiesData[i]['von-ab'];
+            propertiesElement['to_date'] = propertiesData[i]['bis'];
+            propertiesElement['proven_date'] = propertiesData[i]['belegt'];
+            propertiesElement['comment'] = propertiesData[i]['kommentar'];
+            
+            data[i] = propertiesElement;
+        }
         
         return data;
     },
@@ -233,7 +271,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForRanks = function(ranksData){
         var data = [];
         
-
+        for(var i = 0; i < ranksData.length; i++){
+            var ranksElement = [];
+            
+            ranksElement['label'] = ranksData[i]['rang'];
+            ranksElement['class'] = ranksData[i]['rangklasse'];
+            ranksElement['country'] = ranksData[i]['land'];
+            ranksElement['territory'] = ranksData[i]['territorium'];
+            ranksElement['location'] = ranksData[i]['ort'];
+            ranksElement['from_date'] = ranksData[i]['von-ab'];
+            ranksElement['to_date'] = ranksData[i]['bis'];
+            ranksElement['proven_date'] = ranksData[i]['belegt'];
+            ranksElement['comment'] = ranksData[i]['kommentar'];
+            
+            data[i] = ranksElement;
+        }
         
         return data;
     },
@@ -255,7 +307,18 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForReligion = function(religionData){
         var data = [];
         
-
+        for(var i = 0; i < religionData.length; i++){
+            var religionElement = [];
+            
+            religionElement['name'] = religionData[i]['konfession'];
+            religionElement['change_of_religion'] = religionData[i]['konversion'];
+            religionElement['from_date'] = religionData[i]['von-ab'];
+            religionElement['to_date'] = religionData[i]['bis'];
+            religionElement['comment'] = religionData[i]['kommentar'];
+            
+            data[i] = religionElement;
+        }
+        
         
         return data;
     },
@@ -278,6 +341,16 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         var data = [];
         
 
+        for(var i = 0; i < residenceData.length; i++){
+            var residenceElement = [];
+            
+            residenceElement['residence_country'] = residenceData[i]['wohnland'];
+            residenceElement['residence_territory'] = residenceData[i]['wohnterritorium'];
+            residenceElement['residence_location'] = residenceData[i]['wohnort'];
+            
+            data[i] = residenceElement;
+        }
+        
         
         return data;
     },
@@ -299,7 +372,22 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     extractPersonDataForRoadOfLife = function(roadOfLifeData){
         var data = [];
         
-
+        for(var i = 0; i < roadOfLifeData.length; i++){
+            var roadOfLifeElement = [];
+            
+            roadOfLifeElement['origin_country'] = roadOfLifeData[i]['stammland'];
+            roadOfLifeElement['origin_territory'] = roadOfLifeData[i]['stammterritorium'];
+            roadOfLifeElement['job'] = roadOfLifeData[i]['beruf'];
+            roadOfLifeElement['country'] = roadOfLifeData[i]['land'];
+            roadOfLifeElement['territory'] = roadOfLifeData[i]['territorium'];
+            roadOfLifeElement['location'] = roadOfLifeData[i]['ort'];
+            roadOfLifeElement['from_date'] = roadOfLifeData[i]['von-ab'];
+            roadOfLifeElement['to_date'] = roadOfLifeData[i]['bis'];
+            roadOfLifeElement['proven_date'] = roadOfLifeData[i]['belegt'];
+            roadOfLifeElement['comment'] = roadOfLifeData[i]['kommentar'];
+            
+            data[i] = roadOfLifeElement;
+        }
         
         return data;
     },
@@ -322,6 +410,16 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         var data = [];
         
 
+        for(var i = 0; i < sourceData.length; i++){
+            var sourceElement = [];
+            
+            sourceElement['label'] = sourceData[i]['bezeichnung'];
+            sourceElement['place_of_discovery'] = sourceData[i]['fundstelle'];
+            sourceElement['remark'] = sourceData[i]['bemerkung'];
+            sourceElement['comment'] = sourceData[i]['kommentar'];
+            
+            data[i] = sourceElement;
+        }
         
         return data;
     },
@@ -344,6 +442,20 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         var data = [];
         
 
+        for(var i = 0; i < statusData.length; i++){
+            var statusElement = [];
+            
+            statusElement['label'] = statusData[i]['stand'];
+            statusElement['country'] = statusData[i]['land'];
+            statusElement['territory'] = statusData[i]['territorium'];
+            statusElement['location'] = statusData[i]['ort'];
+            statusElement['from_date'] = statusData[i]['von-ab'];
+            statusElement['to_date'] = statusData[i]['bis'];
+            statusElement['proven_date'] = statusData[i]['belegt'];
+            statusElement['comment'] = statusData[i]['kommentar'];
+            
+            data[i] = statusElement;
+        }
         
         return data;
     },
@@ -364,8 +476,21 @@ PersonCorrection.OldPersonViewGenerator = (function(){
     
     extractPersonDataForWorks = function(worksData){
         var data = [];
-        
 
+        for(var i = 0; i < worksData.length; i++){
+            var worksElement = [];
+            
+            worksElement['label'] = worksData[i]['werke'];
+            worksElement['country'] = worksData[i]['land'];
+            worksElement['territory'] = worksData[i]['territorium'];
+            worksElement['location'] = worksData[i]['ort'];
+            worksElement['from_date'] = worksData[i]['von-ab'];
+            worksElement['to_date'] = worksData[i]['bis'];
+            worksElement['proven_date'] = worksData[i]['belegt'];
+            worksElement['comment'] = worksData[i]['kommentar'];
+            
+            data[i] = worksElement;
+        }
         
         return data;
     };

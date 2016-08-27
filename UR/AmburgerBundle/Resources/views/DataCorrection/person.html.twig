@@ -1479,7 +1479,6 @@
         <div class="row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="roadOfLifeOrder">
-                <label>Name<input type="text" name="label" value="<%= typeof(roadOfLifeObj['label']) !== 'undefined' ?  roadOfLifeObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsland
                     <%  if(typeof(roadOfLifeObj['origin_country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -1656,7 +1655,6 @@
         <div class="row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="roadOfLifeOrder">
-                <label>Name<input type="text" name="label" value="<%= typeof(roadOfLifeObj['label']) !== 'undefined' ?  roadOfLifeObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsland<input type="text" name="originCountry" value="<%= typeof(roadOfLifeObj['origin_country']) !== 'undefined' ?  roadOfLifeObj['origin_country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsterritorium<input type="text" name="originTerritory" value="<%= typeof(roadOfLifeObj['origin_territory']) !== 'undefined' ?  roadOfLifeObj['origin_territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Job<input type="text" name="job" value="<%= typeof(roadOfLifeObj['job']) !== 'undefined' ?  roadOfLifeObj['job'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
