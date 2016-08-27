@@ -419,7 +419,7 @@
     <script type="text/template" id="birth">
         <div class="row">
                <input type="hidden" name="id"> 
-                <label>Herkunftsland
+                <label class="origin-country">Herkunftsland
                     <% if(typeof(origin_country) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -437,7 +437,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Herkunftsterritory
+                <label class="origin-territory">Herkunftsterritory
                     <% if(typeof(origin_territory) !== 'undefined') { 
                             var territoryTemplate = _.template($("script#territory").html());
                             
@@ -455,7 +455,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Herkunftsort
+                <label class="origin-location">Herkunftsort
                     <% 
                         if(typeof(origin_location) !== 'undefined') { 
                             var locationTemplate = _.template($("script#location").html());
@@ -475,7 +475,7 @@
                     <%  } %>
                 </label>
         
-                <label>Geburtsland
+                <label class="country">Geburtsland
                     <% 
                         if(typeof(birth_country) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -495,7 +495,7 @@
                     <%  } %>
                 </label>
         
-                <label>Geburtsterritorium
+                <label class="territory">Geburtsterritorium
                     <% if(typeof(birth_territory) !== 'undefined') { 
                             var territoryTemplate = _.template($("script#territory").html());
                             
@@ -514,7 +514,7 @@
                     <%  } %>
                 </label>
             
-                <label>Geburtsort
+                <label class="location">Geburtsort
                     <% if(typeof(birth_location) !== 'undefined') { 
                             var locationTemplate = _.template($("script#location").html());
                             
@@ -532,7 +532,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Geburtsdatum
+                <label class="birth-date">Geburtsdatum
                     <% 
                         if(typeof(birth_date) !== 'undefined') { 
                             var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -572,7 +572,7 @@
     <script type="text/template" id="death">
         <div class="row">
                 <input type="hidden" name="id"> 
-                <label>Todesland
+                <label class="country">Todesland
                 <%  if(typeof(death_country) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -590,7 +590,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Todesterritorium
+                <label class="territory">Todesterritorium
                     <% if(typeof(death_territory) !== 'undefined') { 
                             var territoryTemplate = _.template($("script#territory").html());
                             
@@ -608,7 +608,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Todesort
+                <label class="location">Todesort
                     <% if(typeof(death_location) !== 'undefined') { 
                             var locationTemplate = _.template($("script#location").html());
                             
@@ -627,7 +627,7 @@
                     <%  } %>
                 </label>
                 <label>Todesgrund<input type="text" name="causeOfDeath" value="<%= typeof(cause_of_death) !== 'undefined' ?  cause_of_death : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Todesdatum
+                <label class="death-date">Todesdatum
                     <% 
                             if(typeof(death_date) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -647,7 +647,7 @@
                 </label>
         
                 <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Begräbnisort
+                <label class="funeral-location">Begräbnisort
                     <% if(typeof(funeral_location) !== 'undefined') { 
                             var locationTemplate = _.template($("script#location").html());
                             
@@ -665,7 +665,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Begräbnisdatum
+                <label class="funeral-date">Begräbnisdatum
                         <% 
                             if(typeof(funeral_date) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1975,33 +1975,35 @@
     </script>
     
     <script type="text/template" id="dateReference">
-        <% 
-            _.forEach(dateReference, function (date,i) { 
-                        if(typeof(date['from']) !== 'undefined') {
-                            var dateTemplate = _.template($("script#date").html()); 
-                            
-                            if(typeof(enabled) !== 'undefined') { 
-                                date['from']['enabled'] = true; 
-                                date['to']['enabled'] = true; 
-                            }
-                    %>
-                            <div class="input-group date-range-container">
-                                <%= dateTemplate(date['from']) %>
-                                    bis
-                                <%= dateTemplate(date['to']) %>
-                            </div>
-                        <% } else { 
-                        
-                            var dateTemplate = _.template($("script#date").html());
-                            
-                            if(typeof(enabled) !== 'undefined') { 
-                                date['enabled'] = true; 
-                            }
-                            %>
-                            
-                            <%= dateTemplate(date) %>
-                        <% } 
-            }) %>
+        <div class="input-group date-reference-container">
+            <% 
+                _.forEach(dateReference, function (date,i) { 
+                            if(typeof(date['from']) !== 'undefined') {
+                                var dateTemplate = _.template($("script#date").html()); 
+
+                                if(typeof(enabled) !== 'undefined') { 
+                                    date['from']['enabled'] = true; 
+                                    date['to']['enabled'] = true; 
+                                }
+                        %>
+                                <div class="input-group date-range-container">
+                                    <%= dateTemplate(date['from']) %>
+                                        bis
+                                    <%= dateTemplate(date['to']) %>
+                                </div>
+                            <% } else { 
+
+                                var dateTemplate = _.template($("script#date").html());
+
+                                if(typeof(enabled) !== 'undefined') { 
+                                    date['enabled'] = true; 
+                                }
+                                %>
+
+                                <%= dateTemplate(date) %>
+                            <% } 
+                }) %>
+            </div>
         </script>
     
     <script type="text/template" id="date">
@@ -2057,7 +2059,7 @@
     </script>
         
     <script type="text/template" id="jobClass">
-        <div class="input-group jobclass-container">
+        <div class="input-group job-class-container">
             <input type="hidden" name="jobClassId"> 
             <input type="text" name="label" value="<%= typeof(label)!== 'undefined' ?  label : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
