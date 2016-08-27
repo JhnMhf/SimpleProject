@@ -713,7 +713,7 @@
                         <input type="hidden" name="id"> 
                         <input type="hidden" name="educationOrder">
                         <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(educationObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -731,7 +731,7 @@
                         
                     <%  } %>
                 </label>
-                        <label>Territorium
+                        <label class="territory">Territorium
                         <% if(typeof(educationObj['territory']) !== 'undefined') { 
                             var territoryTemplate = _.template($("script#territory").html());
                             
@@ -749,7 +749,7 @@
                         
                     <%  } %>
                 </label>
-                        <label>Ort
+                        <label class="location">Ort
                              <% if(typeof(educationObj['location']) !== 'undefined') { 
                                     var locationTemplate = _.template($("script#location").html());
 
@@ -767,7 +767,7 @@
                         
                             <%  } %>
                         </label>
-                        <label>von
+                        <label class="from-date">von
                         <% 
                             if(typeof(educationObj['from_date']) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -785,7 +785,7 @@
 
                             <%  } %>
                         </label>
-                        <label>bis
+                        <label class="to-date">bis
                         <% 
                             if(typeof(educationObj['to_date']) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -804,7 +804,7 @@
 
                             <%  } %>
                         </label>
-                        <label>belegt                       
+                        <label class="proven-date">belegt                       
                         <% if(typeof(educationObj['proven_date']) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
  
@@ -823,7 +823,7 @@
                             <%  } %>
                         </label>
                         <label>Abschluss<input type="text" name="graduationLabel" value="<%= typeof(educationObj['graduation_label']) !== 'undefined' ? educationObj['graduation_label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Abschlussdatum
+                        <label class="graduation-date">Abschlussdatum
                         <% if(typeof(educationObj['graduation_date']) !== 'undefined') { 
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
  
@@ -841,7 +841,7 @@
 
                             <%  } %>
                         </label>
-                        <label>Abschlussort 
+                        <label class="graduation-location">Abschlussort 
                             <% if(typeof(educationObj['graduation_location']) !== 'undefined') { 
                                 var locationTemplate = _.template($("script#location").html());
 
@@ -873,12 +873,12 @@
                         <input type="hidden" name="id"> 
                         <input type="hidden" name="educationOrder">
                         <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land<input type="text" name="country" value="<%= typeof(educationObj['country']) !== 'undefined' ?  educationObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Territorium<input type="text" name="territory" value="<%= typeof(educationObj['territory']) !== 'undefined' ?  educationObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Ort<input type="text" name="location" value="<%= typeof(educationObj['location']) !== 'undefined' ?  educationObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>von<input type="text" name="fromDate" value="<%= typeof(educationObj['from_date']) !== 'undefined' ?  educationObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>bis<input type="text" name="toDate" value="<%= typeof(educationObj['to_date']) !== 'undefined' ?  educationObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>belegt<input type="text" name="provenDate" value="<%= typeof(educationObj['proven_date']) !== 'undefined' ?  educationObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="country">Land<input type="text" name="country" value="<%= typeof(educationObj['country']) !== 'undefined' ?  educationObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(educationObj['territory']) !== 'undefined' ?  educationObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="location">Ort<input type="text" name="location" value="<%= typeof(educationObj['location']) !== 'undefined' ?  educationObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(educationObj['from_date']) !== 'undefined' ?  educationObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(educationObj['to_date']) !== 'undefined' ?  educationObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(educationObj['proven_date']) !== 'undefined' ?  educationObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label>Abschluss<input type="text" name="graduationLabel" value="<%= typeof(educationObj['graduation_label']) !== 'undefined' ? educationObj['graduation_label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label>Abschlussdatum<input type="text" name="graduationDate" value="<%= typeof(educationObj['graduation_date']) !== 'undefined' ?  educationObj['graduation_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label>Abschlussort<input type="text" name="graduationLocation" value="<%= typeof(educationObj['graduation_location']) !== 'undefined' ?  educationObj['graduation_location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -896,7 +896,7 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="honourOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(honourObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -914,7 +914,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(honourObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -932,7 +932,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(honourObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -950,7 +950,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(honourObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -968,7 +968,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(honourObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -987,7 +987,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(honourObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1019,12 +1019,12 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="honourOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(honourObj['country']) !== 'undefined' ?  honourObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(honourObj['territory']) !== 'undefined' ?  honourObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(honourObj['location']) !== 'undefined' ?  honourObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(honourObj['from_date']) !== 'undefined' ?  honourObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(honourObj['to_date']) !== 'undefined' ?  honourObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(honourObj['proven_date']) !== 'undefined' ?  honourObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(honourObj['country']) !== 'undefined' ?  honourObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(honourObj['territory']) !== 'undefined' ?  honourObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(honourObj['location']) !== 'undefined' ?  honourObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(honourObj['from_date']) !== 'undefined' ?  honourObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(honourObj['to_date']) !== 'undefined' ?  honourObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(honourObj['proven_date']) !== 'undefined' ?  honourObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
@@ -1039,7 +1039,7 @@
                <input type="hidden" name="id"> 
                 <input type="hidden" name="propertyOrder">
                  <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(propertyObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1057,7 +1057,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(propertyObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1075,7 +1075,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(propertyObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1093,7 +1093,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(propertyObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1111,7 +1111,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(propertyObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1130,7 +1130,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(propertyObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1162,12 +1162,12 @@
                <input type="hidden" name="id"> 
                 <input type="hidden" name="propertyOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(propertyObj['country']) !== 'undefined' ?  propertyObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(propertyObj['territory']) !== 'undefined' ?  propertyObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(propertyObj['location']) !== 'undefined' ?  propertyObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(propertyObj['from_date']) !== 'undefined' ?  propertyObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(propertyObj['to_date']) !== 'undefined' ?  propertyObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(propertyObj['proven_date']) !== 'undefined' ?  propertyObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(propertyObj['country']) !== 'undefined' ?  propertyObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(propertyObj['territory']) !== 'undefined' ?  propertyObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(propertyObj['location']) !== 'undefined' ?  propertyObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(propertyObj['from_date']) !== 'undefined' ?  propertyObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(propertyObj['to_date']) !== 'undefined' ?  propertyObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(propertyObj['proven_date']) !== 'undefined' ?  propertyObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
@@ -1183,7 +1183,7 @@
                 <input type="hidden" name="rankOrder">
                                  <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                  <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(rankObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1201,7 +1201,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(rankObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1219,7 +1219,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(rankObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1237,7 +1237,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(rankObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1255,7 +1255,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(rankObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1274,7 +1274,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(rankObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1307,12 +1307,12 @@
                 <input type="hidden" name="rankOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(rankObj['country']) !== 'undefined' ?  rankObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(rankObj['territory']) !== 'undefined' ?  rankObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(rankObj['location']) !== 'undefined' ?  rankObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(rankObj['from_date']) !== 'undefined' ?  rankObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(rankObj['to_date']) !== 'undefined' ?  rankObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(rankObj['proven_date']) !== 'undefined' ?  rankObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(rankObj['country']) !== 'undefined' ?  rankObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(rankObj['territory']) !== 'undefined' ?  rankObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(rankObj['location']) !== 'undefined' ?  rankObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(rankObj['from_date']) !== 'undefined' ?  rankObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(rankObj['to_date']) !== 'undefined' ?  rankObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(rankObj['proven_date']) !== 'undefined' ?  rankObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(rankObj['comment']) !== 'undefined' ? rankObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
@@ -1330,7 +1330,7 @@
                 <label>Religionswechsel<input type="text" name="changeOfReligion" value="<%= typeof(religionObj['change_of_religion']) !== 'undefined' ?  religionObj['change_of_religion'] : '' %>"' <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
 
 
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(religionObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1348,7 +1348,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(religionObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1382,8 +1382,8 @@
                 <input type="hidden" name="religionOrder">
                 <label>Name<input type="text" name="name" value="<%= typeof(religionObj['name']) !== 'undefined' ?  religionObj['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Religionswechsel<input type="text" name="changeOfReligion" value="<%= typeof(religionObj['change_of_religion']) !== 'undefined' ?  religionObj['change_of_religion'] : '' %>"' <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(religionObj['from_date']) !== 'undefined' ?  religionObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(religionObj['to_date']) !== 'undefined' ?  religionObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(religionObj['from_date']) !== 'undefined' ?  religionObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(religionObj['to_date']) !== 'undefined' ?  religionObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(religionObj['comment']) !== 'undefined' ? religionObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
@@ -1532,7 +1532,7 @@
                         
                     <%  } %>
                 </label>
-                 <label>Land
+                 <label class="country">Land
                         <%  if(typeof(roadOfLifeObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1550,7 +1550,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(roadOfLifeObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1568,7 +1568,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(roadOfLifeObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1586,7 +1586,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(roadOfLifeObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1604,7 +1604,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(roadOfLifeObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1623,7 +1623,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(roadOfLifeObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1658,12 +1658,12 @@
                 <label>Herkunftsland<input type="text" name="originCountry" value="<%= typeof(roadOfLifeObj['origin_country']) !== 'undefined' ?  roadOfLifeObj['origin_country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsterritorium<input type="text" name="originTerritory" value="<%= typeof(roadOfLifeObj['origin_territory']) !== 'undefined' ?  roadOfLifeObj['origin_territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Job<input type="text" name="job" value="<%= typeof(roadOfLifeObj['job']) !== 'undefined' ?  roadOfLifeObj['job'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(roadOfLifeObj['country']) !== 'undefined' ?  roadOfLifeObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(roadOfLifeObj['territory']) !== 'undefined' ?  roadOfLifeObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(roadOfLifeObj['location']) !== 'undefined' ?  roadOfLifeObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(roadOfLifeObj['from_date']) !== 'undefined' ?  roadOfLifeObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(roadOfLifeObj['to_date']) !== 'undefined' ?  roadOfLifeObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(roadOfLifeObj['proven_date']) !== 'undefined' ?  roadOfLifeObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(roadOfLifeObj['country']) !== 'undefined' ?  roadOfLifeObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(roadOfLifeObj['territory']) !== 'undefined' ?  roadOfLifeObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(roadOfLifeObj['location']) !== 'undefined' ?  roadOfLifeObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(roadOfLifeObj['from_date']) !== 'undefined' ?  roadOfLifeObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(roadOfLifeObj['to_date']) !== 'undefined' ?  roadOfLifeObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(roadOfLifeObj['proven_date']) !== 'undefined' ?  roadOfLifeObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(roadOfLifeObj['comment']) !== 'undefined' ? roadOfLifeObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
@@ -1694,7 +1694,7 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="statusOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(statusObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1712,7 +1712,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(statusObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1730,7 +1730,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(statusObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1748,7 +1748,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(statusObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1766,7 +1766,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(statusObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1785,7 +1785,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(statusObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1818,12 +1818,12 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="statusOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(statusObj['country']) !== 'undefined' ?  statusObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(statusObj['territory']) !== 'undefined' ?  statusObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(statusObj['location']) !== 'undefined' ?  statusObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(statusObj['from_date']) !== 'undefined' ?  statusObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(statusObj['to_date']) !== 'undefined' ?  statusObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(statusObj['proven_date']) !== 'undefined' ?  statusObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(statusObj['country']) !== 'undefined' ?  statusObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(statusObj['territory']) !== 'undefined' ?  statusObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(statusObj['location']) !== 'undefined' ?  statusObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(statusObj['from_date']) !== 'undefined' ?  statusObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(statusObj['to_date']) !== 'undefined' ?  statusObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(statusObj['proven_date']) !== 'undefined' ?  statusObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(statusObj['comment']) !== 'undefined' ? statusObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
@@ -1839,7 +1839,7 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="worksOrder">
                                  <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Land
+                        <label class="country">Land
                         <%  if(typeof(worksObj['country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1857,7 +1857,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Territorium
+                <label class="territory">Territorium
                     <% if(typeof(worksObj['territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1875,7 +1875,7 @@
 
                 <%  } %>
             </label>
-            <label>Ort
+            <label class="location">Ort
                  <% if(typeof(worksObj['location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1893,7 +1893,7 @@
 
                 <%  } %>
             </label>
-            <label>von
+            <label class="from-date">von
             <% 
                 if(typeof(worksObj['from_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1911,7 +1911,7 @@
 
                 <%  } %>
             </label>
-            <label>bis
+            <label class="to-date">bis
             <% 
                 if(typeof(worksObj['to_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
@@ -1930,7 +1930,7 @@
 
                 <%  } %>
             </label>
-            <label>belegt                       
+            <label class="proven-date">belegt                       
             <% if(typeof(worksObj['proven_date']) !== 'undefined') { 
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1963,12 +1963,12 @@
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="worksOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Land<input type="text" name="country" value="<%= typeof(worksObj['country']) !== 'undefined' ?  worksObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Territorium<input type="text" name="territory" value="<%= typeof(worksObj['territory']) !== 'undefined' ?  worksObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Ort<input type="text" name="location" value="<%= typeof(worksObj['location']) !== 'undefined' ?  worksObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>von<input type="text" name="fromDate" value="<%= typeof(worksObj['from_date']) !== 'undefined' ?  worksObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>bis<input type="text" name="toDate" value="<%= typeof(worksObj['to_date']) !== 'undefined' ?  worksObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>belegt<input type="text" name="provenDate" value="<%= typeof(worksObj['proven_date']) !== 'undefined' ?  worksObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+                <label class="country">Land<input type="text" name="country" value="<%= typeof(worksObj['country']) !== 'undefined' ?  worksObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(worksObj['territory']) !== 'undefined' ?  worksObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="location">Ort<input type="text" name="location" value="<%= typeof(worksObj['location']) !== 'undefined' ?  worksObj['location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(worksObj['from_date']) !== 'undefined' ?  worksObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(worksObj['to_date']) !== 'undefined' ?  worksObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(worksObj['proven_date']) !== 'undefined' ?  worksObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(worksObj['comment']) !== 'undefined' ? worksObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
