@@ -892,7 +892,7 @@
             _.forEach(honours, function (honourObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row honour-row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="honourOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -1035,7 +1035,7 @@
             _.forEach(properties, function (propertyObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row property-row">
                <input type="hidden" name="id"> 
                 <input type="hidden" name="propertyOrder">
                  <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -1178,10 +1178,10 @@
             _.forEach(ranks, function (rankObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row rank-row">
                <input type="hidden" name="id"> 
                 <input type="hidden" name="rankOrder">
-                                 <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                  <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
                         <label class="country">Land
                         <%  if(typeof(rankObj['country']) !== 'undefined') { 
@@ -1323,7 +1323,7 @@
             _.forEach(religions, function (religionObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row religion-row">
                <input type="hidden" name="id"> 
                 <input type="hidden" name="religionOrder">
                  <label>Name<input type="text" name="name" value="<%= typeof(religionObj['name']) !== 'undefined' ?  religionObj['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -1397,7 +1397,7 @@
         <div class="row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="residenceOrder">
-                 <label>Wohnland
+                 <label class='country'>Wohnland
                         <%  if(typeof(residenceObj['residence_country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1415,7 +1415,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Wohnterritorium
+                <label class='territory'>Wohnterritorium
                     <% if(typeof(residenceObj['residence_territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
@@ -1433,7 +1433,7 @@
 
                 <%  } %>
             </label>
-            <label>Wohnort
+            <label class='location'>Wohnort
                  <% if(typeof(residenceObj['residence_location']) !== 'undefined') { 
                         var locationTemplate = _.template($("script#location").html());
 
@@ -1476,10 +1476,10 @@
             _.forEach(roadOfLifes, function (roadOfLifeObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row road-of-life-row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="roadOfLifeOrder">
-                <label>Herkunftsland
+                <label class="origion-country">Herkunftsland
                     <%  if(typeof(roadOfLifeObj['origin_country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
                             
@@ -1497,7 +1497,7 @@
                         
                     <%  } %>
                 </label>
-                <label>Herkunftsterritorium<% if(typeof(roadOfLifeObj['origin_territory']) !== 'undefined') { 
+                <label class="origin-territory">Herkunftsterritorium<% if(typeof(roadOfLifeObj['origin_territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
 
                         var array = [];
@@ -1514,7 +1514,7 @@
 
                 <%  } %>
                 </label>
-                <label>Job
+                <label class='job'>Job
                 <%  if(typeof(roadOfLifeObj['job']) !== 'undefined') { 
                             var jobTemplate = _.template($("script#job").html());
                             
@@ -1674,7 +1674,7 @@
             _.forEach(sources, function (sourceObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row source-row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="sourceOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(sourceObj['label']) !== 'undefined' ?  sourceObj['label'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
@@ -1690,7 +1690,7 @@
             _.forEach(stati, function (statusObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row status-row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="statusOrder">
                 <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -1835,7 +1835,7 @@
             _.forEach(works, function (worksObj,i) {       
                 
         %>
-        <div class="row">
+        <div class="row works-row">
                 <input type="hidden" name="id"> 
                 <input type="hidden" name="worksOrder">
                                  <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>

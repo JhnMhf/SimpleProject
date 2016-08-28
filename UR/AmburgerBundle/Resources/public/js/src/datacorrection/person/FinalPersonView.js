@@ -1,375 +1,558 @@
 
-PersonCorrection.FinalPersonView = (function(){
+PersonCorrection.FinalPersonView = (function () {
     var that = {},
-    
-    finalPersonData = null,
-    
-    personViewGenerator = null,
-    
-    /* 
-        Initialises the object and sets default values.
-    */
-    init = function() {
-        personViewGenerator = PersonCorrection.BasePersonViewGenerator.init();
-        return that;
-    },
-    
-    displayPerson = function(personData){
-        finalPersonData = personData;
-        personViewGenerator.displayPerson("#final", personData, true);
-        
-    },
-    
-    extractPersonData = function(){
-        console.log("basePerson", extractBasePerson());
-        console.log("baptism", extractBaptism());
-        console.log("birth", extractBirth());
-        console.log("death", extractDeath());
-        console.log("educations", extractEducations());
-        return finalPersonData;
-    },
-    
-    extractBasePerson = function(){
-        var baseIdentifier = '#final .base-person-container';
-        
-        var person = {};
-        person['first_name'] = $(baseIdentifier + ' input[name="firstName"]').val();
-        person['patronym'] = $(baseIdentifier + ' input[name="patronym"]').val();
-        person['last_name'] = $(baseIdentifier + ' input[name="lastName"]').val();
-        person['fore_name'] = $(baseIdentifier + ' input[name="foreName"]').val();
-        person['birth_name'] = $(baseIdentifier + ' input[name="birthName"]').val();
-        person['gender'] = parseInt($(baseIdentifier + ' select[name="gender"] option:selected').val());
-        person['gender_comment'] = $(baseIdentifier + ' input[name="genderComment"]').val();
-        person['born_in_marriage'] = $(baseIdentifier + ' input[name="bornInMarriage"]').val();
-        
-        var jobObj = extractJobObj(baseIdentifier);
-        
-        if(jobObj !== undefined){
-            person['job'] = jobObj;
-        }
-                
-        var jobClassObj = extractJobClassObj(baseIdentifier);
-        
-        if(jobClassObj !== undefined){
-            person['job_class'] = jobClassObj;
-        }
-        
-        
-        var nationObj = extractNationObj(baseIdentifier);
-        
-        if(nationObj !== undefined){
-            person['nation'] = nationObj;
-        }
-        
-        person['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
+            finalPersonData = null,
+            personViewGenerator = null,
+            /* 
+             Initialises the object and sets default values.
+             */
+            init = function () {
+                personViewGenerator = PersonCorrection.BasePersonViewGenerator.init();
+                return that;
+            },
+            displayPerson = function (personData) {
+                finalPersonData = personData;
+                personViewGenerator.displayPerson("#final", personData, true);
+
+            },
+            extractPersonData = function () {
+                var basePerson = extractBasePerson();
+                basePerson['baptism'] = extractBaptism();
+                basePerson['birth'] = extractBirth();
+                basePerson['death'] = extractDeath();
+                basePerson['educations'] = extractArrayData('education','educations-container','education-row');
+                basePerson['honours'] = extractArrayData('honour','honours-container','honour-row');
+                basePerson['properties'] = extractArrayData('property','properties-container','property-row');
+                basePerson['ranks'] = extractArrayData('rank','ranks-container','rank-row');
+                basePerson['religions'] = extractArrayData('religion','religions-container','religion-row');
+                basePerson['residences'] = extractArrayData('residence','residences-container','residence-row');
+                basePerson['road_of_life'] = extractArrayData('road_of_life','road-of-life-container','road-of-life-row');
+                basePerson['sources'] = extractArrayData('source','sources-container','source-row');
+                basePerson['stati'] = extractArrayData('status','stati-container','status-row');
+                basePerson['works'] = extractArrayData('works','works-container','works-row');
+
+                console.log("extractedPerson", basePerson);
+
+                return finalPersonData;
+            },
+            extractBasePerson = function () {
+                var baseIdentifier = '#final .base-person-container';
+
+                var person = {};
+                person['first_name'] = $(baseIdentifier + ' input[name="firstName"]').val();
+                person['patronym'] = $(baseIdentifier + ' input[name="patronym"]').val();
+                person['last_name'] = $(baseIdentifier + ' input[name="lastName"]').val();
+                person['fore_name'] = $(baseIdentifier + ' input[name="foreName"]').val();
+                person['birth_name'] = $(baseIdentifier + ' input[name="birthName"]').val();
+                person['gender'] = parseInt($(baseIdentifier + ' select[name="gender"] option:selected').val());
+                person['gender_comment'] = $(baseIdentifier + ' input[name="genderComment"]').val();
+                person['born_in_marriage'] = $(baseIdentifier + ' input[name="bornInMarriage"]').val();
+
+                var jobObj = extractJobObj(baseIdentifier);
+
+                if (jobObj !== undefined) {
+                    person['job'] = jobObj;
+                }
+
+                var jobClassObj = extractJobClassObj(baseIdentifier);
+
+                if (jobClassObj !== undefined) {
+                    person['job_class'] = jobClassObj;
+                }
 
 
-        
-        return person;
-    },
-    
-    extractBaptism = function(){
-        var baseIdentifier = '#final .baptism-container';
-        
-        var baptism = {};
-        
+                var nationObj = extractNationObj(baseIdentifier);
 
-        baptism['baptism_location'] = extractLocationObj(baseIdentifier);
-        baptism['baptism_date'] = extractDateReferenceObj(baseIdentifier);
+                if (nationObj !== undefined) {
+                    person['nation'] = nationObj;
+                }
 
-        return baptism;
-    },
-    
-    extractBirth = function(){
-        var baseIdentifier = '#final .birth-container';
-        
-        var birth = {};
+                person['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
 
-        birth['origin_country'] = extractCountryObj(baseIdentifier + ' .origin-country' );
-        birth['origin_territory'] = extractTerritoryObj(baseIdentifier + ' .origin-territory' );
-        birth['origin_location'] = extractLocationObj(baseIdentifier + ' .origin-location' );
-        birth['birth_country'] = extractCountryObj(baseIdentifier + ' .country' );
-        birth['birth_territory'] = extractTerritoryObj(baseIdentifier + ' .territory' );
-        birth['birth_location'] = extractLocationObj(baseIdentifier + ' .location' );
-        birth['birth_date'] = extractDateReferenceObj(baseIdentifier + ' .birth-date' );
-        birth['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
-        
-        return birth;
-    },
-    
-    extractDeath = function(){
-        var baseIdentifier = '#final .death-container';
-        
-        var death = {};
-        
-        death['death_country'] = extractCountryObj(baseIdentifier + ' .country' );
-        death['death_territory'] = extractTerritoryObj(baseIdentifier + ' .territory' );
-        death['death_location'] = extractLocationObj(baseIdentifier + ' .location' );
-        death['death_date'] = extractDateReferenceObj(baseIdentifier + ' .death-date' );
-        death['cause_of_death'] = $(baseIdentifier + ' input[name="causeOfDeath"]').val();
-        death['graveyard'] = $(baseIdentifier + ' input[name="graveyard"]').val();
-        death['funeral_location'] = extractLocationObj(baseIdentifier + ' .funeral-location' );
-        death['funeral_date'] = extractDateReferenceObj(baseIdentifier + ' .funeral-date' );
-        death['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
-        
-        return death;
-    },
-    
-    extractEducations = function(){
-        var baseIdentifier = '#final .educations-container';
-        
-        var educations = {};
-        
-        var educationRows = $(baseIdentifier + ' .education-row');
-        
-        for(var i = 0; i < educationRows.length; i++){
+
+
+                return person;
+            },
+            extractBaptism = function () {
+                var baseIdentifier = '#final .baptism-container';
+
+                var baptism = {};
+
+
+                baptism['baptism_location'] = extractLocationObj(baseIdentifier);
+                baptism['baptism_date'] = extractDateReferenceObj(baseIdentifier);
+
+                return baptism;
+            },
+            extractBirth = function () {
+                var baseIdentifier = '#final .birth-container';
+
+                var birth = {};
+
+                birth['origin_country'] = extractCountryObj(baseIdentifier + ' .origin-country');
+                birth['origin_territory'] = extractTerritoryObj(baseIdentifier + ' .origin-territory');
+                birth['origin_location'] = extractLocationObj(baseIdentifier + ' .origin-location');
+                birth['birth_country'] = extractCountryObj(baseIdentifier + ' .country');
+                birth['birth_territory'] = extractTerritoryObj(baseIdentifier + ' .territory');
+                birth['birth_location'] = extractLocationObj(baseIdentifier + ' .location');
+                birth['birth_date'] = extractDateReferenceObj(baseIdentifier + ' .birth-date');
+                birth['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
+
+                return birth;
+            },
+            extractDeath = function () {
+                var baseIdentifier = '#final .death-container';
+
+                var death = {};
+
+                death['death_country'] = extractCountryObj(baseIdentifier + ' .country');
+                death['death_territory'] = extractTerritoryObj(baseIdentifier + ' .territory');
+                death['death_location'] = extractLocationObj(baseIdentifier + ' .location');
+                death['death_date'] = extractDateReferenceObj(baseIdentifier + ' .death-date');
+                death['cause_of_death'] = $(baseIdentifier + ' input[name="causeOfDeath"]').val();
+                death['graveyard'] = $(baseIdentifier + ' input[name="graveyard"]').val();
+                death['funeral_location'] = extractLocationObj(baseIdentifier + ' .funeral-location');
+                death['funeral_date'] = extractDateReferenceObj(baseIdentifier + ' .funeral-date');
+                death['comment'] = $(baseIdentifier + ' input[name="comment"]').val();
+
+                return death;
+            },
+            extractArrayData = function (type, containerClass, rowClass) {
+                var baseIdentifier = '#final .' + containerClass;
+
+                var array = {};
+
+                var rows = $(baseIdentifier + ' .' + rowClass);
+
+                for (var i = 0; i < rows.length; i++) {
+
+                    switch (type) {
+                        case 'education':
+                            array[i] = extractEducationObj(rows[i]);
+                            break;
+                        case 'honour':
+                            array[i] = extractHonourObj(rows[i]);
+                            break;
+                        case 'property':
+                            array[i] = extractPropertyObj(rows[i]);
+                            break;
+                        case 'rank':
+                            array[i] = extractRankObj(rows[i]);
+                            break;
+                        case 'religion':
+                            array[i] = extractReligionObj(rows[i]);
+                            break;
+                        case 'residence':
+                            array[i] = extractResidenceObj(rows[i]);
+                            break;
+                        case 'road_of_life':
+                            array[i] = extractRoadOfLifeObj(rows[i]);
+                            break;
+                        case 'source':
+                            array[i] = extractSourceObj(rows[i]);
+                            break;
+                        case 'status':
+                            array[i] = extractStatusObj(rows[i]);
+                            break;
+                        case 'works':
+                            array[i] = extractWorksObj(rows[i]);
+                            break;
+                    }
+
+                }
+
+                return array;
+            },
+           
+            extractEducationObj = function (element) {
+                console.log("Education: ", element, $(element));
+
+                var $element = $(element);
+
+                var educationObj = {};
+
+                educationObj['label'] = $element.find('input[name="label"]').val();
+                educationObj['country'] = extractCountryObj($element.find('.country'));
+                educationObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                educationObj['location'] = extractLocationObj($element.find('.location'));
+                educationObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                educationObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                educationObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                educationObj['graduation_label'] = $element.find('input[name="graduationLabel"]').val();
+                educationObj['graduation_location'] = extractLocationObj($element.find('.graduation-location'));
+                educationObj['graduation_date'] = extractDateReferenceObj($element.find('.graduation-date'));
+                educationObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return educationObj;
+            },
+           
+            extractHonourObj = function (element) {
+                console.log("Honour: ", element, $(element));
+
+                var $element = $(element);
+
+                var honourObj = {};
+
+                honourObj['label'] = $element.find('input[name="label"]').val();
+                honourObj['country'] = extractCountryObj($element.find('.country'));
+                honourObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                honourObj['location'] = extractLocationObj($element.find('.location'));
+                honourObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                honourObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                honourObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                honourObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return honourObj;
+            },
             
-            educations[i]= extractEducationObj(educationRows[i]);
-        }
-        
-        return educations;
-    },
-    
-    extractEducationObj = function(element){
-        console.log("Education: ", element, $(element));
-        
-        var $element = $(element);
-        
-        var educationObj = {};
-        
-        educationObj['label'] = $element.find('input[name="label"]').val();
-        educationObj['country'] = extractCountryObj($element.find('.country'));
-        educationObj['territory'] = extractTerritoryObj($element.find('.territory'));
-        educationObj['location'] = extractLocationObj($element.find('.location'));
-        educationObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
-        educationObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
-        educationObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
-        educationObj['graduation_label'] = $element.find('input[name="graduationLabel"]').val();
-        educationObj['graduation_location'] = extractLocationObj($element.find('.graduation-location'));
-        educationObj['graduation_date'] = extractDateReferenceObj($element.find('.graduation-date'));
-        educationObj['comment'] = $element.find('input[name="comment"]').val();
-        
-        return educationObj;
-    },
-    
-    extractNationObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            //if it is an identifier
-            if($(identifier + " .nation-container ").length > 0){
-                var nationObj = {};
+            extractPropertyObj = function (element) {
+                console.log("Property: ", element, $(element));
 
-                nationObj['name'] = $(identifier + ' .nation-container input[name="name"]').val();
-                nationObj['comment'] = $(identifier + ' .nation-container input[name="comment"]').val();
+                var $element = $(element);
 
-                return nationObj;
-            }
-        } else{
-            //if it is an element
-            if($(identifier).find('.nation-container').length > 0){
-                var nationObj = {};
+                var propertyObj = {};
 
-                nationObj['name'] = $(identifier).find('.nation-container input[name="name"]').val();
-                nationObj['comment'] = $(identifier).find('.nation-container input[name="comment"]').val();
+                propertyObj['label'] = $element.find('input[name="label"]').val();
+                propertyObj['country'] = extractCountryObj($element.find('.country'));
+                propertyObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                propertyObj['location'] = extractLocationObj($element.find('.location'));
+                propertyObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                propertyObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                propertyObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                propertyObj['comment'] = $element.find('input[name="comment"]').val();
 
-                return nationObj;
-            }
-        }
-        
-    },
-    
-    extractJobObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            if($(identifier + " .job-container ").length > 0){
-                var jobObj = {};
+                return propertyObj;
+            },
+            
+            extractRankObj = function (element) {
+                console.log("Rank: ", element, $(element));
 
-                jobObj['label'] = $(identifier + ' .job-container input[name="label"]').val();
-                jobObj['comment'] = $(identifier + ' .job-container input[name="comment"]').val();
+                var $element = $(element);
 
-                return jobObj;
-            }
-        }else {
-            if($(identifier).find('.job-container').length > 0){
-                var jobObj = {};
+                var rankObj = {};
 
-                jobObj['label'] = $(identifier).find('.job-container input[name="label"]').val();
-                jobObj['comment'] = $(identifier).find('.job-container input[name="comment"]').val();
+                rankObj['label'] = $element.find('input[name="label"]').val();
+                rankObj['class'] = $element.find('input[name="class"]').val();
+                rankObj['country'] = extractCountryObj($element.find('.country'));
+                rankObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                rankObj['location'] = extractLocationObj($element.find('.location'));
+                rankObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                rankObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                rankObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                rankObj['comment'] = $element.find('input[name="comment"]').val();
 
-                return jobObj;
-            }
-        }
-    },
-    
-    extractJobClassObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            if($(identifier + " .job-class-container ").length > 0){
-                var jobObj = {};
+                return rankObj;
+            },
+            
+            extractReligionObj = function (element) {
+                console.log("Religion: ", element, $(element));
 
-                jobObj['label'] = $(identifier + ' .job-class-container input[name="label"]').val();
-                jobObj['comment'] = $(identifier + ' .job-class-container input[name="comment"]').val();
+                var $element = $(element);
 
-                return jobObj;
-            }
-        }else {
-            if($(identifier).find('.country-container').length > 0){
-                var jobObj = {};
+                var religionObj = {};
 
-                jobObj['label'] = $(identifier).find('.job-class-container input[name="label"]').val();
-                jobObj['comment'] = $(identifier).find('.job-class-container input[name="comment"]').val();
+                religionObj['name'] = $element.find('input[name="name"]').val();
+                religionObj['change_of_religion'] = $element.find('input[name="changeOfReligion"]').val();
+                religionObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                religionObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                religionObj['comment'] = $element.find('input[name="comment"]').val();
 
-                return jobObj;
-            }
-        }
-    },
-    
-    extractDateReferenceObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            //if it is an identifier
-            var children = $(identifier + " .date-reference-container").children();
+                return religionObj;
+            },
 
-            console.log("DateReferences: ", children);
+            extractResidenceObj = function (element) {
+                console.log("Residence: ", element, $(element));
 
-            if(children.length > 0){
-                var dateReferenceArray = [];
+                var $element = $(element);
 
-                for(var i = 0; i < children.length; i++){
-                    var childElement = children[i];
+                var residenceObj = {};
 
-                    if(childElement.className.indexOf('date-range-container') !== -1){
-                        //date range found
-                        dateReferenceArray[i] = extractDateRangeObj(childElement);
-                    } else {
-                        //normal date found
-                        dateReferenceArray[i] = extractDateObj(childElement);
+                residenceObj['residence_country'] = extractCountryObj($element.find('.country'));
+                residenceObj['residence_territory'] = extractTerritoryObj($element.find('.territory'));
+                residenceObj['residence_location'] = extractLocationObj($element.find('.location'));
+
+                return residenceObj;
+            },
+            extractRoadOfLifeObj = function (element) {
+                console.log("RoadOfLife: ", element, $(element));
+
+                var $element = $(element);
+
+                var roadOfLifeObj = {};
+
+                roadOfLifeObj['origin_country'] = extractCountryObj($element.find('.origin-country'));
+                roadOfLifeObj['origin_territory'] = extractTerritoryObj($element.find('.origin-territory'));
+                roadOfLifeObj['job'] = extractJobObj($element.find('.job'));
+                roadOfLifeObj['country'] = extractCountryObj($element.find('.country'));
+                roadOfLifeObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                roadOfLifeObj['location'] = extractLocationObj($element.find('.location'));
+                roadOfLifeObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                roadOfLifeObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                roadOfLifeObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                roadOfLifeObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return roadOfLifeObj;
+            },
+            extractSourceObj = function (element) {
+                console.log("Source: ", element, $(element));
+
+                var $element = $(element);
+
+                var sourceObj = {};
+
+                sourceObj['label'] = $element.find('input[name="label"]').val();
+                sourceObj['place_of_discovery'] = $element.find('input[name="placeOfDiscovery"]').val();
+                sourceObj['remark'] = $element.find('input[name="remark"]').val();
+                sourceObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return sourceObj;
+            },
+            extractStatusObj = function (element) {
+                console.log("Status: ", element, $(element));
+
+                var $element = $(element);
+
+                var statusObj = {};
+
+                statusObj['label'] = $element.find('input[name="label"]').val();
+                statusObj['country'] = extractCountryObj($element.find('.country'));
+                statusObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                statusObj['location'] = extractLocationObj($element.find('.location'));
+                statusObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                statusObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                statusObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                statusObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return statusObj;
+            },
+            extractWorksObj = function (element) {
+                console.log("Works: ", element, $(element));
+
+                var $element = $(element);
+
+                var worksObj = {};
+
+                worksObj['label'] = $element.find('input[name="label"]').val();
+                worksObj['country'] = extractCountryObj($element.find('.country'));
+                worksObj['territory'] = extractTerritoryObj($element.find('.territory'));
+                worksObj['location'] = extractLocationObj($element.find('.location'));
+                worksObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
+                worksObj['to_date'] = extractDateReferenceObj($element.find('.to-date'));
+                worksObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                worksObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return worksObj;
+            },
+            extractNationObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    //if it is an identifier
+                    if ($(identifier + " .nation-container ").length > 0) {
+                        var nationObj = {};
+
+                        nationObj['name'] = $(identifier + ' .nation-container input[name="name"]').val();
+                        nationObj['comment'] = $(identifier + ' .nation-container input[name="comment"]').val();
+
+                        return nationObj;
+                    }
+                } else {
+                    //if it is an element
+                    if ($(identifier).find('.nation-container').length > 0) {
+                        var nationObj = {};
+
+                        nationObj['name'] = $(identifier).find('.nation-container input[name="name"]').val();
+                        nationObj['comment'] = $(identifier).find('.nation-container input[name="comment"]').val();
+
+                        return nationObj;
                     }
                 }
 
-                return dateReferenceArray;
-            }
-        } else {
-           var children = $(identifier).children(".date-reference-container");
+            },
+            extractJobObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    if ($(identifier + " .job-container ").length > 0) {
+                        var jobObj = {};
 
-            console.log("DateReferences: ", children);
-            
-            //if it is an element
-            if(children.length > 0){
-                var dateReferenceArray = [];
+                        jobObj['label'] = $(identifier + ' .job-container input[name="label"]').val();
+                        jobObj['comment'] = $(identifier + ' .job-container input[name="comment"]').val();
 
-                for(var i = 0; i < children.length; i++){
-                    var childElement = children[i];
+                        return jobObj;
+                    }
+                } else {
+                    if ($(identifier).find('.job-container').length > 0) {
+                        var jobObj = {};
 
-                    if(childElement.className.indexOf('date-range-container') !== -1){
-                        //date range found
-                        dateReferenceArray[i] = extractDateRangeObj(childElement);
-                    } else {
-                        //normal date found
-                        dateReferenceArray[i] = extractDateObj(childElement);
+                        jobObj['label'] = $(identifier).find('.job-container input[name="label"]').val();
+                        jobObj['comment'] = $(identifier).find('.job-container input[name="comment"]').val();
+
+                        return jobObj;
                     }
                 }
+            },
+            extractJobClassObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    if ($(identifier + " .job-class-container ").length > 0) {
+                        var jobObj = {};
 
-                return dateReferenceArray;
-            }
-        }
-    },
-    
-    extractDateRangeObj = function(element) {
-        console.log("DateRange: ", element, $(element));
-        
-        var $element = $(element);
-        var children = $element.children();
-        
-        var dateRangeObj = {};
-        
-        dateRangeObj['from'] = extractDateObj(children[0]);
-        dateRangeObj['to'] = extractDateObj(children[1]);
-        
-        return dateRangeObj;
-    },
-        
-    extractDateObj = function(element) {
-        console.log("Date: ", element, $(element));
-        
-        var $element = $(element);
-        
-        var dateObj = {};
-        
-        dateObj['day'] = $element.find('input[name="day"]').val();
-        dateObj['month'] = $element.find('input[name="month"]').val();
-        dateObj['year'] = $element.find('input[name="year"]').val();
-        dateObj['before_date'] = $element.find('input[name="beforeDate"]').val();
-        dateObj['after_date'] = $element.find('input[name="afterDate"]').val();
-        dateObj['comment'] = $element.find('input[name="comment"]').val();
-        
-        return dateObj;
-    },
-    
-    extractCountryObj = function(identifier) { 
-        if($.type(identifier) === "string"){
-            //if it is an identifier
-            if($(identifier + " .country-container").length > 0){
-                var countryObj = {};
+                        jobObj['label'] = $(identifier + ' .job-class-container input[name="label"]').val();
+                        jobObj['comment'] = $(identifier + ' .job-class-container input[name="comment"]').val();
 
-                countryObj['name'] = $(identifier + ' .country-container input[name="name"]').val();
-                countryObj['comment'] = $(identifier + ' .country-container input[name="comment"]').val();
+                        return jobObj;
+                    }
+                } else {
+                    if ($(identifier).find('.country-container').length > 0) {
+                        var jobObj = {};
 
-                return countryObj;
-            }
-        } else {
-            if($(identifier).find('.country-container').length > 0){
-                var countryObj = {};
+                        jobObj['label'] = $(identifier).find('.job-class-container input[name="label"]').val();
+                        jobObj['comment'] = $(identifier).find('.job-class-container input[name="comment"]').val();
 
-                countryObj['name'] = $(identifier).find('.country-container input[name="name"]').val();
-                countryObj['comment'] = $(identifier).find('.country-container input[name="comment"]').val();
+                        return jobObj;
+                    }
+                }
+            },
+            extractDateReferenceObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    //if it is an identifier
+                    var children = $(identifier + " .date-reference-container").children();
 
-                return countryObj;
-            }
-        }
-    },
-    
-    extractTerritoryObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            //if it is an identifier
-            if($(identifier + " .territory-container").length > 0){
-                var territoryObj = {};
+                    console.log("DateReferences: ", children);
 
-                territoryObj['name'] = $(identifier + ' .territory-container input[name="name"]').val();
-                territoryObj['comment'] = $(identifier + ' .territory-container input[name="comment"]').val();
+                    if (children.length > 0) {
+                        var dateReferenceArray = [];
 
-                return territoryObj;
-            }
-        }else {
-            if($(identifier).find('.territory-container').length > 0){
-                var territoryObj = {};
+                        for (var i = 0; i < children.length; i++) {
+                            var childElement = children[i];
 
-                territoryObj['name'] = $(identifier).find('.territory-container input[name="name"]').val();
-                territoryObj['comment'] = $(identifier).find('.territory-container input[name="comment"]').val();
+                            if (childElement.className.indexOf('date-range-container') !== -1) {
+                                //date range found
+                                dateReferenceArray[i] = extractDateRangeObj(childElement);
+                            } else {
+                                //normal date found
+                                dateReferenceArray[i] = extractDateObj(childElement);
+                            }
+                        }
 
-                return territoryObj;
-            }
-        }
-    },
-    
-    extractLocationObj = function(identifier) {
-        if($.type(identifier) === "string"){
-            //if it is an identifier
-            if($(identifier + " .location-container").length > 0){
-                var locationObj = {};
+                        return dateReferenceArray;
+                    }
+                } else {
+                    var children = $(identifier).children(".date-reference-container");
 
-                locationObj['name'] = $(identifier + ' .location-container input[name="name"]').val();
-                locationObj['comment'] = $(identifier + ' .location-container input[name="comment"]').val();
+                    console.log("DateReferences: ", children);
 
-                return locationObj;
-            }
-        }else {
-            if($(identifier).find('.location-container').length > 0){
-                var locationObj = {};
+                    //if it is an element
+                    if (children.length > 0) {
+                        var dateReferenceArray = [];
 
-                locationObj['name'] = $(identifier).find('.location-container input[name="name"]').val();
-                locationObj['comment'] = $(identifier).find('.location-container input[name="comment"]').val();
+                        for (var i = 0; i < children.length; i++) {
+                            var childElement = children[i];
 
-                return locationObj;
-            }
-        }
-    };
+                            if (childElement.className.indexOf('date-range-container') !== -1) {
+                                //date range found
+                                dateReferenceArray[i] = extractDateRangeObj(childElement);
+                            } else {
+                                //normal date found
+                                dateReferenceArray[i] = extractDateObj(childElement);
+                            }
+                        }
+
+                        return dateReferenceArray;
+                    }
+                }
+            },
+            extractDateRangeObj = function (element) {
+                console.log("DateRange: ", element, $(element));
+
+                var $element = $(element);
+                var children = $element.children();
+
+                var dateRangeObj = {};
+
+                dateRangeObj['from'] = extractDateObj(children[0]);
+                dateRangeObj['to'] = extractDateObj(children[1]);
+
+                return dateRangeObj;
+            },
+            extractDateObj = function (element) {
+                console.log("Date: ", element, $(element));
+
+                var $element = $(element);
+
+                var dateObj = {};
+
+                dateObj['day'] = $element.find('input[name="day"]').val();
+                dateObj['month'] = $element.find('input[name="month"]').val();
+                dateObj['year'] = $element.find('input[name="year"]').val();
+                dateObj['before_date'] = $element.find('input[name="beforeDate"]').val();
+                dateObj['after_date'] = $element.find('input[name="afterDate"]').val();
+                dateObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return dateObj;
+            },
+            extractCountryObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    //if it is an identifier
+                    if ($(identifier + " .country-container").length > 0) {
+                        var countryObj = {};
+
+                        countryObj['name'] = $(identifier + ' .country-container input[name="name"]').val();
+                        countryObj['comment'] = $(identifier + ' .country-container input[name="comment"]').val();
+
+                        return countryObj;
+                    }
+                } else {
+                    if ($(identifier).find('.country-container').length > 0) {
+                        var countryObj = {};
+
+                        countryObj['name'] = $(identifier).find('.country-container input[name="name"]').val();
+                        countryObj['comment'] = $(identifier).find('.country-container input[name="comment"]').val();
+
+                        return countryObj;
+                    }
+                }
+            },
+            extractTerritoryObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    //if it is an identifier
+                    if ($(identifier + " .territory-container").length > 0) {
+                        var territoryObj = {};
+
+                        territoryObj['name'] = $(identifier + ' .territory-container input[name="name"]').val();
+                        territoryObj['comment'] = $(identifier + ' .territory-container input[name="comment"]').val();
+
+                        return territoryObj;
+                    }
+                } else {
+                    if ($(identifier).find('.territory-container').length > 0) {
+                        var territoryObj = {};
+
+                        territoryObj['name'] = $(identifier).find('.territory-container input[name="name"]').val();
+                        territoryObj['comment'] = $(identifier).find('.territory-container input[name="comment"]').val();
+
+                        return territoryObj;
+                    }
+                }
+            },
+            extractLocationObj = function (identifier) {
+                if ($.type(identifier) === "string") {
+                    //if it is an identifier
+                    if ($(identifier + " .location-container").length > 0) {
+                        var locationObj = {};
+
+                        locationObj['name'] = $(identifier + ' .location-container input[name="name"]').val();
+                        locationObj['comment'] = $(identifier + ' .location-container input[name="comment"]').val();
+
+                        return locationObj;
+                    }
+                } else {
+                    if ($(identifier).find('.location-container').length > 0) {
+                        var locationObj = {};
+
+                        locationObj['name'] = $(identifier).find('.location-container input[name="name"]').val();
+                        locationObj['comment'] = $(identifier).find('.location-container input[name="comment"]').val();
+
+                        return locationObj;
+                    }
+                }
+            };
 
 
     that.init = init;
