@@ -268,7 +268,7 @@
     {% verbatim %}
     <script type="text/template" id="basePerson">
         <div class="row">
-                <input type="hidden" name="id"> 
+                <input type="hidden" name="id" value="<%= id %>"> 
                 <label>OID<input type="text" name="oid" value="<%=oid %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Vorname<input type="text" name="firstName" value="<%= typeof(first_name) !== 'undefined' ?  first_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Vatersname<input type="text" name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -367,7 +367,7 @@
     </script>
     <script type="text/template" id="baptism">
         <div class="row">
-               <input type="hidden" name="id"> 
+               <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <label>Taufort
                     <% 
                         if(typeof(baptism_location) !== 'undefined') { 
@@ -418,7 +418,7 @@
     
     <script type="text/template" id="birth">
         <div class="row">
-               <input type="hidden" name="id"> 
+               <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <label class="origin-country">Herkunftsland
                     <% if(typeof(origin_country) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -557,7 +557,7 @@
     
 <script type="text/template" id="birth-old">
         <div class="row">
-               <input type="hidden" name="id"> 
+                <input type="hidden" name="id"> 
                 <label>Herkunftsland<input type="text" name="originCountry" value="<%= typeof(origin_country) !== 'undefined' ?  origin_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsterritory<input type="text" name="originTerritory" value="<%= typeof(origin_territory) !== 'undefined' ?  origin_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsort<input type="text" name="originLocation" value="<%= typeof(origin_location) !== 'undefined' ?  origin_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -571,7 +571,7 @@
     
     <script type="text/template" id="death">
         <div class="row">
-                <input type="hidden" name="id"> 
+                <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <label class="country">Todesland
                 <%  if(typeof(death_country) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -710,8 +710,8 @@
                 
         %>
                 <div class="row education-row">
-                        <input type="hidden" name="id"> 
-                        <input type="hidden" name="educationOrder">
+                        <input type="hidden" name="id" value="<%= typeof(educationObj['id']) !== 'undefined' ?  educationObj['id'] : '' %>"> 
+                        <input type="hidden" name="order" value="<%= typeof(educationObj['education_order']) !== 'undefined' ?  educationObj['education_order'] : '' %>">
                         <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land
                         <%  if(typeof(educationObj['country']) !== 'undefined') { 
@@ -871,7 +871,7 @@
         %>
                 <div class="row education-row">
                         <input type="hidden" name="id"> 
-                        <input type="hidden" name="educationOrder">
+                        <input type="hidden" name="order">
                         <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land<input type="text" name="country" value="<%= typeof(educationObj['country']) !== 'undefined' ?  educationObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(educationObj['territory']) !== 'undefined' ?  educationObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -893,8 +893,8 @@
                 
         %>
         <div class="row honour-row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="honourOrder">
+                <input type="hidden" name="id" value="<%= typeof(honourObj['id']) !== 'undefined' ?  honourObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(honourObj['honour_order']) !== 'undefined' ?  honourObj['honour_order'] : '' %>">
                 <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land
                         <%  if(typeof(honourObj['country']) !== 'undefined') { 
@@ -1036,8 +1036,8 @@
                 
         %>
         <div class="row property-row">
-               <input type="hidden" name="id"> 
-                <input type="hidden" name="propertyOrder">
+               <input type="hidden" name="id" value="<%= typeof(propertyObj['id']) !== 'undefined' ?  propertyObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(propertyObj['property_order']) !== 'undefined' ?  propertyObj['property_order'] : '' %>">
                  <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land
                         <%  if(typeof(propertyObj['country']) !== 'undefined') { 
@@ -1179,8 +1179,8 @@
                 
         %>
         <div class="row rank-row">
-               <input type="hidden" name="id"> 
-                <input type="hidden" name="rankOrder">
+               <input type="hidden" name="id" value="<%= typeof(rankObj['id']) !== 'undefined' ?  rankObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(rankObj['rank_order']) !== 'undefined' ?  rankObj['rank_order'] : '' %>">
                 <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                  <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
                         <label class="country">Land
@@ -1324,8 +1324,8 @@
                 
         %>
         <div class="row religion-row">
-               <input type="hidden" name="id"> 
-                <input type="hidden" name="religionOrder">
+               <input type="hidden" name="id" value="<%= typeof(religionObj['id']) !== 'undefined' ?  religionObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(religionObj['religion_order']) !== 'undefined' ?  religionObj['religion_order'] : '' %>">
                  <label>Name<input type="text" name="name" value="<%= typeof(religionObj['name']) !== 'undefined' ?  religionObj['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Religionswechsel<input type="text" name="changeOfReligion" value="<%= typeof(religionObj['change_of_religion']) !== 'undefined' ?  religionObj['change_of_religion'] : '' %>"' <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
 
@@ -1395,8 +1395,7 @@
                 
         %>
         <div class="row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="residenceOrder">
+                <input type="hidden" name="id" value="<%= typeof(residenceObj['id']) !== 'undefined' ? residenceObj['id'] : '' %>"> 
                  <label class='country'>Wohnland
                         <%  if(typeof(residenceObj['residence_country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -1477,8 +1476,8 @@
                 
         %>
         <div class="row road-of-life-row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="roadOfLifeOrder">
+                <input type="hidden" name="id" value="<%= typeof(roadOfLifeObj['id']) !== 'undefined' ?  roadOfLifeObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(roadOfLifeObj['road_of_life_order']) !== 'undefined' ?  roadOfLifeObj['road_of_life_order'] : '' %>">
                 <label class="origion-country">Herkunftsland
                     <%  if(typeof(roadOfLifeObj['origin_country']) !== 'undefined') { 
                             var countryTemplate = _.template($("script#country").html());
@@ -1675,8 +1674,8 @@
                 
         %>
         <div class="row source-row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="sourceOrder">
+                <input type="hidden" name="id" value="<%= typeof(sourceObj['id']) !== 'undefined' ?  sourceObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(sourceObj['source_order']) !== 'undefined' ?  sourceObj['source_order'] : '' %>">
                 <label>Name<input type="text" name="label" value="<%= typeof(sourceObj['label']) !== 'undefined' ?  sourceObj['label'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
                 <label>Fundort<input type="text" name="placeOfDiscovery" value="<%= typeof(sourceObj['place_of_discovery']) !== 'undefined' ?  sourceObj['place_of_discovery'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
                 <label>Bemerkung<input type="text" name="remark" value="<%= typeof(sourceObj['remark']) !== 'undefined' ?  sourceObj['remark'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
@@ -1691,8 +1690,8 @@
                 
         %>
         <div class="row status-row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="statusOrder">
+                <input type="hidden" name="id" value="<%= typeof(statusObj['id']) !== 'undefined' ?  statusObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(statusObj['status_order']) !== 'undefined' ?  statusObj['status_order'] : '' %>">
                 <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land
                         <%  if(typeof(statusObj['country']) !== 'undefined') { 
@@ -1836,8 +1835,8 @@
                 
         %>
         <div class="row works-row">
-                <input type="hidden" name="id"> 
-                <input type="hidden" name="worksOrder">
+                <input type="hidden" name="id" value="<%= typeof(worksObj['id']) !== 'undefined' ?  worksObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(worksObj['works_order']) !== 'undefined' ?  worksObj['works_order'] : '' %>">
                                  <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label class="country">Land
                         <%  if(typeof(worksObj['country']) !== 'undefined') { 
@@ -2008,7 +2007,7 @@
     
     <script type="text/template" id="date">
         <div class="input-group date-container">
-            <input type="hidden" name="dateId"> 
+            <input type="hidden" name="id" value="<%= typeof(id)!== 'undefined' ?  id : '' %>"> 
             <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>

@@ -34,12 +34,14 @@ PersonCorrection.FinalPersonView = (function () {
                 console.log("extractedPerson", basePerson);
                 console.log('json', JSON.stringify(basePerson));
 
-                return finalPersonData;
+                return basePerson;
             },
             extractBasePerson = function () {
                 var baseIdentifier = '#final .base-person-container';
 
                 var person = {};
+                person['id'] = parseInt($(baseIdentifier + ' input[name="id"]').val());
+                person['oid'] = parseInt($(baseIdentifier + ' input[name="oid"]').val());
                 person['first_name'] = $(baseIdentifier + ' input[name="firstName"]').val();
                 person['patronym'] = $(baseIdentifier + ' input[name="patronym"]').val();
                 person['last_name'] = $(baseIdentifier + ' input[name="lastName"]').val();
@@ -79,7 +81,7 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var baptism = {};
 
-
+                baptism['id'] = parseInt($(baseIdentifier + ' input[name="id"]').val());
                 baptism['baptism_location'] = extractLocationObj(baseIdentifier);
                 baptism['baptism_date'] = extractDateReferenceObj(baseIdentifier);
 
@@ -90,6 +92,7 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var birth = {};
 
+                birth['id'] = parseInt($(baseIdentifier + ' input[name="id"]').val());
                 birth['origin_country'] = extractCountryObj(baseIdentifier + ' .origin-country');
                 birth['origin_territory'] = extractTerritoryObj(baseIdentifier + ' .origin-territory');
                 birth['origin_location'] = extractLocationObj(baseIdentifier + ' .origin-location');
@@ -106,6 +109,7 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var death = {};
 
+                death['id'] = parseInt($(baseIdentifier + ' input[name="id"]').val());
                 death['death_country'] = extractCountryObj(baseIdentifier + ' .country');
                 death['death_territory'] = extractTerritoryObj(baseIdentifier + ' .territory');
                 death['death_location'] = extractLocationObj(baseIdentifier + ' .location');
@@ -172,6 +176,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var educationObj = {};
 
+                educationObj['id'] = parseInt($element.find('input[name="id"]').val());
+                educationObj['education_order'] = parseInt($element.find('input[name="order"]').val());
                 educationObj['label'] = $element.find('input[name="label"]').val();
                 educationObj['country'] = extractCountryObj($element.find('.country'));
                 educationObj['territory'] = extractTerritoryObj($element.find('.territory'));
@@ -193,7 +199,9 @@ PersonCorrection.FinalPersonView = (function () {
                 var $element = $(element);
 
                 var honourObj = {};
-
+                
+                honourObj['id'] = parseInt($element.find('input[name="id"]').val());
+                honourObj['honour_order'] = parseInt($element.find('input[name="order"]').val());
                 honourObj['label'] = $element.find('input[name="label"]').val();
                 honourObj['country'] = extractCountryObj($element.find('.country'));
                 honourObj['territory'] = extractTerritoryObj($element.find('.territory'));
@@ -213,6 +221,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var propertyObj = {};
 
+                propertyObj['id'] = parseInt($element.find('input[name="id"]').val());
+                propertyObj['property_order'] = parseInt($element.find('input[name="order"]').val());
                 propertyObj['label'] = $element.find('input[name="label"]').val();
                 propertyObj['country'] = extractCountryObj($element.find('.country'));
                 propertyObj['territory'] = extractTerritoryObj($element.find('.territory'));
@@ -232,6 +242,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var rankObj = {};
 
+                rankObj['id'] = parseInt($element.find('input[name="id"]').val());
+                rankObj['rank_order'] = parseInt($element.find('input[name="order"]').val());
                 rankObj['label'] = $element.find('input[name="label"]').val();
                 rankObj['class'] = $element.find('input[name="class"]').val();
                 rankObj['country'] = extractCountryObj($element.find('.country'));
@@ -252,6 +264,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var religionObj = {};
 
+                religionObj['id'] = parseInt($element.find('input[name="id"]').val());
+                religionObj['religion_order'] = parseInt($element.find('input[name="order"]').val());
                 religionObj['name'] = $element.find('input[name="name"]').val();
                 religionObj['change_of_religion'] = $element.find('input[name="changeOfReligion"]').val();
                 religionObj['from_date'] = extractDateReferenceObj($element.find('.from-date'));
@@ -267,7 +281,8 @@ PersonCorrection.FinalPersonView = (function () {
                 var $element = $(element);
 
                 var residenceObj = {};
-
+                
+                residenceObj['id'] = parseInt($element.find('input[name="id"]').val());
                 residenceObj['residence_country'] = extractCountryObj($element.find('.country'));
                 residenceObj['residence_territory'] = extractTerritoryObj($element.find('.territory'));
                 residenceObj['residence_location'] = extractLocationObj($element.find('.location'));
@@ -281,6 +296,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var roadOfLifeObj = {};
 
+                roadOfLifeObj['id'] = parseInt($element.find('input[name="id"]').val());
+                roadOfLifeObj['road_of_life_order'] = parseInt($element.find('input[name="order"]').val());
                 roadOfLifeObj['origin_country'] = extractCountryObj($element.find('.origin-country'));
                 roadOfLifeObj['origin_territory'] = extractTerritoryObj($element.find('.origin-territory'));
                 roadOfLifeObj['job'] = extractJobObj($element.find('.job'));
@@ -300,7 +317,9 @@ PersonCorrection.FinalPersonView = (function () {
                 var $element = $(element);
 
                 var sourceObj = {};
-
+                
+                sourceObj['id'] = parseInt($element.find('input[name="id"]').val());
+                sourceObj['source_order'] = parseInt($element.find('input[name="order"]').val());
                 sourceObj['label'] = $element.find('input[name="label"]').val();
                 sourceObj['place_of_discovery'] = $element.find('input[name="placeOfDiscovery"]').val();
                 sourceObj['remark'] = $element.find('input[name="remark"]').val();
@@ -315,6 +334,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var statusObj = {};
 
+                statusObj['id'] = parseInt($element.find('input[name="id"]').val());
+                statusObj['status_order'] = parseInt($element.find('input[name="order"]').val());
                 statusObj['label'] = $element.find('input[name="label"]').val();
                 statusObj['country'] = extractCountryObj($element.find('.country'));
                 statusObj['territory'] = extractTerritoryObj($element.find('.territory'));
@@ -333,6 +354,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var worksObj = {};
 
+                worksObj['id'] = parseInt($element.find('input[name="id"]').val());
+                worksObj['works_order'] = parseInt($element.find('input[name="order"]').val());
                 worksObj['label'] = $element.find('input[name="label"]').val();
                 worksObj['country'] = extractCountryObj($element.find('.country'));
                 worksObj['territory'] = extractTerritoryObj($element.find('.territory'));
@@ -479,6 +502,7 @@ PersonCorrection.FinalPersonView = (function () {
 
                 var dateObj = {};
 
+                dateObj['id'] = parseInt($element.find('input[name="id"]').val());
                 dateObj['day'] = $element.find('input[name="day"]').val();
                 dateObj['month'] = $element.find('input[name="month"]').val();
                 dateObj['year'] = $element.find('input[name="year"]').val();

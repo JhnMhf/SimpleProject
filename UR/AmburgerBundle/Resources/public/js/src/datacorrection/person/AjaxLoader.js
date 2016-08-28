@@ -41,17 +41,20 @@ PersonCorrection.AjaxLoader = (function () {
                     type: "POST",
                     url: 'save',
                     dataType: 'json',
-                    data: finalPerson,
+                    data: JSON.stringify(finalPerson),
                     success: function (data) {
-
+                        console.log('success', data);
                     },
                     error: function (data) {
+                        console.log('error', data);
                         if (data.status == 200) {
                             //data.responseText
                         }
                     }
                 }).always(function (data, textStatus, jqXHR) {
-                    console.log(data);
+                    console.log('always', data);
+                    
+                    console.log(data.responseText);
                     //@TODO: Handle errors etc.?
                     $(that).trigger("saveFinished");
                 });
