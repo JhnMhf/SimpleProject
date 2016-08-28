@@ -32,6 +32,7 @@ PersonCorrection.FinalPersonView = (function () {
                 basePerson['works'] = extractArrayData('works','works-container','works-row');
 
                 console.log("extractedPerson", basePerson);
+                console.log('json', JSON.stringify(basePerson));
 
                 return finalPersonData;
             },
@@ -481,8 +482,8 @@ PersonCorrection.FinalPersonView = (function () {
                 dateObj['day'] = $element.find('input[name="day"]').val();
                 dateObj['month'] = $element.find('input[name="month"]').val();
                 dateObj['year'] = $element.find('input[name="year"]').val();
-                dateObj['before_date'] = $element.find('input[name="beforeDate"]').val();
-                dateObj['after_date'] = $element.find('input[name="afterDate"]').val();
+                dateObj['before_date'] = $element.find('input[name="beforeDate"]').is(':checked');
+                dateObj['after_date'] = $element.find('input[name="afterDate"]').is(':checked');
                 dateObj['comment'] = $element.find('input[name="comment"]').val();
 
                 return dateObj;
