@@ -63,7 +63,6 @@ class DateReferenceSerializationHandler implements SubscribingHandlerInterface {
         );
     }
 
-    //@TODO: Check if deserialization still works right
     public function deserializeJsonToDateReference(JsonDeserializationVisitor $visitor, $json, array $type, DeserializationContext $context) {
         if (array_key_exists("from", $json)) {
             $from = $this->createDateObj($json['from']);

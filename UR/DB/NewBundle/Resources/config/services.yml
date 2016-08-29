@@ -32,6 +32,11 @@ services:
         arguments: 
            container: "@service_container"
            
+    util_object_handler.service:
+        class: UR\DB\NewBundle\Utils\UtilObjHandler       
+        arguments: 
+           container: "@service_container"
+           
 # listener/ subscriber
     fixDBOrder.subscriber:
             class: UR\DB\NewBundle\Utils\FixDBOrdersEventSubscriber
@@ -46,8 +51,7 @@ services:
                 container: "@service_container"
             tags:
                 - { name: doctrine.event_subscriber, connection: new }
-                - { name: doctrine.event_subscriber, connection: final }
-                
+                - { name: doctrine.event_subscriber, connection: final }      
                 
     datereference_jms_handler:
         class: UR\DB\NewBundle\Utils\DateReferenceSerializationHandler

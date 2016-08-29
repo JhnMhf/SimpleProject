@@ -36,7 +36,6 @@ PersonCorrection.AjaxLoader = (function () {
             },
             
             saveFinalPerson = function(finalPerson){
-                //@TODO: Save
                 $.ajax({
                     type: "POST",
                     url: 'save',

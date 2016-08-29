@@ -62,51 +62,33 @@ class CorrectionPersonController extends Controller
         $content = $this->get("request")->getContent();
         
         
-        
-        //@TODO: Add error if no content is found.
         if (!empty($content))
         {
-            //@TODO: Check for right content? oid etc?
             //http://jmsyst.com/libs/serializer/master/usage
             
             //Alternative: http://symfony.com/doc/current/components/serializer.html#deserializing-an-object
             $serializer = $this->get('serializer');
+            
+
             $personEntity = $serializer->deserialize($content,'UR\DB\NewBundle\Entity\Person', 'json');
             
-            //print_r($personEntity);
-            
-            //@TODO: check if oids are matching
-            
-            $finalDBManager = $this->get('doctrine')->getManager('final');
-            
-            //@TODO: Necessary only for testing?
-            
-            //@TODO: New dates are still not getting saved.
-            //Maybe add doctrine pre persist listener, which checks for dateReferences and saves the dates?
-            
-            //@TODO: Current highest id?
-            //@TODO: Person Ids not being set by serializer...
-            //@TODO: Perhaps the merging of One-To-Many Relations has to be done manually.
-            if(is_null($this->loadFinalPersonByOID($OID))){
-                //first persist if not existant
-                $finalDBManager->persist($personEntity);
-                $finalDBManager->flush();
+            if($personEntity->getOid() == $OID){
+                $em = $this->get('doctrine')->getManager('final');
+                $this->get('person_saver.service')->savePerson($em, $personEntity);
+                $response->setStatusCode("202");
+            }else {
+                $response->setContent("OIDs do not match");
+                $response->setStatusCode("406");
             }
-                            
-            //merge necessary to set relations right/ update the values
 
-            $finalDBManager->merge($personEntity);
-            $finalDBManager->flush();
-
-            
-            $response->setStatusCode("202");
         } else {
-            $response->setContent("{Missing Content.");
+            $response->setContent("Missing Content.");
             $response->setStatusCode("406");
         }
 
         return $response;
     }
+    
     
     
     public function dateSerializeAction(){

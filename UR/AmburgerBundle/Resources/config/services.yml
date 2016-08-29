@@ -10,3 +10,7 @@ services:
         class: UR\AmburgerBundle\Util\MigrationUtil
         arguments: 
            container: "@service_container"
+    person_saver.service:
+        class: UR\AmburgerBundle\Util\PersonSaver
+        arguments: 
+           container: "@service_container"
