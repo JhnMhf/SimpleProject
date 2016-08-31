@@ -23,12 +23,12 @@ PersonCorrection.FinalPersonView = (function () {
                 basePerson['educations'] = extractArrayData('education','educations-container','education-row');
                 basePerson['honours'] = extractArrayData('honour','honours-container','honour-row');
                 basePerson['properties'] = extractArrayData('property','properties-container','property-row');
-                basePerson['ranks'] = extractArrayData('rank','ranks-container','rank-row');
-                basePerson['religions'] = extractArrayData('religion','religions-container','religion-row');
-                basePerson['residences'] = extractArrayData('residence','residences-container','residence-row');
+                basePerson['ranks'] = extractArrayData('rank','rank-container','rank-row');
+                basePerson['religions'] = extractArrayData('religion','religion-container','religion-row');
+                basePerson['residences'] = extractArrayData('residence','residence-container','residence-row');
                 basePerson['road_of_life'] = extractArrayData('road_of_life','road-of-life-container','road-of-life-row');
-                basePerson['sources'] = extractArrayData('source','sources-container','source-row');
-                basePerson['stati'] = extractArrayData('status','stati-container','status-row');
+                basePerson['sources'] = extractArrayData('source','source-container','source-row');
+                basePerson['stati'] = extractArrayData('status','status-container','status-row');
                 basePerson['works'] = extractArrayData('works','works-container','works-row');
 
                 console.log("extractedPerson", basePerson);
