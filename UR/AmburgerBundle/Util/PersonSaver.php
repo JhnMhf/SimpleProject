@@ -23,8 +23,6 @@ class PersonSaver {
         $this->preparePerson($em, $personEntity);
 
         //@TODO: Current highest id?
-        //@TODO: Person Ids not being set by serializer...
-        //@TODO: Perhaps the merging of One-To-Many Relations has to be done manually.
         if(is_null($this->loadFinalPersonByOID($personEntity->getOid()))){
             //@TODO: Necessary only for testing? In the "real" case, the data should already exist and only be updated?
             //first persist if not existant
@@ -67,12 +65,14 @@ class PersonSaver {
         
         for($i = 0; $i < count($educationsArray); $i++){
             $this->prepareEducation($em, $educationsArray[$i]);
+            $educationsArray[$i]->setPerson($personEntity);
         }
                 
         $honoursArray = $personEntity->getHonours()->toArray();
         
         for($i = 0; $i < count($honoursArray); $i++){
             $this->prepareHonour($em, $honoursArray[$i]);
+            $honoursArray[$i]->setPerson($personEntity);
         }
         
                 
@@ -80,6 +80,7 @@ class PersonSaver {
         
         for($i = 0; $i < count($propertyArray); $i++){
             $this->prepareProperty($em, $propertyArray[$i]);
+            $propertyArray[$i]->setPerson($personEntity);
         }
         
                 
@@ -87,13 +88,21 @@ class PersonSaver {
         
         for($i = 0; $i < count($rankArray); $i++){
             $this->prepareRank($em, $rankArray[$i]);
+            $rankArray[$i]->setPerson($personEntity);
         }
         
-                
+        $religionArray = $personEntity->getReligions()->toArray();
+        
+        for($i = 0; $i < count($religionArray); $i++){
+            $religionArray[$i]->setPerson($personEntity);
+        }      
+        
+        
         $residenceArray = $personEntity->getResidences()->toArray();
         
         for($i = 0; $i < count($residenceArray); $i++){
             $this->prepareResidence($em, $residenceArray[$i]);
+            $residenceArray[$i]->setPerson($personEntity);
         }
         
                 
@@ -101,20 +110,27 @@ class PersonSaver {
         
         for($i = 0; $i < count($roadOfLifeArray); $i++){
             $this->prepareRoadOfLife($em, $roadOfLifeArray[$i]);
+            $roadOfLifeArray[$i]->setPerson($personEntity);
         }
         
+        $sourceArray = $personEntity->getSources()->toArray();
+        
+        for($i = 0; $i < count($sourceArray); $i++){
+            $sourceArray[$i]->setPerson($personEntity);
+        }
                 
         $statusArray = $personEntity->getStati()->toArray();
         
         for($i = 0; $i < count($statusArray); $i++){
             $this->prepareStatus($em, $statusArray[$i]);
+            $statusArray[$i]->setPerson($personEntity);
         }
-        
-                
+           
         $worksArray = $personEntity->getWorks()->toArray();
         
         for($i = 0; $i < count($worksArray); $i++){
             $this->prepareWorks($em, $worksArray[$i]);
+            $worksArray[$i]->setPerson($personEntity);
         }
     }
     
