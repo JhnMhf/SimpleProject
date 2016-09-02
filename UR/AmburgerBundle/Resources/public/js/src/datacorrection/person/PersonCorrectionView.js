@@ -8,9 +8,20 @@ PersonCorrection.PersonCorrectionView = (function(){
     init = function() {
         $('#save-button').on("click", save);
         $('.collapsible').on("click", collapse);
+        showLoader();
+        
         return that;
     },
+
+    showLoader = function(){
+        $('#loader-background').show();
+        $('#loaders').show();
+    },
     
+    hideLoader = function(){
+        $('#loaders').hide();
+        $('#loader-background').hide();
+    },
     
     save = function(){
         $(that).trigger('save');
@@ -51,6 +62,8 @@ PersonCorrection.PersonCorrectionView = (function(){
 
 
     that.init = init;
+    that.showLoader = showLoader;
+    that.hideLoader = hideLoader;
 
     return that;
 })();

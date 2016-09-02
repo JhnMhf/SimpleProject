@@ -43,9 +43,12 @@ PersonCorrection.PersonCorrectionController = (function(){
         newPersonView.displayPerson(newPerson);
         console.log("FinalPerson", finalPerson);
         finalPersonView.displayPerson(finalPerson);
+        
+        personCorrectionView.hideLoader();
     },
     
     onSave = function(){
+        personCorrectionView.showLoader();
         var changedFinalPerson = finalPersonView.extractPersonData();
         
         console.log(changedFinalPerson);
@@ -54,6 +57,7 @@ PersonCorrection.PersonCorrectionController = (function(){
     },
     
     onSaveFinished = function(){
+        personCorrectionView.hideLoader();
         /*
         var currentUrl = window.location.href;
         var newUrl = currentUrl.replace("person", "relationships");
