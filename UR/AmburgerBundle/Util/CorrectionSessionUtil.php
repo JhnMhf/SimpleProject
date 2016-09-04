@@ -2,6 +2,8 @@
 
 namespace UR\AmburgerBundle\Util;
 
+use UR\AmburgerBundle\Entity\CorrectionSession;
+
 class CorrectionSessionUtil {
     
     private $LOGGER;
@@ -56,15 +58,17 @@ class CorrectionSessionUtil {
     } 
     
     public function startCorrectionSession($OID, $personData, $session){
-        $this->LOGGER->debug("Starting the correction session.");
+        $username = $session->get('name');
+        $userId = $session->get('userid');
+        $this->LOGGER->debug("Starting the correction session for User: ".$username. " with ID: ".$userId);
         $personData->setCurrentlyInProcess(true);
         
         $this->getSystemDBManager()->merge($personData);
         
         $correctionSession = new CorrectionSession();
         $correctionSession->setOid($OID);
-        $correctionSession->setActiveUserName($session->get('name'));
-        $correctionSession->setActiveUserId($session->get('userid'));
+        $correctionSession->setActiveUserName($username);
+        $correctionSession->setActiveUserId($userId);
         $correctionSession->setSessionIdentifier($session->getId());      
         
         $this->getSystemDBManager()->persist($correctionSession);

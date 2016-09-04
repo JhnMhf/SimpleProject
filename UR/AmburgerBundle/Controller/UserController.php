@@ -38,7 +38,7 @@ class UserController extends Controller implements SessionController{
     {
         $session = $this->getRequest()->getSession();
         if($session->get('userid')){
-            //check rights of user if he is allowed to create a new user?
+            //TODO: check rights of user if he is allowed to create a new user?
             $newUser = $request->request->get('username');
             $newPassword = $request->request->get('password');
             

@@ -55,7 +55,7 @@ class CorrectionSession
      *
      * @return CorrectionSession
      */
-    public function setActiveUserName(\String $activeUserName)
+    public function setActiveUserName($activeUserName)
     {
         $this->activeUserName = $activeUserName;
 
@@ -79,7 +79,7 @@ class CorrectionSession
      *
      * @return CorrectionSession
      */
-    public function setActiveUserId(\String $activeUserId)
+    public function setActiveUserId($activeUserId)
     {
         $this->activeUserId = $activeUserId;
 
@@ -103,7 +103,7 @@ class CorrectionSession
      *
      * @return CorrectionSession
      */
-    public function setSessionIdentifier(\String $sessionIdentifier)
+    public function setSessionIdentifier($sessionIdentifier)
     {
         $this->sessionIdentifier = $sessionIdentifier;
 
@@ -167,11 +167,29 @@ class CorrectionSession
     {
         return $this->modified;
     }
+    
+    /**
+     * Set oid
+     *
+     * @param integer $oid
+     *
+     * @return CorrectionSession
+     */
+    public function setOid($oid)
+    {
+        $this->oid = $oid;
+
+        return $this;
+    }
+    
     /**
      * @ORM\PreFlush
      */
     public function updateCreatedAndModified()
     {
-        // Add your code here
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime());
+        }
+        $this->setModified(new \DateTime());
     }
 }
