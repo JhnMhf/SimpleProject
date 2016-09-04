@@ -62,6 +62,7 @@ class SessionListener
         $this->checkNormalSession($event, $controller);
         $this->LOGGER->debug("Checking CorrectionSession in filter.");
 
+        $session = $event->getRequest()->getSession();
         $OID = $event->getRequest()->get('OID');
 
         $this->LOGGER->debug("Found OID: ".$OID);

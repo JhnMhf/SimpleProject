@@ -75,5 +75,11 @@ class CorrectionSessionUtil {
         
         $this->getSystemDBManager()->flush($personData);
     }
+    
+    private function stopCorrectionSessionsForUser($sessions){
+        
+        
+       
+    }
 }
 

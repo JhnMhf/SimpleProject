@@ -1,0 +1,31 @@
+UR\AmburgerBundle\Entity\CronTask:
+    type: entity
+    table: cron_task
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 120
+            comment: 'Name of the cron task'
+        commands:
+            type: array
+            nullable: false
+            comment: 'Commands to run'
+        runInterval:
+            type: integer
+            nullable: false
+            comment: 'Interval to run in'
+        lastrun:
+            type: datetime
+            nullable: true
+            comment: 'Timestamp when it last ran'
+    lifecycleCallbacks: {  }
