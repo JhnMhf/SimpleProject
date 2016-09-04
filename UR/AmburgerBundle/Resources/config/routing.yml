@@ -110,6 +110,10 @@ migrate_process:
     path: /migration/process
     defaults: { _controller: AmburgerBundle:Default:migrateProcess }
     
+create_person_data:
+    path: /missing/person/data
+    defaults: { _controller: AmburgerBundle:Default:personData }
+    
 dateSerializeTest:
     path: /date/serialize
     defaults: { _controller: AmburgerBundle:CorrectionPerson:dateSerialize }

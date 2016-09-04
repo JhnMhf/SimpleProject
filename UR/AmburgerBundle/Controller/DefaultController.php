@@ -33,4 +33,10 @@ class DefaultController extends Controller
         return new Response("Number of migrated persons: ".$numberOfMigratedPersons);
     }
     
+    public function personDataAction(){
+        $this->get('person_data_creator.service')->createMissingEntries();
+        
+        return new Response();
+    }
+    
 }

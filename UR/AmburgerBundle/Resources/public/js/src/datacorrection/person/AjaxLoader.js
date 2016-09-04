@@ -17,17 +17,7 @@ PersonCorrection.AjaxLoader = (function () {
                 $.ajax({
                     type: "GET",
                     url: 'load',
-                    dataType: 'json',
-                    data: {
-                    },
-                    success: function (data) {
-
-                    },
-                    error: function (data) {
-                        if (data.status == 200) {
-                            //data.responseText
-                        }
-                    }
+                    dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
 
@@ -40,22 +30,15 @@ PersonCorrection.AjaxLoader = (function () {
                     type: "POST",
                     url: 'save',
                     dataType: 'json',
-                    data: JSON.stringify(finalPerson),
-                    success: function (data) {
-                        console.log('success', data);
-                    },
-                    error: function (data) {
-                        console.log('error', data);
-                        if (data.status == 200) {
-                            //data.responseText
-                        }
-                    }
+                    data: JSON.stringify(finalPerson)
                 }).always(function (data, textStatus, jqXHR) {
                     console.log('always', data);
-                    
-                    console.log(data.responseText);
-                    //@TODO: Handle errors etc.?
-                    $(that).trigger("saveFinished");
+                    if(data.status == '202'){
+                        //@TODO: Handle errors etc.?
+                        $(that).trigger("saveFinished");
+                    } else {
+                        $(that).trigger("errorOccured", data);
+                    }
                 });
             };
 

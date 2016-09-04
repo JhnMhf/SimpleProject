@@ -10,16 +10,18 @@ UR\AmburgerBundle\Entity\PersonData:
                 unsigned: false
             column: OID
             id: true
-            generator:
-                strategy: IDENTITY
     fields:
         currentlyInProcess:
             type: boolean
             nullable: false
+            options:
+                default: false
             comment: 'Flag if currently someone is working on this person'
         completed:
             type: boolean
             nullable: false
+            options:
+                default: false
             comment: 'Flag if the person was corrected completly'
         created:
             type: datetime

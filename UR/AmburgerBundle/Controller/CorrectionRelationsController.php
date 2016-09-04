@@ -4,8 +4,9 @@ namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class CorrectionDuplicateController extends Controller
+class CorrectionRelationsController extends Controller
 {
     private $LOGGER;
 
@@ -20,12 +21,12 @@ class CorrectionDuplicateController extends Controller
     
     public function indexAction($OID)
     {
-        $this->getLogger()->debug("Duplicates side called: ".$OID);
+        $this->getLogger()->debug("Relations page called: ".$OID);
         $session = $this->getRequest()->getSession();
         if($this->get('correction_session.service')->checkSession($session)){
             //check if allowed for this person
             if($this->get('correction_session.service')->checkCorrectionSession($OID,$session)){
-                return $this->render('AmburgerBundle:DataCorrection:duplicate_persons.html.twig');
+                return $this->render('AmburgerBundle:DataCorrection:related_person.html.twig');
             } else {
                 $response = new Response();
                 $response->setStatusCode("403");
@@ -36,16 +37,12 @@ class CorrectionDuplicateController extends Controller
         }
     }
     
-    public function loadAction($OID)
+    public function loadNextAction($OID)
     {
-        $this->getLogger()->debug("Loading duplicates: ".$OID);
-        $response["duplicate_persons"] = array();
-        
-        $serializer = $this->get('serializer');
-        $json = $serializer->serialize($response, 'json');
-        $jsonResponse = new JsonResponse();
-        $jsonResponse->setContent($json);
-        
-        return $jsonResponse;
+        $this->getLogger()->debug("Load next relation called: ".$OID);
+    }
+    
+    public function saveAction($OID){
+        $this->getLogger()->debug("Save relation called: ".$OID);
     }
 }

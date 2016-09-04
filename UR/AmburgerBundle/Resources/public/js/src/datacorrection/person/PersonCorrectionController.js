@@ -21,6 +21,8 @@ PersonCorrection.PersonCorrectionController = (function(){
         $(ajaxLoader).on("personLoaded", onPersonLoaded);
         
         $(ajaxLoader).on("saveFinished", onSaveFinished);
+        
+        $(ajaxLoader).on("errorOccured", onErrorOccured);
 
         personCorrectionView = PersonCorrection.PersonCorrectionView.init();
         
@@ -58,11 +60,18 @@ PersonCorrection.PersonCorrectionController = (function(){
     
     onSaveFinished = function(){
         personCorrectionView.hideLoader();
+        alert('Success');
         /*
         var currentUrl = window.location.href;
         var newUrl = currentUrl.replace("person", "relationships");
         window.location.href = newUrl;
         */
+    },
+    
+        
+    onErrorOccured = function(event, data){
+        personCorrectionView.hideLoader();
+        console.error(data)
     };
 
 

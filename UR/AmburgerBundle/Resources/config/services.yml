@@ -14,3 +14,11 @@ services:
         class: UR\AmburgerBundle\Util\PersonSaver
         arguments: 
            container: "@service_container"
+    correction_session.service:
+        class: UR\AmburgerBundle\Util\CorrectionSessionUtil
+        arguments: 
+           container: "@service_container"
+    person_data_creator.service:
+        class: UR\AmburgerBundle\Util\PersonDataCreator
+        arguments: 
+           container: "@service_container"

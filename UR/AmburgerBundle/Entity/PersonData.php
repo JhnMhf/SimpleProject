@@ -15,12 +15,12 @@ class PersonData
     /**
      * @var boolean
      */
-    private $currentlyInProcess;
+    private $currentlyInProcess = false;
 
     /**
      * @var boolean
      */
-    private $completed;
+    private $completed = false;
 
     /**
      * @var \DateTime
@@ -148,5 +148,19 @@ class PersonData
             $this->setCreated(new \DateTime());
         }
         $this->setModified(new \DateTime());
+    }
+
+    /**
+     * Set oid
+     *
+     * @param integer $oid
+     *
+     * @return PersonData
+     */
+    public function setOid($oid)
+    {
+        $this->oid = $oid;
+
+        return $this;
     }
 }

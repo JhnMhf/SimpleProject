@@ -9,6 +9,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginController extends Controller
 {
+    private $LOGGER;
+
+    private function getLogger()
+    {
+        if(is_null($this->LOGGER)){
+            $this->LOGGER = $this->get('monolog.logger.default');
+        }
+        
+        return $this->LOGGER;
+    }
+    
     /* 
         Returns the login html.
     */
@@ -21,6 +32,7 @@ class LoginController extends Controller
     */
     public function loginAction(Request $request)
     {
+        $this->getLogger()->debug("Login request.");
         $username = $request->request->get('username');
         $password = $request->request->get('password');
         $systemDBManager = $this->get('doctrine')->getManager('system');
@@ -47,6 +59,8 @@ class LoginController extends Controller
             $value = $session->getId(); // get session id
             $session->set('name', $username);
             $session->set('userid', $user->getId());
+            
+            $this->getLogger()->debug("Successfully logged in user: ".$username);
             return $this->redirect($this->generateUrl('start'));
         }
     }
@@ -55,6 +69,8 @@ class LoginController extends Controller
     */
     public function logoutAction(Request $request)
     {
+        $this->getLogger()->debug("Logout request");
+        
         $session = $request->getSession();
         $session->invalidate();
         

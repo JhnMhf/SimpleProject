@@ -8,13 +8,38 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CorrectionPersonController extends Controller
 {
+    private $LOGGER;
+
+    private function getLogger()
+    {
+        if(is_null($this->LOGGER)){
+            $this->LOGGER = $this->get('monolog.logger.default');
+        }
+        
+        return $this->LOGGER;
+    }
+    
     public function indexAction($OID)
     {
-        return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
+        $this->getLogger()->debug("Person correction side called: ".$OID);
+        $session = $this->getRequest()->getSession();
+        if($this->get('correction_session.service')->checkSession($session)){
+            //check if allowed for this person
+            if($this->get('correction_session.service')->checkCorrectionSession($OID,$session)){
+                return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
+            } else {
+                $response = new Response();
+                $response->setStatusCode("403");
+                return $response;
+            }
+        } else {
+            return $this->redirect($this->generateUrl('login'));
+        }
     }
     
     public function loadAction($OID)
     {
+        $this->getLogger()->debug("Loading person data: ".$OID);
         // return json response, with old, new and final in one?
         $response = array();
         
@@ -56,6 +81,7 @@ class CorrectionPersonController extends Controller
     }
     
     public function saveAction($OID){
+        $this->getLogger()->debug("Saving person data: ".$OID);
         $response = new Response();
 
         //@TODO: Validate if this user is currently working on this person
