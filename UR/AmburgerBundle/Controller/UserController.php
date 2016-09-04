@@ -19,7 +19,7 @@ use UR\AmburgerBundle\Entity\User;
  *
  * @author johanna
  */
-class UserController extends Controller{
+class UserController extends Controller implements SessionController{
     
     /* 
         Returns the user html.

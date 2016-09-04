@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class CorrectionPersonController extends Controller
+class CorrectionPersonController extends Controller implements CorrectionSessionController
 {
     private $LOGGER;
 
@@ -22,19 +22,7 @@ class CorrectionPersonController extends Controller
     public function indexAction($OID)
     {
         $this->getLogger()->debug("Person correction side called: ".$OID);
-        $session = $this->getRequest()->getSession();
-        if($this->get('correction_session.service')->checkSession($session)){
-            //check if allowed for this person
-            if($this->get('correction_session.service')->checkCorrectionSession($OID,$session)){
-                return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
-            } else {
-                $response = new Response();
-                $response->setStatusCode("403");
-                return $response;
-            }
-        } else {
-            return $this->redirect($this->generateUrl('login'));
-        }
+        return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
     }
     
     public function loadAction($OID)
