@@ -28,7 +28,7 @@ class DefaultController extends Controller
     
     public function migrateProcessAction()
     {
-        $numberOfMigratedPersons = $this->get("migration_process.service")->run();
+        $numberOfMigratedPersons = $this->get("migration_process.service")->runWithTestdata();
         
         return new Response("Number of migrated persons: ".$numberOfMigratedPersons);
     }

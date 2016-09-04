@@ -20,6 +20,7 @@ class CorrectionSessionInvalidateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->getContainer()->get('monolog.logger.cron')->info("Running the invalidate old sessions cron task.");
         $output->writeln('<comment>Invalidating old sessions...</comment>');
 
         $this->output = $output;

@@ -21,6 +21,7 @@ class TaskSetupCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->getContainer()->get('monolog.logger.cron')->info("Running the setup cron tasks command.");
         $output->writeln('<comment>Setting up Cron Tasks...</comment>');
 
         $this->output = $output;
@@ -28,6 +29,7 @@ class TaskSetupCommand extends ContainerAwareCommand
         
 
         $this->insertCorrectionSessionInvalidationCronTask($em);
+        $this->insertMigratterTask($em);
         
         // Flush database changes
         $em->flush();
@@ -39,13 +41,30 @@ class TaskSetupCommand extends ContainerAwareCommand
         $existingTask = $em->getRepository('AmburgerBundle:CronTask')->findOneByName('CorrectionSessionInvalidator');
         
         if(is_null($existingTask)){
-            $this->output('<comment>Adding Task CorrectionSessionInvalidator!</comment>');
+            $this->output->writeln('<comment>Adding Task CorrectionSessionInvalidator!</comment>');
             $newTask = new CronTask();
 
             $newTask
                 ->setName('CorrectionSessionInvalidator')
                 ->setRunInterval(3600) // Run once every hour
                 ->setCommands(array('correctionsession:invalidate'));
+
+            $em->persist($newTask);
+        }
+        
+    }
+    
+    private function insertMigratterTask($em){
+        $existingTask = $em->getRepository('AmburgerBundle:CronTask')->findOneByName('MigratterTask');
+        
+        if(is_null($existingTask)){
+            $this->output->writeln('<comment>Adding Task MigratterTask!</comment>');
+            $newTask = new CronTask();
+
+            $newTask
+                ->setName('MigratterTask')
+                ->setRunInterval(240) // Run every four minutes (realistically only all 5 minutes)
+                ->setCommands(array('personmigration:run'));
 
             $em->persist($newTask);
         }

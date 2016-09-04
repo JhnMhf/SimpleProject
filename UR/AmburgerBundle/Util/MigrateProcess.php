@@ -23,7 +23,7 @@ class MigrateProcess {
         return $this->container->get($identifier);
     }
     
-        private function getLogger()
+    private function getLogger()
     {
         if(is_null($this->LOGGER)){
             $this->LOGGER = $this->get('monolog.logger.migratter');
@@ -42,19 +42,63 @@ class MigrateProcess {
         return $this->migrationUtil;
     }
 
+    public function run(){
+        return $this->internalRun($this->getPersonIds());
+    }
+    
     //@TODO: Call over browser allows only a runtime of one minute. after that an error occurs.
     //@TODO: Rollback if one person fails?
-    public function run(){
-        $personIds = $this->getPersonIds();
-        
+    private function internalRun($personIds){
         for($i = 0; $i < count($personIds); $i++){
             $this->migratePerson($personIds[$i]);
         }
         
         return count($personIds);
     }
+    
+    private function migratePerson($id){
+        try{
+            $this->getLogger()->info("Migration person with (old DB) id: ".$id);
+            $person = $this->getMigrationUtils()->migratePerson($id);
 
-    private function getPersonIds() {
+            if(is_null($person)){
+                $this->getLogger()->warn("Unknown id");
+            } else {
+                $this->getLogger()->info("Migrated Person: ".$person);
+            }
+        } catch (Exception $ex) {
+            $this->getLogger()->error("An Exception occured: ". $ex);
+        }
+
+    }
+    
+    private function getPersonIds(){
+        $newDBManager = $this->get('doctrine')->getManager('new');
+        
+        $sql = 'SELECT ID,OID FROM OldAmburgerDB.ids WHERE OID NOT IN '
+                . '(SELECT OID FROM NewAmburgerDB.person ORDER BY OID ASC) '
+                . 'ORDER BY oid ASC LIMIT 15';
+        
+        
+        $stmt = $newDBManager->getConnection()->prepare($sql);
+        $stmt->execute();
+        
+        $ids = $stmt->fetchAll();
+        
+        $personIds = array();
+        
+        for($i = 0; $i < count($ids); $i++){
+            $personIds[] = $ids[$i]['ID'];
+        }
+        
+        return $personIds;
+    }
+    
+    public function runWithTestData(){
+        return $this->internalRun($this->getTestPersonIds());
+    }
+
+    private function getTestPersonIds() {
         return [4,
             9,
             39,
@@ -95,19 +139,4 @@ class MigrateProcess {
             95279];
     }
 
-    private function migratePerson($id){
-        try{
-            $this->getLogger()->info("Migration person with old id: ".$id);
-            $person = $this->getMigrationUtils()->migratePerson($id);
-
-            if(is_null($person)){
-                $this->getLogger()->warn("Unknown id");
-            } else {
-                $this->getLogger()->info("Migrated Person: ".$person);
-            }
-        } catch (Exception $ex) {
-            $this->getLogger()->error("An Exception occured: ". $ex);
-        }
-
-    }
 }

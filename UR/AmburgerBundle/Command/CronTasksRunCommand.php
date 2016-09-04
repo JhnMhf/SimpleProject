@@ -61,6 +61,7 @@ class CronTasksRunCommand extends ContainerAwareCommand
                     $output->writeln('<info>SUCCESS</info>');
                 } catch (\Exception $e) {
                     $output->writeln('<error>ERROR</error>');
+                    $this->getContainer()->get('monolog.logger.cron')->info("An exception occured while running the tasks: ".$e);
                 }
 
                 // Persist crontask

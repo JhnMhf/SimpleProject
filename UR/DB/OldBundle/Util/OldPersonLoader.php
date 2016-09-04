@@ -24,7 +24,7 @@ class OldPersonLoader {
 
     private function getLogger() {
         if (is_null($this->LOGGER)) {
-            $this->LOGGER = $this->get('monolog.logger.migratter');
+            $this->LOGGER = $this->get('monolog.logger.default');
         }
 
         return $this->LOGGER;
