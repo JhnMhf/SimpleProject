@@ -1465,6 +1465,7 @@ class MigrationUtil {
         if (count($childEducation) > 0) {
             //education
             for ($i = 0; $i < count($childEducation); $i++) {
+                $education = $childEducation[$i];
                 $educationID = $this->getMigrationService()->migrateEducation($child, $education["order3"], $education["ausbildung"], $education["land"], null, $education["ort"], $education["von-ab"], $education["bis"], $education["belegt"], $education["bildungsabschluss"], $education["bildungsabschlussdatum"], $education["bildungsabschlussort"], $education["kommentar"]);
             }
         }
