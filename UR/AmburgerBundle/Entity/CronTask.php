@@ -145,4 +145,33 @@ class CronTask
     {
         return $this->runInterval;
     }
+    /**
+     * @var boolean
+     */
+    private $active = true;
+
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     *
+     * @return CronTask
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
 }

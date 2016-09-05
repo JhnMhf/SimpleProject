@@ -28,8 +28,8 @@ class TaskSetupCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager('system');
         
 
-        $this->insertCorrectionSessionInvalidationCronTask($em);
-        $this->insertMigratterTask($em);
+        $this->createOrUpdateCorrectionSessionInvalidationCronTask($em);
+        $this->createOrUpdateMigratterTask($em);
         
         // Flush database changes
         $em->flush();
@@ -37,38 +37,48 @@ class TaskSetupCommand extends ContainerAwareCommand
         $output->writeln('<comment>Done!</comment>');
     }
 
-    private function insertCorrectionSessionInvalidationCronTask($em){
-        $existingTask = $em->getRepository('AmburgerBundle:CronTask')->findOneByName('CorrectionSessionInvalidator');
-        
-        if(is_null($existingTask)){
-            $this->output->writeln('<comment>Adding Task CorrectionSessionInvalidator!</comment>');
-            $newTask = new CronTask();
+    private function createOrUpdateCorrectionSessionInvalidationCronTask($em){
+        $name = 'CorrectionSessionInvalidator';
+        $runInterval = 3600;
+        $commands = array('correctionsession:invalidate');
+        $active = true;
 
-            $newTask
-                ->setName('CorrectionSessionInvalidator')
-                ->setRunInterval(3600) // Run once every hour
-                ->setCommands(array('correctionsession:invalidate'));
-
-            $em->persist($newTask);
-        }
-        
+        $this->createOrUpdateTask($em, $name, $runInterval, $commands, $active);
     }
     
-    private function insertMigratterTask($em){
-        $existingTask = $em->getRepository('AmburgerBundle:CronTask')->findOneByName('MigratterTask');
+    private function createOrUpdateMigratterTask($em){
+        $name = 'MigratterTask';
+        $runInterval = 90;
+        $commands = array('personmigration:run');
+        $active = true;
+
+        $this->createOrUpdateTask($em, $name, $runInterval, $commands, $active);
+    }
+    
+    private function createOrUpdateTask($em, $name, $runInterval, $commands, $active){
+        $existingTask = $em->getRepository('AmburgerBundle:CronTask')->findOneByName($name);
         
         if(is_null($existingTask)){
-            $this->output->writeln('<comment>Adding Task MigratterTask!</comment>');
+            $this->output->writeln(sprintf('<comment>Adding Task %s!</comment>',$name));
+            
             $newTask = new CronTask();
-
+            
             $newTask
-                ->setName('MigratterTask')
-                ->setRunInterval(90) // Run every 90 seconds (realistically only all 2 minutes)
-                ->setCommands(array('personmigration:run'));
-
-            $em->persist($newTask);
-        }
+                ->setName($name)
+                ->setRunInterval($runInterval) // Run every 90 seconds (realistically only all 2 minutes)
+                ->setCommands($commands)
+                ->setActive($active);
         
+            $em->persist($newTask);
+        } else {
+            $this->output->writeln(sprintf('<comment>Updating Task %s!</comment>', $name));
+            $existingTask
+                    ->setRunInterval($runInterval) // Run every 90 seconds (realistically only all 2 minutes)
+                    ->setCommands($commands)
+                    ->setActive($active);
+            
+            $em->merge($existingTask);
+        }
     }
     
     

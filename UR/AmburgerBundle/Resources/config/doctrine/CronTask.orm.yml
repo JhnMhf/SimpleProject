@@ -28,4 +28,9 @@ UR\AmburgerBundle\Entity\CronTask:
             type: datetime
             nullable: true
             comment: 'Timestamp when it last ran'
+        active:
+            type: boolean
+            options:
+                default: true
+            comment: 'Is task currently active'
     lifecycleCallbacks: {  }

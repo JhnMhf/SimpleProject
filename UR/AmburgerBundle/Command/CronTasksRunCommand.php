@@ -68,39 +68,45 @@ class CronTasksRunCommand extends ContainerAwareCommand
         $crontasks = $em->getRepository('AmburgerBundle:CronTask')->findAll();
 
         foreach ($crontasks as $crontask) {
-            // Get the last run time of this task, and calculate when it should run next
-            $lastrun = $crontask->getLastRun() ? $crontask->getLastRun()->format('U') : 0;
-            $nextrun = $lastrun + $crontask->getRunInterval();
+            if($crontask->getActive()){
+                // Get the last run time of this task, and calculate when it should run next
+                $lastrun = $crontask->getLastRun() ? $crontask->getLastRun()->format('U') : 0;
+                $nextrun = $lastrun + $crontask->getRunInterval();
 
-            // We must run this task if:
-            // * time() is larger or equal to $nextrun
-            $run = (time() >= $nextrun);
+                // We must run this task if:
+                // * time() is larger or equal to $nextrun
+                $run = (time() >= $nextrun);
 
-            if ($run) {
-                $this->output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask));
+                if ($run) {
+                    $this->output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask));
 
-                // Set $lastrun for this crontask
-                $crontask->setLastRun(new \DateTime());
+                    // Set $lastrun for this crontask
+                    $crontask->setLastRun(new \DateTime());
 
-                try {
-                    $commands = $crontask->getCommands();
-                    foreach ($commands as $command) {
-                        $this->output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
+                    try {
+                        $commands = $crontask->getCommands();
+                        foreach ($commands as $command) {
+                            $this->output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
 
-                        // Run the command
-                        $this->runCommand($command);
+                            // Run the command
+                            $this->runCommand($command);
+                        }
+                        $this->output->writeln('<info>SUCCESS</info>');
+                    } catch (\Exception $e) {
+                        $this->output->writeln('<error>ERROR</error>');
+                        $this->getContainer()->get('monolog.logger.cron')->info("An exception occured while running the tasks: ".$e);
                     }
-                    $this->output->writeln('<info>SUCCESS</info>');
-                } catch (\Exception $e) {
-                    $this->output->writeln('<error>ERROR</error>');
-                    $this->getContainer()->get('monolog.logger.cron')->info("An exception occured while running the tasks: ".$e);
-                }
 
-                // Persist crontask
-                $em->persist($crontask);
-            } else {
-                $this->output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask));
+                    // Persist crontask
+                    $em->persist($crontask);
+                } else {
+                    $this->output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask));
+                }
+            }else {
+                $this->output->writeln(sprintf('Cron Task <info>%s</info> is deactivated', $crontask));
             }
+            
+            
         }
 
         // Flush database changes
