@@ -64,10 +64,17 @@ class MigrateData {
     //@TODO: Check if abbrevations are checked at all necessary places!
     public function __construct($container) {
         $this->container = $container;
-        $this->newDBManager = $this->get('doctrine')->getManager('new');
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
         $this->normalizationService = $this->get("normalization.service");
         $this->locationToTerritoryService = $this->get("locationToTerritory.service");
+    }
+    
+    private function getDBManager(){
+        if(is_null($this->newDBManager) || !$this->newDBManager->isOpen()){
+            $this->newDBManager = $this->get('doctrine')->getManager('new');
+        }
+        
+        return $this->newDBManager;
     }
 
     private function get($identifier) {
@@ -94,13 +101,13 @@ class MigrateData {
             $countryName = $result[0];
             $comment = $result[1];
 
-            $country = $this->newDBManager->getRepository('NewBundle:Country')->findOneByName($countryName);
+            $country = $this->getDBManager()->getRepository('NewBundle:Country')->findOneByName($countryName);
 
             if ($country != null) {
                 return $country;
             }
         } else {
-            $country = $this->newDBManager->getRepository('NewBundle:Country')->findOneBy(array('name' => $countryName, 'comment' => $comment));
+            $country = $this->getDBManager()->getRepository('NewBundle:Country')->findOneBy(array('name' => $countryName, 'comment' => $comment));
 
             if ($country != null) {
                 return $country;
@@ -113,8 +120,8 @@ class MigrateData {
         $newCountry->setName($countryName);
         $newCountry->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newCountry);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newCountry);
+        $this->getDBManager()->flush();
 
         return $newCountry;
     }
@@ -146,13 +153,13 @@ class MigrateData {
             $territoryName = $result[0];
             $comment = $result[1];
 
-            $territory = $this->newDBManager->getRepository('NewBundle:Territory')->findOneByName($territoryName);
+            $territory = $this->getDBManager()->getRepository('NewBundle:Territory')->findOneByName($territoryName);
 
             if ($territory != null) {
                 return $territory;
             }
         } else {
-            $territory = $this->newDBManager->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territoryName, 'comment' => $comment));
+            $territory = $this->getDBManager()->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territoryName, 'comment' => $comment));
 
             if ($territory != null) {
                 return $territory;
@@ -165,8 +172,8 @@ class MigrateData {
         $newTerritory->setName($territoryName);
         $newTerritory->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newTerritory);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newTerritory);
+        $this->getDBManager()->flush();
 
         return $newTerritory;
     }
@@ -184,13 +191,13 @@ class MigrateData {
             $locationName = $result[0];
             $comment = $result[1];
 
-            $location = $this->newDBManager->getRepository('NewBundle:Location')->findOneByName($locationName);
+            $location = $this->getDBManager()->getRepository('NewBundle:Location')->findOneByName($locationName);
 
             if ($location != null) {
                 return $location;
             }
         } else {
-            $location = $this->newDBManager->getRepository('NewBundle:Location')->findOneBy(array('name' => $locationName, 'comment' => $comment));
+            $location = $this->getDBManager()->getRepository('NewBundle:Location')->findOneBy(array('name' => $locationName, 'comment' => $comment));
 
             if ($location != null) {
                 return $location;
@@ -203,8 +210,8 @@ class MigrateData {
         $newLocation->setName($locationName);
         $newLocation->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newLocation);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newLocation);
+        $this->getDBManager()->flush();
 
         return $newLocation;
     }
@@ -225,13 +232,13 @@ class MigrateData {
             $nationName = $result[0];
             $comment = $result[1];
 
-            $nation = $this->newDBManager->getRepository('NewBundle:Nation')->findOneByName($nationName);
+            $nation = $this->getDBManager()->getRepository('NewBundle:Nation')->findOneByName($nationName);
 
             if ($nation != null) {
                 return $nation;
             }
         } else {
-            $nation = $this->newDBManager->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nationName, 'comment' => $comment));
+            $nation = $this->getDBManager()->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nationName, 'comment' => $comment));
 
             if ($nation != null) {
                 return $nation;
@@ -244,8 +251,8 @@ class MigrateData {
         $newNation->setName($nationName);
         $newNation->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newNation);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newNation);
+        $this->getDBManager()->flush();
 
         return $newNation;
     }
@@ -265,7 +272,7 @@ class MigrateData {
             $jobLabel = $result[0];
             $comment = $result[1];
 
-            $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
+            $job = $this->getDBManager()->getRepository('NewBundle:Job')->findOneByLabel($jobLabel);
 
             if ($job != null) {
                 return $job;
@@ -273,7 +280,7 @@ class MigrateData {
         } else {
 
 
-            $job = $this->newDBManager->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
+            $job = $this->getDBManager()->getRepository('NewBundle:Job')->findOneBy(array('label' => $jobLabel, 'comment' => $comment));
 
             if ($job != null) {
                 return $job;
@@ -286,8 +293,8 @@ class MigrateData {
         $newJob->setLabel($jobLabel);
         $newJob->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newJob);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newJob);
+        $this->getDBManager()->flush();
 
         return $newJob;
     }
@@ -306,13 +313,13 @@ class MigrateData {
             $jobClassLabel = $result[0];
             $comment = $result[1];
 
-            $jobClass = $this->newDBManager->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
+            $jobClass = $this->getDBManager()->getRepository('NewBundle:JobClass')->findOneByLabel($jobClassLabel);
 
             if ($jobClass != null) {
                 return $jobClass;
             }
         } else {
-            $jobClass = $this->newDBManager->getRepository('NewBundle:JobClass')->findOneBy(array('label' => $jobClassLabel, 'comment' => $comment));
+            $jobClass = $this->getDBManager()->getRepository('NewBundle:JobClass')->findOneBy(array('label' => $jobClassLabel, 'comment' => $comment));
 
             if ($jobClass != null) {
                 return $jobClass;
@@ -324,8 +331,8 @@ class MigrateData {
 
         $newJobClass->setLabel($jobClassLabel);
 
-        $this->newDBManager->persist($newJobClass);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newJobClass);
+        $this->getDBManager()->flush();
 
         return $newJobClass;
     }
@@ -379,7 +386,7 @@ class MigrateData {
         }
 
         //first flush to get ids later
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
 
         return $newDatesArray;
     }
@@ -453,7 +460,7 @@ class MigrateData {
                     $newDate->setAfterDate(1);
                 } else if (substr($date[5], 0, 1) == "-") {
                     //persist first date before searching for second date!
-                    $this->newDBManager->persist($newDate);
+                    $this->getDBManager()->persist($newDate);
                     //check for daterange
                     $this->LOGGER->debug("Check for a daterange");
                     $secondDate = $this->extractDateObjFromString($date[5], true);
@@ -474,17 +481,17 @@ class MigrateData {
                 $newDate->setComment($this->normalize($commentString));
             }
 
-            $this->newDBManager->persist($newDate);
+            $this->getDBManager()->persist($newDate);
 
             if ($secondDate != null) {
-                $this->newDBManager->persist($secondDate);
+                $this->getDBManager()->persist($secondDate);
                 return new DateRange($newDate, $secondDate);
             }
 
             return $newDate;
         } else {
             $newDate->setComment("ERROR: " . $dateString);
-            $this->newDBManager->persist($newDate);
+            $this->getDBManager()->persist($newDate);
             return $newDate;
         }
     }
@@ -594,9 +601,9 @@ class MigrateData {
 
         $newBirth->setBirthDate($this->getDate($birthDate));
 
-        $this->newDBManager->persist($newBirth);
+        $this->getDBManager()->persist($newBirth);
         $person->setBirth($newBirth);
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     public function migrateBaptism($person, $baptismDate, $baptismLocation = null) {
@@ -606,9 +613,9 @@ class MigrateData {
         $newBaptism->setBaptismLocation($this->getLocation($baptismLocation));
         $newBaptism->setBaptismDate($this->getDate($baptismDate));
 
-        $this->newDBManager->persist($newBaptism);
+        $this->getDBManager()->persist($newBaptism);
         $person->setBaptism($newBaptism);
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     public function migrateCountry($name, $comment = null) {
@@ -626,8 +633,8 @@ class MigrateData {
         $newDate->setWeekday($weekday);
         $newDate->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newDate);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newDate);
+        $this->getDBManager()->flush();
 
         return $newDate->getId();
     }
@@ -646,9 +653,9 @@ class MigrateData {
         $newDeath->setDeathDate($this->getDate($deathDate));
         $newDeath->setFuneralDate($this->getDate($funeralDate));
 
-        $this->newDBManager->persist($newDeath);
+        $this->getDBManager()->persist($newDeath);
         $person->setDeath($newDeath);
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     public function migrateEducation($person, $educationOrder, $label, $country = null, $territory = null, $location = null, $fromDate = null, $toDate = null, $provenDate = null, $graduationLabel = null, $graduationDate = null, $graduationLocation = null, $comment = null) {
@@ -669,8 +676,8 @@ class MigrateData {
         $newEducation->setGraduationLocation($this->getLocation($graduationLocation));
         $newEducation->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newEducation);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newEducation);
+        $this->getDBManager()->flush();
     }
 
     public function migrateHonour($person, $honourOrder, $label, $country = null, $territory = null, $location = null, $fromDate = null, $toDate = null, $provenDate = null, $comment = null) {
@@ -688,8 +695,8 @@ class MigrateData {
         $newHonour->setProvenDate($this->getDate($provenDate));
         $newHonour->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newHonour);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newHonour);
+        $this->getDBManager()->flush();
     }
 
     public function migrateIsGrandparent($grandchild, $grandparent, $paternal, $comment = null) {
@@ -704,8 +711,8 @@ class MigrateData {
             $newIsGrandparent->setIsPaternal($paternal);
             $newIsGrandparent->setComment($this->normalize($comment));
 
-            $this->newDBManager->persist($newIsGrandparent);
-            $this->newDBManager->flush();
+            $this->getDBManager()->persist($newIsGrandparent);
+            $this->getDBManager()->flush();
         }
     }
 
@@ -719,8 +726,8 @@ class MigrateData {
             $newIsParent->setParentID($parent->getId());
             $newIsParent->setComment($this->normalize($comment));
 
-            $this->newDBManager->persist($newIsParent);
-            $this->newDBManager->flush();
+            $this->getDBManager()->persist($newIsParent);
+            $this->getDBManager()->flush();
         }
         
          $this->LOGGER->info("Finished adding childParentRelation with... Child: '" . $child . "' Parent: '" . $parent . "'");
@@ -736,8 +743,8 @@ class MigrateData {
             $newIsParentInLaw->setParentInLawid($parentInLaw->getId());
             $newIsParentInLaw->setComment($this->normalize($comment));
 
-            $this->newDBManager->persist($newIsParentInLaw);
-            $this->newDBManager->flush();
+            $this->getDBManager()->persist($newIsParentInLaw);
+            $this->getDBManager()->flush();
         }
     }
 
@@ -757,8 +764,8 @@ class MigrateData {
 
         //$newIsSibling->;
 
-        $this->newDBManager->persist($newIsSibling);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newIsSibling);
+        $this->getDBManager()->flush();
 
         return $newIsSibling->getId();
     }
@@ -795,8 +802,8 @@ class MigrateData {
         $newPartner->setJob(null);
         $newPartner->setJobClass(null);
 
-        $this->newDBManager->persist($newPartner);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newPartner);
+        $this->getDBManager()->flush();
         
         $this->LOGGER->debug("Finished migrating Partner: ".$newPartner);
         return $newPartner;
@@ -823,8 +830,8 @@ class MigrateData {
         $newPerson->setJobClass($this->getJobClass($jobClass));
         $newPerson->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newPerson);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newPerson);
+        $this->getDBManager()->flush();
         
         $this->LOGGER->debug("Finished migrating Person: ".$newPerson);
         return $newPerson;
@@ -845,8 +852,8 @@ class MigrateData {
         $newProperty->setProvenDate($this->getDate($provenDate));
         $newProperty->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newProperty);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newProperty);
+        $this->getDBManager()->flush();
     }
 
     public function migrateRank($person, $rankOrder, $label, $class = null, $country = null, $territory = null, $location = null, $fromDate = null, $toDate = null, $provenDate = null, $comment = null) {
@@ -865,8 +872,8 @@ class MigrateData {
         $newRank->setProvenDate($this->getDate($provenDate));
         $newRank->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newRank);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newRank);
+        $this->getDBManager()->flush();
     }
 
     public function migrateRelative($firstName, $patronym, $lastName, $gender, $nation = null, $comment = null) {
@@ -885,8 +892,8 @@ class MigrateData {
         
         $newRelative->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newRelative);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newRelative);
+        $this->getDBManager()->flush();
         
         $this->LOGGER->debug("Finished migrating Relative: ".$newRelative);
 
@@ -906,8 +913,8 @@ class MigrateData {
         $newReligion->setProvenDate($this->getDate($provenDate));
         $newReligion->setFromDate($this->getDate($fromDate));
 
-        $this->newDBManager->persist($newReligion);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newReligion);
+        $this->getDBManager()->flush();
     }
 
     public function migrateResidence($person, $residenceOrder, $residenceCountry, $residenceTerritory = null, $residenceLocation = null) {
@@ -921,8 +928,8 @@ class MigrateData {
         $newResidence->setResidenceLocation($this->getLocation($residenceLocation));
 
 
-        $this->newDBManager->persist($newResidence);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newResidence);
+        $this->getDBManager()->flush();
     }
 
     public function migrateRoadOfLife($person, $roadOfLifeOrder, $originCountry = null, $originTerritory = null, $job = null, $country = null, $territory = null, $location = null, $fromDate = null, $toDate = null, $provenDate = null, $comment = null) {
@@ -942,8 +949,8 @@ class MigrateData {
         $newRoadOfLife->setProvenDate($this->getDate($provenDate));
         $newRoadOfLife->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newRoadOfLife);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newRoadOfLife);
+        $this->getDBManager()->flush();
     }
 
     public function migrateSource($person, $sourceOrder, $label, $placeOfDiscovery = null, $remark = null, $comment = null) {
@@ -957,8 +964,8 @@ class MigrateData {
         $newSource->setRemark($this->normalize($remark));
         $newSource->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newSource);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newSource);
+        $this->getDBManager()->flush();
     }
 
     public function migrateStatus($person, $statusOrder, $label, $country = null, $territory = null, $location = null, $fromDate = null, $toDate = null, $provenDate = null, $comment = null) {
@@ -976,8 +983,8 @@ class MigrateData {
         $newStatus->setProvenDate($this->getDate($provenDate));
         $newStatus->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newStatus);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newStatus);
+        $this->getDBManager()->flush();
     }
 
     public function migrateTerritory($name, $comment = null) {
@@ -1017,16 +1024,16 @@ class MigrateData {
 
         if (is_null($existingWedding)) {
             //persist new wedding obj
-            $this->newDBManager->persist($newWedding);
-            $this->newDBManager->flush();
+            $this->getDBManager()->persist($newWedding);
+            $this->getDBManager()->flush();
         } else {
             //merge with existing wedding
             $this->LOGGER->info("Merging new wedding with existing wedding.");
 
             $existingWedding = $this->get("person_merging.service")->createMergedWeddingObj($existingWedding, $newWedding);
 
-            $this->newDBManager->persist($existingWedding);
-            $this->newDBManager->flush();
+            $this->getDBManager()->persist($existingWedding);
+            $this->getDBManager()->flush();
         }
     }
 
@@ -1042,7 +1049,7 @@ class MigrateData {
 
         $this->LOGGER->info("Searching for wedding with... Husband: '" . $husband . "' Wife: '" . $wife . " and WeddingOrder: " . $weddingOrder);
 
-        $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
+        $wedding = $this->getDBManager()->getRepository('NewBundle:Wedding')
                 ->findOneBy(array('weddingOrder' => $weddingOrder,
             'husbandId' => $husband != null ? $husband->getId() : null,
             'wifeId' => $wife != null ? $wife->getId() : null
@@ -1071,18 +1078,18 @@ class MigrateData {
         $newWorks->setProvenDate($this->getDate($provenDate));
         $newWorks->setComment($this->normalize($comment));
 
-        $this->newDBManager->persist($newWorks);
-        $this->newDBManager->flush();
+        $this->getDBManager()->persist($newWorks);
+        $this->getDBManager()->flush();
     }
 
     public function saveObject($object) {
         $this->LOGGER->info("persisting and flushing the person to the new db: " . $object);
-        $this->newDBManager->merge($object);
-        $this->newDBManager->flush();
+        $this->getDBManager()->merge($object);
+        $this->getDBManager()->flush();
     }
 
     public function getNewPersonForOid($OID) {
-        return $this->newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        return $this->getDBManager()->getRepository('NewBundle:Person')->findOneByOid($OID);
     }
 
     /* Migration helper methods */
@@ -1090,7 +1097,7 @@ class MigrateData {
     public function parentChildRelationAlreadyExists($child, $parent) {
         $this->LOGGER->info("Searching for childParentRelation with... Child: '" . $child . "' Parent: '" . $parent);
 
-        $relation = $this->newDBManager->getRepository('NewBundle:IsParent')
+        $relation = $this->getDBManager()->getRepository('NewBundle:IsParent')
                 ->findOneBy(array('childID' => $child->getId(),
             'parentID' => $parent->getId()
         ));
@@ -1107,7 +1114,7 @@ class MigrateData {
     public function parentChildInLawRelationAlreadyExists($childInLaw, $parentInLaw) {
         $this->LOGGER->info("Searching for childParentInLawRelation with... Child: '" . $childInLaw . "' Parent: '" . $parentInLaw);
 
-        $relation = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')
+        $relation = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')
                 ->findOneBy(array('childInLawid' => $childInLaw->getId(),
             'parentInLawid' => $parentInLaw->getId()
         ));
@@ -1124,7 +1131,7 @@ class MigrateData {
     public function grandparentChildRelationAlreadyExists($grandchild, $grandparent) {
         $this->LOGGER->info("Searching for grandchildGrandParentRelation with... GrandChild: '" . $grandchild . "' GrandParent: '" . $grandparent);
 
-        $relation = $this->newDBManager->getRepository('NewBundle:IsGrandparent')
+        $relation = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')
                 ->findOneBy(array('grandChildID' => $grandchild->getId(),
             'grandParentID' => $grandparent->getId()
         ));
@@ -1141,7 +1148,7 @@ class MigrateData {
     public function isSiblingRelationAlreadyExists($siblingOne, $siblingTwo) {
         $this->LOGGER->info("Checking if SiblingRelationShip already exists between " . $siblingOne . " and " . $siblingTwo);
 
-        $queryBuilder = $this->newDBManager->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
+        $queryBuilder = $this->getDBManager()->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
         $siblingEntries = $queryBuilder
                 ->where('(s.siblingOneid = :idOne AND s.siblingTwoid = :idTwo) '
                         . 'OR (s.siblingOneid = :idTwo AND s.siblingTwoid = :idOne)')
@@ -1175,7 +1182,7 @@ class MigrateData {
 
     private function findHusband($weddingOrder, $wife) {
         //given person is female
-        $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
+        $wedding = $this->getDBManager()->getRepository('NewBundle:Wedding')
                 ->findOneBy(array('weddingOrder' => $weddingOrder,
             'wifeId' => $wife->getId()
         ));
@@ -1189,7 +1196,7 @@ class MigrateData {
 
     private function findWife($weddingOrder, $husband) {
         //given person is male
-        $wedding = $this->newDBManager->getRepository('NewBundle:Wedding')
+        $wedding = $this->getDBManager()->getRepository('NewBundle:Wedding')
                 ->findOneBy(array('weddingOrder' => $weddingOrder,
             'husbandId' => $husband->getId()
         ));
@@ -1202,14 +1209,14 @@ class MigrateData {
     }
 
     private function loadPerson($id) {
-        $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
+        $person = $this->getDBManager()->getRepository('NewBundle:Person')->findOneById($id);
 
         if (is_null($person)) {
-            $person = $this->newDBManager->getRepository('NewBundle:Relative')->findOneById($id);
+            $person = $this->getDBManager()->getRepository('NewBundle:Relative')->findOneById($id);
         }
 
         if (is_null($person)) {
-            $person = $this->newDBManager->getRepository('NewBundle:Partner')->findOneById($id);
+            $person = $this->getDBManager()->getRepository('NewBundle:Partner')->findOneById($id);
         }
 
         if (is_null($person)) {
@@ -1220,24 +1227,24 @@ class MigrateData {
     }
 
     public function clearProxyCache() {
-        $this->newDBManager->clear();
+        $this->getDBManager()->clear();
     }
 
     public function flush(){
         $this->LOGGER->info("Explizit flush called!");
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
     
     public function remove($obj){
         $this->LOGGER->info("Explizit remove called: ".$obj);
-        $this->newDBManager->remove($obj);
+        $this->getDBManager()->remove($obj);
     }
     
     public function detach($obj){
         $this->LOGGER->info("Explizit detach called: ".$obj);
-        if($this->newDBManager->contains($obj)){
+        if($this->getDBManager()->contains($obj)){
             $this->LOGGER->debug("Object IS managed by this entitymanager");
-            $this->newDBManager->detach($obj);
+            $this->getDBManager()->detach($obj);
         } else {
             $this->LOGGER->debug("Object IS NOT managed by this entitymanager");
         }

@@ -17,10 +17,17 @@ class PersonMerger {
 
     public function __construct($container) {
         $this->container = $container;
-        $this->newDBManager = $this->get('doctrine')->getManager('new');
         $this->LOGGER = $this->get('monolog.logger.personMerging');
         $this->compareService = $this->get("comparer.service");
         $this->migrateData = $this->get("migrate_data.service");
+    }
+    
+    private function getDBManager(){
+        if(is_null($this->newDBManager) || !$this->newDBManager->isOpen()){
+            $this->newDBManager = $this->get('doctrine')->getManager('new');
+        }
+        
+        return $this->newDBManager;
     }
 
     private function get($identifier) {
@@ -41,7 +48,7 @@ class PersonMerger {
         }
         
         //flush at start to have clean state
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo != Gender::UNKNOWN) {
             $this->LOGGER->warn("Trying to merge a man with a woman, is this really right?");
@@ -64,9 +71,9 @@ class PersonMerger {
 
         //save new combined person
         //and delete old
-        $this->newDBManager->persist($dataMaster);
+        $this->getDBManager()->persist($dataMaster);
         $this->removeObject($toBeDeleted);
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
 
         return $dataMaster;
     }
@@ -90,13 +97,13 @@ class PersonMerger {
     private function removeObject(\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Now removing: " . $toBeDeleted);
         //remove obj itself
-        $this->newDBManager->remove($toBeDeleted);
+        $this->getDBManager()->remove($toBeDeleted);
         $this->migrateData->remove($toBeDeleted);
 
         //remove like birth should be removed automatically by removing the person
         //
         //all relationships should already be removed/ migrated
-        $this->newDBManager->detach($toBeDeleted);
+        $this->getDBManager()->detach($toBeDeleted);
         $this->migrateData->detach($toBeDeleted);
         
         
@@ -134,7 +141,7 @@ class PersonMerger {
         $this->mergeResidence($dataMaster, $toBeDeleted);
         $this->mergeSource($dataMaster, $toBeDeleted);
         
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     private function mergeRelationships(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
@@ -159,17 +166,17 @@ class PersonMerger {
 
         $this->mergeWeddings($dataMaster, $toBeDeleted);
         
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     private function mergeSiblings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging siblings");
 
-        $dataMasterIsSiblingEntries = $this->newDBManager->getRepository('NewBundle:IsSibling')->loadSiblings($dataMaster->getId());
+        $dataMasterIsSiblingEntries = $this->getDBManager()->getRepository('NewBundle:IsSibling')->loadSiblings($dataMaster->getId());
         
         $this->LOGGER->debug("Found " . count($dataMasterIsSiblingEntries) . " entries for datamaster");
 
-        $toBeDeletedIsSiblingEntries = $this->newDBManager->getRepository('NewBundle:IsSibling')->loadSiblings($toBeDeleted->getId());
+        $toBeDeletedIsSiblingEntries = $this->getDBManager()->getRepository('NewBundle:IsSibling')->loadSiblings($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsSiblingEntries) . " entries for toBeDeleted");
 
@@ -184,11 +191,11 @@ class PersonMerger {
     private function mergeParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents");
 
-        $dataMasterIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadParents($dataMaster->getId());
+        $dataMasterIsParentEntries = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadParents($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadParents($toBeDeleted->getId());
+        $toBeDeletedIsParentEntries = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadParents($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
 
@@ -203,11 +210,11 @@ class PersonMerger {
     private function mergeChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children");
 
-        $dataMasterIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadChildren($dataMaster->getId());
+        $dataMasterIsParentEntries = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadChildren($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentEntries = $this->newDBManager->getRepository('NewBundle:IsParent')->loadChildren($toBeDeleted->getId());
+        $toBeDeletedIsParentEntries = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadChildren($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentEntries) . " entries for toBeDeleted");
 
@@ -222,11 +229,11 @@ class PersonMerger {
     private function mergeGrandParents(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandparents");
 
-        $dataMasterIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandparents($dataMaster->getId());
+        $dataMasterIsGrandparentEntries = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandparents($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsGrandparentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandparents($toBeDeleted->getId());
+        $toBeDeletedIsGrandparentEntries = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandparents($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsGrandparentEntries) . " entries for toBeDeleted");
 
@@ -241,11 +248,11 @@ class PersonMerger {
     private function mergeGrandChildren(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging grandchildren");
 
-        $dataMasterIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($dataMaster->getId());
+        $dataMasterIsGrandparentEntries = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsGrandparentEntries) . " entries for datamaster");
 
-        $toBeDeletedIsGrandparentEntries = $this->newDBManager->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($toBeDeleted->getId());
+        $toBeDeletedIsGrandparentEntries = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsGrandparentEntries) . " entries for toBeDeleted");
 
@@ -260,11 +267,11 @@ class PersonMerger {
     private function mergeParentsInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging parents in law");
 
-        $dataMasterIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($dataMaster->getId());
+        $dataMasterIsParentInLawEntries = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentInLawEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($toBeDeleted->getId());
+        $toBeDeletedIsParentInLawEntries = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentInLawEntries) . " entries for toBeDeleted");
 
@@ -279,11 +286,11 @@ class PersonMerger {
     private function mergeChildrenInLaw(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging children in law");
 
-        $dataMasterIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($dataMaster->getId());
+        $dataMasterIsParentInLawEntries = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterIsParentInLawEntries) . " entries for datamaster");
 
-        $toBeDeletedIsParentInLawEntries = $this->newDBManager->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($toBeDeleted->getId());
+        $toBeDeletedIsParentInLawEntries = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedIsParentInLawEntries) . " entries for toBeDeleted");
 
@@ -298,11 +305,11 @@ class PersonMerger {
     private function mergeWeddings(\UR\DB\NewBundle\Entity\BasePerson $dataMaster, \UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Merging weddings");
 
-        $dataMasterWeddingEntries = $this->newDBManager->getRepository('NewBundle:Wedding')->loadMarriagePartners($dataMaster->getId());
+        $dataMasterWeddingEntries = $this->getDBManager()->getRepository('NewBundle:Wedding')->loadMarriagePartners($dataMaster->getId());
 
         $this->LOGGER->debug("Found " . count($dataMasterWeddingEntries) . " entries for datamaster");
 
-        $toBeDeletedWeddingEntries = $this->newDBManager->getRepository('NewBundle:Wedding')->loadMarriagePartners($toBeDeleted->getId());
+        $toBeDeletedWeddingEntries = $this->getDBManager()->getRepository('NewBundle:Wedding')->loadMarriagePartners($toBeDeleted->getId());
 
         $this->LOGGER->debug("Found " . count($toBeDeletedWeddingEntries) . " entries for toBeDeleted");
 
@@ -397,7 +404,7 @@ class PersonMerger {
             $this->migrateEntriesToDataMaster($dataMaster, $toBeDeleted, $unmatchedToBeDeletedEntries[$i], $type);
         }
 
-        $this->newDBManager->flush();
+        $this->getDBManager()->flush();
     }
 
     private function extractRelatedPersonId($idOfPerson, $entry, $type) {
@@ -481,8 +488,8 @@ class PersonMerger {
                 $this->LOGGER->error("Unknown Type: " . $type);
         }
 
-        $this->newDBManager->persist($entry);
-        $this->newDBManager->flush($entry);
+        $this->getDBManager()->persist($entry);
+        $this->getDBManager()->flush($entry);
     }
 
     private function replaceWeddingPartner($currentId, $newId, $weddingEntry) {
@@ -509,14 +516,14 @@ class PersonMerger {
 
     private function loadPerson($id) {
         $this->LOGGER->debug("Trying to load person with id: " . $id);
-        $person = $this->newDBManager->getRepository('NewBundle:Person')->findOneById($id);
+        $person = $this->getDBManager()->getRepository('NewBundle:Person')->findOneById($id);
 
         if (is_null($person)) {
-            $person = $this->newDBManager->getRepository('NewBundle:Relative')->findOneById($id);
+            $person = $this->getDBManager()->getRepository('NewBundle:Relative')->findOneById($id);
         }
 
         if (is_null($person)) {
-            $person = $this->newDBManager->getRepository('NewBundle:Partner')->findOneById($id);
+            $person = $this->getDBManager()->getRepository('NewBundle:Partner')->findOneById($id);
         }
 
         if (is_null($person)) {
@@ -535,16 +542,16 @@ class PersonMerger {
 
         if (!is_null($toBeDeletedRelatedPerson) && !is_null($dataMasterRelatedPerson) && $dataMasterRelatedPerson->getId() == $toBeDeletedRelatedPerson->getId()) {
             $this->LOGGER->info("Already the same person just removing the toBeDeleted Relation.");
-            $this->newDBManager->remove($toBeDeletedRelationEntry);
-            $this->newDBManager->flush();
+            $this->getDBManager()->remove($toBeDeletedRelationEntry);
+            $this->getDBManager()->flush();
         } else {
             //get combined comment
             $mergedComment = $this->mergeComment($dataMasterRelationEntry->getComment(), $toBeDeletedRelationEntry->getComment());
 
             //first remove entries for now from the db
-            $this->newDBManager->remove($dataMasterRelationEntry);
-            $this->newDBManager->remove($toBeDeletedRelationEntry);
-            $this->newDBManager->flush();
+            $this->getDBManager()->remove($dataMasterRelationEntry);
+            $this->getDBManager()->remove($toBeDeletedRelationEntry);
+            $this->getDBManager()->flush();
 
 
             //merge persons
@@ -582,8 +589,8 @@ class PersonMerger {
                     
                     $this->setHusbandAndWife($dataMaster, $mergedPerson, $newWedding);
                     
-                    $this->newDBManager->persist($newWedding);
-                    $this->newDBManager->flush();
+                    $this->getDBManager()->persist($newWedding);
+                    $this->getDBManager()->flush();
                     break;
                 default:
                     $this->LOGGER->error("Unknown Type: " . $type);
@@ -1352,7 +1359,7 @@ class PersonMerger {
             //do nothing with the fused elements since they are already in the list of datamaster dates
             $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], PersonInformation::DATE);
 
-            $this->newDBManager->remove($listOfMatchingEntriesOfToBeDeleted[$i]);
+            $this->getDBManager()->remove($listOfMatchingEntriesOfToBeDeleted[$i]);
         }
 
         //find missing entries

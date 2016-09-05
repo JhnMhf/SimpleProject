@@ -75,7 +75,7 @@ class MigrateProcess {
                 $this->getLogger()->info("Migrated Person: ".$person);
             }
         } catch (\Exception $ex) {
-            $this->getLogger()->error("An Exception occured: ". $ex);
+            $this->getLogger()->error("An Exception occurred: ". $ex);
         }
 
     }

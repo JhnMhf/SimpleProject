@@ -88,6 +88,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             name: birth_id
             referencedColumnName: ID
             nullable: true
+            onDelete: CASCADE
           fetch: EAGER
           cascade: ["persist", "merge","remove"]
         baptism:
@@ -96,6 +97,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             name: baptism_id
             referencedColumnName: ID
             nullable: true
+            onDelete: CASCADE
           fetch: EAGER
           cascade: ["persist","remove"]
         death:
@@ -104,6 +106,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             name: death_id
             referencedColumnName: ID
             nullable: true
+            onDelete: CASCADE
           fetch: EAGER
           cascade: ["persist","merge","remove"]
     manyToOne:
