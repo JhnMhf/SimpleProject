@@ -9,6 +9,8 @@ namespace UR\AmburgerBundle\Util;
  */
 class MigrateProcess {
      
+    const MAX_RUN_DURATION_IN_SECONDS = "60";
+    
     private $LOGGER;
     private $container;
     
@@ -46,11 +48,17 @@ class MigrateProcess {
         return $this->internalRun($this->getPersonIds());
     }
     
-    //@TODO: Call over browser allows only a runtime of one minute. after that an error occurs.
     //@TODO: Rollback if one person fails?
     private function internalRun($personIds){
+        $startTime = time();
+        
         for($i = 0; $i < count($personIds); $i++){
             $this->migratePerson($personIds[$i]);
+            
+            if((time() -$startTime) > MigrateProcess::MAX_RUN_DURATION_IN_SECONDS){
+                $this->getLogger()->info("Stopping the run after ".$id. " since it already took longer than ".MigrateProcess::MAX_RUN_DURATION_IN_SECONDS);
+                break;
+            }
         }
         
         return count($personIds);
@@ -66,7 +74,7 @@ class MigrateProcess {
             } else {
                 $this->getLogger()->info("Migrated Person: ".$person);
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->getLogger()->error("An Exception occured: ". $ex);
         }
 
@@ -77,7 +85,7 @@ class MigrateProcess {
         
         $sql = 'SELECT ID,OID FROM OldAmburgerDB.ids WHERE OID NOT IN '
                 . '(SELECT OID FROM NewAmburgerDB.person ORDER BY OID ASC) '
-                . 'ORDER BY oid ASC LIMIT 20';
+                . 'ORDER BY oid ASC LIMIT 25';
         
         
         $stmt = $newDBManager->getConnection()->prepare($sql);

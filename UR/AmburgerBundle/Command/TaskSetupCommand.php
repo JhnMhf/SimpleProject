@@ -63,7 +63,7 @@ class TaskSetupCommand extends ContainerAwareCommand
 
             $newTask
                 ->setName('MigratterTask')
-                ->setRunInterval(240) // Run every four minutes (realistically only all 5 minutes)
+                ->setRunInterval(90) // Run every 90 seconds (realistically only all 2 minutes)
                 ->setCommands(array('personmigration:run'));
 
             $em->persist($newTask);
