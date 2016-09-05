@@ -18,6 +18,10 @@ use UR\AmburgerBundle\Entity\TaskWorker;
 
 class CronTasksRunCommand extends ContainerAwareCommand
 {
+    //43200 would be 12 hours
+    //3600 would be one hour
+    const RESET_TIMEOUT_IN_SECONDS = 3600;
+    
     private $output;
 
     protected function configure()
@@ -35,33 +39,63 @@ class CronTasksRunCommand extends ContainerAwareCommand
         $this->output = $output;
         $em = $this->getContainer()->get('doctrine')->getManager('system');
         
+        if(!$this->startRun($em)){
+            return;
+        }
+        
+        $this->runTasks($em);
+        
+        $this->finishRun($em);
+
+        $output->writeln('<comment>Done!</comment>');
+    }
+    
+    private function startRun($em){
         $taskWorkers = $em->getRepository('AmburgerBundle:TaskWorker')->findAll();
         
         if(is_null($taskWorkers) || count($taskWorkers) == 0){
             $newTaskWorker = new TaskWorker();
             $newTaskWorker->setRunning(true);
+            $newTaskWorker->setLastRun(new \DateTime());
             
             $em->persist($newTaskWorker);
         } else if(!is_null($taskWorkers) && count($taskWorkers) == 1 && !$taskWorkers[0]->getRunning()){
             $taskWorkers[0]->setRunning(true);
+            $taskWorkers[0]->setLastRun(new \DateTime());
             
             $em->merge($taskWorkers[0]);
         } else {
-            $output->writeln('<comment>Previous worker is still running. Skipping this run.</comment>');
-            $this->getContainer()->get('monolog.logger.cron')->info("Previous worker is still running. Skipping this run.");
-            return;
+            $lastrun = $taskWorkers[0]->getLastRun() ? $taskWorkers[0]->getLastRun()->format('U') : 0;
+            
+            $resetTime = $lastrun + CronTasksRunCommand::RESET_TIMEOUT_IN_SECONDS;
+
+            // We must reset the runner:
+            $reset = (time() >= $resetTime);
+            
+            if($reset){
+                $this->output->writeln("<comment>The previous runner somehow didn't stop. Restarting the worker.</comment>");
+                $this->getContainer()->get("monolog.logger.cron")->info("The previous runner somehow didn't stop. Restarting the worker.");
+                $taskWorkers[0]->setRunning(true);
+                $taskWorkers[0]->setLastRun(new \DateTime());
+                $em->merge($taskWorkers[0]);
+            }else {
+                $this->output->writeln('<comment>Previous worker is still running. Skipping this run.</comment>');
+                $this->getContainer()->get('monolog.logger.cron')->info("Previous worker is still running. Skipping this run.");
+                return false;
+            }
         }
         
         $em->flush();
         
-        $this->runTasks($em);
-        
+        return true;
+    }
+    
+    private function finishRun($em){
         $taskWorkers = $em->getRepository('AmburgerBundle:TaskWorker')->findAll();
         $taskWorkers[0]->setRunning(false);
+        $taskWorkers[0]->setLastRun(new \DateTime());
         $em->merge($taskWorkers[0]);
         $em->flush();
-
-        $output->writeln('<comment>Done!</comment>');
     }
     
     private function runTasks($em){

@@ -14,4 +14,8 @@ UR\AmburgerBundle\Entity\TaskWorker:
         running:
             type: boolean
             comment: 'Is the task worker currently running.'
+        lastrun:
+            type: datetime
+            nullable: true
+            comment: 'Timestamp when it last ran'
     lifecycleCallbacks: {  }

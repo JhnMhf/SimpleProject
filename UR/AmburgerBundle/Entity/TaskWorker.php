@@ -51,4 +51,33 @@ class TaskWorker
     {
         return $this->running;
     }
+    /**
+     * @var \DateTime
+     */
+    private $lastrun;
+
+
+    /**
+     * Set lastrun
+     *
+     * @param \DateTime $lastrun
+     *
+     * @return TaskWorker
+     */
+    public function setLastrun($lastrun)
+    {
+        $this->lastrun = $lastrun;
+
+        return $this;
+    }
+
+    /**
+     * Get lastrun
+     *
+     * @return \DateTime
+     */
+    public function getLastrun()
+    {
+        return $this->lastrun;
+    }
 }
