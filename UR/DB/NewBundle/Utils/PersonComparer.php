@@ -223,7 +223,7 @@ class PersonComparer {
                         $found = $this->matchingWork($elementOne, $elementTwo, $allowLessInformation);
                         break;
                     default:
-                        $this->LOGGER->warn("No comparison method found for type: " . $type);
+                        $this->LOGGER->error("No comparison method found for type: " . $type);
                         $found = $elementOne == $elementTwo;
                 }
 

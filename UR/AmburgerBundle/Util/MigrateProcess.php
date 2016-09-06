@@ -9,7 +9,7 @@ namespace UR\AmburgerBundle\Util;
  */
 class MigrateProcess {
      
-    const MAX_RUN_DURATION_IN_SECONDS = "60";
+    const MAX_RUN_DURATION_IN_SECONDS = 55;
     
     private $LOGGER;
     private $container;
@@ -70,7 +70,7 @@ class MigrateProcess {
             $person = $this->getMigrationUtils()->migratePerson($id);
 
             if(is_null($person)){
-                $this->getLogger()->warn("Unknown id");
+                $this->getLogger()->error("Unknown id");
             } else {
                 $this->getLogger()->info("Migrated Person: ".$person);
             }
@@ -85,7 +85,7 @@ class MigrateProcess {
         
         $sql = 'SELECT ID,OID FROM OldAmburgerDB.ids WHERE OID NOT IN '
                 . '(SELECT OID FROM NewAmburgerDB.person ORDER BY OID ASC) '
-                . 'ORDER BY oid ASC LIMIT 25';
+                . 'ORDER BY oid ASC LIMIT 30';
         
         
         $stmt = $newDBManager->getConnection()->prepare($sql);

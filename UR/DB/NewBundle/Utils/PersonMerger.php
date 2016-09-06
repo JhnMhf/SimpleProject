@@ -51,7 +51,7 @@ class PersonMerger {
         $this->getDBManager()->flush();
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo != Gender::UNKNOWN) {
-            $this->LOGGER->warn("Trying to merge a man with a woman, is this really right?");
+            $this->LOGGER->error("Trying to merge a man with a woman, is this really right?");
         }
 
         $dataMaster = $this->determineDatamaster($personOne, $personTwo);

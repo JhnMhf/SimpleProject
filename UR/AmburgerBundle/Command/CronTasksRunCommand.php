@@ -51,6 +51,7 @@ class CronTasksRunCommand extends ContainerAwareCommand
     }
     
     private function startRun($em){
+        //add option to deactivate runner itself, not only tasks
         $taskWorkers = $em->getRepository('AmburgerBundle:TaskWorker')->findAll();
         
         if(is_null($taskWorkers) || count($taskWorkers) == 0){
