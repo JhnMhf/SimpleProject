@@ -2726,6 +2726,7 @@ class MigrationUtil {
     }
 
     private function separateReferenceIdsAndComment($stringOfReferenceIds) {
+        $this->LOGGER->debug("Seperating ReferenceIds from Comments in: ".$stringOfReferenceIds);
         if (is_null($stringOfReferenceIds)) {
             return [];
         }
@@ -2749,20 +2750,20 @@ class MigrationUtil {
 
         if ($containsAnmerkung !== false) {
             $this->LOGGER->debug("Found '-Anmerkung:' in" . $stringOfReferenceIds);
-            $result[0] = substr($stringOfReferenceIds, 0, $containsAnmerkung);
+            $result[0] = trim(substr($stringOfReferenceIds, 0, $containsAnmerkung));
             $result[1] = substr($stringOfReferenceIds, $containsAnmerkung);
         } else if ($containsImOriginal !== false) {
             $this->LOGGER->debug("Found '-im Original' in" . $stringOfReferenceIds);
-            $result[0] = substr($stringOfReferenceIds, 0, $containsImOriginal);
+            $result[0] = trim(substr($stringOfReferenceIds, 0, $containsImOriginal));
             $result[1] = substr($stringOfReferenceIds, $containsImOriginal);
         } else if ($containEvtl !== false) {
             if($containEvtl == 0){
                 $this->LOGGER->debug("Found 'evtl.' at the start of" . $stringOfReferenceIds);
-                $result[0] = substr($stringOfReferenceIds, strlen("evtl."));
+                $result[0] = trim(substr($stringOfReferenceIds, strlen("evtl.")));
                 $result[1] = substr($stringOfReferenceIds, 0, strlen("evtl."));
             } else {
                 $this->LOGGER->debug("Found 'evtl.' at the end of" . $stringOfReferenceIds);
-                $result[0] = substr($stringOfReferenceIds, 0, $containEvtl);
+                $result[0] = trim(substr($stringOfReferenceIds, 0, $containEvtl));
                 $result[1] = substr($stringOfReferenceIds, $containEvtl);
             }
         } else if ($containsOr !== false) {
@@ -2773,7 +2774,7 @@ class MigrationUtil {
         } else if ($containsBzw !== false) {
             $this->LOGGER->debug("Found an 'bzw.' in " . $stringOfReferenceIds);
             //separate at oder, trim whitespaces and then recreate string but with ;, so that it will be separated again later
-           $result[0] = implode(";",array_map('trim', explode("bzw.", $stringOfReferenceIds)));
+            $result[0] = implode(";",array_map('trim', explode("bzw.", $stringOfReferenceIds)));
             $result[1] = $stringOfReferenceIds;
         } else if (substr($lowerCaseReferenceIds, -2) == "??") {
             $this->LOGGER->debug("Found an '??' at the end of " . $stringOfReferenceIds);
@@ -2794,6 +2795,7 @@ class MigrationUtil {
     }
 
     private function extractReferenceIdsArray($stringOfReferenceIds) {
+        $this->LOGGER->debug("Extracting ReferenceIds from: ".$stringOfReferenceIds);
         if (is_null($stringOfReferenceIds)) {
             return [];
         }

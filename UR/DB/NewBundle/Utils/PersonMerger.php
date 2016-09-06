@@ -50,7 +50,7 @@ class PersonMerger {
         //flush at start to have clean state
         $this->getDBManager()->flush();
 
-        if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo != Gender::UNKNOWN) {
+        if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo->getGender() != Gender::UNKNOWN) {
             $this->LOGGER->error("Trying to merge a man with a woman, is this really right?");
         }
 
@@ -642,12 +642,12 @@ class PersonMerger {
         $toBeDeletedBaptism = $toBeDeleted->getBaptism();
 
         if ($dataMasterBaptism != null && $toBeDeletedBaptism != null) {
-            $dataMasterBaptism->setOriginLocation($this->mergeLocationObject($dataMasterBaptism->getBaptismLocation(), $toBeDeletedBaptism->getBaptismLocation()));
-            $dataMasterBaptism->setBirthDate($this->mergeDateReference($dataMasterBaptism->getBaptismDate(), $toBeDeletedBaptism->getBaptismDate()));
+            $dataMasterBaptism->setBaptismLocation($this->mergeLocationObject($dataMasterBaptism->getBaptismLocation(), $toBeDeletedBaptism->getBaptismLocation()));
+            $dataMasterBaptism->setBaptismDate($this->mergeDateReference($dataMasterBaptism->getBaptismDate(), $toBeDeletedBaptism->getBaptismDate()));
 
-            $dataMaster->setBirth($dataMasterBaptism);
+            $dataMaster->setBaptism($dataMasterBaptism);
         } else if ($toBeDeletedBaptism != null) {
-            $dataMaster->setBirth($toBeDeletedBaptism);
+            $dataMaster->setBaptism($toBeDeletedBaptism);
         }
     }
 
@@ -1412,6 +1412,7 @@ class PersonMerger {
         $dataMasterDate->setWeekday($this->mergeStrings($dataMasterDate->getWeekday(), $toBeDeletedDate->getWeekday()));
 
         $dataMasterDate->setComment($this->mergeComment($dataMasterDate->getComment(), $toBeDeletedDate->getComment()));
+        //@TODO: Before/ After booleans? They are not getting merged right now
     }
 
     private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference) {
