@@ -416,6 +416,7 @@ class MigrateData {
     //OLD DB ID => 204
     //Merged death date of 69955. Position switched? and before set?
     private function extractDateObjFromString($string, $inner = false) {
+        $this->LOGGER->debug("Extracting DateObjsFromString: ".$string);
         if ($inner) {
             $this->LOGGER->debug("Probably searching for a date range.");
         }
@@ -462,7 +463,7 @@ class MigrateData {
                     //persist first date before searching for second date!
                     $this->getDBManager()->persist($newDate);
                     //check for daterange
-                    $this->LOGGER->debug("Check for a daterange");
+                    $this->LOGGER->debug("Check for a daterange: ".$date[5]);
                     $secondDate = $this->extractDateObjFromString($date[5], true);
 
                     if ($secondDate == null) {
@@ -485,13 +486,19 @@ class MigrateData {
 
             if ($secondDate != null) {
                 $this->getDBManager()->persist($secondDate);
-                return new DateRange($newDate, $secondDate);
+                $dateRange = new DateRange($newDate, $secondDate);
+                
+                $this->LOGGER->debug("Returning daterange: ".$dateRange);
+                
+                return $dateRange;
             }
-
+            
+            $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;
         } else {
             $newDate->setComment("ERROR: " . $dateString);
             $this->getDBManager()->persist($newDate);
+            $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;
         }
     }

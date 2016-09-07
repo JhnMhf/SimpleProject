@@ -8,7 +8,7 @@ namespace UR\DB\NewBundle\Entity;
 class Person extends BasePerson
 {
     public function __toString (){
-        return "Person with ID: ".$this->getId();
+        return "Person with ID: ".$this->getId()." and OID: ".$this->getOid();
     }
     
     /**

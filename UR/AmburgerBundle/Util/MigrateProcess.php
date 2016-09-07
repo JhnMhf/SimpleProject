@@ -85,7 +85,7 @@ class MigrateProcess {
         
         $sql = 'SELECT ID,OID FROM OldAmburgerDB.ids WHERE OID NOT IN '
                 . '(SELECT OID FROM NewAmburgerDB.person ORDER BY OID ASC) '
-                . 'ORDER BY oid ASC LIMIT 30';
+                . 'ORDER BY oid ASC LIMIT 120';
         
         
         $stmt = $newDBManager->getConnection()->prepare($sql);

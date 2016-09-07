@@ -51,7 +51,7 @@ class PersonMerger {
         $this->getDBManager()->flush();
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo->getGender() != Gender::UNKNOWN) {
-            $this->LOGGER->error("Trying to merge a man with a woman, is this really right?");
+            $this->LOGGER->error(sprintf("Trying to merge a man with a woman, is this really right? PersonOne: %s, PersonTwo: %s", $personOne,$personTwo));
         }
 
         $dataMaster = $this->determineDatamaster($personOne, $personTwo);
@@ -72,6 +72,9 @@ class PersonMerger {
         //save new combined person
         //and delete old
         $this->getDBManager()->persist($dataMaster);
+        
+        $this->getDBManager()->flush();
+        
         $this->removeObject($toBeDeleted);
         $this->getDBManager()->flush();
 

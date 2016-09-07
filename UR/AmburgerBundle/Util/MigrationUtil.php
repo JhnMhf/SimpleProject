@@ -2674,7 +2674,7 @@ class MigrationUtil {
 
         //rank
         if (!is_null($oldGrandchild["rang"])) {
-            $this->getMigrationService()->migrateRank(1, $oldGrandchild["rang"]);
+            $this->getMigrationService()->migrateRank($grandchild,1, $oldGrandchild["rang"]);
         }
 
 
@@ -2784,8 +2784,8 @@ class MigrationUtil {
             $this->LOGGER->debug("Found an '?' at the end of " . $stringOfReferenceIds);
             $result[0] = trim(substr($stringOfReferenceIds, 0, strlen($stringOfReferenceIds) - 1));
             $result[1] = "?";
-        } else if (!is_numeric($stringOfReferenceIds)){
-            $this->LOGGER->debug($stringOfReferenceIds." is not numeric!");
+        } else if (!is_int($stringOfReferenceIds)){
+            $this->LOGGER->debug($stringOfReferenceIds." is not an int!");
             $result[0] = null;
             $result[1] = $stringOfReferenceIds;
         } 
