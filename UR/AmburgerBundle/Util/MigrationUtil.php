@@ -1197,14 +1197,18 @@ class MigrationUtil {
                 
                 $result = $this->separateReferenceIdsAndComment($referenceValue);
                 
-                $marriagePartnersOID = $result[0];
+                if(!is_null($result[0])){
+                    $marriagePartnersOID = $result[0];
 
-                $marriagePartnersMainID = $this->getIDForOID($marriagePartnersOID, $oldDBManager);
+                    $marriagePartnersMainID = $this->getIDForOID($marriagePartnersOID, $oldDBManager);
 
-                $newMarriagePartnerObj = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
+                    $newMarriagePartnerObj = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
 
-                $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
-                
+                    $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                }else {
+                    $newMarriagePartner = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
+                }
+
                $comment = $result[1];
             }
 
@@ -1701,14 +1705,18 @@ class MigrationUtil {
                 
                 $result = $this->separateReferenceIdsAndComment($referenceValue);
                 
-                //check it?
-                $fatherInLawOID = $result[0];
+                if(!is_null($result[0])){
+                    //check it?
+                    $fatherInLawOID = $result[0];
 
-                $fatherInLawsMainId = $this->getIDForOID($fatherInLawOID, $oldDBManager);
+                    $fatherInLawsMainId = $this->getIDForOID($fatherInLawOID, $oldDBManager);
 
-                $newFatherInLawObj = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
+                    $newFatherInLawObj = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
 
-                $newFatherInLaw = $this->get("person_merging.service")->mergePersons($newFatherInLaw, $newFatherInLawObj);
+                    $newFatherInLaw = $this->get("person_merging.service")->mergePersons($newFatherInLaw, $newFatherInLawObj);
+                } else {
+                    $newFatherInLaw = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
+                }
                 
                 $comment = $result[1];
             }
@@ -2746,7 +2754,7 @@ class MigrationUtil {
         $containsOr = strpos($lowerCaseReferenceIds, strtolower("oder"));
         $containsBzw = strpos($lowerCaseReferenceIds, strtolower("bzw."));
         
-        $result = [$stringOfReferenceIds, null];
+        $result = [$trimmedReferenceIds, null];
 
         if ($containsAnmerkung !== false) {
             $this->LOGGER->debug("Found '-Anmerkung:' in" . $stringOfReferenceIds);
@@ -2784,11 +2792,16 @@ class MigrationUtil {
             $this->LOGGER->debug("Found an '?' at the end of " . $stringOfReferenceIds);
             $result[0] = trim(substr($stringOfReferenceIds, 0, strlen($stringOfReferenceIds) - 1));
             $result[1] = "?";
-        } else if (!is_int($stringOfReferenceIds)){
-            $this->LOGGER->debug($stringOfReferenceIds." is not an int!");
+        } else if (is_numeric($stringOfReferenceIds)){
+            $this->LOGGER->debug($stringOfReferenceIds." is a number but could be separated by dot.");
+            $result[0] = str_replace('.', '', $trimmedReferenceIds);
+            $result[1] = null;
+
+        } else {
+            $this->LOGGER->debug($stringOfReferenceIds." is not an numeric!");
             $result[0] = null;
             $result[1] = $stringOfReferenceIds;
-        } 
+        }
 
         $this->LOGGER->debug("Separated '" . $stringOfReferenceIds . "' into ids: '" . $result[0] . "' and comment '" . $result[1] . "'");
         return $result;
