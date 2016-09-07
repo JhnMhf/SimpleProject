@@ -10,6 +10,11 @@ UR\DB\NewBundle\Entity\IsParent:
             columns:
                 - childID
                 - parentID
+    indexes:
+        child_idx:
+            columns: [ childID ]
+        partner_idx:
+            columns: [ parentID ]
     id:
         id:
             type: integer

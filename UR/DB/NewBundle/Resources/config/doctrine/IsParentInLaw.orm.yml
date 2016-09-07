@@ -10,6 +10,11 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
             columns:
                 - child_in_lawID
                 - parent_in_lawID
+    indexes:
+        childInLaw_idx:
+            columns: [ child_in_lawID ]
+        partnerInLaw_idx:
+            columns: [ parent_in_lawID ]
     id:
         id:
             type: integer

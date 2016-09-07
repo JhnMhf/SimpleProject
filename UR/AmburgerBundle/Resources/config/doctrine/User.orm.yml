@@ -2,6 +2,9 @@ UR\AmburgerBundle\Entity\User:
     type: entity
     repositoryClass: UR\AmburgerBundle\Entity\UserRepository
     table: user
+    indexes:
+        user_password_idx:
+            columns: [ name,password ]
     id:
         id:
             type: integer

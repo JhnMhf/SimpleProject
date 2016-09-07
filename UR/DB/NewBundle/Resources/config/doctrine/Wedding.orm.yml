@@ -11,6 +11,11 @@ UR\DB\NewBundle\Entity\Wedding:
                 - wedding_order
                 - husband_ID
                 - wife_ID
+    indexes:
+        husband_idx:
+            columns: [ husband_ID ]
+        wife_idx:
+            columns: [ wife_ID ]
     id:
         id:
             type: integer

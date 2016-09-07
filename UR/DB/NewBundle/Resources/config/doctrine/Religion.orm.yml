@@ -4,6 +4,12 @@ UR\DB\NewBundle\Entity\Religion:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        # the name of the index
+        name_idx:
+            # Columns is an array, specify multiple columns for 
+            # a compound index
+            columns: [ name ]
     id:
         id:
             type: integer

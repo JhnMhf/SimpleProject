@@ -1,6 +1,11 @@
 UR\AmburgerBundle\Entity\CorrectionSession:
     type: entity
     table: correction_session
+    indexes:
+        modified_idx:
+            columns: [ modified ]
+        activeUserId_idx:
+            columns: [ activeUserId ]
     id:
         oid:
             type: integer

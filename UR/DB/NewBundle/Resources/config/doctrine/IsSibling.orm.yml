@@ -10,6 +10,11 @@ UR\DB\NewBundle\Entity\IsSibling:
             columns:
                 - sibling_oneID
                 - sibling_twoID
+    indexes:
+        siblingOne_idx:
+            columns: [ sibling_oneID ]
+        siblingTwo_idx:
+            columns: [ sibling_twoID ]
     id:
         id:
             type: integer

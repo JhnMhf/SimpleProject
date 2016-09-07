@@ -9,6 +9,11 @@ UR\DB\NewBundle\Entity\IsInRelationshipWith:
             columns:
                 - first_partnerID
                 - second_partnerID
+    indexes:
+        firstPartner_idx:
+            columns: [ first_partnerID ]
+        secondPartner_idx:
+            columns: [ second_partnerID ]
     id:
         id:
             type: integer

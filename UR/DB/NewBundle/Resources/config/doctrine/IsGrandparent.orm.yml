@@ -10,6 +10,11 @@ UR\DB\NewBundle\Entity\IsGrandparent:
             columns:
                 - grandparentID
                 - grandchildID
+    indexes:
+        grandParent_idx:
+            columns: [ grandparentID ]
+        grandChild_idx:
+            columns: [ grandchildID ]
     id:
         id:
             type: integer

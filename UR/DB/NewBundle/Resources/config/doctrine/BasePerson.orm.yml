@@ -1,5 +1,11 @@
 UR\DB\NewBundle\Entity\BasePerson:
     type: mappedSuperclass
+    indexes:
+        # the name of the index
+        gender_idx:
+            # Columns is an array, specify multiple columns for 
+            # a compound index
+            columns: [ gender ]
     id:
         id:
             type: integer
