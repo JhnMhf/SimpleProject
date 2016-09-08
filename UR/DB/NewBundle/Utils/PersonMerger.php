@@ -1318,6 +1318,11 @@ class PersonMerger {
         if($toBeDeletedDateArray == null){
             return $dataMasterDateArray;
         }
+        
+        if($dataMasterDateArray == null){
+            //cast null to empty array to prevent problems
+            $dataMasterDateArray = array();
+        }
 
         if (count($toBeDeletedDateArray) == 0 && count($dataMasterDateArray) == 0) {
             $this->LOGGER->info("No fusing necessary, since no data is present");
@@ -1365,22 +1370,16 @@ class PersonMerger {
             $this->getDBManager()->remove($listOfMatchingEntriesOfToBeDeleted[$i]);
         }
 
-        //find missing entries
-        $unmatchedDataMasterEntries = array_diff($dataMasterDateArray, $listOfMatchingEntriesOfDatamaster);
-
         //move unmatched entries from toBeDeleted to Datamaster
         $unmatchedToBeDeletedEntries = array_diff($toBeDeletedDateArray, $listOfMatchingEntriesOfToBeDeleted);
-
-        $this->LOGGER->debug("Size of unmatching DataMaster entries " . count($unmatchedDataMasterEntries));
+        
         $this->LOGGER->debug("Size of unmatching toBeDeleted entries " . count($unmatchedToBeDeletedEntries));
 
         //add unmatched to be deleted to datamaster array
-
         for ($i = 0; $i < count($unmatchedToBeDeletedEntries); $i++) {
             $this->LOGGER->debug("DateReferenceEntry which was migrated to dataMaster ".$unmatchedToBeDeletedEntries[$i]);
             $dataMasterDateArray[] = $unmatchedToBeDeletedEntries[$i];
         }
-
 
         $this->LOGGER->info("End size of dataMasterArray " . count($dataMasterDateArray));
 
