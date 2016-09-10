@@ -99,6 +99,7 @@ class PersonMerger {
 
     private function removeObject(\UR\DB\NewBundle\Entity\BasePerson $toBeDeleted) {
         $this->LOGGER->info("Now removing: " . $toBeDeleted);
+        
         //remove obj itself
         $this->getDBManager()->remove($toBeDeleted);
         $this->migrateData->remove($toBeDeleted);
@@ -631,6 +632,7 @@ class PersonMerger {
             $dataMasterBirth->setBirthTerritory($this->mergeTerritoryObject($dataMasterBirth->getBirthTerritory(), $toBeDeletedBirth->getBirthTerritory()));
             $dataMasterBirth->setBirthLocation($this->mergeLocationObject($dataMasterBirth->getBirthLocation(), $toBeDeletedBirth->getBirthLocation()));
             $dataMasterBirth->setBirthDate($this->mergeDateReference($dataMasterBirth->getBirthDate(), $toBeDeletedBirth->getBirthDate()));
+            $toBeDeletedBirth->setBirthDate(null);
             $dataMasterBirth->setComment($this->mergeComment($dataMasterBirth->getComment(), $toBeDeletedBirth->getComment()));
 
             $dataMaster->setBirth($dataMasterBirth);
@@ -647,7 +649,7 @@ class PersonMerger {
         if ($dataMasterBaptism != null && $toBeDeletedBaptism != null) {
             $dataMasterBaptism->setBaptismLocation($this->mergeLocationObject($dataMasterBaptism->getBaptismLocation(), $toBeDeletedBaptism->getBaptismLocation()));
             $dataMasterBaptism->setBaptismDate($this->mergeDateReference($dataMasterBaptism->getBaptismDate(), $toBeDeletedBaptism->getBaptismDate()));
-
+            $toBeDeletedBaptism->setBaptismDate(null);
             $dataMaster->setBaptism($dataMasterBaptism);
         } else if ($toBeDeletedBaptism != null) {
             $dataMaster->setBaptism($toBeDeletedBaptism);
@@ -670,6 +672,9 @@ class PersonMerger {
             $dataMasterDeath->setFuneralDate($this->mergeDateReference($dataMasterDeath->getFuneralDate(), $toBeDeletedDeath->getFuneralDate()));
             $dataMasterDeath->setComment($this->mergeComment($dataMasterDeath->getComment(), $toBeDeletedDeath->getComment()));
 
+            $toBeDeletedDeath->setDeathDate(null);
+            $toBeDeletedDeath->setFuneralDate(null);
+            
             $dataMaster->setDeath($dataMasterDeath);
         } else if ($toBeDeletedDeath != null) {
             $dataMaster->setDeath($toBeDeletedDeath);
@@ -850,6 +855,10 @@ class PersonMerger {
         $dataMasterReligion->setToDate($this->mergeDateReference($dataMasterReligion->getToDate(), $toBeDeletedReligion->getToDate()));
         $dataMasterReligion->setProvenDate($this->mergeDateReference($dataMasterReligion->getProvenDate(), $toBeDeletedReligion->getProvenDate()));
         $dataMasterReligion->setComment($this->mergeStrings($dataMasterReligion->getComment(), $toBeDeletedReligion->getComment()));
+        
+        $toBeDeletedReligion->setFromDate(null);
+        $toBeDeletedReligion->setProvenDate(null);
+        $toBeDeletedReligion->setToDate(null);
 
         return $dataMasterReligion;
     }
@@ -895,6 +904,10 @@ class PersonMerger {
         $dataMasterWork->setToDate($this->mergeDateReference($dataMasterWork->getToDate(), $toBeDeletedWork->getToDate()));
         $dataMasterWork->setProvenDate($this->mergeDateReference($dataMasterWork->getProvenDate(), $toBeDeletedWork->getProvenDate()));
         $dataMasterWork->setComment($this->mergeStrings($dataMasterWork->getComment(), $toBeDeletedWork->getComment()));
+        
+        $toBeDeletedWork->setFromDate(null);
+        $toBeDeletedWork->setProvenDate(null);
+        $toBeDeletedWork->setToDate(null);
 
         return $dataMasterWork;
     }
@@ -923,6 +936,10 @@ class PersonMerger {
         $dataMasterStatus->setProvenDate($this->mergeDateReference($dataMasterStatus->getProvenDate(), $toBeDeletedStatus->getProvenDate()));
         $dataMasterStatus->setComment($this->mergeStrings($dataMasterStatus->getComment(), $toBeDeletedStatus->getComment()));
 
+        $toBeDeletedStatus->setFromDate(null);
+        $toBeDeletedStatus->setProvenDate(null);
+        $toBeDeletedStatus->setToDate(null);
+        
         return $dataMasterStatus;
     }
 
@@ -982,6 +999,10 @@ class PersonMerger {
         $dataMasterRoadOfLife->setOriginCountry($this->mergeCountryObject($dataMasterRoadOfLife->getOriginCountry(), $toBeDeletedRoadOfLife->getOriginCountry()));
         $dataMasterRoadOfLife->setOriginTerritory($this->mergeTerritoryObject($dataMasterRoadOfLife->getOriginTerritory(), $toBeDeletedRoadOfLife->getOriginTerritory()));
 
+        $toBeDeletedRoadOfLife->setFromDate(null);
+        $toBeDeletedRoadOfLife->setProvenDate(null);
+        $toBeDeletedRoadOfLife->setToDate(null);
+        
         return $dataMasterRoadOfLife;
     }
 
@@ -1010,6 +1031,10 @@ class PersonMerger {
         $dataMasterRank->setProvenDate($this->mergeDateReference($dataMasterRank->getProvenDate(), $toBeDeletedRank->getProvenDate()));
         $dataMasterRank->setComment($this->mergeStrings($dataMasterRank->getComment(), $toBeDeletedRank->getComment()));
 
+        $toBeDeletedRank->setFromDate(null);
+        $toBeDeletedRank->setProvenDate(null);
+        $toBeDeletedRank->setToDate(null);
+        
         return $dataMasterRank;
     }
 
@@ -1037,6 +1062,10 @@ class PersonMerger {
         $dataMasterProperty->setProvenDate($this->mergeDateReference($dataMasterProperty->getProvenDate(), $toBeDeletedProperty->getProvenDate()));
         $dataMasterProperty->setComment($this->mergeStrings($dataMasterProperty->getComment(), $toBeDeletedProperty->getComment()));
 
+        $toBeDeletedProperty->setFromDate(null);
+        $toBeDeletedProperty->setProvenDate(null);
+        $toBeDeletedProperty->setToDate(null);
+        
         return $dataMasterProperty;
     }
 
@@ -1064,6 +1093,10 @@ class PersonMerger {
         $dataMasterHonour->setProvenDate($this->mergeDateReference($dataMasterHonour->getProvenDate(), $toBeDeletedHonour->getProvenDate()));
         $dataMasterHonour->setComment($this->mergeStrings($dataMasterHonour->getComment(), $toBeDeletedHonour->getComment()));
 
+        $toBeDeletedHonour->setFromDate(null);
+        $toBeDeletedHonour->setProvenDate(null);
+        $toBeDeletedHonour->setToDate(null);
+        
         return $dataMasterHonour;
     }
 
@@ -1095,6 +1128,12 @@ class PersonMerger {
         $dataMasterEducation->setGraduationDate($this->mergeDateReference($dataMasterEducation->getGraduationDate(), $toBeDeletedEducation->getGraduationDate()));
         $dataMasterEducation->setGraduationLocation($this->mergeLocationObject($dataMasterEducation->getGraduationLocation(), $toBeDeletedEducation->getGraduationLocation()));
 
+        $toBeDeletedEducation->setFromDate(null);
+        $toBeDeletedEducation->setProvenDate(null);
+        $toBeDeletedEducation->setToDate(null);
+        
+        $toBeDeletedEducation->setGraduationDate(null);
+        
         return $dataMasterEducation;
     }
 
@@ -1149,6 +1188,10 @@ class PersonMerger {
         $dataMasterWedding->setBeforeAfter($this->mergeStrings($dataMasterWedding->getBeforeAfter(), $toBeDeletedWedding->getBeforeAfter()));
         $dataMasterWedding->setComment($this->mergeComment($dataMasterWedding->getComment(), $toBeDeletedWedding->getComment()));
 
+        $toBeDeletedWedding->setWeddingDate(null);
+        $toBeDeletedWedding->setBannsDate(null);
+        $toBeDeletedWedding->setBreakupDate(null);
+        
         return $dataMasterWedding;
     }
 
@@ -1415,6 +1458,10 @@ class PersonMerger {
 
         $dataMasterDate->setComment($this->mergeComment($dataMasterDate->getComment(), $toBeDeletedDate->getComment()));
         //@TODO: Before/ After booleans? They are not getting merged right now
+        
+        
+        //remove toBeDeletedDate
+        $this->newDBManager->remove($toBeDeletedDate);
     }
 
     private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference) {
