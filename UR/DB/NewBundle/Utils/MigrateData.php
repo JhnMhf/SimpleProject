@@ -349,11 +349,11 @@ class MigrateData {
         $containsAnmerkung = strpos($lowerCaseString, strtolower("- Anmerkung:"));
         $containsImOriginal = strpos($lowerCaseString, strtolower("- im Original"));
         if ($containsAnmerkung !== false) {
-            $this->LOGGER->debug("Found -Anmerkung: in" . $string);
+            $this->LOGGER->debug("Found -Anmerkung: in " . $string);
             $result[0] = substr($string, 0, $containsAnmerkung);
             $result[1] = substr($string, $containsAnmerkung);
         } else if ($containsImOriginal !== false) {
-            $this->LOGGER->debug("Found -im Original in" . $string);
+            $this->LOGGER->debug("Found -im Original in " . $string);
             $result[0] = substr($string, 0, $containsImOriginal);
             $result[1] = substr($string, $containsImOriginal);
         } else if (substr($lowerCaseString,-1) == "?"){
@@ -422,6 +422,21 @@ class MigrateData {
         }
 
         $dateString = trim($string);
+        
+        //try separating comments from dates
+        $separatedResult = $this->tryExtractingNameAndCommentFromString($dateString);
+        
+        $dateString = $separatedResult[0];
+        $comment = $separatedResult[1];
+        
+        if(is_null($dateString) || count($dateString) == 0){
+            $newDate = new Date();
+            $newDate->setComment($comment);
+            
+            return $newDate;
+        }
+        
+        $this->LOGGER->debug("Extracted datestring: ".$dateString);
 
         preg_match(self::DATE_REGEX, $dateString, $date);
         $newDate = new Date();
@@ -429,6 +444,7 @@ class MigrateData {
             $secondDate = null;
 
             if (strpos($date[1], "- im Original")) {
+                $this->LOGGER->error("Should not happen anymore? ".$date[0]);
                 $newDate->setComment($date[0]);
                 return $newDate;
             }
@@ -446,11 +462,13 @@ class MigrateData {
                 $newDate->setYear($date[4]);
             }
 
-            $commentString = "";
+            $commentString = $comment;
 
             if ($date[1] != "") {
                 if ($date[1] == "-" && !$inner) {
                     $newDate->setBeforeDate(1);
+                } else if($date[1] == "-" && $inner){
+                    $this->LOGGER->debug("Not setting - as before date and instead ignoring it, because we are in a daterange.");
                 } else {
                     $commentString .= trim($date[1]);
                 }
@@ -473,6 +491,8 @@ class MigrateData {
 
                         $commentString .= trim(substr($date[5], 1));
                     }
+                } else if($date[5] == "-" && $inner){
+                    $this->LOGGER->debug("Not setting - as after date and instead ignoring it, because we are in a daterange.");
                 } else {
                     $commentString .= trim($date[5]);
                 }
@@ -496,6 +516,7 @@ class MigrateData {
             $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;
         } else {
+            $this->LOGGER->error("ERROR: " . $dateString);
             $newDate->setComment("ERROR: " . $dateString);
             $this->getDBManager()->persist($newDate);
             $this->LOGGER->debug("Returning date: ".$newDate);
