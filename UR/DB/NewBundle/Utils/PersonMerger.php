@@ -47,7 +47,7 @@ class PersonMerger {
             return $personOne;
         }
         
-        //flush at start to have clean state
+        //persist and flush at start to have clean state
         $this->getDBManager()->flush();
 
         if ($personOne->getGender() != $personTwo->getGender() && $personOne->getGender() != Gender::UNKNOWN && $personTwo->getGender() != Gender::UNKNOWN) {
@@ -58,11 +58,11 @@ class PersonMerger {
         $toBeDeleted = $this->determineToBeRemoved($personOne, $personTwo);
 
         $this->LOGGER->info("The data will be combined in: " . $dataMaster);
-        $this->LOGGER->info("The object '" . $dataMaster . "' will be removed.");
+        $this->LOGGER->info("The object '" . $toBeDeleted . "' will be removed.");
 
         if (get_class($personOne) == PersonClasses::PERSON_CLASS && get_class($personTwo) == PersonClasses::PERSON_CLASS) {
             //what to do with the oid?
-            $this->LOGGER->info("Found two PersonObjects. The oid, control and complete fields must be handled");
+            $this->LOGGER->error("Found two PersonObjects. The oid, control and complete fields must be handled");
         }
 
 
@@ -559,7 +559,6 @@ class PersonMerger {
 
 
             //merge persons
-
             $mergedPerson = $this->mergePersons($dataMasterRelatedPerson, $toBeDeletedRelatedPerson);
 
             $this->LOGGER->info("Merged person for relationship of Type: " . $type . " result is " . $mergedPerson);
@@ -625,6 +624,7 @@ class PersonMerger {
         $toBeDeletedBirth = $toBeDeleted->getBirth();
 
         if ($dataMasterBirth != null && $toBeDeletedBirth != null) {
+            $this->LOGGER->debug("Found two entries. Merging them now");
             $dataMasterBirth->setOriginCountry($this->mergeCountryObject($dataMasterBirth->getOriginCountry(), $toBeDeletedBirth->getOriginCountry()));
             $dataMasterBirth->setOriginTerritory($this->mergeTerritoryObject($dataMasterBirth->getOriginTerritory(), $toBeDeletedBirth->getOriginTerritory()));
             $dataMasterBirth->setOriginLocation($this->mergeLocationObject($dataMasterBirth->getOriginLocation(), $toBeDeletedBirth->getOriginLocation()));
@@ -637,7 +637,9 @@ class PersonMerger {
 
             $dataMaster->setBirth($dataMasterBirth);
         } else if ($toBeDeletedBirth != null) {
+            $this->LOGGER->debug("Found only entry for toBeDeleted, moving it to dataMaster");
             $dataMaster->setBirth($toBeDeletedBirth);
+            $toBeDeletedBirth->setBirth(null);
         }
     }
 
@@ -647,12 +649,15 @@ class PersonMerger {
         $toBeDeletedBaptism = $toBeDeleted->getBaptism();
 
         if ($dataMasterBaptism != null && $toBeDeletedBaptism != null) {
+            $this->LOGGER->debug("Found two entries. Merging them now");
             $dataMasterBaptism->setBaptismLocation($this->mergeLocationObject($dataMasterBaptism->getBaptismLocation(), $toBeDeletedBaptism->getBaptismLocation()));
             $dataMasterBaptism->setBaptismDate($this->mergeDateReference($dataMasterBaptism->getBaptismDate(), $toBeDeletedBaptism->getBaptismDate()));
             $toBeDeletedBaptism->setBaptismDate(null);
             $dataMaster->setBaptism($dataMasterBaptism);
         } else if ($toBeDeletedBaptism != null) {
+            $this->LOGGER->debug("Found only entry for toBeDeleted, moving it to dataMaster");
             $dataMaster->setBaptism($toBeDeletedBaptism);
+            $toBeDeleted->setBaptism(null);
         }
     }
 
@@ -662,6 +667,7 @@ class PersonMerger {
         $toBeDeletedDeath = $toBeDeleted->getDeath();
 
         if ($dataMasterDeath != null && $toBeDeletedDeath != null) {
+            $this->LOGGER->debug("Found two entries. Merging them now");
             $dataMasterDeath->setDeathCountry($this->mergeCountryObject($dataMasterDeath->getDeathCountry(), $toBeDeletedDeath->getDeathCountry()));
             $dataMasterDeath->setTerritoryOfDeath($this->mergeTerritoryObject($dataMasterDeath->getTerritoryOfDeath(), $toBeDeletedDeath->getTerritoryOfDeath()));
             $dataMasterDeath->setDeathLocation($this->mergeLocationObject($dataMasterDeath->getDeathLocation(), $toBeDeletedDeath->getDeathLocation()));
@@ -677,7 +683,9 @@ class PersonMerger {
             
             $dataMaster->setDeath($dataMasterDeath);
         } else if ($toBeDeletedDeath != null) {
+            $this->LOGGER->debug("Found only entry for toBeDeleted, moving it to dataMaster");
             $dataMaster->setDeath($toBeDeletedDeath);
+            $toBeDeleted->setDeath(null);
         }
     }
 
@@ -1409,8 +1417,6 @@ class PersonMerger {
             $this->LOGGER->debug("DateReferenceEntry which should be removed: ".$listOfMatchingEntriesOfToBeDeleted[$i]);
             //do nothing with the fused elements since they are already in the list of datamaster dates
             $this->mergeEntries($listOfMatchingEntriesOfDatamaster[$i], $listOfMatchingEntriesOfToBeDeleted[$i], PersonInformation::DATE);
-
-            $this->getDBManager()->remove($listOfMatchingEntriesOfToBeDeleted[$i]);
         }
 
         //move unmatched entries from toBeDeleted to Datamaster
@@ -1461,7 +1467,7 @@ class PersonMerger {
         
         
         //remove toBeDeletedDate
-        $this->newDBManager->remove($toBeDeletedDate);
+        $this->getDBManager()->remove($toBeDeletedDate);
     }
 
     private function checkForEasyReferenceMerge($dataMasterReference, $toBeDeletedReference) {

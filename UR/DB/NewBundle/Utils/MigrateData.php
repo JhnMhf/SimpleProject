@@ -1117,6 +1117,7 @@ class MigrateData {
     }
 
     public function getNewPersonForOid($OID) {
+        $this->LOGGER->debug("Trying to load new Person with OID: ".$OID);
         return $this->getDBManager()->getRepository('NewBundle:Person')->findOneByOid($OID);
     }
 

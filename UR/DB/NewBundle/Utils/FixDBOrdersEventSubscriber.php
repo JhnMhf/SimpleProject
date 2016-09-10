@@ -46,7 +46,7 @@ class FixDBOrdersEventSubscriber implements EventSubscriber {
         $this->LOGGER->debug("postPersist called!");
         $this->fixOrders($event);
     }
-
+    
     private function fixOrders(LifecycleEventArgs $event){
         $entity = $event->getEntity();
 
