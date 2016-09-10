@@ -56,7 +56,7 @@ class MigrateProcess {
             $this->migratePerson($personIds[$i]);
             
             if((time() -$startTime) > MigrateProcess::MAX_RUN_DURATION_IN_SECONDS){
-                $this->getLogger()->info("Stopping the run after ".$id. " since it already took longer than ".MigrateProcess::MAX_RUN_DURATION_IN_SECONDS);
+                $this->getLogger()->info("Stopping the run after ".$personIds[$i]. " since it already took longer than ".MigrateProcess::MAX_RUN_DURATION_IN_SECONDS);
                 break;
             }
         }
@@ -85,7 +85,7 @@ class MigrateProcess {
         
         $sql = 'SELECT ID,OID FROM OldAmburgerDB.ids WHERE OID NOT IN '
                 . '(SELECT OID FROM NewAmburgerDB.person ORDER BY OID ASC) '
-                . 'ORDER BY oid ASC LIMIT 120';
+                . 'ORDER BY oid ASC LIMIT 100';
         
         
         $stmt = $newDBManager->getConnection()->prepare($sql);
