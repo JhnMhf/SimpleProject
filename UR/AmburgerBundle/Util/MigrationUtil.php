@@ -8,9 +8,7 @@
 
 namespace UR\AmburgerBundle\Util;
 
-use Doctrine\ORM\Query\ResultSetMapping;
-use UR\DB\OldDBBundle\Entity\Person;
-use UR\DB\NewDBBundle\Utils\MigrateData;
+use UR\AmburgerBundle\Exception;
 
 /**
  * Description of MigrationUtil
@@ -64,7 +62,7 @@ class MigrationUtil {
             return $IDData->getId();
         }
 
-        throw new \Exception("Could not find ID for OID: ".$OID);
+        throw new \UR\AmburgerBundle\Exception\NotFoundException("Could not find ID for OID: ".$OID, 404);
     }
 
     public function migratePerson($ID, $OID = null) {
@@ -499,12 +497,14 @@ class MigrationUtil {
             //check if reference to person
             if (!is_null($oldGrandfather["mütterl_großvater_id-nr"])) {
                 $grandfathersOID = $oldGrandfather["mütterl_großvater_id-nr"];
-
-                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
-
-                $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
-
-                $grandfather = $this->get("person_merging.service")->mergePersons($grandfather, $newGrandfather);
+                try{
+                    $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+                    $newGrandfather = $this->migratePerson($grandfatherMainID, $grandfathersOID);
+                    $grandfather = $this->get("person_merging.service")->mergePersons($grandfather, $newGrandfather);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$grandfathersOID);
+                    $grandfather->setComment($grandfather->getComment() ? $grandfather->getComment()."ReferencedOID: ".$grandfathersOID : "ReferencedOID: ".$grandfathersOID);
+                }
             }
 
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, false);
@@ -523,11 +523,15 @@ class MigrationUtil {
                 $this->LOGGER->debug("Found paternal grandfather reference");
                 $grandfathersOID = $oldGrandfather["vät_großvater_id-nr"];
 
-                $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+                try{
+                    $grandfatherMainID = $this->getIDForOID($grandfathersOID, $oldDBManager);
+                    $newGrandfatherObj = $this->migratePerson($grandfatherMainID, $grandfathersOID);
+                    $grandfather = $this->get("person_merging.service")->mergePersons($grandfather, $newGrandfatherObj);
 
-                $newGrandfatherObj = $this->migratePerson($grandfatherMainID, $grandfathersOID);
-
-                $grandfather = $this->get("person_merging.service")->mergePersons($grandfather, $newGrandfatherObj);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$grandfathersOID);
+                    $grandfather->setComment($grandfather->getComment() ? $grandfather->getComment()."ReferencedOID: ".$grandfathersOID : "ReferencedOID: ".$grandfathersOID);
+                }
             }
 
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, true);
@@ -617,12 +621,14 @@ class MigrationUtil {
                     $this->getLogger()->info("Mother reference found...");
                     //reference to person entry for mother
                     $mothersOID = $oldMother["mutter_id-nr"];
-
-                    $mothersMainID = $this->getIDForOID($mothersOID, $oldDBManager);
-
-                    $newMotherObj = $this->migratePerson($mothersMainID, $mothersOID);
-
-                    $newMother = $this->get("person_merging.service")->mergePersons($newMother, $newMotherObj);
+                    try{
+                        $mothersMainID = $this->getIDForOID($mothersOID, $oldDBManager);
+                        $newMotherObj = $this->migratePerson($mothersMainID, $mothersOID);
+                        $newMother = $this->get("person_merging.service")->mergePersons($newMother, $newMotherObj);
+                    }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                        $this->LOGGER->info("Could not found ID for OID: ".$mothersOID);
+                        $newMother->setComment($newMother->getComment() ? $newMother->getComment()."ReferencedOID: ".$mothersOID : "ReferencedOID: ".$mothersOID);
+                    }
                 }
             }
 
@@ -786,12 +792,15 @@ class MigrationUtil {
                         $this->getLogger()->debug("Extracted father OID: ".$fathersOID);
                         
                         $newFather = $this->createFather($oldFather, $mother);
-
-                        $fathersMainID = $this->getIDForOID($fathersOID, $oldDBManager);
-
-                        $newFatherObj = $this->migratePerson($fathersMainID, $fathersOID);
-
-                        $newFather = $this->get("person_merging.service")->mergePersons($newFatherObj, $newFather);
+                        
+                        try{
+                            $fathersMainID = $this->getIDForOID($fathersOID, $oldDBManager);
+                            $newFatherObj = $this->migratePerson($fathersMainID, $fathersOID);
+                            $newFather = $this->get("person_merging.service")->mergePersons($newFatherObj, $newFather);
+                        }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                            $this->LOGGER->info("Could not found ID for OID: ".$fathersOID);
+                            $newFather->setComment($newFather->getComment() ? $newFather->getComment()."ReferencedOID: ".$fathersOID : "ReferencedOID: ".$fathersOID);
+                        }
 
                         $this->getMigrationService()->migrateIsParent($newPerson, $newFather, $result[1]);
                     }
@@ -946,12 +955,16 @@ class MigrationUtil {
                 $this->getLogger()->info("Sibling reference found...");
                 //check it?
                 $siblingsOID = $oldSibling["geschwister_id-nr"];
+                
+                try{
+                    $siblingsMainId = $this->getIDForOID($siblingsOID, $oldDBManager);
+                    $newSiblingObj = $this->migratePerson($siblingsMainId, $siblingsOID);
+                    $newSibling = $this->get("person_merging.service")->mergePersons($newSibling, $newSiblingObj);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$siblingsOID);
+                    $newSibling->setComment($newSibling->getComment() ? $newSibling->getComment()."ReferencedOID: ".$siblingsOID : "ReferencedOID: ".$siblingsOID);
+                }
 
-                $siblingsMainId = $this->getIDForOID($siblingsOID, $oldDBManager);
-
-                $newSiblingObj = $this->migratePerson($siblingsMainId, $siblingsOID);
-
-                $newSibling = $this->get("person_merging.service")->mergePersons($newSibling, $newSiblingObj);
             }
 
             $this->getMigrationService()->migrateIsSibling($newPerson, $newSibling);
@@ -1199,12 +1212,15 @@ class MigrationUtil {
                 
                 if(!is_null($result[0])){
                     $marriagePartnersOID = $result[0];
-
-                    $marriagePartnersMainID = $this->getIDForOID($marriagePartnersOID, $oldDBManager);
-
-                    $newMarriagePartnerObj = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
-
-                    $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                    
+                    try{
+                        $marriagePartnersMainID = $this->getIDForOID($marriagePartnersOID, $oldDBManager);
+                        $newMarriagePartnerObj = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
+                        $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                    }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                        $this->LOGGER->info("Could not found ID for OID: ".$marriagePartnersOID);
+                        $newMarriagePartner->setComment($newMarriagePartner->getComment() ? $newMarriagePartner->getComment()."ReferencedOID: ".$marriagePartnersOID : "ReferencedOID: ".$marriagePartnersOID);
+                    }
                 }else {
                     $newMarriagePartner = $this->migratePerson($marriagePartnersMainID, $marriagePartnersOID);
                 }
@@ -1365,14 +1381,17 @@ class MigrationUtil {
 
                         $childToMerge = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
 
-                        $childsMainId = $this->getIDForOID($childsOID, $oldDBManager);
+                        try{
+                            $childsMainId = $this->getIDForOID($childsOID, $oldDBManager);
+                            $newChildObj = $this->migratePerson($childsMainId, $childsOID);
+                            $childToMerge = $this->get("person_merging.service")->mergePersons($childToMerge, $newChildObj);
+                        }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                            $this->LOGGER->info("Could not found ID for OID: ".$childsOID);
+                            $childToMerge->setComment($childToMerge->getComment() ? $childToMerge->getComment()."ReferencedOID: ".$childsOID : "ReferencedOID: ".$childsOID);
+                        }
 
-                        $newChildObj = $this->migratePerson($childsMainId, $childsOID);
-
-                        $mergedChild = $this->get("person_merging.service")->mergePersons($childToMerge, $newChildObj);
-
-                        $this->getMigrationService()->migrateIsParent($mergedChild, $newPerson, $result[1]);
-                        $this->getMigrationService()->migrateIsParent($mergedChild, $newMarriagePartner, $result[1]);
+                        $this->getMigrationService()->migrateIsParent($childToMerge, $newPerson, $result[1]);
+                        $this->getMigrationService()->migrateIsParent($childToMerge, $newMarriagePartner, $result[1]);
                     }
                     //don't try to load marriage partners etc. because there won't be any and it would not be possible to related them
                 } else {
@@ -1708,12 +1727,16 @@ class MigrationUtil {
                 if(!is_null($result[0])){
                     //check it?
                     $fatherInLawOID = $result[0];
+                    
+                    try{
+                        $fatherInLawsMainId = $this->getIDForOID($fatherInLawOID, $oldDBManager);
+                        $newFatherInLawObj = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
+                        $newFatherInLaw = $this->get("person_merging.service")->mergePersons($newFatherInLaw, $newFatherInLawObj);
+                    }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                        $this->LOGGER->info("Could not found ID for OID: ".$fatherInLawOID);
+                        $newFatherInLaw->setComment($newFatherInLaw->getComment() ? $newFatherInLaw->getComment()."ReferencedOID: ".$fatherInLawOID : "ReferencedOID: ".$fatherInLawOID);
+                    }
 
-                    $fatherInLawsMainId = $this->getIDForOID($fatherInLawOID, $oldDBManager);
-
-                    $newFatherInLawObj = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
-
-                    $newFatherInLaw = $this->get("person_merging.service")->mergePersons($newFatherInLaw, $newFatherInLawObj);
                 } else {
                     $newFatherInLaw = $this->migratePerson($fatherInLawsMainId, $fatherInLawOID);
                 }
@@ -1911,12 +1934,15 @@ class MigrationUtil {
             if (!is_null($oldOtherPartner["partnerpartner_id-nr"])) {
                 //check it?
                 $partnerPartnerOID = $oldOtherPartner["partnerpartner_id-nr"];
-
-                $partnerPartnerMainId = $this->getIDForOID($partnerPartnerOID, $oldDBManager);
-
-                $newPartnerPartner = $this->migratePerson($partnerPartnerMainId, $partnerPartnerOID);
-
-                $newOtherParner = $this->get("person_merging.service")->mergePersons($newOtherParner, $newPartnerPartner);
+                
+                try{
+                    $partnerPartnerMainId = $this->getIDForOID($partnerPartnerOID, $oldDBManager);
+                    $newPartnerPartner = $this->migratePerson($partnerPartnerMainId, $partnerPartnerOID);
+                    $newOtherParner = $this->get("person_merging.service")->mergePersons($newOtherParner, $newPartnerPartner);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$partnerPartnerOID);
+                    $newOtherParner->setComment($newOtherParner->getComment() ? $newOtherParner->getComment()."ReferencedOID: ".$partnerPartnerOID : "ReferencedOID: ".$partnerPartnerOID);
+                }
             }
 
             $this->migrateWeddingOfOtherPartners($newOtherParner, $newMarriagePartner, $oldOtherPartner);
@@ -2128,12 +2154,15 @@ class MigrationUtil {
             if (!is_null($oldMarriagePartnersOfSibling["geschwisterpartner_id-nr"])) {
                 //check it?
                 $marriagePartnersOfSiblingOID = $oldMarriagePartnersOfSibling["geschwisterpartner_id-nr"];
-
-                $marriagePartnersOfSiblingMainId = $this->getIDForOID($marriagePartnersOfSiblingOID, $oldDBManager);
-
-                $newMarriagePartnerObj = $this->migratePerson($marriagePartnersOfSiblingMainId, $marriagePartnersOfSiblingOID);
-
-                $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                   
+                try{
+                    $marriagePartnersOfSiblingMainId = $this->getIDForOID($marriagePartnersOfSiblingOID, $oldDBManager);
+                    $newMarriagePartnerObj = $this->migratePerson($marriagePartnersOfSiblingMainId, $marriagePartnersOfSiblingOID);
+                    $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$marriagePartnersOfSiblingOID);
+                    $newMarriagePartner->setComment($newMarriagePartner->getComment() ? $newMarriagePartner->getComment()."ReferencedOID: ".$marriagePartnersOfSiblingOID : "ReferencedOID: ".$marriagePartnersOfSiblingOID);
+                }
             }
 
             $this->migrateWeddingOfSibling($newSibling, $newMarriagePartner, $oldMarriagePartnersOfSibling);
@@ -2293,12 +2322,17 @@ class MigrationUtil {
                 //TODO: think about special case 88558<->87465
                 //check it?
                 $marriagePartnerOID = $oldMarriagePartner["kindespartner_id-nr"];
+                            
+                try{
+                    $marriagePartnerMainId = $this->getIDForOID($marriagePartnerOID, $oldDBManager);
 
-                $marriagePartnerMainId = $this->getIDForOID($marriagePartnerOID, $oldDBManager);
+                    $newMarriagePartnerObj = $this->migratePerson($marriagePartnerMainId, $marriagePartnerOID);
 
-                $newMarriagePartnerObj = $this->migratePerson($marriagePartnerMainId, $marriagePartnerOID);
-
-                $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                    $newMarriagePartner = $this->get("person_merging.service")->mergePersons($newMarriagePartner, $newMarriagePartnerObj);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$marriagePartnerOID);
+                    $newMarriagePartner->setComment($newMarriagePartner->getComment() ? $newMarriagePartner->getComment()."ReferencedOID: ".$marriagePartnerOID : "ReferencedOID: ".$marriagePartnerOID);
+                }
             }
 
             $this->migrateWeddingOfChildren($newChild, $newMarriagePartner, $oldMarriagePartner);
@@ -2599,6 +2633,7 @@ class MigrationUtil {
             $oldFatherOfSibling = $fatherOfSibling[$i];
             if (!is_null($oldFatherOfSibling["geschwistervater_id-nr"])) {
                 //check it?
+                //no check for not found exception, since there is no way to recover from it.
                 $fatherOfSiblingOID = $oldFatherOfSibling["geschwistervater_id-nr"];
 
                 $fatherOfSiblingMainId = $this->getIDForOID($fatherOfSiblingOID, $oldDBManager);
@@ -2637,12 +2672,15 @@ class MigrationUtil {
             if (!is_null($oldGrandchild["enkel_id-nr"])) {
                 //check it?
                 $grandchildsOID = $oldGrandchild["enkel_id-nr"];
-
-                $grandchildsMainId = $this->getIDForOID($grandchildsOID, $oldDBManager);
-
-                $newGrandchildObj = $this->migratePerson($grandchildsMainId, $grandchildsOID);
-
-                $newGrandChild = $this->get("person_merging.service")->mergePersons($newGrandChild, $newGrandchildObj);
+                
+                try{
+                    $grandchildsMainId = $this->getIDForOID($grandchildsOID, $oldDBManager);
+                    $newGrandchildObj = $this->migratePerson($grandchildsMainId, $grandchildsOID);
+                    $newGrandChild = $this->get("person_merging.service")->mergePersons($newGrandChild, $newGrandchildObj);
+                }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
+                    $this->LOGGER->info("Could not found ID for OID: ".$grandchildsOID);
+                    $newGrandChild->setComment($newGrandChild->getComment() ? $newGrandChild->getComment()."ReferencedOID: ".$grandchildsOID : "ReferencedOID: ".$grandchildsOID);
+                }
             }
 
             $paternal = true;
