@@ -121,3 +121,7 @@ dateSerializeTest:
 relativesFinderTest:
     path: /find/relatives/{database}/{OID}
     defaults:  { _controller: AmburgerBundle:Default:findPossibleRelatives }
+    
+changeTrackignTest:
+    path: /check/tracking/{ID}
+    defaults:  { _controller: AmburgerBundle:Default:loadTrackedCorrection }

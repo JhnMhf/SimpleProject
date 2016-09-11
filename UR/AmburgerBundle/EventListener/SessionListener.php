@@ -69,5 +69,7 @@ class SessionListener
         if(!$this->get('correction_session.service')->checkCorrectionSession($OID,$session)){
                 throw new AccessDeniedHttpException('The user is currently not working on this!');
         } 
+        
+        //@TODO: Update modified correction session to prevent timeout?
     }
 }

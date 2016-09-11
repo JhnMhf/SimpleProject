@@ -88,7 +88,8 @@ class CorrectionPersonController extends Controller implements CorrectionSession
             
             if($personEntity->getOid() == $OID){
                 $em = $this->get('doctrine')->getManager('final');
-                $this->get('person_saver.service')->savePerson($em, $personEntity);
+                $this->get('person_saver.service')->savePerson($em,$this->get("request")->getSession(),$content, $personEntity);
+
                 $response->setStatusCode("202");
             }else {
                 $response->setContent("OIDs do not match");

@@ -25,7 +25,11 @@ services:
     possible_relatives_finder.service:
         class: UR\AmburgerBundle\Util\PossibleRelativesFinder
         arguments: 
-           container: "@service_container"           
+           container: "@service_container"         
+    correction_change_tracker:
+        class: UR\AmburgerBundle\Util\CorrectionChangeTracker
+        arguments: 
+           container: "@service_container"  
            
     correction_session_validation_listener:
         class:  UR\AmburgerBundle\EventListener\SessionListener

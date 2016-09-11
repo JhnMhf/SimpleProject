@@ -19,21 +19,27 @@ class PersonSaver {
         return $this->container->get($identifier);
     }
     
-    public function savePerson($em, $personEntity){
+    public function savePerson($em, $session,$payload, $personEntity){
         $this->preparePerson($em, $personEntity);
-
+        $oldData = null;
+        
         //@TODO: Current highest id?
-        if(is_null($this->loadFinalPersonByOID($personEntity->getOid()))){
+        $existingPerson = $this->loadFinalPersonByOID($personEntity->getOid());
+        if(is_null($existingPerson)){
             //@TODO: Necessary only for testing? In the "real" case, the data should already exist and only be updated?
             //first persist if not existant
             $em->persist($personEntity);
             $em->flush();
+        } else {
+            $serializer = $this->get('serializer');
+            $oldData = $serializer->serialize($existingPerson, 'json');
         }
-
         //merge necessary to set relations right/ update the values
 
         $em->merge($personEntity);
         $em->flush();
+        
+        $this->get('correction_change_tracker')->trackChange($personEntity->getOid(), $personEntity->getId(),$session->get('name'),$session->get('userid'), $payload, $oldData);
     }
     
     private function loadFinalPersonByOID($OID){

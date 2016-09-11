@@ -1,0 +1,49 @@
+UR\AmburgerBundle\Entity\ChangeTracking:
+    type: entity
+    table: change_tracking
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        oid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: OID
+            comment: 'The oid for which this change was done.'
+        affected_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: 'The affected id of the person of the change'
+        old_data:
+            type: blob
+            nullable: true
+            comment: 'The payload before the change'
+        new_data:
+            type: blob
+            nullable: false
+            comment: 'The payload of the change'
+        activeUserName:
+            type: string
+            nullable: false
+            comment: 'Currently active user name in session'
+        activeUserId:
+            type: string
+            nullable: false
+            comment: 'Currently active user id in session'
+        created:
+            type: datetime
+            nullable: false
+        modified:
+            type: datetime
+            nullable: false
+    lifecycleCallbacks:
+        preFlush: [updateCreatedAndModified]

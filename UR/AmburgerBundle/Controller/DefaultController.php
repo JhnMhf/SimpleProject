@@ -58,4 +58,16 @@ class DefaultController extends Controller
         return new Response();
     }
     
+    public function loadTrackedCorrectionAction($ID){
+        $em = $this->get('doctrine')->getManager('system');
+        
+        $change = $em->getRepository('AmburgerBundle:ChangeTracking')->findOneById($ID);
+        
+        echo stream_get_contents($change->getNewData());
+        
+        echo stream_get_contents($change->getOldData());
+        
+        return new Response();
+    }
+    
 }
