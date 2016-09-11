@@ -22,7 +22,10 @@ services:
         class: UR\AmburgerBundle\Util\PersonDataCreator
         arguments: 
            container: "@service_container"
-           
+    possible_relatives_finder.service:
+        class: UR\AmburgerBundle\Util\PossibleRelativesFinder
+        arguments: 
+           container: "@service_container"           
            
     correction_session_validation_listener:
         class:  UR\AmburgerBundle\EventListener\SessionListener

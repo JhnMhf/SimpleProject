@@ -117,3 +117,7 @@ create_person_data:
 dateSerializeTest:
     path: /date/serialize
     defaults: { _controller: AmburgerBundle:CorrectionPerson:dateSerialize }
+    
+relativesFinderTest:
+    path: /find/relatives/{database}/{OID}
+    defaults:  { _controller: AmburgerBundle:Default:findPossibleRelatives }

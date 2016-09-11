@@ -39,4 +39,23 @@ class DefaultController extends Controller
         return new Response();
     }
     
+    public function findPossibleRelativesAction($database, $OID){
+        $em = null;
+        
+        if($database == 'final'){
+            $em = $this->get('doctrine')->getManager('final');
+        } else if($database == 'new'){
+            $em = $this->get('doctrine')->getManager('new');
+        } else  {
+            throw new Exception("Invalid database");
+        }
+        
+        
+        $possibleRelatives = $this->get('possible_relatives_finder.service')->findPossibleRelatives($em, $OID);
+        
+        print_r($possibleRelatives);
+        
+        return new Response();
+    }
+    
 }

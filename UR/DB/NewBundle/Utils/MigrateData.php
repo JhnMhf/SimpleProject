@@ -438,6 +438,7 @@ class MigrateData {
         
         $this->LOGGER->debug("Extracted datestring: ".$dateString);
 
+        //@TODO: Adapt code to handle 00.0.1881, 0.00.1867 currently not found by regex
         preg_match(self::DATE_REGEX, $dateString, $date);
         $newDate = new Date();
         if (count($date) > 0) {
@@ -516,8 +517,8 @@ class MigrateData {
             $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;
         } else {
-            $this->LOGGER->error("ERROR: " . $dateString);
-            $newDate->setComment("ERROR: " . $dateString);
+            $this->LOGGER->error("ERROR: " . $string);
+            $newDate->setComment("ERROR: " . $string);
             $this->getDBManager()->persist($newDate);
             $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;

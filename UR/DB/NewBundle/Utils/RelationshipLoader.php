@@ -61,6 +61,23 @@ class RelationshipLoader {
 
         return $relatives;
     }
+    
+    public function loadOnlyRelativeIds($id, $skipRelativesForPersons = true) {
+        $alreadyLoaded = array();
+        $relatives = $this->internalLoadRelatives($id, $alreadyLoaded, $skipRelativesForPersons);
+
+        $this->loadClosestRelatives($relatives, $alreadyLoaded, $skipRelativesForPersons);
+
+        $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
+
+        do {
+            $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
+            $this->loadRelativesWhichWereNotLoadedYet($relatives, $alreadyLoaded, $skipRelativesForPersons);
+        } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
+
+
+        return $alreadyLoaded;
+    }
 
     private function internalLoadRelatives($id, &$alreadyLoaded, $skipRelativesForPersons = true) {
         $this->getLogger()->info("Internally loading relatives for ID: " . $id);
@@ -162,7 +179,7 @@ class RelationshipLoader {
         return $this->generateRelativesEntry($id, $alreadyLoaded, $childrenInLawIds, $skipRelativesForPersons);
     }
 
-    private function generateRelativesEntry($id, &$alreadyLoaded, $relativesIds, $skipRelativesForPersons = true) {
+    private function generateRelativesEntry($id, &$alreadyLoaded, $relativesIds) {
         $relativesArray = array();
 
         for ($i = 0; $i < count($relativesIds); $i++) {
