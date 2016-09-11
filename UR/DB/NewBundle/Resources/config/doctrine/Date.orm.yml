@@ -4,6 +4,17 @@ UR\DB\NewBundle\Entity\Date:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        day_idx:
+            columns: [ day ]
+        month_idx:
+            columns: [ month ]
+        year_idx:
+            columns: [ year ]
+        before_idx:
+            columns: [ before_date ]
+        after_idx:
+            columns: [ after_date ]
     id:
         id:
             type: integer

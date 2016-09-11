@@ -6,6 +6,16 @@ UR\DB\NewBundle\Entity\BasePerson:
             # Columns is an array, specify multiple columns for 
             # a compound index
             columns: [ gender ]
+        firstName_idx:
+            columns: [ first_name ]
+        patronym_idx:
+            columns: [ patronym ]
+        lastName_idx:
+            columns: [ last_name ]
+        foreName_idx:
+            columns: [ fore_name ]
+        birthName_idx:
+            columns: [ birth_name ]
     id:
         id:
             type: integer
