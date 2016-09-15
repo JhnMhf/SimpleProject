@@ -8,6 +8,22 @@ UR\DB\NewBundle\Entity\Partner:
     inheritance:
         type: concrete
         extends: Entities\BasePerson 
+    indexes:
+        # the name of the index
+        partner_gender_idx:
+            # Columns is an array, specify multiple columns for 
+            # a compound index
+            columns: [ gender ]
+        partner_firstName_idx:
+            columns: [ first_name ]
+        partner_patronym_idx:
+            columns: [ patronym ]
+        partner_lastName_idx:
+            columns: [ last_name ]
+        partner_foreName_idx:
+            columns: [ fore_name ]
+        partner_birthName_idx:
+            columns: [ birth_name ]
     fields:
     oneToMany:
         educations:

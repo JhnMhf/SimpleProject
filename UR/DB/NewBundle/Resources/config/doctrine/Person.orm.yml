@@ -11,6 +11,22 @@ UR\DB\NewBundle\Entity\Person:
         ID_OLD:
             columns:
                 - OID
+    indexes:
+        # the name of the index
+        person_gender_idx:
+            # Columns is an array, specify multiple columns for 
+            # a compound index
+            columns: [ gender ]
+        person_firstName_idx:
+            columns: [ first_name ]
+        person_patronym_idx:
+            columns: [ patronym ]
+        person_lastName_idx:
+            columns: [ last_name ]
+        person_foreName_idx:
+            columns: [ fore_name ]
+        person_birthName_idx:
+            columns: [ birth_name ]
     fields:
         oid:
             type: integer

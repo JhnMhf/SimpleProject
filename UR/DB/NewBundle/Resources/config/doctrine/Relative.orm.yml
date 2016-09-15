@@ -8,6 +8,22 @@ UR\DB\NewBundle\Entity\Relative:
     inheritance:
         type: concrete
         extends: Entities\BasePerson 
+    indexes:
+        # the name of the index
+        relative_gender_idx:
+            # Columns is an array, specify multiple columns for 
+            # a compound index
+            columns: [ gender ]
+        relative_firstName_idx:
+            columns: [ first_name ]
+        relative_patronym_idx:
+            columns: [ patronym ]
+        relative_lastName_idx:
+            columns: [ last_name ]
+        relative_foreName_idx:
+            columns: [ fore_name ]
+        relative_birthName_idx:
+            columns: [ birth_name ]
     fields:
     oneToMany:
         educations:
