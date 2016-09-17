@@ -2275,7 +2275,7 @@ class MigrationUtil {
         //baptism
         if (!is_null($oldChildOfSibling["getauft"]) ||
                 !is_null($oldChildOfSibling["taufort"])) {
-            $$this->getMigrationService()->migrateBaptism($childOfSibling, $oldChildOfSibling["getauft"], $oldChildOfSibling["taufort"]);
+            $this->getMigrationService()->migrateBaptism($childOfSibling, $oldChildOfSibling["getauft"], $oldChildOfSibling["taufort"]);
         }
 
         //death
