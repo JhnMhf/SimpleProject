@@ -1,0 +1,10 @@
+.center  {
+    text-align: center;
+}
+
+/* Search */
+
+.simple-search label,
+.simple-search label input{
+    display: inline-block;
+}

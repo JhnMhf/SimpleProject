@@ -1,0 +1,144 @@
+{% extends "AmburgerBundle:Visualization:base.html.twig" %}
+
+{% block body %}
+    <div class="search">
+        <div class="row">
+            <div class="large-12 columns large-centered center">
+                <h2>Suche</h2>
+            </div>
+        </div>
+        <div class="row simple-search">
+            <div class="large-10 columns">
+                <label>Freie Suche (Boolesche Logik und Klammerung wird unterstützt)</label><input name="simple-search"/>
+            </div>
+            <div class="large-2 columns">
+                <label>
+                    Auf Hauptpersonen einschränken
+                    <input type="checkbox" name="only-main-persons"/>
+                </label>
+            </div>
+        </div>
+        <div class="row extended-search">
+            <div class="large-10 columns">
+                <label>
+                    Name
+                    <input name="name"/>
+                </label>
+                <label>
+                    Vorname
+                    <input name="firstname"/>
+                </label>
+                <label>
+                    Russischer Vorname
+                    <input name="patronym"/>
+                </label>
+                <label>
+                    Ort
+                    <input name="location"/>
+                </label>
+                <label>
+                    Region
+                    <input name="territory"/>
+                </label>
+                <label>
+                    Land
+                    <input name="country"/>
+                </label>
+
+                <label>
+                    Bestimmtes Jahr
+                    <input name="year"/>
+                </label>
+                <label>
+                    Bestimmter Zeitraum
+                    <input name="form-year" placeholder="von"/><input name="to-year" placeholder="bis"/>
+                </label>
+            </div>
+            <div class="large-2 columns">
+                <label>
+                    Auf Hauptpersonen einschränken
+                    <input type="checkbox" name="only-main-persons"/>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns centered">
+                <button id="search-btn">Suchen</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row map">
+        <div class="large-12 columns large-centered center">
+            <h2>Karte</h2>
+
+        </div>
+    </div>
+
+    <div class="row list">
+        <div class="large-12 columns large-centered center">
+            <h2>Personen</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            Vorname
+                        </td>
+                        <td>
+                            Russischer Vorname
+                        </td>
+                        <td>
+                            Nachname
+                        </td>
+                        <td>
+                            Geburtsdatum/ Taufdatum
+                        </td>
+                        <td>
+                            Sterbedatum/ Beerdigungsdatum
+                        </td>
+                        <td>
+                            Hauptperson
+                        </td>
+                        <td>
+                            Vollständige Personendaten einsehen
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Start #}
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/Index.js')}}"></script>
+
+    {# Models #}
+
+    {# Views #}
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/MapView.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/PersonListView.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/SearchView.js')}}"></script>
+    {# Manager #}
+
+
+    {# Controllers #}
+    <script src="{{ asset('bundles/amburger/js/src/visualization/index/AjaxLoader.js') }}"></script>
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/IndexController.js')}}"></script>
+
+
+
+    {# As last init the Start #}
+    <script>
+        $(document).ready(function () {
+            Index.init();
+        });
+    </script>
+
+{% endblock %}

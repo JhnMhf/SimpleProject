@@ -106,6 +106,18 @@ gnd_subject:
     path: /gnd/subject/{name}
     defaults: { _controller: AmburgerBundle:GND:subject }    
     
+# visualizatin
+
+visualization_index:
+    path: /visualization
+    defaults: { _controller: AmburgerBundle:Visualization:index }
+
+visualization_detail:
+    path: /visualization/{ID}
+    defaults: { _controller: AmburgerBundle:Visualization:detail }
+    
+# test
+    
 migrate_process:
     path: /migration/process
     defaults: { _controller: AmburgerBundle:Default:migrateProcess }
@@ -117,7 +129,7 @@ create_person_data:
 dateSerializeTest:
     path: /date/serialize
     defaults: { _controller: AmburgerBundle:CorrectionPerson:dateSerialize }
-    
+
 relativesFinderTest:
     path: /find/relatives/{database}/{OID}
     defaults:  { _controller: AmburgerBundle:Default:findPossibleRelatives }
