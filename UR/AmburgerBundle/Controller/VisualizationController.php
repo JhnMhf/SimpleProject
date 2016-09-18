@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use UR\AmburgerBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of UserController
@@ -21,20 +22,13 @@ use UR\AmburgerBundle\Entity\User;
  */
 class VisualizationController extends Controller{
     
-    /* 
-        Returns the user html.
-    */
     public function indexAction()
     {
         return $this->render('AmburgerBundle:Visualization:index.html.twig');
     }
-    
-    /* 
-        Returns the user html.
-    */
+
     public function detailAction($ID)
     {
         return $this->render('AmburgerBundle:Visualization:detail.html.twig');
     }
-    
 }

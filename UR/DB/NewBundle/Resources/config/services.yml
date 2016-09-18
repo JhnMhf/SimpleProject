@@ -37,6 +37,11 @@ services:
         arguments: 
            container: "@service_container"
            
+    date_reference_loader:
+        class: UR\DB\NewBundle\Utils\DateReferenceLoader       
+        arguments: 
+           container: "@service_container"
+           
 # listener/ subscriber
     fixDBOrder.subscriber:
             class: UR\DB\NewBundle\Utils\FixDBOrdersEventSubscriber

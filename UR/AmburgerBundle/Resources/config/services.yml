@@ -30,7 +30,10 @@ services:
         class: UR\AmburgerBundle\Util\CorrectionChangeTracker
         arguments: 
            container: "@service_container"  
-           
+    search.util:
+        class: UR\AmburgerBundle\Util\SearchUtil
+        arguments: 
+           container: "@service_container"             
     correction_session_validation_listener:
         class:  UR\AmburgerBundle\EventListener\SessionListener
         arguments: 

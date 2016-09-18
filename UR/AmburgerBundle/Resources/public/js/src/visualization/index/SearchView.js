@@ -43,10 +43,10 @@ Index.SearchView = (function () {
         var location = $("." + extendedSearchDiv + " input[name='location']").val();
         var territory = $("." + extendedSearchDiv + " input[name='territory']").val();
         var country = $("." + extendedSearchDiv + " input[name='country']").val();
-        var year = $("." + extendedSearchDiv + " input[name='year']").val();
+        var date = $("." + extendedSearchDiv + " input[name='date']").val();
 
-        var fromYear = $("." + extendedSearchDiv + " input[name='from-year']").val();
-        var toYear = $("." + extendedSearchDiv + " input[name='to-year']").val();
+        var fromDate = $("." + extendedSearchDiv + " input[name='from-date']").val();
+        var toDate = $("." + extendedSearchDiv + " input[name='to-date']").val();
 
         if (lastname) {
             data['lastname'] = lastname;
@@ -74,13 +74,13 @@ Index.SearchView = (function () {
         }
 
 
-        if (year) {
-            data['year'] = year;
+        if (date) {
+            data['date'] = date;
         }
 
-        if (fromYear && toYear) {
-            data['fromYear'] = fromYear;
-            data['toYear'] = toYear;
+        if (fromDate && toDate) {
+            data['fromDate'] = fromDate;
+            data['toDate'] = toDate;
         }
 
         console.log("enrichWithExtendedData", data);

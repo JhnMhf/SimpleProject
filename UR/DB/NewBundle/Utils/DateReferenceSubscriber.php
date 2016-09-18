@@ -24,11 +24,13 @@ class DateReferenceSubscriber implements EventSubscriber {
     
     private $LOGGER;
     private $container;
+    private $dateReferenceLoader;
     
     public function __construct($container)
     {
         $this->container = $container;
         $this->LOGGER = $this->get('monolog.logger.default');
+        $this->dateReferenceLoader = $this->get('date_reference_loader');
     } 
     
     private function get($identifier){
@@ -63,21 +65,21 @@ class DateReferenceSubscriber implements EventSubscriber {
          switch(get_class($entity)){
             case "UR\DB\NewBundle\Entity\Baptism":
                 $this->LOGGER->debug("Found baptism entity");
-                $entity->getBaptismDate($this->loadDateReference($em, $entity->getBaptismDate()));
+                $entity->getBaptismDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBaptismDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Birth":
                 $this->LOGGER->debug("Found birth entity");
-                $entity->setBirthDate($this->loadDateReference($em, $entity->getBirthDate()));
+                $entity->setBirthDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBirthDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Death":
                 $this->LOGGER->debug("Found death entity");
-                $entity->setDeathDate($this->loadDateReference($em, $entity->getDeathDate()));
-                $entity->setFuneralDate($this->loadDateReference($em, $entity->getFuneralDate()));
+                $entity->setDeathDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getDeathDate()));
+                $entity->setFuneralDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getFuneralDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Education":
                 $this->LOGGER->debug("Found education entity");
                 $this->loadFromToProvenDates($em, $entity);
-                $entity->setGraduationDate($this->loadDateReference($em, $entity->getGraduationDate()));
+                $entity->setGraduationDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getGraduationDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Honour":
                 $this->LOGGER->debug("Found honour entity");
@@ -105,9 +107,9 @@ class DateReferenceSubscriber implements EventSubscriber {
                 break;
             case "UR\DB\NewBundle\Entity\Wedding":
                 $this->LOGGER->debug("Found wedding entity");
-                $entity->setWeddingDate($this->loadDateReference($em, $entity->getWeddingDate()));
-                $entity->setBannsDate($this->loadDateReference($em, $entity->getBannsDate()));
-                $entity->setBreakupDate($this->loadDateReference($em, $entity->getBreakupDate()));
+                $entity->setWeddingDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getWeddingDate()));
+                $entity->setBannsDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBannsDate()));
+                $entity->setBreakupDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBreakupDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Works":
                 $this->LOGGER->debug("Found works entity");
@@ -118,38 +120,9 @@ class DateReferenceSubscriber implements EventSubscriber {
     }
     
     private function loadFromToProvenDates($em, $entity){
-        $entity->setFromDate($this->loadDateReference($em, $entity->getFromDate()));
-        $entity->setToDate($this->loadDateReference($em, $entity->getToDate()));
-        $entity->setProvenDate($this->loadDateReference($em, $entity->getProvenDate()));
-    }
-    
-    private function loadDateReference($em, $dateReference){
-        $this->LOGGER->debug("Loading DateReference.");
-        
-        if(count($dateReference) == 0){
-            return array();
-        }
-        
-        $repository = $em->getRepository("NewBundle:Date");
-       
-        
-        $objArray = [];
-
-        for($i = 0; $i < count($dateReference); $i++){
-            $this->LOGGER->debug("Loading: ".$dateReference[$i]);
-            if (DateRange::isDateRange($dateReference[$i])) {
-                //date range found
-               $objArray[] = DateRange::createDateRange($dateReference[$i], $repository);
-            }else {
-                $objArray[] = $repository->findOneById($dateReference[$i]);
-            }
-            
-            $this->LOGGER->debug("Loading finished: ".$dateReference[$i]);
-        }
-        
-        $this->LOGGER->debug("Finished loading DateReference.");
-        
-        return $objArray;
+        $entity->setFromDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getFromDate()));
+        $entity->setToDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getToDate()));
+        $entity->setProvenDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getProvenDate()));
     }
 
     private function saveDateToDB(LifecycleEventArgs $event){
