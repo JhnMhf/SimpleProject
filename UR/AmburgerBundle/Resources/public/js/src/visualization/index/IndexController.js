@@ -23,12 +23,18 @@ Index.IndexController = (function(){
         personListView = Index.PersonListView.init();
         
         ajaxLoader = Index.AjaxLoader.init();
+        $(searchView).on("searchResult", onSearchResult);
 
         return that;
     },
     
     onSearch = function(event, data){
-        console.log("OnSearch: ", data['searchMode'], data['queryData']);
+        console.log("OnSearch: ", data);
+        ajaxLoader.search(data);
+    },
+    
+    onSearchResult = function(event,data){
+         console.log("OnSearchResult");
     };
     
     

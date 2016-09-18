@@ -1,60 +1,94 @@
 
-Index.SearchView = (function(){
+Index.SearchView = (function () {
     var that = {},
-    
-    simpleSearchMode = 'simple-search',
-    
-    extendedSearchMode = 'extended-search',
-
-    activeMode = simpleSearchMode,
-
+    simpleSearchDiv = 'simple-search',
+    extendedSearchDiv = 'extended-search',
     /* 
-        Initialises the object 
-    */
-    init = function() {
-        
+     Initialises the object 
+     */
+    init = function () {
+
         $('#search-btn').on("click", searchButtonClicked);
 
         return that;
     },
     
-    searchButtonClicked = function(){
-        $(that).trigger('search', {'searchMode': activeMode, 'queryData': extractSearchData()});
+    searchButtonClicked = function () {
+        $(that).trigger('search', extractSearchData());
     },
     
-    extractSearchData = function(){
-        if(activeMode == extendedSearchMode){
-            return extractDataForExtendedMode();
+    extractSearchData = function () {
+        var data = extractBaseData();
+
+        enrichWithExtendedData(data);
+
+        return data;
+    },
+    
+    extractBaseData = function () {
+        var data = {};
+
+        data['searchQuery'] = $("." + simpleSearchDiv + " input[name='searchQuery']").val();
+        data['onlyMainPersons'] = $("." + simpleSearchDiv + " input[name='only-main-persons']").is(':checked');
+
+        console.log("extractBaseData", data);
+
+        return data;
+    },
+    
+    enrichWithExtendedData = function (data) {
+        var lastname = $("." + extendedSearchDiv + " input[name='lastname']").val();
+        var firstname = $("." + extendedSearchDiv + " input[name='firstname']").val();
+        var patronym = $("." + extendedSearchDiv + " input[name='patronym']").val();
+        var location = $("." + extendedSearchDiv + " input[name='location']").val();
+        var territory = $("." + extendedSearchDiv + " input[name='territory']").val();
+        var country = $("." + extendedSearchDiv + " input[name='country']").val();
+        var year = $("." + extendedSearchDiv + " input[name='year']").val();
+
+        var fromYear = $("." + extendedSearchDiv + " input[name='from-year']").val();
+        var toYear = $("." + extendedSearchDiv + " input[name='to-year']").val();
+
+        if (lastname) {
+            data['lastname'] = lastname;
         }
-        return extractDataForSimpleMode();
-    },
-    
-    extractDataForSimpleMode = function(){
-        var data = {};
-        
-        data['searchQuery'] = $("."+simpleSearchMode + " input[name='simple-search']").val();
-        data['onlyMainPersons'] = $("."+simpleSearchMode + " input[name='only-main-persons']").is(':checked');
-        
-        console.log("extractDataForSimpleMode", data);
-        
+
+        if (firstname) {
+            data['firstname'] = firstname;
+        }
+
+        if (patronym) {
+            data['patronym'] = patronym;
+        }
+
+        if (location) {
+            data['location'] = location;
+        }
+
+        if (territory) {
+            data['territory'] = territory;
+        }
+
+
+        if (country) {
+            data['country'] = country;
+        }
+
+
+        if (year) {
+            data['year'] = year;
+        }
+
+        if (fromYear && toYear) {
+            data['fromYear'] = fromYear;
+            data['toYear'] = toYear;
+        }
+
+        console.log("enrichWithExtendedData", data);
+
         return data;
-    },
-    
-    extractDataForExtendedMode = function(){
-        var data = {};
-        
-        data['onlyMainPersons'] = $("."+extendedSearchMode + " input[name='only-main-persons']").is(':checked');
-        
-        console.log("extractDataForExtendedMode", data);
-        
-        return data;
-    },
-    
-    switchActiveMode = function(){
-        
     };
-    
-    
+
+
     that.init = init;
     return that;
 })();
