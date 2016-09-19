@@ -16,7 +16,7 @@ UR\DB\NewBundle\Entity\BasePerson:
         firstName:
             type: string
             nullable: true
-            length: 100
+            length: 200
             options:
                 fixed: false
                 default: null
@@ -24,14 +24,14 @@ UR\DB\NewBundle\Entity\BasePerson:
         patronym:
             type: string
             nullable: true
-            length: 100
+            length: 200
             options:
                 fixed: false
                 default: null
         lastName:
             type: string
             nullable: true
-            length: 100
+            length: 200
             options:
                 fixed: false
                 default: null
@@ -39,7 +39,7 @@ UR\DB\NewBundle\Entity\BasePerson:
         foreName:
             type: string
             nullable: true
-            length: 100
+            length: 200
             options:
                 fixed: false
                 default: null
@@ -47,7 +47,7 @@ UR\DB\NewBundle\Entity\BasePerson:
         birthName:
             type: string
             nullable: true
-            length: 100
+            length: 200
             options:
                 fixed: false
                 default: null
