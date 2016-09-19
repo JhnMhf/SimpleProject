@@ -24,8 +24,10 @@ Index.IndexController = (function(){
         $(personListView).on('loadPersons', onLoadPersons);
         
         ajaxLoader = Index.AjaxLoader.init();
-        $(ajaxLoader).on("searchResult", onSearchResult);
+        $(ajaxLoader).on("idListLoaded", onIdListLoaded);
         $(ajaxLoader).on("loadedPersonData", onLoadedPersonData);
+        
+        ajaxLoader.loadInitialIdList();
 
         return that;
     },
@@ -35,8 +37,8 @@ Index.IndexController = (function(){
         ajaxLoader.search(data);
     },
     
-    onSearchResult = function(event,data){
-         console.log("OnSearchResult: ", data);
+    onIdListLoaded = function(event,data){
+         console.log("onIdListLoaded: ", data);
          personListView.setPersonListIds(data['data']);
     },
     

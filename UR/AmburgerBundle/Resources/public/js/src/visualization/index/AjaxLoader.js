@@ -25,7 +25,7 @@ Index.AjaxLoader = (function(){
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
 
-            $(that).trigger("searchResult", {'data':data});
+            $(that).trigger("idListLoaded", {'data':data});
         });
     },
     
@@ -40,6 +40,19 @@ Index.AjaxLoader = (function(){
             console.log(data,textStatus, jqXHR);
 
            $(that).trigger("loadedPersonData", {'persons': data});
+        });
+    },
+    
+    loadInitialIdList = function(){
+        $.ajax({
+            type: "GET",
+            url: 'visualization/ids/list/',
+            dataType: 'json',
+        })
+        .always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("idListLoaded", {'data':data});
         });
     },
     
@@ -71,5 +84,6 @@ Index.AjaxLoader = (function(){
     that.init = init;
     that.search = search;
     that.loadPersonListData = loadPersonListData;
+    that.loadInitialIdList = loadInitialIdList;
     return that;
 })();

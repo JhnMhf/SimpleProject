@@ -101,6 +101,11 @@ visualization_detail:
     path: /visualization/{ID}
     defaults: { _controller: AmburgerBundle:Visualization:detail }
     methods: [GET]
+
+visualization_ids:
+    path: /visualization/ids/list/
+    defaults: { _controller: AmburgerBundle:Visualization:listOfAllIds }
+    methods: [GET]    
     
 # search
 
