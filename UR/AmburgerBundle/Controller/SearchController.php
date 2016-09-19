@@ -35,9 +35,20 @@ class SearchController extends Controller{
         $fromDate = $request->query->get('fromDate');
         $toDate = $request->query->get('toDate');
         
+        /*
         $listOfPossibleIds = $this->get('search.util')->search($searchQuery, 
                 $onlyMainPersons, $lastname, $firstname, $patronym, $location,
                 $territory, $country, $date, $fromDate, $toDate);
+         * 
+         */
+        
+        
+        
+        $listOfPossibleIds = [];
+        
+        for($i = 0; $i < 100; $i++){
+            $listOfPossibleIds[] = $i;
+        }
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($listOfPossibleIds, 'json');
@@ -132,7 +143,7 @@ class SearchController extends Controller{
         $finalDBManager = $this->get('doctrine')->getManager('new');
 
         $stmt =  $finalDBManager->getConnection()->executeQuery(
-                "SELECT first_name, patronym, last_name, 'person' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
+                "SELECT person.id as id, first_name, patronym, last_name, 'person' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
                 . "FROM person "
                 . "LEFT JOIN birth "
                 . "ON person.birth_id = birth.id "
@@ -151,7 +162,7 @@ class SearchController extends Controller{
         
         
         $stmt =  $finalDBManager->getConnection()->executeQuery(
-                "SELECT first_name, patronym, last_name, 'relative' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
+                "SELECT relative.id as id, first_name, patronym, last_name, 'relative' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
                 . "FROM relative "
                 . "LEFT JOIN birth "
                 . "ON relative.birth_id = birth.id "
@@ -169,7 +180,7 @@ class SearchController extends Controller{
         $finalDBManager = $this->get('doctrine')->getManager('new');
         
         $stmt =  $finalDBManager->getConnection()->executeQuery(
-                "SELECT first_name, patronym, last_name, 'partner' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
+                "SELECT partner.id as id, first_name, patronym, last_name, 'partner' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
                 . "FROM partner "
                 . "LEFT JOIN birth "
                 . "ON partner.birth_id = birth.id "

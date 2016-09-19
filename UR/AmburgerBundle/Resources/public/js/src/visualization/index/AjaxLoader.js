@@ -21,18 +21,25 @@ Index.AjaxLoader = (function(){
             type: "GET",
             url: 'search?'+queryString,
             dataType: 'json',
-            data: {
-            },
-            success: function(data){
-                //@TODO: Handle json?
-                console.log(data);
-                $(that).trigger("searchResult");
-            },
-            error: function(data){
-                if(data.status == 200){
-                    //data.responseText
-                }
-            }
+        })
+        .always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("searchResult", {'data':data});
+        });
+    },
+    
+    loadPersonListData = function(ids){
+        $.ajax({
+            type: "POST",
+            url: 'search/load',
+            dataType: 'json',
+            data: JSON.stringify(ids)
+        })
+        .always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+           $(that).trigger("loadedPersonData", {'persons': data});
         });
     },
     
@@ -63,5 +70,6 @@ Index.AjaxLoader = (function(){
 
     that.init = init;
     that.search = search;
+    that.loadPersonListData = loadPersonListData;
     return that;
 })();

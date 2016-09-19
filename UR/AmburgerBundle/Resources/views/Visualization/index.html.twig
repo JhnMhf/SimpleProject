@@ -100,7 +100,7 @@
                         </td>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="personDataList">
                 </tbody>
             </table>
         </div>
@@ -115,6 +115,7 @@
     <script src="{{asset('bundles/amburger/js/src/visualization/index/Index.js')}}"></script>
 
     {# Models #}
+    <script src="{{asset('bundles/amburger/js/src/visualization/index/PersonListModel.js')}}"></script>
 
     {# Views #}
     <script src="{{asset('bundles/amburger/js/src/visualization/index/MapView.js')}}"></script>
@@ -136,4 +137,51 @@
         });
     </script>
 
+{% endblock %}
+
+{% block templates %}
+    {% verbatim %}
+
+    <script type="text/template" id="personDataTemplate">
+        <tr>
+            <td>
+                <%= first_name %>
+            </td>
+            <td>
+                <%= patronym %>
+            </td>
+            <td>
+                <%= last_name %>
+            </td>
+            <td>
+                <% if(birth_date) { %>
+                    Geburtssymbol + <%= birth_date %>
+                 <% } else if(baptism_date) { %>
+                    Taufsymbol + <%= baptism_date %>
+                 <% } else { %>
+                    Keine Angabe
+                 <% } %>
+            </td>
+            <td>
+                <% if(death_date) { %>
+                    Todessymbol + <%= death_date %>
+                 <% } else if(funeral_date) { %>
+                    Begräbnissymbol + <%= funeral_date %>
+                 <% } else { %>
+                    Keine Angabe
+                 <% } %>
+            </td>
+            <td class="center">
+                 <% if(type == 'person') { %>
+                     <i class="fa fa-check fa-green" aria-hidden="true"></i>
+                 <% } else { %>
+                    <i class="fa fa-times fa-red" aria-hidden="true"></i>
+                 <% } %>
+            </td>
+            <td>
+                <a href="/visualization/<%= id %>" target="_blank"><button class='secondary small'>Details</button></a>
+            </td>
+        </tr>
+    </script>
+    {% endverbatim %}
 {% endblock %}

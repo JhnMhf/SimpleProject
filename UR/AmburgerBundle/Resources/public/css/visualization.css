@@ -8,3 +8,13 @@
 .simple-search label input{
     display: inline-block;
 }
+
+/* PersonList */
+
+.fa-red {
+    color: red;
+}
+
+.fa-green {
+    color: green;
+}

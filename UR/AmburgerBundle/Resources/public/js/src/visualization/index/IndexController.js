@@ -21,9 +21,11 @@ Index.IndexController = (function(){
         
         mapView = Index.MapView.init();
         personListView = Index.PersonListView.init();
+        $(personListView).on('loadPersons', onLoadPersons);
         
         ajaxLoader = Index.AjaxLoader.init();
-        $(searchView).on("searchResult", onSearchResult);
+        $(ajaxLoader).on("searchResult", onSearchResult);
+        $(ajaxLoader).on("loadedPersonData", onLoadedPersonData);
 
         return that;
     },
@@ -34,7 +36,18 @@ Index.IndexController = (function(){
     },
     
     onSearchResult = function(event,data){
-         console.log("OnSearchResult");
+         console.log("OnSearchResult: ", data);
+         personListView.setPersonListIds(data['data']);
+    },
+    
+    onLoadPersons = function(event, data){
+        console.log("onLoadPersons: ", data);
+        ajaxLoader.loadPersonListData(data['ids']);
+    }
+    
+    onLoadedPersonData = function(event,data){
+         console.log("onLoadedPersonData: ",data);
+         personListView.displayPersonData(data['persons']);
     };
     
     
