@@ -112,7 +112,13 @@ class SearchController extends Controller{
             }
         }
         
+        usort($personIds,array($this, 'compareEntries'));
+        
         return $personIds;
+    }
+    
+    private function compareEntries($a, $b){
+        return ($a['id'] < $b['id']) ? -1 : 1;
     }
     
     private function internalLoadData($ids){
