@@ -40,6 +40,11 @@ Index.PersonListModel = (function () {
     
     setPageSize = function(newPageSize){
         pageSize = newPageSize;
+        
+        //changeing currentPage, because its to high
+        if(currentPage > getPageCount()){
+            currentPage = getPageCount();
+        }
     },
     
     getCurrentStart = function(){
@@ -58,6 +63,10 @@ Index.PersonListModel = (function () {
     
     getPageCount = function(){
         return Math.ceil(ids.length/ pageSize);
+    },
+    
+    getPageSize = function(){
+       return pageSize
     };
 
 
@@ -70,5 +79,6 @@ Index.PersonListModel = (function () {
     that.getCurrentEnd = getCurrentEnd;
     that.getCurrentPage = getCurrentPage;
     that.getPageCount = getPageCount;
+    that.getPageSize = getPageSize;
     return that;
 })();

@@ -74,7 +74,16 @@
     <div class="row list">
         <div class="large-12 columns large-centered center">
             <h2>Personen</h2>
-            <div class="pagination-container"></div>
+            <div class="table-header">
+                <div class="pagination-container"></div>
+                <select class="page-size">
+                    <option value="5">5</item>
+                    <option value="10">10</item>
+                    <option value="25">25</item>
+                    <option value="50">50</item>
+                    <option value="100">100</item>
+                </select>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -104,7 +113,16 @@
                 <tbody id="personDataList">
                 </tbody>
             </table>
-            <div class="pagination-container"></div>
+            <div class="table-footer">
+                <div class="pagination-container"></div>
+                <select class="page-size">
+                    <option value="5">5</item>
+                    <option value="10">10</item>
+                    <option value="25">25</item>
+                    <option value="50">50</item>
+                    <option value="100">100</item>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -184,7 +202,7 @@
     
     <script type="text/template" id="paginationTemplate">
             <ul class="pagination">
-              <li class="arrow <%= 1 == currentPage ? 'unavailable' : '' %> previous"><a href="">&laquo;</a></li>
+              <li class="arrow <%= 1 == currentPage ? 'unavailable' : '' %> previous"><a>&laquo;</a></li>
                <% if(pageCount <= 8){ 
                    for(var i = 1; i <= pageCount; i++){ %>
                        <li class="page-marker <%= i == currentPage ? 'current' : '' %>" page="<%= i %>"><a><%= i %></a></li>

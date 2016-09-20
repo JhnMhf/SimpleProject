@@ -9,8 +9,25 @@ Index.PersonListView = (function(){
     */
     init = function() {
         personListModel = Index.PersonListModel.init();
+        
+        initSelectBox();
 
         return that;
+    },
+    
+    initSelectBox = function(){
+        $('.page-size').val(personListModel.getPageSize());
+        $('.page-size').change(onSelectBoxChange);
+    },
+    
+    onSelectBoxChange = function(){
+        var selectedValue = $(this).find('option:selected').attr('value');
+        
+        console.log("SelectedValue: ", selectedValue);
+        //update other box
+        $('.page-size').val(selectedValue);
+        personListModel.setPageSize(selectedValue);
+        triggerPersonLoad();
     },
     
     setPersonListIds = function(ids){
