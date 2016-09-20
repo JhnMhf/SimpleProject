@@ -41,6 +41,9 @@ class VisualizationController extends Controller{
         return $jsonResponse;
     }
     
+    //@TODO: Add caching (also add it for data for the map etc.)
+    //http://stackoverflow.com/questions/8893081/how-to-cache-in-symfony-2
+    //http://nerdpress.org/2012/07/10/caching-data-in-symfony2/
     private function loadAllIds(){
         $allIds = $this->loadPersonIds();
         

@@ -33,6 +33,10 @@ Index.PersonListModel = (function () {
     setCurrentPage = function(page){
        currentPage = page;
     },
+        
+    getCurrentPage = function(){
+       return currentPage;
+    },
     
     setPageSize = function(newPageSize){
         pageSize = newPageSize;
@@ -52,8 +56,8 @@ Index.PersonListModel = (function () {
         return end;
     },
     
-    getTotalSize = function(){
-        return ids.length;
+    getPageCount = function(){
+        return Math.ceil(ids.length/ pageSize);
     };
 
 
@@ -64,6 +68,7 @@ Index.PersonListModel = (function () {
     that.setPageSize = setPageSize;
     that.getCurrentStart = getCurrentStart;
     that.getCurrentEnd = getCurrentEnd;
-    that.getTotalSize = getTotalSize;
+    that.getCurrentPage = getCurrentPage;
+    that.getPageCount = getPageCount;
     return that;
 })();

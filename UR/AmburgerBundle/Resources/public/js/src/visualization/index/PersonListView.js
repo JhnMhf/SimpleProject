@@ -26,10 +26,12 @@ Index.PersonListView = (function(){
         for(var i = 0; i < personData.length; i++){
             displayPerson(personData[i]);
         }
+        //handle pagination
+        updatePagination();
     },
     
     displayPerson = function(person){
-        console.log(person);
+        //console.log(person);
         var template = _.template($("script#personDataTemplate").html());
 
         var data = preparePersonData(person);
@@ -111,6 +113,49 @@ Index.PersonListView = (function(){
         var idsForCurrentPage = personListModel.getIdsForCurrentPage();
         console.log("IdsForCurrentPage: ", idsForCurrentPage)
         $(that).trigger('loadPersons', {'ids': idsForCurrentPage});
+    },
+    
+    updatePagination = function(){
+        console.log("updatePagination");
+        $('.pagination-container').empty();
+        var currentPage = personListModel.getCurrentPage();
+        var pageCount = personListModel.getPageCount();
+        
+        var template = _.template($("script#paginationTemplate").html());
+
+        console.log("CurrentPage: ", currentPage, "PageCount: ", pageCount);
+
+        var data = [];
+        data['currentPage'] = currentPage;
+        data['pageCount'] = pageCount;
+
+        $('.pagination-container').append(template(data));
+        $('.pagination-container .arrow.previous').on("click", onPrevious);
+        $('.pagination-container .arrow.next').on("click", onNext);
+        $('.pagination-container .page-marker').on("click", onPageSelected);
+    },
+    
+    onPageSelected = function(){
+        var selectedPage = $(this).attr('page');
+        console.log("SelectedPage: ", selectedPage);
+        if(personListModel.getCurrentPage() != selectedPage){
+            personListModel.setCurrentPage(selectedPage);
+            triggerPersonLoad();
+        }
+    },
+    
+    onNext = function(){
+        if(personListModel.getCurrentPage()+1 <= personListModel.getPageCount()){
+            personListModel.setCurrentPage(personListModel.getCurrentPage()+1);
+            triggerPersonLoad();
+        }
+    },
+    
+    onPrevious = function(){
+        if(personListModel.getCurrentPage()-1 > 0){
+            personListModel.setCurrentPage(personListModel.getCurrentPage()-1);
+            triggerPersonLoad();
+        }
     };
     
     

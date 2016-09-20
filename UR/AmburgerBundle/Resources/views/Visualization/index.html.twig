@@ -74,6 +74,7 @@
     <div class="row list">
         <div class="large-12 columns large-centered center">
             <h2>Personen</h2>
+            <div class="pagination-container"></div>
             <table>
                 <thead>
                     <tr>
@@ -103,6 +104,7 @@
                 <tbody id="personDataList">
                 </tbody>
             </table>
+            <div class="pagination-container"></div>
         </div>
     </div>
 
@@ -179,5 +181,37 @@
             </td>
         </tr>
     </script>
+    
+    <script type="text/template" id="paginationTemplate">
+            <ul class="pagination">
+              <li class="arrow <%= 1 == currentPage ? 'unavailable' : '' %> previous"><a href="">&laquo;</a></li>
+               <% if(pageCount <= 8){ 
+                   for(var i = 1; i <= pageCount; i++){ %>
+                       <li class="page-marker <%= i == currentPage ? 'current' : '' %>" page="<%= i %>"><a><%= i %></a></li>
+                <%   }
+                } else if(currentPage <= 3 || currentPage >= pageCount-2) { %>
+                    <li class="page-marker <%= 1 == currentPage ? 'current' : '' %>" page="1"><a>1</a></li>
+                    <li class="page-marker <%= 2 == currentPage ? 'current' : '' %>" page="2"><a>2</a></li>
+                    <li class="page-marker <%= 3 == currentPage ? 'current' : '' %>" page="3"><a>3</a></li>
+                    <li class="unavailable"><a href="">&hellip;</a></li>
+                <%    for(var i = pageCount-2; i <= pageCount; i++){ %>
+                       <li class="page-marker <%= i == currentPage ? 'current' : '' %>" page="<%= i %>"><a><%= i %></a></li>
+                <%   } 
+                  } else { %>
+                        <li class="page-marker" page="1"><a>1</a></li>
+                        <li class="page-marker" page="2"><a>2</a></li>
+                        <li class="page-marker" page="3"><a>3</a></li>       
+                        <li class="unavailable"><a href="">&hellip;</a></li>
+                        <%    for(var i = currentPage-1; i <= (currentPage+1); i++){ %>
+                               <li class="page-marker <%= i == currentPage ? 'current' : '' %>" page="<%= i %>"><a><%= i %></a></li>
+                        <%   } %>
+                        <li class="unavailable"><a href="">&hellip;</a></li>
+                         <%    for(var i = pageCount-2; i <= pageCount; i++){ %>
+                               <li class="page-marker" page="<%= i %>"><a><%= i %></a></li>
+                        <%   } %>
+                <%  } %>
+              <li class="arrow <%= pageCount == currentPage ? 'unavailable' : '' %> next"><a>&raquo;</a></li>
+            </ul>
+     </script>
     {% endverbatim %}
 {% endblock %}
