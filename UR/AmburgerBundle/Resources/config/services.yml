@@ -31,7 +31,7 @@ services:
         arguments: 
            container: "@service_container"  
     search.util:
-        class: UR\AmburgerBundle\Util\SearchUtil
+        class: UR\AmburgerBundle\Util\Search\SearchUtil
         arguments: 
            container: "@service_container"             
     correction_session_validation_listener:

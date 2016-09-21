@@ -11,6 +11,7 @@ namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of UserController
@@ -22,6 +23,18 @@ class SearchController extends Controller{
     public function searchAction()
     {
         $request = $this->getRequest();
+        
+        if(count($request->query->all()) == 0){
+            $response = new Response();
+            $response->setContent("Missing GET Parameters");
+            $response->setStatusCode("406");
+            return $response;
+        }
+        
+        //@TODO: Check if at least one valid parameter is given
+        //http://symfony.com/doc/current/components/http_foundation.html
+        //http://api.symfony.com/3.1/Symfony/Component/HttpFoundation/ParameterBag.html
+        
         $searchQuery = $request->query->get('searchQuery');
         $onlyMainPersons = $request->query->get('onlyMainPersons');
         $lastname = $request->query->get('lastname');
@@ -35,20 +48,11 @@ class SearchController extends Controller{
         $fromDate = $request->query->get('fromDate');
         $toDate = $request->query->get('toDate');
         
-        /*
+        
+        
         $listOfPossibleIds = $this->get('search.util')->search($searchQuery, 
                 $onlyMainPersons, $lastname, $firstname, $patronym, $location,
                 $territory, $country, $date, $fromDate, $toDate);
-         * 
-         */
-        
-        
-        
-        $listOfPossibleIds = [];
-        
-        for($i = 0; $i < 100; $i++){
-            $listOfPossibleIds[] = $i;
-        }
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($listOfPossibleIds, 'json');
