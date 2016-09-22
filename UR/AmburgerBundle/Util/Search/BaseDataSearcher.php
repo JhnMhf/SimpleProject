@@ -147,6 +147,15 @@ abstract class BaseDataSearcher {
         }
     }
     
+    protected function extractMainPersons($personIds){
+        $finalDBManager = $this->finalDBManager;
+        $sql = "SELECT id FROM person WHERE id IN (?)";
+        
+        $stmt = $finalDBManager->getConnection()->executeQuery($sql, array($personIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+
+        return $this->extractIdArray($stmt->fetchAll());
+    }
+    
     protected function checkPersonByName($lastName, $firstName, $patronym) {
         return $this->checkBasePersonByName("SELECT id FROM person WHERE ", $lastName, $firstName, $patronym);
     }
@@ -220,7 +229,7 @@ abstract class BaseDataSearcher {
                 array(), $territoryReferenceId, 
                 array(), $countryReferenceId, 
                 array('baptism_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
         if(!$onlyMainPerson) {
             $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery, $isAndCondition,
@@ -228,7 +237,7 @@ abstract class BaseDataSearcher {
                 array(), $territoryReferenceId, 
                 array(), $countryReferenceId, 
                 array('baptism_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
             $personIds = array_merge($personIds, $relativeIds);
 
@@ -237,7 +246,7 @@ abstract class BaseDataSearcher {
                 array(), $territoryReferenceId, 
                 array(), $countryReferenceId, 
                 array('baptism_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
 
             $personIds = array_merge($personIds, $partnerIds);
         }
@@ -255,7 +264,7 @@ abstract class BaseDataSearcher {
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
                 array('birth_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
         if(!$onlyMainPerson) {
             $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery, $isAndCondition,
@@ -263,7 +272,7 @@ abstract class BaseDataSearcher {
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
                 array('birth_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
             $personIds = array_merge($personIds, $relativeIds);
 
@@ -272,7 +281,7 @@ abstract class BaseDataSearcher {
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
                 array('birth_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
 
             $personIds = array_merge($personIds, $partnerIds);
         }
@@ -290,7 +299,7 @@ abstract class BaseDataSearcher {
                 array('territory_of_deathid'), $territoryReferenceId, 
                 array('death_countryid'), $countryReferenceId, 
                 array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
         if(!$onlyMainPerson) {
             $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery,  $isAndCondition,
@@ -298,7 +307,7 @@ abstract class BaseDataSearcher {
                 array('territory_of_deathid'), $territoryReferenceId, 
                 array('death_countryid'), $countryReferenceId, 
                 array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
         
             $personIds = array_merge($personIds, $relativeIds);
 
@@ -307,7 +316,7 @@ abstract class BaseDataSearcher {
                 array('territory_of_deathid'), $territoryReferenceId, 
                 array('death_countryid'), $countryReferenceId, 
                 array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('person_id'), $personReferenceIds);
+                array('id'), $personReferenceIds);
 
             $personIds = array_merge($personIds, $partnerIds);
         }
