@@ -92,9 +92,13 @@ class SearchUtil {
         for($i = 0; $i < count($this->searcherStrategies); $i++){
             $searcher = $this->searcherStrategies[$i];
             if($searcher->isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
+                $this->getLogger()->info("Searching with the class: ".get_class($searcher));
+                
                 return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
             }
         }
+
+        throw new \Exception("Found not matching search strategy.");
     }
 
 }
