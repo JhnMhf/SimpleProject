@@ -77,11 +77,5 @@ class MixedSearcher extends BaseDataSearcher {
         return $personIds;
              */
     }
-    
-        
-    private function searchInEducations($onlyQueryStringUsedForReferences, $queryString, 
-            $locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds){
-        
-    }
 }
 
