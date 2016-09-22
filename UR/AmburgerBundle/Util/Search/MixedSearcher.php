@@ -4,6 +4,11 @@ namespace UR\AmburgerBundle\Util\Search;
 
 class MixedSearcher extends BaseDataSearcher {
 
+    public function isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){  
+        return true;
+    }
+    
+    //set everything to querystring and combine queries with or
     public function search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){
         
         $listOfPossibleIds = [];

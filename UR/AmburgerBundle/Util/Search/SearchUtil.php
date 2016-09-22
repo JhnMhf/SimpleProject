@@ -7,10 +7,12 @@ class SearchUtil {
     private $LOGGER;
     private $container;
     private $finalDBManager;
+    private $searcherStrategies;
     
     public function __construct($container)
     {
         $this->container = $container;
+        $this->initiateStrategies();
     } 
     
     private function get($identifier){
@@ -31,6 +33,17 @@ class SearchUtil {
         }
         
         return $this->finalDBManager;
+    }
+    
+    private function initiateStrategies(){
+        $this->searcherStrategies = [];
+        
+        $this->searcherStrategies[] = new OnlyPersonDataSearcher($this->getLogger(), $this->getFinalDBManager());
+        $this->searcherStrategies[] = new NoQueryStringAndPersonDataSearcher($this->getLogger(), $this->getFinalDBManager());
+        $this->searcherStrategies[] = new NoQueryStringSearcher($this->getLogger(), $this->getFinalDBManager());
+        $this->searcherStrategies[] = new OnlyQueryStringSearcher($this->getLogger(), $this->getFinalDBManager());
+        $this->searcherStrategies[] = new MixedSearcher($this->getLogger(), $this->getFinalDBManager());
+        
     }
 
     //boolean logic:
@@ -76,34 +89,11 @@ class SearchUtil {
     
     public function search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){
         
-        $noLocationOrDateUsedForSearch = empty($location) && empty($territory) 
-                && empty($country) && empty($date) 
-                && empty($fromDate) && empty($toDate);
-        
-        if($noLocationOrDateUsedForSearch && empty($queryString)){
-            //handle it only with lastname, firstname, patronym
-            $searcher = new OnlyPersonDataSearcher($this->getLogger(), $this->getFinalDBManager());
-            
-            return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
-        } else if((!empty($lastName) || !empty($firstName) || !empty ($patronym)) && empty($queryString)){
-            //write queries which only use what is set
-
-            //check birth, baptism, death, job, jobclass, nation
-            //again for them?
-            $searcher = new NoQueryStringSearcher($this->getLogger(), $this->getFinalDBManager());
-            
-            return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
-        } else if(empty($queryString)) {
-            //write queries which only use what is set, extract person ids
-            //baptism, death and birth have to be handled extra
-            $searcher = new NoQueryStringAndPersonDataSearcher($this->getLogger(), $this->getFinalDBManager());
-            
-            return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
-        } else {
-            //set everything to querystring and combine queries with or
-            $searcher = new MixedSearcher($this->getLogger(), $this->getFinalDBManager());
-            
-            return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+        for($i = 0; $i < count($this->searcherStrategies); $i++){
+            $searcher = $this->searcherStrategies[$i];
+            if($searcher->isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
+                return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+            }
         }
     }
 

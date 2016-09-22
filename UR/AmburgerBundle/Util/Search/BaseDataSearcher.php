@@ -17,8 +17,22 @@ abstract class BaseDataSearcher {
         $this->finalDBManager = $finalDBManager;
     } 
     
+    public abstract function isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+    
     public abstract function search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
 
+    protected function geographicalMarkersAreSet($location, $territory, $country){
+        return !empty($location) || !empty($territory) || !empty($country);
+    }
+    
+    protected function dateMarkersAreSet($date, $fromDate, $toDate){
+        return !empty($date) || !empty($fromDate) || !empty($toDate);
+    }
+    
+    protected function personDataMarkersAreSet($lastName, $firstName, $patronym){
+        return !empty($lastName) || !empty($firstName) || !empty($patronym);
+    }
+    
     protected function extractIdArray($results){
         $idArray = [];
         
