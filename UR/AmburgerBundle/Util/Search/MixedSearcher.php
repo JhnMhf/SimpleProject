@@ -3,7 +3,22 @@
 namespace UR\AmburgerBundle\Util\Search;
 
 class MixedSearcher extends BaseDataSearcher {
+    
+    private $onlyQueryStringSearcher;
+    private $noQueryStringSearcher;
+    private $onlyPersonDataSearcher;
+    private $noQueryStringAndPersonDataSearcher;
 
+    public function __construct($LOGGER, $finalDBManager)
+    {
+        parent::__construct($LOGGER, $finalDBManager);
+        $this->onlyQueryStringSearcher = new OnlyQueryStringSearcher($this->LOGGER, $this->finalDBManager);
+        
+        $this->onlyPersonDataSearcher = new OnlyPersonDataSearcher($this->LOGGER, $this->finalDBManager);
+        $this->noQueryStringAndPersonDataSearcher = new NoQueryStringAndPersonDataSearcher($this->LOGGER, $this->finalDBManager);
+        $this->noQueryStringSearcher = new NoQueryStringSearcher($this->LOGGER, $this->finalDBManager);
+    }
+    
     public function isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){  
         return true;
     }
@@ -11,71 +26,27 @@ class MixedSearcher extends BaseDataSearcher {
     //set everything to querystring and combine queries with or
     public function search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){
         
-        $listOfPossibleIds = [];
+        $personIdsOne = $this->onlyQueryStringSearcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
         
-            for($i = 0; $i < 100; $i++){
-                $listOfPossibleIds[] = $i;
-            }
+        $this->LOGGER->debug("Found " .count($personIdsOne). " with onlyQueryStringSeacher.");
+        $personIdsTwo = array();
+        if($this->onlyPersonDataSearcher->isApplicable(null, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
+            $personIdsTwo = $this->onlyPersonDataSearcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+        
+            $this->LOGGER->debug("Found " .count($personIdsTwo). " with onlyPersonDataSearcher.");
+        } else if($this->noQueryStringAndPersonDataSearcher->isApplicable(null, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
+            $personIdsTwo = $this->noQueryStringAndPersonDataSearcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+        
+            $this->LOGGER->debug("Found " .count($personIdsTwo). " with noQueryStringAndPersonDataSearcher.");
+        } else if($this->noQueryStringSearcher->isApplicable(null, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
+            $personIdsTwo = $this->noQueryStringSearcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
             
-            return $listOfPossibleIds;
-            
-            /*
-             * 
-        $locationReferenceId = null;
-        $territoryReferenceId = null;
-        $countryReferenceId = null;
-        $possibleDateReferenceIds = array();
-        $possibleJobIds = array();
-        $possibleJobClassIds = array();
-        $possibleNationIds = array();
-        $matchingBaptismIds = array();
-        $matchingBirthIds = array();
-        $matchingDeathIds = array();
-        
-        if(!empty($location) || !empty($queryString)){
-            $locationReferenceId = $this->findLocation($queryString, $location);
+            $this->LOGGER->debug("Found " .count($personIdsTwo). " with noQueryStringSearcher.");
+        } else{
+            $this->LOGGER->error("Found no matching searcher in MixedSearcher.");
         }
-        
-        if(!empty($territory) || !empty($queryString)){
-            $territoryReferenceId = $this->findTerritory($queryString, $territory);
-        }
-        
-        if(!empty($country) || !empty($queryString)){
-            $countryReferenceId = $this->findCountry($queryString, $country);
-        }
-        
-        if(!empty($country) || !empty($queryString)){
-            $countryReferenceId = $this->findCountry($queryString, $country);
-        }
-        
-        if(!empty($date) || (!empty($fromDate) && !empty($toDate)) || !empty($queryString)){
-            $possibleDateReferenceIds = $this->findDates($queryString, $date, $fromDate, $toDate);
-        }
-        
-        if(!empty($queryString)){
-            $possibleJobIds = $this->findJob($queryString);
-            $possibleJobClassIds = $this->findJobClass($queryString);
-            $possibleNationIds = $this->findNation($queryString);
-        }
-        
-        $educationIds = $this->searchInEducations($noLocationOrDateUsedForSearch, $queryString, 
-                $locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds);
-        
-        
-        $ids = $educationIds;
-        
-        if($noLocationOrDateUsedForSearch){
-            //combine results from references with found persons from checkallpersons
-            
-            //get person ids for birth, baptism, death etc in an extra query
-            
-            //if only main person, the persons from references must be check if they are a main person
-        } else {
-            //build intersection of persons which are in references as well as in checkallpersons
-        }
-        
-        return $personIds;
-             */
+
+        return array_intersect($personIdsOne, $personIdsTwo);
     }
 }
 
