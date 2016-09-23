@@ -91,7 +91,7 @@ abstract class BaseDataSearcher {
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('nation', '%'.$queryString.'%');
-
+        
         $stmt->execute();
 
         return $this->extractIdArray($stmt->fetchAll());
@@ -146,16 +146,7 @@ abstract class BaseDataSearcher {
             return $searchIds;
         }
     }
-    
-    protected function extractMainPersons($personIds){
-        $finalDBManager = $this->finalDBManager;
-        $sql = "SELECT id FROM person WHERE id IN (?)";
-        
-        $stmt = $finalDBManager->getConnection()->executeQuery($sql, array($personIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
 
-        return $this->extractIdArray($stmt->fetchAll());
-    }
-    
     protected function checkPersonByName($lastName, $firstName, $patronym) {
         return $this->checkBasePersonByName("SELECT id FROM person WHERE ", $lastName, $firstName, $patronym);
     }
@@ -210,6 +201,63 @@ abstract class BaseDataSearcher {
         if(!empty($patronym)){
             $stmt->bindValue('patronym', '%'.$patronym.'%');
         }
+        
+        $stmt->execute();
+
+        return $this->extractIdArray($stmt->fetchAll());
+    }
+    
+    protected function extractMainPersons($personIds){
+        $finalDBManager = $this->finalDBManager;
+        $sql = "SELECT id FROM person WHERE id IN (?)";
+        
+        $stmt = $finalDBManager->getConnection()->executeQuery($sql, array($personIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
+
+        return $this->extractIdArray($stmt->fetchAll());
+    }
+    
+    protected function checkAllPersonsByQueryString($onlyMainPersons, $queryString){
+        if($onlyMainPersons){
+            return $this->checkPersonByQueryString($queryString);
+        } else {
+            $searchIds = $this->checkPersonByQueryString($queryString);
+            
+            $searchIds = array_merge($searchIds, $this->checkRelativeByQueryString($queryString));
+            
+            $searchIds = array_merge($searchIds, $this->checkPartnerByQueryString($queryString));
+            
+            sort($searchIds, SORT_NUMERIC);
+
+            return $searchIds;
+        }
+    }
+    
+    protected function checkPersonByQueryString($queryString) {
+        return $this->checkBasePersonByQueryString("SELECT id FROM person WHERE ", $queryString);
+    }
+    
+    protected function checkRelativeByQueryString($queryString) {
+        return $this->checkBasePersonByQueryString("SELECT id FROM relative WHERE ", $queryString);
+    }
+    
+    protected function checkPartnerByQueryString($queryString) {
+        return $this->checkBasePersonByQueryString("SELECT id FROM partner WHERE ", $queryString);
+    }
+    
+    protected function checkBasePersonByQueryString($baseQuery, $queryString) {
+        $finalDBManager = $this->finalDBManager;
+        
+        $sql = $baseQuery. "last_name LIKE :queryString "
+                . "OR first_name LIKE :queryString "
+                . "OR patronym LIKE :queryString "
+                . "OR birth_name LIKE :queryString "
+                . "OR fore_name LIKE :queryString";
+        
+        $this->LOGGER->debug("Using query: ".$sql);
+        
+        $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+        $stmt->bindValue('queryString', '%'.$queryString.'%');
         
         $stmt->execute();
 
@@ -317,6 +365,136 @@ abstract class BaseDataSearcher {
                 array('death_countryid'), $countryReferenceId, 
                 array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
                 array('id'), $personReferenceIds);
+
+            $personIds = array_merge($personIds, $partnerIds);
+        }
+
+        return $personIds;
+    }
+    
+    protected function searchForJobInPerson($onlyMainPerson,$job){
+        
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = "SELECT DISTINCT id FROM person WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+        $stmt = $finalDBManager->getConnection()->prepare($sql);
+        
+        $stmt->bindValue('job', $job);
+
+        $stmt->execute();
+
+        $personIds = $this->extractIdArray($stmt->fetchAll());
+        if(!$onlyMainPerson) {
+            $sql = "SELECT DISTINCT id FROM relative WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('job', $job);
+
+            $stmt->execute();
+
+            $relativeIds = $this->extractIdArray($stmt->fetchAll());
+        
+            $personIds = array_merge($personIds, $relativeIds);
+
+            $sql = "SELECT DISTINCT id FROM partner WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('job', $job);
+
+            $stmt->execute();
+
+            $partnerIds = $this->extractIdArray($stmt->fetchAll());
+
+            $personIds = array_merge($personIds, $partnerIds);
+        }
+
+        return $personIds;
+    }
+    
+    protected function searchForJobInRoadOfLife($onlyMainPerson,$job){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = "SELECT DISTINCT person_id FROM road_of_life WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+        $stmt = $finalDBManager->getConnection()->prepare($sql);
+        
+        $stmt->bindValue('job', $job);
+
+        $stmt->execute();
+
+        return $this->extractIdArray($stmt->fetchAll(), 'person_id');
+    }
+    
+    protected function searchForJobClassInPerson($onlyMainPerson,$jobClass){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = "SELECT DISTINCT id FROM person WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+        $stmt = $finalDBManager->getConnection()->prepare($sql);
+        
+        $stmt->bindValue('jobClass', $jobClass);
+
+        $stmt->execute();
+
+        $personIds = $this->extractIdArray($stmt->fetchAll());
+        
+        if(!$onlyMainPerson) {
+            $sql = "SELECT DISTINCT id FROM relative WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('jobClass', $jobClass);
+
+            $stmt->execute();
+
+            $relativeIds = $this->extractIdArray($stmt->fetchAll());
+        
+            $personIds = array_merge($personIds, $relativeIds);
+
+            $sql = "SELECT DISTINCT id FROM partner WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('jobClass', $jobClass);
+
+            $stmt->execute();
+
+            $partnerIds = $this->extractIdArray($stmt->fetchAll());
+
+            $personIds = array_merge($personIds, $partnerIds);
+        }
+
+        return $personIds;
+    }
+    
+    protected function searchForNationInPerson($onlyMainPerson,$nation){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = "SELECT DISTINCT id FROM person WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+        $stmt = $finalDBManager->getConnection()->prepare($sql);
+        
+        $stmt->bindValue('nation', $nation);
+
+        $stmt->execute();
+
+        $personIds = $this->extractIdArray($stmt->fetchAll());
+        
+        if(!$onlyMainPerson) {
+            $sql = "SELECT DISTINCT id FROM relative WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('nation', $nation);
+
+            $stmt->execute();
+
+            $relativeIds = $this->extractIdArray($stmt->fetchAll());
+        
+            $personIds = array_merge($personIds, $relativeIds);
+
+            $sql = "SELECT DISTINCT id FROM partner WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('nation', $nation);
+
+            $stmt->execute();
+
+            $partnerIds = $this->extractIdArray($stmt->fetchAll());
 
             $personIds = array_merge($personIds, $partnerIds);
         }
@@ -585,6 +763,48 @@ abstract class BaseDataSearcher {
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
         return $this->extractIdArray($stmt->fetchAll());
+    }
+    
+    
+    private function baseSearchWithInnerQuery($baseOuterQuery, $baseInnerQuery,$extractFieldName, $identifiers, $values, $personIdentifier, $personReferenceIds){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = $baseOuterQuery ."(".$baseInnerQuery;
+
+        $foundOne = false;
+        $executeArray = array();
+        $typeArray = array();
+
+        if (count($values) > 0 && count($identifiers) > 0) {
+            $sql .= $this->buildQueryForIdentifier($identifiers);
+            
+            for($i = 0; $i < count($identifiers); $i++){
+                $executeArray[] = $values[$i];
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+        }
+
+        //close inner query at this point
+        $sql .=")";
+        
+        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
+            if ($foundOne) {
+                $sql .= " AND ";
+            }
+            $sql .= $this->buildQueryForIdentifier($personIdentifier);
+            $foundOne = true;
+            
+            for($i = 0; $i < count($personIdentifier); $i++){
+                $executeArray[] = $personReferenceIds;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+        }
+
+        $this->LOGGER->debug("Using query: " . $sql);
+        
+        $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+
+        return $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
     }
     
     private function buildQueryForIdentifier($identifierArray){

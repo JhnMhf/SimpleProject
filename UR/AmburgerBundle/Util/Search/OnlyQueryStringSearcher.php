@@ -41,31 +41,42 @@ class OnlyQueryStringSearcher extends BaseDataSearcher {
             $this->LOGGER->debug("Found " . count($possibleDateReferenceIds) . " dateranges.");
         }
 
-        if (count($locationReferenceId) == 0 && count($territoryReferenceId) == 0 && count($countryReferenceId) == 0 && count($possibleDateReferenceIds) == 0) {
-            return array();
+        $personIds = array();
+        
+        if (count($locationReferenceId) > 0 
+                || count($territoryReferenceId) > 0 
+                || count($countryReferenceId) > 0 
+                || count($possibleDateReferenceIds) > 0) {
+            
+            $personIds = $this->searchInEducations(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds);
+            $personIds = array_merge($personIds,$this->searchInHonours(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInProperties(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInRanks(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInReligions(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInResidence(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInRoadOfLife(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInStatus(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInWorks(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+
+            //baptism, birth, death
+            $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInDeath($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
         }
 
-        $personIds = $this->searchInEducations(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds);
-        $personIds = array_merge($personIds,$this->searchInHonours(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInProperties(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInRanks(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInReligions(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInResidence(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInRoadOfLife(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInStatus(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInWorks(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+
+        $personIds = array_merge($personIds,$this->searchForJobInPerson($onlyMainPersons, $queryString));
+        $personIds = array_merge($personIds,$this->searchForJobInRoadOfLife($onlyMainPersons, $queryString));
+        $personIds = array_merge($personIds,$this->searchForJobClassInPerson($onlyMainPersons, $queryString));
+        $personIds = array_merge($personIds,$this->searchForNationInPerson($onlyMainPersons, $queryString));
         
-        //baptism, birth, death
-        $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        $personIds = array_merge($personIds,$this->searchInDeath($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
-        
-        //@TODO: job, jobclass, nation
-        
-        
-        //@TODO: persons themself
+        $personIds = array_merge($personIds, $this->checkAllPersonsByQueryString($onlyMainPersons, $queryString));
         
         $personIds = array_unique($personIds);
+        
+        if($onlyMainPersons){
+            $personIds = $this->extractMainPersons($personIds);
+        }
         
         sort($personIds);
         
