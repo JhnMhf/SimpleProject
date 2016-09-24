@@ -86,7 +86,7 @@ class OnlyQueryStringSearcher extends BaseDataSearcher {
     public function isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){  
         return !$this->geographicalMarkersAreSet($location, $territory, $country)
                 && !$this->dateMarkersAreSet($date, $fromDate, $toDate) 
-                && !$this->personDataMarkersAreSet($lastName, $firstName, $patronym, $onlyMainPersons);
+                && !$this->personDataMarkersAreSet($lastName, $firstName, $patronym, null);
     }
 }
 
