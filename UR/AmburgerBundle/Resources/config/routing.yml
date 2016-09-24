@@ -106,6 +106,16 @@ visualization_ids:
     path: /visualization/ids/list/
     defaults: { _controller: AmburgerBundle:Visualization:listOfAllIds }
     methods: [GET]    
+
+visualization_all_locations:
+    path: /visualization/locations/all/
+    defaults: { _controller: AmburgerBundle:Visualization:loadAllLocations }
+    methods: [GET]   
+    
+visualization_locations_for_ids:
+    path: /visualization/locations/ids/
+    defaults: { _controller: AmburgerBundle:Visualization:loadLocationsForIds }
+    methods: [POST]   
     
 # search
 
