@@ -46,7 +46,11 @@ class MixedSearcher extends BaseDataSearcher {
             $this->LOGGER->error("Found no matching searcher in MixedSearcher.");
         }
 
-        return array_intersect($personIdsOne, $personIdsTwo);
+        $intersectedPersonIds = array_intersect($personIdsOne, $personIdsTwo);
+        
+        sort($intersectedPersonIds);
+        
+        return $intersectedPersonIds;
     }
 }
 

@@ -125,6 +125,11 @@ abstract class BaseDataSearcher {
     
     protected function findDatesBasedOnDate($date){
         $parts = explode(".", $date);
+        
+        if(count($parts) != 3){
+            return array();
+        }
+        
         $day = !empty($parts[0]) ? $parts[0] : null;
         $month = !empty($parts[1]) ? $parts[1] : null;
         $year = !empty($parts[2]) ? $parts[2] : null;
