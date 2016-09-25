@@ -67,7 +67,7 @@
     <div class="row map">
         <div class="large-12 columns large-centered center">
             <h2>Karte</h2>
-
+            <div id="map-display"></div>
         </div>
     </div>
 
@@ -153,10 +153,12 @@
     {# As last init the Start #}
     <script>
         $(document).ready(function () {
-            Index.init();
+            Index.init('{{ google_api_key }}');
         });
     </script>
+    
 
+    
 {% endblock %}
 
 {% block templates %}

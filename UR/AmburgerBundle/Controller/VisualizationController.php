@@ -21,7 +21,8 @@ class VisualizationController extends Controller{
     
     public function indexAction()
     {
-        return $this->render('AmburgerBundle:Visualization:index.html.twig');
+        $googleApiKey = $this->container->getParameter('amburger.google_api_key');
+        return $this->render('AmburgerBundle:Visualization:index.html.twig', array('google_api_key'=>$googleApiKey));
     }
 
     public function detailAction($ID)

@@ -21,7 +21,10 @@ class AmburgerExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
+       
+        //http://stackoverflow.com/questions/4821692/how-do-i-read-configuration-settings-from-symfony2-config-yml
+        $container->setParameter( 'amburger.google_api_key', $config[ 'google_api_key' ]);
+        
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

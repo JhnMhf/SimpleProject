@@ -18,3 +18,7 @@
 .fa-green {
     color: green;
 }
+
+#map-display {
+    height: 500px;
+}

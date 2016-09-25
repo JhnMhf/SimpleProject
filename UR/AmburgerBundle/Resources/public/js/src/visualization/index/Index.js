@@ -4,8 +4,8 @@
 */
 var Index = {
 
-    init: function() {
-        this.IndexController.init();
+    init: function(googleApiKey) {
+        this.IndexController.init(googleApiKey);
     }
 };
 

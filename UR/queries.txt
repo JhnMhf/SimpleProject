@@ -98,3 +98,4 @@ ORDER BY type
 
 /* get all comments which contain a digit */
 SELECT ID,kommentar FROM `person` WHERE kommentar REGEXP '[0-9]' GROUP BY kommentar ORDER BY count(*) 
+

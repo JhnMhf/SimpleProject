@@ -23,6 +23,8 @@ class Configuration implements ConfigurationInterface
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
+        //http://stackoverflow.com/questions/4821692/how-do-i-read-configuration-settings-from-symfony2-config-yml
+        $rootNode->children()->scalarNode('google_api_key')->end();
 
         return $treeBuilder;
     }

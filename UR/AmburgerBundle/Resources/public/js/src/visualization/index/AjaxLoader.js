@@ -52,7 +52,7 @@ Index.AjaxLoader = (function(){
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
 
-            $(that).trigger("idListLoaded", {'data':data});
+            $(that).trigger("idListLoadedAll", {'data':data});
         });
     },
     
@@ -79,11 +79,40 @@ Index.AjaxLoader = (function(){
         }
         
         return queryString;
+    },
+    
+    loadLocationDataForAll = function(){
+        $.ajax({
+            type: "GET",
+            url: 'visualization/locations/all/',
+            dataType: 'json',
+        })
+        .always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("locationsLoaded", {'data':data});
+        });
+    },
+    
+    loadLocationsForPersonList= function(personList){
+        $.ajax({
+            type: "POST",
+            url: 'visualization/locations/ids/',
+            dataType: 'json',
+            data: JSON.stringify(personList)
+        })
+        .always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("locationsLoaded", {'data':data});
+        });
     };
 
     that.init = init;
     that.search = search;
     that.loadPersonListData = loadPersonListData;
     that.loadInitialIdList = loadInitialIdList;
+    that.loadLocationDataForAll = loadLocationDataForAll;
+    that.loadLocationsForPersonList = loadLocationsForPersonList;
     return that;
 })();
