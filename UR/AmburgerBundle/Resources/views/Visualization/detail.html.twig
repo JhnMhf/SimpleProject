@@ -19,7 +19,7 @@
     <div class="row map">
         <div class="large-12 columns large-centered center">
             <h2>Karte</h2>
-            
+            <div id="map-display"></div>
         </div>
     </div>
     
@@ -28,5 +28,35 @@
             <h2>Vollständige Personendaten</h2>
         </div>
     </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Start #}
+    <script src="{{asset('bundles/amburger/js/src/visualization/detail/Detail.js')}}"></script>
+
+    {# Models #}
+    
+
+    {# Views #}
+    <script src="{{asset('bundles/amburger/js/src/visualization/detail/MapView.js')}}"></script>
+    {# Manager #}
+
+
+    {# Controllers #}
+    <script src="{{ asset('bundles/amburger/js/src/visualization/detail/AjaxLoader.js') }}"></script>
+    <script src="{{asset('bundles/amburger/js/src/visualization/detail/DetailController.js')}}"></script>
+
+
+
+    {# As last init the Start #}
+    <script>
+        $(document).ready(function () {
+            Detail.init('{{ google_api_key }}');
+        });
+    </script>
+    
+
     
 {% endblock %}

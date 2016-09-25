@@ -27,7 +27,54 @@ class VisualizationController extends Controller{
 
     public function detailAction($ID)
     {
-        return $this->render('AmburgerBundle:Visualization:detail.html.twig');
+        $googleApiKey = $this->container->getParameter('amburger.google_api_key');
+        return $this->render('AmburgerBundle:Visualization:detail.html.twig', array('google_api_key'=>$googleApiKey));
+    }
+    
+    public function detailLoadAction($ID)
+    {
+        $person = $this->loadPersonById($ID);
+        
+        if(is_null($person)){
+            $response = new Response();
+            $response->setContent("Found no person for this id.");
+            $response->setStatusCode("404");
+            return $response;
+        } else {      
+            $serializer = $this->get('serializer');
+            $json = $serializer->serialize($person, 'json');
+            $jsonResponse = new JsonResponse();
+            $jsonResponse->setContent($json);
+
+            return $jsonResponse;
+        }
+    }
+    
+    public function detailLocationsAction($ID)
+    {
+        $locationData = $this->internalLoadLocationsForIds(array($ID));
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($locationData, 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+
+        return $jsonResponse;
+    }
+    
+    private function loadPersonById($ID){
+        $newDBManager = $this->get('doctrine')->getManager('new');
+        $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+
+        if (is_null($person)) {
+            $person = $newDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+
+        if (is_null($person)) {
+            $person = $newDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+
+        return $person;
+            
     }
     
     public function listOfAllIdsAction(){

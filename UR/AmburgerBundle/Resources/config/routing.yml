@@ -98,9 +98,19 @@ visualization_index:
     methods: [GET]
 
 visualization_detail:
-    path: /visualization/{ID}
+    path: /visualization/{ID}/
     defaults: { _controller: AmburgerBundle:Visualization:detail }
     methods: [GET]
+
+visualization_detail_load:
+    path: /visualization/{ID}/load
+    defaults: { _controller: AmburgerBundle:Visualization:detailLoad }
+    methods: [GET]
+
+visualization_detail_locations:
+    path: /visualization/{ID}/locations
+    defaults: { _controller: AmburgerBundle:Visualization:detailLocations }
+    methods: [GET]   
 
 visualization_ids:
     path: /visualization/ids/list/
