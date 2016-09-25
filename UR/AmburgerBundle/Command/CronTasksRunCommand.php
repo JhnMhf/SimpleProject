@@ -20,7 +20,7 @@ class CronTasksRunCommand extends ContainerAwareCommand
 {
     //43200 would be 12 hours
     //3600 would be one hour
-    const RESET_TIMEOUT_IN_SECONDS = 3600;
+    const RESET_TIMEOUT_IN_SECONDS = 900;
     
     private $output;
 

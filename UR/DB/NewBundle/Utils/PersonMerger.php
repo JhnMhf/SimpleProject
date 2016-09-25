@@ -639,7 +639,7 @@ class PersonMerger {
         } else if ($toBeDeletedBirth != null) {
             $this->LOGGER->debug("Found only entry for toBeDeleted, moving it to dataMaster");
             $dataMaster->setBirth($toBeDeletedBirth);
-            $toBeDeletedBirth->setBirth(null);
+            $toBeDeleted->setBirth(null);
         }
     }
 
