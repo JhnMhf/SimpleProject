@@ -77,7 +77,7 @@ Index.SearchView = (function () {
 
         if (date) {
             data['date'] = date;
-        } else if (fromDate && toDate) {
+        } else if (fromDate != ".." || toDate != "..") {
             data['fromDate'] = fromDate;
             data['toDate'] = toDate;
         }

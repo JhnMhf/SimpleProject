@@ -4,7 +4,7 @@ Detail.MapView = (function(){
     mapContainerId = 'map-display',
 
     map = {},
-    heatmap = undefined,
+    markers = [],
     locationsData = {},
     
     googleApiKey = {},
@@ -24,7 +24,7 @@ Detail.MapView = (function(){
         locationsData = newLocationsData;
         
         repositionMap();
-        displayHeatMap();
+        displayMarkers();
     },
     
     startMap = function(){
@@ -39,30 +39,26 @@ Detail.MapView = (function(){
         }
     },
     
-    displayHeatMap = function(){
-        if(heatmap !== undefined){
-            heatmap.setMap(null);
+    displayMarkers = function(){
+        if(markers.length > 0){
+            for(var i = 0; i < markers.length; i++){
+                markers[i].setMap(null);
+            }
         }
         
-        heatmap = new google.maps.visualization.HeatmapLayer({
-          data: getPoints(),
-          map: map
-        });
-    },
-    
-    getPoints = function(){
-        var points = [];
+        markers = [];
+
         console.log(locationsData, locationsData.length);
         for(var i = 0; i < locationsData.length; i++){
             var latitude = parseFloat(locationsData[i]['latitude']);
             var longitude = parseFloat(locationsData[i]['longitude']);
-            for(var j = 0; j < parseInt(locationsData[i]['count']); j++){
-                points.push(new google.maps.LatLng(latitude, longitude));
-            }
+            var latLng = new google.maps.LatLng(latitude, longitude);
+            markers.push(new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: locationsData[i]['name']
+            }));
         }
-
-        console.log(points);
-        return points;
     },
     
     initMap = function() {
