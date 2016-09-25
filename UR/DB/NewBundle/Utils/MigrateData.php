@@ -50,7 +50,8 @@ class MigrateData {
 
     //http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy/26972181#26972181
     //private $DATE_REGEX = "/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/";
-    const DATE_REGEX = "/^(\D*)(0|0?[1-9]|[12][0-9]|3[01])[\.\-](0|0?[1-9]|1[012])[\.\-](\d{4})(.*)$/";
+    const DATE_REGEX = "/^(\D*)(0|00|0?[1-9]|[12][0-9]|3[01])?( ?)[\.\-\ \:]( ?)(0|00|0?[1-9]|1[012])?( ?)[\.\-\ \:]( ?)(\d{4})(.*)$/";
+    const YEAR_REGEX = "/^(\-)?(\d{4})(.*)$/";
     const PERSON_CLASS = "UR\DB\NewBundle\Entity\Person";
     const RELATIVE_CLASS = "UR\DB\NewBundle\Entity\Relative";
     const PARTNER_CLASS = "UR\DB\NewBundle\Entity\Partner";
@@ -452,59 +453,64 @@ class MigrateData {
         $newDate = new Date();
         if (count($date) > 0) {
             $secondDate = null;
+            $beforeOrComment = $date[1];
+            $day = $date[2];
+            $month = $date[5];
+            $year = $date[8];
+            $afterOrComment = $date[9];
 
-            if (strpos($date[1], "- im Original")) {
+            if (strpos($beforeOrComment, "- im Original")) {
                 $this->LOGGER->error("Should not happen anymore? ".$date[0]);
                 $newDate->setComment($date[0]);
                 return $newDate;
             }
 
             //found date, do the right things...
-            if ($date[2] != "0") {
-                $newDate->setDay($date[2]);
+            if ($day != "0") {
+                $newDate->setDay(intval($day));
             }
 
-            if ($date[3] != "0") {
-                $newDate->setMonth($date[3]);
+            if ($month != "0") {
+                $newDate->setMonth(intval($month));
             }
 
-            if ($date[4] != "0") {
-                $newDate->setYear($date[4]);
+            if ($year != "0") {
+                $newDate->setYear(intval($year));
             }
 
             $commentString = $comment;
 
-            if ($date[1] != "") {
-                if ($date[1] == "-" && !$inner) {
+            if ($beforeOrComment != "") {
+                if ($beforeOrComment == "-" && !$inner) {
                     $newDate->setBeforeDate(1);
-                } else if($date[1] == "-" && $inner){
+                } else if($beforeOrComment == "-" && $inner){
                     $this->LOGGER->debug("Not setting - as before date and instead ignoring it, because we are in a daterange.");
                 } else {
-                    $commentString .= trim($date[1]);
+                    $commentString .= trim($beforeOrComment);
                 }
             }
 
-            if ($date[5] != "") {
-                if ($date[5] == "-" && !$inner) {
+            if ($afterOrComment != "") {
+                if ($afterOrComment == "-" && !$inner) {
                     $newDate->setAfterDate(1);
-                } else if (substr($date[5], 0, 1) == "-") {
+                } else if (substr($afterOrComment, 0, 1) == "-") {
                     //persist first date before searching for second date!
                     $this->getDBManager()->persist($newDate);
                     //check for daterange
-                    $this->LOGGER->debug("Check for a daterange: ".$date[5]);
-                    $secondDate = $this->extractDateObjFromString($date[5], true);
+                    $this->LOGGER->debug("Check for a daterange: ".$afterOrComment);
+                    $secondDate = $this->extractDateObjFromString($afterOrComment, true);
 
                     if ($secondDate == null) {
                         if (!$inner) {
                             $newDate->setAfterDate(1);
                         }
 
-                        $commentString .= trim(substr($date[5], 1));
+                        $commentString .= trim(substr($afterOrComment, 1));
                     }
-                } else if($date[5] == "-" && $inner){
+                } else if($afterOrComment == "-" && $inner){
                     $this->LOGGER->debug("Not setting - as after date and instead ignoring it, because we are in a daterange.");
                 } else {
-                    $commentString .= trim($date[5]);
+                    $commentString .= trim($afterOrComment);
                 }
             }
 
@@ -526,11 +532,39 @@ class MigrateData {
             $this->LOGGER->debug("Returning date: ".$newDate);
             return $newDate;
         } else {
-            $this->LOGGER->error("ERROR: " . $string);
-            $newDate->setComment("ERROR: " . $string);
-            $this->getDBManager()->persist($newDate);
-            $this->LOGGER->debug("Returning date: ".$newDate);
-            return $newDate;
+            //check if it is perhaps only a year
+            
+            $secondDate = null;
+            preg_match(self::YEAR_REGEX, $dateString, $secondDate);
+            
+            if(count($secondDate) > 0){
+                $beforeYear = $date[1];
+                $year = $date[2];
+                $afterYear = $date[3];
+                $comment = $comment.$date[4];
+                
+                $newDate->setYear($year);
+                $newDate->setComment($comment);
+                
+                if ($beforeYear != "") {
+                    $newDate->setBeforeDate(true);
+                }
+                
+                if ($afterYear != "") {
+                    $newDate->setAfterDate(true);
+                }
+                
+                $this->getDBManager()->persist($newDate);
+                
+                $this->LOGGER->debug("Returning date: ".$newDate);
+                return $newDate;
+            } else {
+                $this->LOGGER->error("ERROR: " . $string);
+                $newDate->setComment("ERROR: " . $string);
+                $this->getDBManager()->persist($newDate);
+                $this->LOGGER->debug("Returning date: ".$newDate);
+                return $newDate;
+            }
         }
     }
 
@@ -565,11 +599,7 @@ class MigrateData {
         } else{
             $result[0] = Gender::UNKNOWN;
         }
-        
-        
-        
-        
-        
+
         return $result;
     }
     
