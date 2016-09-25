@@ -22,6 +22,10 @@ services:
         class: UR\DB\NewBundle\Utils\LocationToTerritoryMappingService
         arguments: 
            container: "@service_container"
+    locationGeodata.service:
+        class: UR\DB\NewBundle\Utils\LocationGeodataService
+        arguments: 
+           container: "@service_container"
     comparer.service:
         class: UR\DB\NewBundle\Utils\PersonComparer
         arguments: 

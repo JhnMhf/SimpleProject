@@ -60,6 +60,7 @@ class MigrateData {
     private $newDBManager;
     private $normalizationService;
     private $locationToTerritoryService;
+    private $locationGeodataService;
 
     //@TODO: Check if abbrevations are checked at all necessary places!
     public function __construct($container) {
@@ -67,6 +68,7 @@ class MigrateData {
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
         $this->normalizationService = $this->get("normalization.service");
         $this->locationToTerritoryService = $this->get("locationToTerritory.service");
+        $this->locationGeodataService = $this->get('locationGeodata.service');
     }
     
     private function getDBManager(){
@@ -138,8 +140,7 @@ class MigrateData {
 
             //returns null if no information are in the database
             $territoryName = $this->locationToTerritoryService->getTerritoryForLocation($locationName);
-
-
+            
             if ($territoryName == null) {
                 return null;
             }
@@ -209,6 +210,14 @@ class MigrateData {
 
         $newLocation->setName($locationName);
         $newLocation->setComment($this->normalize($comment));
+        
+        //try to get geodata
+        $geodata = $this->locationGeodataService->getGeodataForLocation($locationName);
+        
+        if(!is_null($geodata)){
+            $newLocation->setLatitude($geodata[0]);
+            $newLocation->setLongitude($geodata[1]);
+        }
 
         $this->getDBManager()->persist($newLocation);
         $this->getDBManager()->flush();

@@ -2824,7 +2824,7 @@ class MigrationUtil {
             $result[1] = $stringOfReferenceIds;
         } else if (substr($lowerCaseReferenceIds, -2) == "??") {
             $this->LOGGER->debug("Found an '??' at the end of " . $stringOfReferenceIds);
-            $result[0] = trim(substr($stringOfReferenceIds, 0, strlen($stringOfReferenceIds) - 1));
+            $result[0] = trim(substr($stringOfReferenceIds, 0, strlen($stringOfReferenceIds) - 2));
             $result[1] = "??";
         } else if (substr($lowerCaseReferenceIds, -1) == "?") {
             $this->LOGGER->debug("Found an '?' at the end of " . $stringOfReferenceIds);
