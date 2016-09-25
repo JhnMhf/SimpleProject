@@ -33,10 +33,11 @@ class CronTasksRunCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('monolog.logger.cron')->info("Running cron tasks...");
-        $output->writeln('<comment>Running Cron Tasks...</comment>');
-
         $this->output = $output;
+        $this->getContainer()->get('monolog.logger.cron')->info("Running cron tasks...");
+        $this->writeToOutput('<comment>Running Cron Tasks...</comment>');
+
+        
         $em = $this->getContainer()->get('doctrine')->getManager('system');
         
         if(!$this->startRun($em)){
@@ -47,7 +48,7 @@ class CronTasksRunCommand extends ContainerAwareCommand
         
         $this->finishRun($em);
 
-        $output->writeln('<comment>Done!</comment>');
+        $this->writeToOutput('<comment>Done!</comment>');
     }
     
     private function startRun($em){
@@ -74,13 +75,13 @@ class CronTasksRunCommand extends ContainerAwareCommand
             $reset = (time() >= $resetTime);
             
             if($reset){
-                $this->output->writeln("<comment>The previous runner somehow didn't stop. Restarting the worker.</comment>");
+                $this->writeToOutput("<comment>The previous runner somehow didn't stop. Restarting the worker.</comment>");
                 $this->getContainer()->get("monolog.logger.cron")->info("The previous runner somehow didn't stop. Restarting the worker.");
                 $taskWorkers[0]->setRunning(true);
                 $taskWorkers[0]->setLastRun(new \DateTime());
                 $em->merge($taskWorkers[0]);
             }else {
-                $this->output->writeln('<comment>Previous worker is still running. Skipping this run.</comment>');
+                $this->writeToOutput('<comment>Previous worker is still running. Skipping this run.</comment>');
                 $this->getContainer()->get('monolog.logger.cron')->info("Previous worker is still running. Skipping this run.");
                 return false;
             }
@@ -89,6 +90,16 @@ class CronTasksRunCommand extends ContainerAwareCommand
         $em->flush();
         
         return true;
+    }
+    
+    private function writeToOutput($string){
+        $this->output->writeln($this->currentDateAsString()." ".$string);
+    }
+    
+    private function currentDateAsString(){
+        $date = new \DateTime();
+                
+        return $date->format('Y-m-d H:i:s');
     }
     
     private function finishRun($em){
@@ -113,7 +124,7 @@ class CronTasksRunCommand extends ContainerAwareCommand
                 $run = (time() >= $nextrun);
 
                 if ($run) {
-                    $this->output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask));
+                    $this->writeToOutput(sprintf('Running Cron Task <info>%s</info>', $crontask));
 
                     // Set $lastrun for this crontask
                     $crontask->setLastRun(new \DateTime());
@@ -121,24 +132,24 @@ class CronTasksRunCommand extends ContainerAwareCommand
                     try {
                         $commands = $crontask->getCommands();
                         foreach ($commands as $command) {
-                            $this->output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
+                            $this->writeToOutput(sprintf('Executing command <comment>%s</comment>...', $command));
 
                             // Run the command
                             $this->runCommand($command);
                         }
-                        $this->output->writeln('<info>SUCCESS</info>');
+                        $this->writeToOutput('<info>SUCCESS</info>');
                     } catch (\Exception $e) {
-                        $this->output->writeln('<error>ERROR</error>');
+                        $this->writeToOutput('<error>ERROR</error>');
                         $this->getContainer()->get('monolog.logger.cron')->info("An exception occured while running the tasks: ".$e);
                     }
 
                     // Persist crontask
                     $em->persist($crontask);
                 } else {
-                    $this->output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask));
+                    $this->writeToOutput(sprintf('Skipping Cron Task <info>%s</info>', $crontask));
                 }
             }else {
-                $this->output->writeln(sprintf('Cron Task <info>%s</info> is deactivated', $crontask));
+                $this->writeToOutput(sprintf('Cron Task <info>%s</info> is deactivated', $crontask));
             }
             
             
