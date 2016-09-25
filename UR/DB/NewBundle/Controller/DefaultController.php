@@ -50,41 +50,80 @@ class DefaultController extends Controller {
     //http://stackoverflow.com/questions/5452760/truncate-foreign-key-constrained-table
     public function clearDatabaseAction() {
 
-        $sqlStatements = [
-            //"SET FOREIGN_KEY_CHECKS = 0;",
-            "TRUNCATE baptism CASCADE;",
-            "TRUNCATE birth CASCADE;",
-            "TRUNCATE country CASCADE;",
-            "TRUNCATE date CASCADE;",
-            "TRUNCATE death CASCADE;",
-            "TRUNCATE education CASCADE;",
-            "TRUNCATE honour CASCADE;",
-            "TRUNCATE is_grandparent CASCADE;",
-            "TRUNCATE is_in_relationship_with CASCADE;",
-            "TRUNCATE is_parent CASCADE;",
-            "TRUNCATE is_parent_in_law CASCADE;",
-            "TRUNCATE is_sibling CASCADE;",
-            "TRUNCATE job CASCADE;",
-            "TRUNCATE job_class CASCADE;",
-            "TRUNCATE location CASCADE;",
-            "TRUNCATE nation CASCADE;",
-            "TRUNCATE partner CASCADE;",
-            "TRUNCATE person CASCADE;",
-            "TRUNCATE property CASCADE;",
-            "TRUNCATE rank CASCADE;",
-            "TRUNCATE relative CASCADE;",
-            "TRUNCATE religion CASCADE;",
-            "TRUNCATE residence CASCADE;",
-            "TRUNCATE road_of_life CASCADE;",
-            "TRUNCATE source CASCADE;",
-            "TRUNCATE status CASCADE;",
-            "TRUNCATE territory CASCADE;",
-            "TRUNCATE unique_id_sequence CASCADE;",
-            "TRUNCATE wedding CASCADE;",
-            "TRUNCATE works CASCADE;"
-            //"SET FOREIGN_KEY_CHECKS = 1;"
-        ];
-
+        $mysql = true;
+        
+        if($mysql){
+            $sqlStatements = [
+                "SET FOREIGN_KEY_CHECKS = 0;",
+                "TRUNCATE baptism;",
+                "TRUNCATE birth;",
+                "TRUNCATE country;",
+                "TRUNCATE date;",
+                "TRUNCATE death;",
+                "TRUNCATE education;",
+                "TRUNCATE honour;",
+                "TRUNCATE is_grandparent;",
+                "TRUNCATE is_in_relationship_with;",
+                "TRUNCATE is_parent;",
+                "TRUNCATE is_parent_in_law;",
+                "TRUNCATE is_sibling;",
+                "TRUNCATE job;",
+                "TRUNCATE job_class;",
+                "TRUNCATE location;",
+                "TRUNCATE nation;",
+                "TRUNCATE partner;",
+                "TRUNCATE person;",
+                "TRUNCATE property;",
+                "TRUNCATE rank;",
+                "TRUNCATE relative;",
+                "TRUNCATE religion;",
+                "TRUNCATE residence;",
+                "TRUNCATE road_of_life;",
+                "TRUNCATE source;",
+                "TRUNCATE status;",
+                "TRUNCATE territory;",
+                "TRUNCATE unique_id_sequence;",
+                "TRUNCATE wedding;",
+                "TRUNCATE works;",
+                "SET FOREIGN_KEY_CHECKS = 1;"
+                ];
+        } else {
+            $sqlStatements = [
+                //"SET FOREIGN_KEY_CHECKS = 0;",
+                "TRUNCATE baptism CASCADE;",
+                "TRUNCATE birth CASCADE;",
+                "TRUNCATE country CASCADE;",
+                "TRUNCATE date CASCADE;",
+                "TRUNCATE death CASCADE;",
+                "TRUNCATE education CASCADE;",
+                "TRUNCATE honour CASCADE;",
+                "TRUNCATE is_grandparent CASCADE;",
+                "TRUNCATE is_in_relationship_with CASCADE;",
+                "TRUNCATE is_parent CASCADE;",
+                "TRUNCATE is_parent_in_law CASCADE;",
+                "TRUNCATE is_sibling CASCADE;",
+                "TRUNCATE job CASCADE;",
+                "TRUNCATE job_class CASCADE;",
+                "TRUNCATE location CASCADE;",
+                "TRUNCATE nation CASCADE;",
+                "TRUNCATE partner CASCADE;",
+                "TRUNCATE person CASCADE;",
+                "TRUNCATE property CASCADE;",
+                "TRUNCATE rank CASCADE;",
+                "TRUNCATE relative CASCADE;",
+                "TRUNCATE religion CASCADE;",
+                "TRUNCATE residence CASCADE;",
+                "TRUNCATE road_of_life CASCADE;",
+                "TRUNCATE source CASCADE;",
+                "TRUNCATE status CASCADE;",
+                "TRUNCATE territory CASCADE;",
+                "TRUNCATE unique_id_sequence CASCADE;",
+                "TRUNCATE wedding CASCADE;",
+                "TRUNCATE works CASCADE;"
+                //"SET FOREIGN_KEY_CHECKS = 1;"
+            ];
+        }
+        
         $newDBManager = $this->get('doctrine')->getManager('new');
 
 
