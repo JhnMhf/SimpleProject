@@ -92,6 +92,10 @@ Index.SearchView = (function () {
         var selectedMonth = $("." + extendedSearchDiv + " select[name='date-month']").find('option:selected').attr('value');
         var year = $("." + extendedSearchDiv + " input[name='date-year']").val();
         
+        if(selectedDay.length == 0 && selectedMonth.length == 0 && year.length == 0){
+            return undefined;
+        }
+        
         return selectedDay+"."+selectedMonth+"."+year;
     },
     
@@ -100,6 +104,10 @@ Index.SearchView = (function () {
         var selectedMonth = $("." + extendedSearchDiv + " select[name='from-date-month']").find('option:selected').attr('value');
         var year = $("." + extendedSearchDiv + " input[name='from-date-year']").val();
         
+        if(selectedDay.length == 0 && selectedMonth.length == 0 && year.length == 0){
+            return "..";
+        }
+        
         return selectedDay+"."+selectedMonth+"."+year;
     },
     
@@ -107,6 +115,10 @@ Index.SearchView = (function () {
         var selectedDay = $("." + extendedSearchDiv + " select[name='to-date-day']").find('option:selected').attr('value');
         var selectedMonth = $("." + extendedSearchDiv + " select[name='to-date-month']").find('option:selected').attr('value');
         var year = $("." + extendedSearchDiv + " input[name='to-date-year']").val();
+        
+        if(selectedDay.length == 0 && selectedMonth.length == 0 && year.length == 0){
+            return "..";
+        }
         
         return selectedDay+"."+selectedMonth+"."+year;
     };

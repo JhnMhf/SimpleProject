@@ -136,48 +136,63 @@ abstract class BaseDataSearcher {
         
         $finalDBManager = $this->finalDBManager;
         $stmt = null;
-        if(!is_null($year) && !is_null($month) && !is_null($day)){
-            $sql = "SELECT id FROM date WHERE year = :year AND month = :month AND day = :day";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('year', $year);
-            $stmt->bindValue('month', $month);
-            $stmt->bindValue('day', $day);
-        } else if(!is_null($year) && !is_null($month) && is_null($day)){
-            $sql = "SELECT id FROM date WHERE year = :year AND month = :month";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('year', $year);
-            $stmt->bindValue('month', $month);
-        }  else if(is_null($year) && !is_null($month) && !is_null($day)){
-            $sql = "SELECT id FROM date WHERE month = :month AND day = :day";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('month', $month);
-            $stmt->bindValue('day', $day);
-        } else if(!is_null($year) && is_null($month) && !is_null($day)){
-            $sql = "SELECT id FROM date WHERE year = :year AND day = :day";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('year', $year);
-            $stmt->bindValue('day', $day);
-        } else if(!is_null($year) && is_null($month) && is_null($day)){
-            $sql = "SELECT id FROM date WHERE year = :year";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('year', $year);
-        } else if(is_null($year) && !is_null($month) && is_null($day)){
-            $sql = "SELECT id FROM date WHERE month = :month";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('month', $month);
-        } else if(is_null($year) && is_null($month) && !is_null($day)){
-            $sql = "SELECT id FROM date WHERE day = :day";
-            $stmt = $finalDBManager->getConnection()->prepare($sql);
-
-            $stmt->bindValue('day', $day);
-        }
         
+        if(!is_null($year)){
+            if(!is_null($month)){
+                if(!is_null($day)){
+                    $sql = "SELECT id FROM date WHERE year = :year AND month = :month AND day = :day";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('year', $year);
+                    $stmt->bindValue('month', $month);
+                    $stmt->bindValue('day', $day);
+                } else {
+                    $sql = "SELECT id FROM date WHERE year = :year AND month = :month";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('year', $year);
+                    $stmt->bindValue('month', $month);
+                }
+            } else {
+                if(!is_null($day)){
+                    $sql = "SELECT id FROM date WHERE year = :year AND day = :day";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('year', $year);
+                    $stmt->bindValue('day', $day);
+                } else {
+                    $sql = "SELECT id FROM date WHERE year = :year";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('year', $year);
+                }
+            }
+        } else {
+            if(!is_null($month)){
+                if(!is_null($day)){
+                    $sql = "SELECT id FROM date WHERE month = :month AND day = :day";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('month', $month);
+                    $stmt->bindValue('day', $day);
+                } else {
+                    $sql = "SELECT id FROM date WHERE month = :month";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('month', $month);
+                }
+            } else {
+                if(!is_null($day)){
+                    $sql = "SELECT id FROM date WHERE day = :day";
+                    $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+                    $stmt->bindValue('day', $day);
+                } else {
+                   //should never happen
+                }
+            }
+        }
+
         $stmt->execute();
 
         return $this->extractIdArray($stmt->fetchAll());
@@ -194,10 +209,113 @@ abstract class BaseDataSearcher {
         $toMonth = !empty($toParts[1]) ? $toParts[1] : null;
         $toYear = !empty($toParts[2]) ? $toParts[2] : null;
         
+        if(count($fromParts) != 3 || count($toParts) != 3){
+            return array();
+        }
+        
         $finalDBManager = $this->finalDBManager;
-        $stmt = null;
         
         
+        $fromQueryPart = $this->buildFromDateQuery($fromYear, $fromMonth, $fromDay);
+        $toQueryPart = $this->buildToDateQuery($toYear, $toMonth, $toDay);
+
+        $sql = "";
+        if(!empty($fromQueryPart) && !empty($toQueryPart)){
+            $sql = "SELECT id FROM date WHERE ".$fromQueryPart. " AND ". $toQueryPart;
+        } else if(!empty($fromQueryPart)){
+            $sql = "SELECT id FROM date WHERE ".$fromQueryPart;
+        } else if(!empty($toQueryPart)){
+            $sql = "SELECT id FROM date WHERE ".$toQueryPart;
+        }
+        
+        $stmt = $stmt = $finalDBManager->getConnection()->prepare($sql);
+        
+        if(!is_null($fromYear)){
+            $stmt->bindValue('fromYear', $fromYear);
+        }
+        if(!is_null($fromMonth)){
+            $stmt->bindValue('fromMonth', $fromMonth);
+        }
+        if(!is_null($fromDay)){
+           $stmt->bindValue('fromDay', $fromDay);
+        }
+        if(!is_null($toYear)){
+            $stmt->bindValue('toYear', $toYear);
+        }
+        if(!is_null($toMonth)){
+            $stmt->bindValue('toMonth', $toMonth);
+        }
+        if(!is_null($toDay)){
+            $stmt->bindValue('toDay', $toDay);
+        }
+        
+        $stmt->execute();
+
+        return $this->extractIdArray($stmt->fetchAll());
+    }
+    
+    private function buildFromDateQuery($fromYear, $fromMonth, $fromDay){
+        if(!is_null($fromYear)){
+            if(!is_null($fromMonth)){
+                if(!is_null($fromDay)){
+                    return "(year > :fromYear OR (year = :fromYear AND (month > :fromMonth OR (month = :fromMonth AND day >= :fromDay))))";
+                } else {
+                    return "(year > :fromYear OR (year = :fromYear AND month >= :fromMonth))";
+                }
+            } else {
+                if(!is_null($fromDay)){
+                    return "(year > :fromYear OR (year = :fromYear AND day >= :fromDay))";
+                } else {
+                    return "(year >= :fromYear )";
+                }
+            }
+        } else {
+            if(!is_null($fromMonth)){
+                if(!is_null($fromDay)){
+                    return "(month > :fromMonth OR (month = :fromMonth AND day >= :fromDay))";
+                } else {
+                    return "(month >= :fromMonth)";
+                }
+            } else {
+                if(!is_null($fromDay)){
+                   return "(day >= :fromDay)";
+                } else {
+                   return "";
+                }
+            }
+        }
+    }
+    
+    private function buildToDateQuery($toYear, $toMonth, $toDay){
+        if(!is_null($toYear)){
+            if(!is_null($toMonth)){
+                if(!is_null($toDay)){
+                    return "(year < :toYear OR (year = :toYear AND (month < :toMonth OR (month = :toMonth AND day <= :toDay))))";
+                } else {
+                    return "(year < :toYear OR (year = :toYear AND month <= :toMonth))";
+                }
+            } else {
+                if(!is_null($toDay)){
+                    return "(year < :toYear OR (year = :toYear AND day <= :toDay))";
+                } else {
+                    return "(year <= :toYear)";
+                }
+            }
+        } else {
+            if(!is_null($toMonth)){
+                if(!is_null($toDay)){
+                    return "(month < :toMonth OR (month = :toMonth AND day <= :toDay))";
+                } else {
+                    return "(month <= :toMonth)";
+                }
+            } else {
+                if(!is_null($toDay)){
+                   return "(day <= :toDay)";
+                } else {
+                   return "";
+                }
+            }
+        }
     }
 
     protected function checkAllPersonsByNames($onlyMainPersons, $lastName, $firstName, $patronym){
