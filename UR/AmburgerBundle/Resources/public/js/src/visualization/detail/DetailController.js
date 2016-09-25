@@ -8,6 +8,8 @@ Detail.DetailController = (function(){
     /* AjaxLoader */
     ajaxLoader = {},
     
+    personView = {},
+    
     personId = undefined,
 
     /* 
@@ -16,6 +18,8 @@ Detail.DetailController = (function(){
     init = function(googleApiKey) {
         
         mapView = Detail.MapView.init(googleApiKey);
+        
+        personView = Detail.PersonView.init();
         
         ajaxLoader = Detail.AjaxLoader.init();
         $(ajaxLoader).on("locationsLoaded", onLocationsLoaded);
@@ -34,6 +38,7 @@ Detail.DetailController = (function(){
     
     onPersonLoaded = function(event, data){
         console.log("onPersonLoaded: ", data);
+        personView.displayPerson(data);
     };
     
     
