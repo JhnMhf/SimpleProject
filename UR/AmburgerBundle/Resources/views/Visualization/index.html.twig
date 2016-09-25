@@ -47,12 +47,55 @@
 
                 <!--TODO: Enforce date with specific format -->
                 <label>
-                    Bestimmtes Jahr
-                    <input name="date"/>
+                    Bestimmtes Datum
+                    Tag <select name="date-day">
+                        <option value=""></item>
+                        {% for i in 1..31 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    Monat <select name="date-month">
+                        <option value=""></item>
+                        {% for i in 1..12 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    
+                    Jahr <input name="date-year"/>
                 </label>
                 <label>
                     Bestimmter Zeitraum
-                    <input name="from-date" placeholder="von"/><input name="to-date" placeholder="bis"/>
+                    Tag <select name="from-date-day">
+                        <option value=""></item>
+                        {% for i in 1..31 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    Monat <select name="from-date-month">
+                        <option value=""></item>
+                        {% for i in 1..12 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    
+                    Jahr <input name="from-date-year"/>
+                    
+                    bis
+                    
+                    Tag <select name="to-date-day">
+                        <option value=""></item>
+                        {% for i in 1..31 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    Monat <select name="to-date-month">
+                        <option value=""></item>
+                        {% for i in 1..12 %}
+                            <option value="{{ i }}">{{ i }}</item>
+                        {% endfor %}
+                    </select>
+                    
+                    Jahr <input name="to-date-year"/>
                 </label>
             </div>
         </div>

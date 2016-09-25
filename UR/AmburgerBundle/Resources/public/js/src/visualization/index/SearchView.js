@@ -43,10 +43,10 @@ Index.SearchView = (function () {
         var location = $("." + extendedSearchDiv + " input[name='location']").val();
         var territory = $("." + extendedSearchDiv + " input[name='territory']").val();
         var country = $("." + extendedSearchDiv + " input[name='country']").val();
-        var date = $("." + extendedSearchDiv + " input[name='date']").val();
+        var date = extractDate();
 
-        var fromDate = $("." + extendedSearchDiv + " input[name='from-date']").val();
-        var toDate = $("." + extendedSearchDiv + " input[name='to-date']").val();
+        var fromDate = extractFromDate();
+        var toDate = extractToDate();
 
         if (lastname) {
             data['lastname'] = lastname;
@@ -73,12 +73,11 @@ Index.SearchView = (function () {
             data['country'] = country;
         }
 
+        console.log(date);
 
         if (date) {
             data['date'] = date;
-        }
-
-        if (fromDate && toDate) {
+        } else if (fromDate && toDate) {
             data['fromDate'] = fromDate;
             data['toDate'] = toDate;
         }
@@ -86,6 +85,30 @@ Index.SearchView = (function () {
         console.log("enrichWithExtendedData", data);
 
         return data;
+    },
+    
+    extractDate = function(){
+        var selectedDay = $("." + extendedSearchDiv + " select[name='date-day']").find('option:selected').attr('value');
+        var selectedMonth = $("." + extendedSearchDiv + " select[name='date-month']").find('option:selected').attr('value');
+        var year = $("." + extendedSearchDiv + " input[name='date-year']").val();
+        
+        return selectedDay+"."+selectedMonth+"."+year;
+    },
+    
+    extractFromDate = function(){
+        var selectedDay = $("." + extendedSearchDiv + " select[name='from-date-day']").find('option:selected').attr('value');
+        var selectedMonth = $("." + extendedSearchDiv + " select[name='from-date-month']").find('option:selected').attr('value');
+        var year = $("." + extendedSearchDiv + " input[name='from-date-year']").val();
+        
+        return selectedDay+"."+selectedMonth+"."+year;
+    },
+    
+    extractToDate = function(){
+        var selectedDay = $("." + extendedSearchDiv + " select[name='to-date-day']").find('option:selected').attr('value');
+        var selectedMonth = $("." + extendedSearchDiv + " select[name='to-date-month']").find('option:selected').attr('value');
+        var year = $("." + extendedSearchDiv + " input[name='to-date-year']").val();
+        
+        return selectedDay+"."+selectedMonth+"."+year;
     };
 
 

@@ -124,10 +124,74 @@ abstract class BaseDataSearcher {
     }
     
     protected function findDatesBasedOnDate($date){
+        $parts = explode(".", $date);
+        $day = !empty($parts[0]) ? $parts[0] : null;
+        $month = !empty($parts[1]) ? $parts[1] : null;
+        $year = !empty($parts[2]) ? $parts[2] : null;
         
+        $finalDBManager = $this->finalDBManager;
+        $stmt = null;
+        if(!is_null($year) && !is_null($month) && !is_null($day)){
+            $sql = "SELECT id FROM date WHERE year = :year AND month = :month AND day = :day";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('year', $year);
+            $stmt->bindValue('month', $month);
+            $stmt->bindValue('day', $day);
+        } else if(!is_null($year) && !is_null($month) && is_null($day)){
+            $sql = "SELECT id FROM date WHERE year = :year AND month = :month";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('year', $year);
+            $stmt->bindValue('month', $month);
+        }  else if(is_null($year) && !is_null($month) && !is_null($day)){
+            $sql = "SELECT id FROM date WHERE month = :month AND day = :day";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('month', $month);
+            $stmt->bindValue('day', $day);
+        } else if(!is_null($year) && is_null($month) && !is_null($day)){
+            $sql = "SELECT id FROM date WHERE year = :year AND day = :day";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('year', $year);
+            $stmt->bindValue('day', $day);
+        } else if(!is_null($year) && is_null($month) && is_null($day)){
+            $sql = "SELECT id FROM date WHERE year = :year";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('year', $year);
+        } else if(is_null($year) && !is_null($month) && is_null($day)){
+            $sql = "SELECT id FROM date WHERE month = :month";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('month', $month);
+        } else if(is_null($year) && is_null($month) && !is_null($day)){
+            $sql = "SELECT id FROM date WHERE day = :day";
+            $stmt = $finalDBManager->getConnection()->prepare($sql);
+
+            $stmt->bindValue('day', $day);
+        }
+        
+        $stmt->execute();
+
+        return $this->extractIdArray($stmt->fetchAll());
     }
     
     protected function findDatesBasedOnDateRange($fromDate, $toDate){
+        $fromParts = explode(".", $fromDate);
+        $fromDay = !empty($fromParts[0]) ? $fromParts[0] : null;
+        $fromMonth = !empty($fromParts[1]) ? $fromParts[1] : null;
+        $fromYear = !empty($fromParts[2]) ? $fromParts[2] : null;
+        
+        $toParts = explode(".", $toDate);
+        $toDay = !empty($toParts[0]) ? $toParts[0] : null;
+        $toMonth = !empty($toParts[1]) ? $toParts[1] : null;
+        $toYear = !empty($toParts[2]) ? $toParts[2] : null;
+        
+        $finalDBManager = $this->finalDBManager;
+        $stmt = null;
+        
         
     }
 
@@ -557,12 +621,16 @@ abstract class BaseDataSearcher {
                 array(), $locationReferenceId, 
                 array(), $territoryReferenceId, 
                 array(), $countryReferenceId, 
-                array('from_dateid', 'to_dateid'), $possibleDateReferenceIds,
+                array('from_dateid', 'proven_dateid'), $possibleDateReferenceIds,
                 array('person_id'), $personReferenceIds);
     }
     
     
     protected function searchInResidence($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+        if(count($locationReferenceId) == 0 && count($territoryReferenceId) == 0 && count($countryReferenceId) == 0){
+            return array();
+        }
+        
         $sql = "SELECT DISTINCT person_id FROM residence WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
