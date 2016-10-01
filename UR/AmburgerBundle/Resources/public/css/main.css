@@ -85,6 +85,22 @@
     content: "+";
 }
 
+
+/* collapsible */
+
+.collapsible.collapsed > .container,
+.collapsible.collapsed > .container {
+    display: none;
+}
+
+.collapsible > h2:before {
+    content: "-";
+}
+
+.collapsible.collapsed > h2:before {
+    content: "+";
+}
+
 /* login */
 
 .welcome-header{

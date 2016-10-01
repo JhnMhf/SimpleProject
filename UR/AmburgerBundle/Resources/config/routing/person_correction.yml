@@ -48,3 +48,23 @@ person_save:
     defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 
     methods: [POST]
 
+#person_relatives
+person_relatives:
+    path:    /correction/{OID}/relatives/
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:index } 
+    methods: [GET]
+    
+person_relatives_load:
+    path:    /correction/{OID}/relatives/load
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:loadPerson } 
+    methods: [GET]
+    
+person_relatives_possible:
+    path:    /correction/{OID}/relatives/possible
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:findPossibleRelatives } 
+    methods: [GET]
+    
+person_relatives_direct:
+    path:    /correction/{OID}/relatives/direct
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:loadDirectRelatives } 
+    methods: [GET]
