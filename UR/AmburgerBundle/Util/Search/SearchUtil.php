@@ -29,7 +29,7 @@ class SearchUtil {
     
     private function getFinalDBManager(){
         if(is_null($this->finalDBManager)){
-            $this->finalDBManager = $this->get('doctrine')->getManager('new');
+            $this->finalDBManager = $this->get('doctrine')->getManager('final');
         }
         
         return $this->finalDBManager;

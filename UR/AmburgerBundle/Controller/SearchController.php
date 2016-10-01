@@ -92,7 +92,7 @@ class SearchController extends Controller{
         
         $dateRefLoader = $this->get('date_reference_loader');
         //@TODO: Replace with final em
-        $em = $this->get('doctrine')->getManager('new');
+        $em = $this->getDBManager();
         
         //enrich datedata
         for($i = 0; $i < count($personIds); $i++){
@@ -150,7 +150,7 @@ class SearchController extends Controller{
     //@TODO: Use final instead of new
     //http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/data-retrieval-and-manipulation.html#list-of-parameters-conversion
     private function loadPersons($ids){
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
 
         $stmt =  $finalDBManager->getConnection()->executeQuery(
                 "SELECT person.id as id, first_name, patronym, last_name, 'person' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
@@ -168,7 +168,7 @@ class SearchController extends Controller{
     }
     
     private function loadRelatives($ids){
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
         
         
         $stmt =  $finalDBManager->getConnection()->executeQuery(
@@ -187,7 +187,7 @@ class SearchController extends Controller{
     }
     
     private function loadPartners($ids){
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
         
         $stmt =  $finalDBManager->getConnection()->executeQuery(
                 "SELECT partner.id as id, first_name, patronym, last_name, 'partner' as type, birth.birth_dateid as birth_date, baptism.baptism_dateid as baptism_date, death.death_dateid as death_date, death.funeral_dateid as funeral_date "
@@ -202,5 +202,10 @@ class SearchController extends Controller{
                 array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
 
         return $stmt->fetchAll();
+    }
+    
+        
+    private function getDBManager(){
+        return $this->get('doctrine')->getManager('final');
     }
 }

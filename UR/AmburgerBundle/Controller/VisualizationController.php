@@ -62,15 +62,15 @@ class VisualizationController extends Controller{
     }
     
     private function loadPersonById($ID){
-        $newDBManager = $this->get('doctrine')->getManager('new');
-        $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        $finalDBManager = $this->getDBManager();
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
 
         if (is_null($person)) {
-            $person = $newDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+            $person = $finalDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
         }
 
         if (is_null($person)) {
-            $person = $newDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
+            $person = $finalDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
         }
 
         return $person;
@@ -153,7 +153,7 @@ class VisualizationController extends Controller{
     }
     
     private function runQuery($sql){
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
 
         $stmt = $finalDBManager->getConnection()->prepare($sql);
 
@@ -206,7 +206,7 @@ class VisualizationController extends Controller{
                 ON location.id = locationData.locationid
                 WHERE location.latitude IS NOT NULL AND location.longitude IS NOT NULL";
         
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
 
         $stmt = $finalDBManager->getConnection()->prepare($sql);
 
@@ -280,7 +280,7 @@ class VisualizationController extends Controller{
                 ON location.id = locationData.locationid
                 WHERE location.latitude IS NOT NULL AND location.longitude IS NOT NULL;";
         
-        $finalDBManager = $this->get('doctrine')->getManager('new');
+        $finalDBManager = $this->getDBManager();
         
         $dataArray = [];
         $typeArray = [];
@@ -295,4 +295,10 @@ class VisualizationController extends Controller{
         
         return $stmt->fetchAll();
     }
+    
+    private function getDBManager(){
+        return  $this->get('doctrine')->getManager('final');
+    }
 }
+
+
