@@ -1,0 +1,48 @@
+# visualizatin
+
+visualization_index:
+    path: /visualization
+    defaults: { _controller: AmburgerBundle:Visualization:index }
+    methods: [GET]
+
+visualization_detail:
+    path: /visualization/{ID}/
+    defaults: { _controller: AmburgerBundle:Visualization:detail }
+    methods: [GET]
+
+visualization_detail_load:
+    path: /visualization/{ID}/load
+    defaults: { _controller: AmburgerBundle:Visualization:detailLoad }
+    methods: [GET]
+
+visualization_detail_locations:
+    path: /visualization/{ID}/locations
+    defaults: { _controller: AmburgerBundle:Visualization:detailLocations }
+    methods: [GET]   
+
+visualization_ids:
+    path: /visualization/ids/list/
+    defaults: { _controller: AmburgerBundle:Visualization:listOfAllIds }
+    methods: [GET]    
+
+visualization_all_locations:
+    path: /visualization/locations/all/
+    defaults: { _controller: AmburgerBundle:Visualization:loadAllLocations }
+    methods: [GET]   
+    
+visualization_locations_for_ids:
+    path: /visualization/locations/ids/
+    defaults: { _controller: AmburgerBundle:Visualization:loadLocationsForIds }
+    methods: [POST]   
+    
+# search
+
+search:
+    path: /search
+    defaults: { _controller: AmburgerBundle:Search:search }
+    methods: [GET]
+    
+load_persons:
+    path: /search/load
+    defaults: { _controller: AmburgerBundle:Search:loadPersonList }
+    methods: [POST]

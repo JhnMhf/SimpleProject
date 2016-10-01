@@ -44,7 +44,7 @@ class PossibleRelativesFinder {
         
         if(count($possibleRelatives) > 0){
             $this->getLogger()->info("Loading existing relatives and removing them from the list.");
-            $existingRelatives = $this->relationShipLoader->loadOnlyRelativeIds($person->getId(), false);
+            $existingRelatives = $this->relationShipLoader->loadOnlyRelativeIds($em,$person->getId(), false);
             
             $this->getLogger()->debug("Loaded ".count($existingRelatives). " existing relatives.");
             

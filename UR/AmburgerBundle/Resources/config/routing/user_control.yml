@@ -1,0 +1,11 @@
+# usercontrol
+
+addUser_index:
+    path: /user/
+    defaults: { _controller: AmburgerBundle:User:index }    
+    methods: [GET]
+
+addUser:
+    path: /user/
+    defaults: { _controller: AmburgerBundle:User:addUser }    
+    methods: [POST]

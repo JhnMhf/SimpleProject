@@ -1,0 +1,50 @@
+
+#@TODO: Think about moving start to correction?
+start:
+    path:     /start/
+    defaults: { _controller: AmburgerBundle:CorrectionStart:index }
+    methods: [GET]
+    
+checkOID:
+    path:     /start/{OID}/check
+    defaults: { _controller: AmburgerBundle:CorrectionStart:check }
+    methods: [GET]
+
+nextOID:
+    path:     /start/next
+    defaults: { _controller: AmburgerBundle:CorrectionStart:next }
+    methods: [GET]
+
+startWork:
+    path:     /start/{OID}
+    defaults: { _controller: AmburgerBundle:CorrectionStart:startWork }
+    methods: [POST]
+
+# duplicate
+duplicate:
+    path:    /correction/{OID}/duplicate/
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:index } 
+    methods: [GET]
+    
+duplicate_load:
+    path:    /correction/{OID}/duplicate/load
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:load } 
+    methods: [GET]
+    
+# person correction
+
+person:
+    path:    /correction/{OID}/person/
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:index } 
+    methods: [GET]
+    
+person_load:
+    path:    /correction/{OID}/person/load
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:load } 
+    methods: [GET]
+    
+person_save:
+    path:    /correction/{OID}/person/save
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 
+    methods: [POST]
+

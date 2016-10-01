@@ -6,7 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace UR\DB\NewBundle\Utils;
+namespace UR\AmburgerBundle\Util;
+
+use UR\DB\NewBundle\Utils\PersonClasses;
 
 /**
  * Description of RelationshipLoader
@@ -17,7 +19,6 @@ class RelationshipLoader {
 
     private $LOGGER;
     private $container;
-    private $newDBManager;
 
     public function __construct($container) {
         $this->container = $container;
@@ -34,42 +35,34 @@ class RelationshipLoader {
 
         return $this->LOGGER;
     }
-
-    private function getDBManager() {
-        if (is_null($this->newDBManager)) {
-            $this->newDBManager = $this->get('doctrine')->getManager('new');
-        }
-
-        return $this->newDBManager;
-    }
     
-    public function loadOnlyDirectRelatives($id){
+    public function loadOnlyDirectRelatives($em, $id){
         $this->getLogger()->info("Loading direct relatives for ID: " . $id);
         
         $relatives = array();
 
-        $relatives["parents"] = $this->loadParents($id);
-        $relatives["children"] = $this->loadChildren($id);
-        $relatives["siblings"] = $this->loadSiblings($id);
-        $relatives["marriagePartners"] = $this->loadMarriagePartners($id);
+        $relatives["parents"] = $this->loadParents($em, $id);
+        $relatives["children"] = $this->loadChildren($em, $id);
+        $relatives["siblings"] = $this->loadSiblings($em, $id);
+        $relatives["marriagePartners"] = $this->loadMarriagePartners($em, $id);
 
         return $relatives;
     }
     
     //Passing the arrays as reference is necessary, since they will be updated!
 
-    public function loadRelatives($id, $skipRelativesForPersons = true) {
+    public function loadRelatives($em, $id, $skipRelativesForPersons = true) {
         $this->getLogger()->info("loadRelatives: " . $id);
         $alreadyLoaded = array();
-        $relatives = $this->internalLoadRelatives($id, $alreadyLoaded);
+        $relatives = $this->internalLoadRelatives($em, $id, $alreadyLoaded);
 
-        $this->loadClosestRelatives($relatives, $alreadyLoaded, $skipRelativesForPersons);
+        $this->loadClosestRelatives($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
 
         $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
 
         do {
             $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
-            $this->loadRelativesWhichWereNotLoadedYet($relatives, $alreadyLoaded, $skipRelativesForPersons);
+            $this->loadRelativesWhichWereNotLoadedYet($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
         } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
 
         $this->getLogger()->info("loadRelatives end: " . $id);
@@ -77,18 +70,18 @@ class RelationshipLoader {
         return $relatives;
     }
     
-    public function loadOnlyRelativeIds($id, $skipRelativesForPersons = true) {
+    public function loadOnlyRelativeIds($em, $id, $skipRelativesForPersons = true) {
         $this->getLogger()->info("loadOnlyRelativeIds: " . $id);
         $alreadyLoaded = array();
-        $relatives = $this->internalLoadRelatives($id, $alreadyLoaded);
+        $relatives = $this->internalLoadRelatives($em, $id, $alreadyLoaded);
 
-        $this->loadClosestRelatives($relatives, $alreadyLoaded, $skipRelativesForPersons);
+        $this->loadClosestRelatives($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
 
         $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
 
         do {
             $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
-            $this->loadRelativesWhichWereNotLoadedYet($relatives, $alreadyLoaded, $skipRelativesForPersons);
+            $this->loadRelativesWhichWereNotLoadedYet($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
         } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
 
         $this->getLogger()->info("loadOnlyRelativeIds end: " . $id);
@@ -96,7 +89,7 @@ class RelationshipLoader {
         return $alreadyLoaded;
     }
 
-    private function internalLoadRelatives($id, &$alreadyLoaded) {
+    private function internalLoadRelatives($em, $id, &$alreadyLoaded) {
         $this->getLogger()->info("Internally loading relatives for ID: " . $id);
         if (!in_array($id, $alreadyLoaded)) {
             $alreadyLoaded[] = $id;
@@ -104,99 +97,99 @@ class RelationshipLoader {
 
         $relatives = array();
 
-        $relatives["parents"] = $this->loadParents($id, $alreadyLoaded);
-        $relatives["children"] = $this->loadChildren($id, $alreadyLoaded);
-        $relatives["grandparents"] = $this->loadGrandparents($id, $alreadyLoaded);
-        $relatives["grandchildren"] = $this->loadGrandchildren($id, $alreadyLoaded);
-        $relatives["siblings"] = $this->loadSiblings($id, $alreadyLoaded);
-        $relatives["marriagePartners"] = $this->loadMarriagePartners($id, $alreadyLoaded);
-        $relatives["parentsInLaw"] = $this->loadParentsInLaw($id, $alreadyLoaded);
-        $relatives["childrenInLaw"] = $this->loadChildrenInLaw($id, $alreadyLoaded);
+        $relatives["parents"] = $this->loadParents($em, $id, $alreadyLoaded);
+        $relatives["children"] = $this->loadChildren($em, $id, $alreadyLoaded);
+        $relatives["grandparents"] = $this->loadGrandparents($em, $id, $alreadyLoaded);
+        $relatives["grandchildren"] = $this->loadGrandchildren($em, $id, $alreadyLoaded);
+        $relatives["siblings"] = $this->loadSiblings($em, $id, $alreadyLoaded);
+        $relatives["marriagePartners"] = $this->loadMarriagePartners($em, $id, $alreadyLoaded);
+        $relatives["parentsInLaw"] = $this->loadParentsInLaw($em, $id, $alreadyLoaded);
+        $relatives["childrenInLaw"] = $this->loadChildrenInLaw($em, $id, $alreadyLoaded);
 
         return $relatives;
     }
 
-    private function loadParents($id, &$alreadyLoaded = null) {
+    private function loadParents($em, $id, &$alreadyLoaded = null) {
         $this->getLogger()->info("Loading parents for id: " . $id);
 
-        $parentIds = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadParents($id);
+        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($id);
 
         $this->getLogger()->info("Found  " . count($parentIds) . " parents");
 
-        return $this->generateRelativesEntry($id, $parentIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $parentIds, $alreadyLoaded);
     }
 
-    private function loadChildren($id, &$alreadyLoaded = null) {
+    private function loadChildren($em, $id, &$alreadyLoaded = null) {
         $this->getLogger()->info("Loading children for id: " . $id);
 
-        $childrenIds = $this->getDBManager()->getRepository('NewBundle:IsParent')->loadChildren($id);
+        $childrenIds = $em->getRepository('NewBundle:IsParent')->loadChildren($id);
         
         $this->getLogger()->info("Found  " . count($childrenIds) . " children");
 
-        return $this->generateRelativesEntry($id, $childrenIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $childrenIds, $alreadyLoaded);
     }
 
-    private function loadGrandparents($id, &$alreadyLoaded) {
+    private function loadGrandparents($em, $id, &$alreadyLoaded) {
         $this->getLogger()->info("Loading grandparents for id: " . $id);
 
-        $grandparentIds = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandparents($id);
+        $grandparentIds = $em->getRepository('NewBundle:IsGrandparent')->loadGrandparents($id);
 
         $this->getLogger()->info("Found  " . count($grandparentIds) . " grandparents");
 
-        return $this->generateRelativesEntry($id, $grandparentIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $grandparentIds, $alreadyLoaded);
     }
 
-    private function loadGrandchildren($id, &$alreadyLoaded) {
+    private function loadGrandchildren($em, $id, &$alreadyLoaded) {
         $this->getLogger()->info("Loading grandchildren for id: " . $id);
 
-        $grandchildrenIds = $this->getDBManager()->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($id);
+        $grandchildrenIds = $em->getRepository('NewBundle:IsGrandparent')->loadGrandchildren($id);
 
         $this->getLogger()->info("Found  " . count($grandchildrenIds) . " grandchildren");
 
-        return $this->generateRelativesEntry($id, $grandchildrenIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $grandchildrenIds, $alreadyLoaded);
     }
 
-    private function loadSiblings($id, &$alreadyLoaded = null) {
+    private function loadSiblings($em, $id, &$alreadyLoaded = null) {
         $this->getLogger()->info("Loading siblings for id: " . $id);
 
-        $siblingIds = $this->getDBManager()->getRepository('NewBundle:IsSibling')->loadSiblings($id);
+        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($id);
 
         $this->getLogger()->info("Found  " . count($siblingIds) . " siblings");
 
-        return $this->generateRelativesEntry($id, $siblingIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $siblingIds, $alreadyLoaded);
     }
 
-    private function loadMarriagePartners($id, &$alreadyLoaded = null) {
+    private function loadMarriagePartners($em, $id, &$alreadyLoaded = null) {
         $this->getLogger()->info("Loading marriage partners for id: " . $id);
         
-        $marriagePartnerIds = $this->getDBManager()->getRepository('NewBundle:Wedding')->loadMarriagePartners($id);
+        $marriagePartnerIds = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($id);
 
         $this->getLogger()->info("Found  " . count($marriagePartnerIds) . " marriage partners");
 
-        return $this->generateRelativesEntry($id, $marriagePartnerIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $marriagePartnerIds, $alreadyLoaded);
     }
 
-    private function loadParentsInLaw($id, &$alreadyLoaded) {
+    private function loadParentsInLaw($em, $id, &$alreadyLoaded) {
         $this->getLogger()->info("Loading parentInLaw for id: " . $id);
 
-        $parentsInLawIds = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($id);
+        $parentsInLawIds = $em->getRepository('NewBundle:IsParentInLaw')->loadParentsInLaw($id);
         
         $this->getLogger()->info("Found  " . count($parentsInLawIds) . " parentInLaw");
 
-        return $this->generateRelativesEntry($id, $parentsInLawIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $parentsInLawIds, $alreadyLoaded);
     }
 
-    private function loadChildrenInLaw($id, &$alreadyLoaded) {
+    private function loadChildrenInLaw($em, $id, &$alreadyLoaded) {
         $this->getLogger()->info("Loading childrenInLaw for id: " . $id);
         
-        $childrenInLawIds = $this->getDBManager()->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($id);
+        $childrenInLawIds = $em->getRepository('NewBundle:IsParentInLaw')->loadChildrenInLaw($id);
 
         $this->getLogger()->info("Found  " . count($childrenInLawIds) . " childrenInLaw");
 
-        return $this->generateRelativesEntry($id, $childrenInLawIds, $alreadyLoaded);
+        return $this->generateRelativesEntry($em, $id, $childrenInLawIds, $alreadyLoaded);
     }
 
-    private function generateRelativesEntry($id, $relativesIds, &$alreadyLoaded = null) {
+    private function generateRelativesEntry($em, $id, $relativesIds, &$alreadyLoaded = null) {
         $relativesArray = array();
 
         for ($i = 0; $i < count($relativesIds); $i++) {
@@ -207,7 +200,7 @@ class RelationshipLoader {
 
             if(is_null($alreadyLoaded)){
                 $this->getLogger()->info("Loading Id " . $idOfRelative);
-                $person = $this->loadPersonByID($idOfRelative);
+                $person = $this->loadPersonByID($em, $idOfRelative);
 
                 if ($person != null) {
                     $entry["class"] = get_class($person);
@@ -216,7 +209,7 @@ class RelationshipLoader {
             }else  if (!in_array($idOfRelative, $alreadyLoaded)) {
                 $this->getLogger()->info("Loading Id " . $idOfRelative);
                 $alreadyLoaded[] = $idOfRelative;
-                $person = $this->loadPersonByID($idOfRelative);
+                $person = $this->loadPersonByID($em, $idOfRelative);
 
                 if ($person != null) {
                     $entry["class"] = get_class($person);
@@ -232,7 +225,7 @@ class RelationshipLoader {
         return $relativesArray;
     }
 
-    private function loadClosestRelatives(&$relatives, &$alreadyLoaded, $skipRelativesForPersons) {
+    private function loadClosestRelatives($em, &$relatives, &$alreadyLoaded, $skipRelativesForPersons) {
         $this->getLogger()->info("Loading Closest Relatives");
         foreach ($relatives as $key => $value) {
             $this->getLogger()->info("Loading Closest Relatives for " . $key);
@@ -245,7 +238,7 @@ class RelationshipLoader {
                     //if the person is no "person" or skipRelativesForPersons is deactivated
                     if (get_class($person) != PersonClasses::PERSON_CLASS || !$skipRelativesForPersons) {
                         $this->getLogger()->info("Loading relatives of " . $person);
-                        $relatives[$key][$i]["relatives"] = $this->internalLoadRelatives($idOfRelative, $alreadyLoaded, $skipRelativesForPersons);
+                        $relatives[$key][$i]["relatives"] = $this->internalLoadRelatives($em, $idOfRelative, $alreadyLoaded, $skipRelativesForPersons);
                     } else {
                         $this->getLogger()->info("Skipping loading relatives of " . $person);
                     }
@@ -254,7 +247,7 @@ class RelationshipLoader {
         }
     }
 
-    private function loadRelativesWhichWereNotLoadedYet(&$relatives, &$alreadyLoaded, $skipRelativesForPersons) {
+    private function loadRelativesWhichWereNotLoadedYet($em, &$relatives, &$alreadyLoaded, $skipRelativesForPersons) {
         $this->getLogger()->info("Called loadRelativesWhichWereNotLoadedYet");
         foreach ($relatives as $key => $value) {
             for ($i = 0; $i < count($value); $i++) {
@@ -265,12 +258,12 @@ class RelationshipLoader {
 
                     if (array_key_exists("relatives", $value[$i])) {
                         $this->getLogger()->debug("Going one step deeper");
-                        $this->loadRelativesWhichWereNotLoadedYet($value[$i]["relatives"], $alreadyLoaded, $skipRelativesForPersons);
+                        $this->loadRelativesWhichWereNotLoadedYet($em, $value[$i]["relatives"], $alreadyLoaded, $skipRelativesForPersons);
                     } else {
                         //if the person is no "person" or skipRelativesForPersons is deactivated
                         if (get_class($person) != PersonClasses::PERSON_CLASS || !$skipRelativesForPersons) {
                             $this->getLogger()->info("Loading relatives of " . $person);
-                            $relatives[$key][$i]["relatives"] = $this->internalLoadRelatives($idOfRelative, $alreadyLoaded, $skipRelativesForPersons);
+                            $relatives[$key][$i]["relatives"] = $this->internalLoadRelatives($em, $idOfRelative, $alreadyLoaded, $skipRelativesForPersons);
                         } else {
                             $this->getLogger()->info("Skipping loading relatives of " . $person);
                         }
@@ -317,16 +310,16 @@ class RelationshipLoader {
         }
     }
 
-    private function loadPersonByID($ID, $type = "id") {
+    private function loadPersonByID($em, $ID, $type = "id") {
         if ($type == 'id') {
-            $person = $this->getDBManager()->getRepository('NewBundle:Person')->findOneById($ID);
+            $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
 
             if (is_null($person)) {
-                $person = $this->getDBManager()->getRepository('NewBundle:Relative')->findOneById($ID);
+                $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
             }
 
             if (is_null($person)) {
-                $person = $this->getDBManager()->getRepository('NewBundle:Partner')->findOneById($ID);
+                $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
             }
 
             if (is_null($person)) {
@@ -335,7 +328,7 @@ class RelationshipLoader {
 
             return $person;
         } else if ($type == 'oid') {
-            $person = $this->getDBManager()->getRepository('NewBundle:Person')->findOneByOid($ID);
+            $person = $em->getRepository('NewBundle:Person')->findOneByOid($ID);
 
             if (is_null($person)) {
                 //throw exception

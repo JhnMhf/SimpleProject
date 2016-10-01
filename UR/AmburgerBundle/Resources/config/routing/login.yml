@@ -1,0 +1,15 @@
+# login
+
+login:
+    path:     /login/
+    defaults: { _controller: AmburgerBundle:Login:index }    
+    methods: [GET]
+    
+login_validate:
+    path:     /login/
+    defaults: { _controller: AmburgerBundle:Login:login }    
+    methods: [POST]
+    
+logout:
+    path: /logout/
+    defaults: { _controller: AmburgerBundle:Login:logout }

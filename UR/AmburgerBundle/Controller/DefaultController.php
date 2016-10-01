@@ -4,6 +4,7 @@ namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -53,9 +54,12 @@ class DefaultController extends Controller
         
         $possibleRelatives = $this->get('possible_relatives_finder.service')->findPossibleRelatives($em, $OID);
         
-        print_r($possibleRelatives);
+        $serializer = $this->container->get('serializer');
+        $json = $serializer->serialize($possibleRelatives, 'json');
+        $response = new JsonResponse();
+        $response->setContent($json);
         
-        return new Response();
+        return $response;
     }
     
     public function loadTrackedCorrectionAction($ID){

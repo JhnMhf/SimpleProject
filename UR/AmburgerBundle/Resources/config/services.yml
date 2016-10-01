@@ -26,6 +26,11 @@ services:
         class: UR\AmburgerBundle\Util\PossibleRelativesFinder
         arguments: 
            container: "@service_container"         
+                      
+    relationship_loader.service:
+        class: UR\AmburgerBundle\Util\RelationshipLoader
+        arguments: 
+           container: "@service_container"
     correction_change_tracker:
         class: UR\AmburgerBundle\Util\CorrectionChangeTracker
         arguments: 

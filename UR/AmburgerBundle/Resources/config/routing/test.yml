@@ -1,0 +1,52 @@
+overview:
+    path:     /overview/
+    defaults: { _controller: AmburgerBundle:Default:overview }
+    
+
+base:
+    path:     /base/
+    defaults: { _controller: AmburgerBundle:Default:base }    
+    
+# test
+    
+migrate_process:
+    path: /migration/process
+    defaults: { _controller: AmburgerBundle:Default:migrateProcess }
+    
+create_person_data:
+    path: /missing/person/data
+    defaults: { _controller: AmburgerBundle:Default:personData }
+    
+dateSerializeTest:
+    path: /date/serialize
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:dateSerialize }
+
+relativesFinderTest:
+    path: /find/relatives/{database}/{OID}
+    defaults:  { _controller: AmburgerBundle:Default:findPossibleRelatives }
+    
+changeTrackingTest:
+    path: /check/tracking/{ID}
+    defaults:  { _controller: AmburgerBundle:Default:loadTrackedCorrection }
+    
+amburger_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: AmburgerBundle:Default:index }
+
+amburger_homepage2:
+    path:     /test/
+    defaults: { _controller: AmburgerBundle:Default:test }
+
+test_old:
+    path:     /test/old/{ID}
+    defaults: { _controller: AmburgerBundle:OldDB:person }
+
+migrate:
+    path:     /migrate/{ID}
+    defaults: { _controller: AmburgerBundle:Migrate:person }
+    
+# gnd
+gnd_subject:
+    path: /gnd/subject/{name}
+    defaults: { _controller: AmburgerBundle:GND:subject }    
+   

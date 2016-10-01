@@ -25,9 +25,33 @@ class CorrectionRelationsController extends Controller implements CorrectionSess
         return $this->render('AmburgerBundle:DataCorrection:related_person.html.twig');
     }
     
-    public function loadNextAction($OID)
+    public function loadDirectRelativesAction($OID)
     {
-        $this->getLogger()->debug("Load next relation called: ".$OID);
+        $this->getLogger()->debug("LoadDirectRelativesAction called: ".$OID);
+        $relationShipLoader = $this->get('relationship_loader.service');
+        $em = $this->get('doctrine')->getManager('final');
+        $relatives = $relationShipLoader->loadOnlyDirectRelatives($em,$ID);
+        
+        $serializer = $this->container->get('serializer');
+        $json = $serializer->serialize($relatives, 'json');
+        $response = new JsonResponse();
+        $response->setContent($json);
+        
+        return $response;
+    }
+    
+    public function findPossibleRelativesAction($OID){
+        $this->getLogger()->debug("FindPossibleRelativesAction called: ".$OID);
+        $em = $this->get('doctrine')->getManager('final');
+
+        $possibleRelatives = $this->get('possible_relatives_finder.service')->findPossibleRelatives($em, $OID);
+        
+        $serializer = $this->container->get('serializer');
+        $json = $serializer->serialize($possibleRelatives, 'json');
+        $response = new JsonResponse();
+        $response->setContent($json);
+        
+        return $response;
     }
     
     public function saveAction($OID){
