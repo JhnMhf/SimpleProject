@@ -14,3 +14,7 @@ compareTest:
 relatives:
     path: /relatives/{ID}
     defaults: { _controller: NewBundle:Relative:id }
+    
+direct_relatives:
+    path: direct/relatives/{ID}
+    defaults: { _controller: NewBundle:Relative:directId }

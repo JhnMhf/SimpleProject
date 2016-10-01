@@ -20,4 +20,17 @@ class RelativeController extends Controller
         
         return $response;
     }
+    
+    public function directIdAction($ID){
+        $relationShipLoader = $this->get('relationship_loader.service');
+        
+        $relatives = $relationShipLoader->loadOnlyDirectRelatives($ID);
+        
+        $serializer = $this->container->get('serializer');
+        $json = $serializer->serialize($relatives, 'json');
+        $response = new JsonResponse();
+        $response->setContent($json);
+        
+        return $response;
+    }
 }
