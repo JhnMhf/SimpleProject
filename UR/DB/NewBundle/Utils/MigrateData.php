@@ -51,7 +51,7 @@ class MigrateData {
     //http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy/26972181#26972181
     //private $DATE_REGEX = "/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/";
     const DATE_REGEX = "/^(\D*)(0|00|0?[1-9]|[12][0-9]|3[01])?( ?)[\.\-\ \:]( ?)(0|00|0?[1-9]|1[012])?( ?)[\.\-\ \:]( ?)(\d{4})(.*)$/";
-    const YEAR_REGEX = "/^(\-)?(\d{4})(.*)$/";
+    const YEAR_REGEX = "/^(\-)?(\d{4})(\-)?(.*)$/";
     const PERSON_CLASS = "UR\DB\NewBundle\Entity\Person";
     const RELATIVE_CLASS = "UR\DB\NewBundle\Entity\Relative";
     const PARTNER_CLASS = "UR\DB\NewBundle\Entity\Partner";
@@ -538,10 +538,10 @@ class MigrateData {
             preg_match(self::YEAR_REGEX, $dateString, $secondDate);
             
             if(count($secondDate) > 0){
-                $beforeYear = $date[1];
-                $year = $date[2];
-                $afterYear = $date[3];
-                $comment = $comment.$date[4];
+                $beforeYear = $secondDate[1];
+                $year = $secondDate[2];
+                $afterYear = $secondDate[3];
+                $comment = $comment.$secondDate[4];
                 
                 $newDate->setYear($year);
                 $newDate->setComment($comment);
