@@ -34,6 +34,9 @@ RelativesCorrection.RelativesView = (function () {
                     var relativeReference = data[identifier][i]['person'];
 
                     var templateData = [];
+                    
+                    templateData['relationship'] = getRelationshipTestBasedOnIdentifier(identifier);
+                    
                     templateData['person_first_name'] = personData['first_name'];
                     templateData['person_last_name'] = personData['last_name'];
                     templateData['person_patronym'] = personData['patronym'];
@@ -41,6 +44,10 @@ RelativesCorrection.RelativesView = (function () {
                     templateData['person_baptism_date'] = extractBaptismDate(personData);
                     templateData['person_death_date'] = extractDeathDate(personData);
                     templateData['person_funeral_date'] = extractFuneralDate(personData);
+                    templateData['person_job'] = extractJob(personData);
+                    templateData['person_job_class'] = extractJobClass(personData);
+                    templateData['person_nation'] = extractNation(personData);
+                    templateData['person_educations'] = extractEducations(personData);
                     
                     
                     templateData['relative_first_name'] = relativeReference['first_name'];
@@ -50,11 +57,29 @@ RelativesCorrection.RelativesView = (function () {
                     templateData['relative_baptism_date'] = extractBaptismDate(relativeReference);
                     templateData['relative_death_date'] = extractDeathDate(relativeReference);
                     templateData['relative_funeral_date'] = extractFuneralDate(relativeReference);
+                    templateData['relative_job'] = extractJob(relativeReference);
+                    templateData['relative_job_class'] = extractJobClass(relativeReference);
+                    templateData['relative_nation'] = extractNation(relativeReference);
+                    templateData['relative_educations'] = extractEducations(relativeReference);
 
 
                     $(".existing-relations-container").append(template(templateData));
                 }
             },
+            
+            getRelationshipTestBasedOnIdentifier = function(identifier){
+                switch(identifier){
+                    case 'parents':
+                        return "ist Kind von";
+                    case 'children':
+                        return "ist Elterteil von";
+                    case 'siblings':
+                        return "ist Geschwister von";
+                    case 'marriagePartners':
+                        return "ist verheiratet mit";
+                }
+                return "";
+            }
             
             extractBirthDate = function(data){
                 if(data['birth']){
@@ -81,6 +106,44 @@ RelativesCorrection.RelativesView = (function () {
                 if(data['death']){
                   return dateReferenceTransformer.dateReferenceToString(data['death']['funeral_date']);
                 }
+                return "";
+            },
+            
+            extractJob = function(data){
+                if(data['job']){
+                    return data['job']['label'];
+                }
+                return "";
+            },
+            
+            extractJobClass = function(data){
+                if(data['job_class']){
+                    return data['job_class']['label'];
+                }
+                return "";
+            },
+            
+            extractNation = function(data){
+                if(data['nation']){
+                    return data['nation']['name'];
+                }
+                return "";
+            },
+            
+            extractEducations = function(data){
+                if(data['educations']){
+                    var educationsString = "";
+                    for(var i = 0; data['educations'].length; i++){
+                        if(i > 0){
+                            educationsString += ",";
+                        }
+                        
+                        educationsString += data['educations'][i]['label'];
+                    }
+                    
+                    return educationsString;
+                }
+                
                 return "";
             },
             

@@ -57,9 +57,17 @@
                 <% if(person_baptism_date) { %>Getauft: <span><%= person_baptism_date %></span></br><% } %>
                 <% if(person_death_date) { %>Gestorben: <span><%= person_death_date %></span></br><% } %>
                 <% if(person_funeral_date) { %>Beerdigt: <span><%= person_funeral_date %></span></br><% } %>
+                <% if(person_job) { %>Job: <span><%= person_job %></span></br><% } %>
+                <% if(person_job_class) { %>Jobklasse: <span><%= person_job_class %></span></br><% } %>
+                <% if(person_nation) { %>Nation: <span><%= person_nation %></span></br><% } %>
+                <% if(person_educations) { %>Ausbildung(en): <span><%= person_educations %></span></br><% } %>
             </div>
-            <div class="large-4 columns">
-                
+            <div class="large-1 columns">
+            </div>
+            <div class="large-2 columns box center">
+                <%= relationship %>
+            </div>
+            <div class="large-1 columns">
             </div>
             <div class="large-4 columns box">
                 <% if(relative_first_name) { %>Vorname: <span><%= relative_first_name %></span></br><% } %>
@@ -69,6 +77,10 @@
                 <% if(relative_baptism_date) { %>Getauft: <span><%= relative_baptism_date %></span></br><% } %>
                 <% if(relative_death_date) { %>Gestorben: <span><%= relative_death_date %></span></br><% } %>
                 <% if(relative_funeral_date) { %>Beerdigt: <span><%= relative_funeral_date %></span></br><% } %>
+                <% if(relative_job) { %>Job: <span><%= relative_job %></span></br><% } %>
+                <% if(relative_job_class) { %>Jobklasse: <span><%= relative_job_class %></span></br><% } %>
+                <% if(relative_nation) { %>Nation: <span><%= relative_nation %></span></br><% } %>
+                <% if(relative_educations) { %>Ausbildung(en): <span><%= relative_educations %></span></br><% } %>
             </div>
         </div>
     </script>

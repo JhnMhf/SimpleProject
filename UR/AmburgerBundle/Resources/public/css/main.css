@@ -166,5 +166,10 @@ input.form-control {
 .box {
     border: 1px solid black;
     padding: 5px;
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.column, .columns{
+  min-height: 1px;
 }
