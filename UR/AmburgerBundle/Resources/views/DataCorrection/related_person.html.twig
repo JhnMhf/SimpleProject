@@ -50,37 +50,73 @@
     <script type="text/template" id="directRelationTemplate">
         <div class="row">
             <div class="large-4 columns box">
-                <% if(person_first_name) { %>Vorname: <span><%= person_first_name %></span></br> <% } %>
-                <% if(person_last_name) { %>Nachname: <span><%= person_last_name %></span></br><% } %>
-                <% if(person_patronym) { %>Vatersname: <span><%= person_patronym %></span></br><% } %>
-                <% if(person_birth_date) { %>Geboren: <span><%= person_birth_date %></span></br><% } %>
-                <% if(person_baptism_date) { %>Getauft: <span><%= person_baptism_date %></span></br><% } %>
-                <% if(person_death_date) { %>Gestorben: <span><%= person_death_date %></span></br><% } %>
-                <% if(person_funeral_date) { %>Beerdigt: <span><%= person_funeral_date %></span></br><% } %>
-                <% if(person_job) { %>Job: <span><%= person_job %></span></br><% } %>
-                <% if(person_job_class) { %>Jobklasse: <span><%= person_job_class %></span></br><% } %>
-                <% if(person_nation) { %>Nation: <span><%= person_nation %></span></br><% } %>
-                <% if(person_educations) { %>Ausbildung(en): <span><%= person_educations %></span></br><% } %>
+                 <%= personData %>
             </div>
             <div class="large-1 columns">
             </div>
-            <div class="large-2 columns box center">
-                <%= relationship %>
+            <div class="large-2 columns box center relation-disabled">
+                <div class="relation-box">
+                    <select disabled>
+                        <option name="" <%= relation == '' ?  'selected' : '' %>></option>
+                        <option name="child" <%= relation == 'child' ?  'selected' : '' %>>ist Kind von</option>
+                        <option name="parent" <%= relation == 'parent' ?  'selected' : '' %>>ist Elterteil von</option>
+                        <option name="sibling" <%= relation == 'sibling' ?  'selected' : '' %>>ist Geschwister von</option>
+                        <option name="marriagePartner" <%= relation == 'marriagePartner' ?  'selected' : '' %>>ist verheiratet mit</option>
+                    </select>
+                    <i class="fa fa-pencil edit-relation" aria-hidden="true"></i>
+                </div>
+                <div class="relation-controls">                
+                    <i class="fa fa-times-circle fa-3x icon-red left remove-relation" aria-hidden="true"></i>
+                    <i class="fa fa-check-circle fa-3x icon-green right accept-relation" aria-hidden="true"></i>
+                </div>
             </div>
             <div class="large-1 columns">
             </div>
             <div class="large-4 columns box">
-                <% if(relative_first_name) { %>Vorname: <span><%= relative_first_name %></span></br><% } %>
-                <% if(relative_last_name) { %>Nachname: <span><%= relative_last_name %></span></br><% } %>
-                <% if(relative_patronym) { %>Vatersname: <span><%= relative_patronym %></span></br><% } %>
-                <% if(relative_birth_date) { %>Geboren: <span><%= relative_birth_date %></span></br><% } %>
-                <% if(relative_baptism_date) { %>Getauft: <span><%= relative_baptism_date %></span></br><% } %>
-                <% if(relative_death_date) { %>Gestorben: <span><%= relative_death_date %></span></br><% } %>
-                <% if(relative_funeral_date) { %>Beerdigt: <span><%= relative_funeral_date %></span></br><% } %>
-                <% if(relative_job) { %>Job: <span><%= relative_job %></span></br><% } %>
-                <% if(relative_job_class) { %>Jobklasse: <span><%= relative_job_class %></span></br><% } %>
-                <% if(relative_nation) { %>Nation: <span><%= relative_nation %></span></br><% } %>
-                <% if(relative_educations) { %>Ausbildung(en): <span><%= relative_educations %></span></br><% } %>
+                <%= relativeData %>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="personDataTemplate">
+        <% if(id) { %>ID: <span><%= id %></span></br> <% } %>
+        <% if(first_name) { %>Vorname: <span><%= first_name %></span></br> <% } %>
+        <% if(last_name) { %>Nachname: <span><%= last_name %></span></br><% } %>
+        <% if(patronym) { %>Vatersname: <span><%= patronym %></span></br><% } %>
+        <% if(gender) { %>Geschlecht: <span><%= gender %></span></br><% } %>
+        <% if(birth_date) { %>Geboren: <span><%= birth_date %></span></br><% } %>
+        <% if(baptism_date) { %>Getauft: <span><%= baptism_date %></span></br><% } %>
+        <% if(death_date) { %>Gestorben: <span><%= death_date %></span></br><% } %>
+        <% if(funeral_date) { %>Beerdigt: <span><%= funeral_date %></span></br><% } %>
+        <% if(job) { %>Job: <span><%= job %></span></br><% } %>
+        <% if(job_class) { %>Jobklasse: <span><%= job_class %></span></br><% } %>
+        <% if(nation) { %>Nation: <span><%= nation %></span></br><% } %>
+        <% if(educations) { %>Ausbildung(en): <span><%= educations %></span></br><% } %>
+    </script>
+    
+    <script type="text/template" id="possibleRelationTemplate">
+        <div class="row">
+            <div class="large-4 columns box">
+                <%= personData %>
+            </div>
+            <div class="large-1 columns">
+            </div>
+            <div class="large-2 columns box center">
+                <select>
+                    <option name="" <%= relation_suggestion == '' ?  'selected' : '' %>></option>
+                    <option name="child" <%= relation_suggestion == 'child' ?  'selected' : '' %>>ist Kind von</option>
+                    <option name="parent" <%= relation_suggestion == 'parent' ?  'selected' : '' %>>ist Elterteil von</option>
+                    <option name="sibling" <%= relation_suggestion == 'sibling' ?  'selected' : '' %>>ist Geschwister von</option>
+                    <option name="marriagePartner" <%= relation_suggestion == 'marriagePartner' ?  'selected' : '' %>>ist verheiratet mit</option>
+                </select>
+        
+                <i class="fa fa-times-circle fa-3x icon-red left remove-relation" aria-hidden="true"></i>
+                <i class="fa fa-check-circle fa-3x icon-green right accept-relation" aria-hidden="true"></i>
+            </div>
+            <div class="large-1 columns">
+            </div>
+            <div class="large-4 columns box">
+                <%= relativeData %>
             </div>
         </div>
     </script>

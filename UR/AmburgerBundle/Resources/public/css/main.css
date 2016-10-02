@@ -173,3 +173,30 @@ input.form-control {
 .column, .columns{
   min-height: 1px;
 }
+
+.icon-red {
+    color: red;
+}
+
+.icon-green {
+    color: green;
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}
+
+
+.relation-box > select {
+    width: 90%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.relation-disabled > .relation-controls {
+    display: none;
+}

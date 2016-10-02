@@ -8,6 +8,7 @@ RelativesCorrection.RelativesView = (function () {
     dateReferenceTransformer = {},
     
     personData = undefined,
+    personDataTemplate = undefined,
             /* 
              Initialises the object 
              */
@@ -35,33 +36,11 @@ RelativesCorrection.RelativesView = (function () {
 
                     var templateData = [];
                     
-                    templateData['relationship'] = getRelationshipTestBasedOnIdentifier(identifier);
+                    templateData['relation'] = getRelationshipTestBasedOnIdentifier(identifier);
                     
-                    templateData['person_first_name'] = personData['first_name'];
-                    templateData['person_last_name'] = personData['last_name'];
-                    templateData['person_patronym'] = personData['patronym'];
-                    templateData['person_birth_date'] = extractBirthDate(personData);
-                    templateData['person_baptism_date'] = extractBaptismDate(personData);
-                    templateData['person_death_date'] = extractDeathDate(personData);
-                    templateData['person_funeral_date'] = extractFuneralDate(personData);
-                    templateData['person_job'] = extractJob(personData);
-                    templateData['person_job_class'] = extractJobClass(personData);
-                    templateData['person_nation'] = extractNation(personData);
-                    templateData['person_educations'] = extractEducations(personData);
+                    templateData['personData'] = personDataTemplate;
                     
-                    
-                    templateData['relative_first_name'] = relativeReference['first_name'];
-                    templateData['relative_last_name'] = relativeReference['last_name'];
-                    templateData['relative_patronym'] = relativeReference['patronym'];
-                    templateData['relative_birth_date'] = extractBirthDate(relativeReference);
-                    templateData['relative_baptism_date'] = extractBaptismDate(relativeReference);
-                    templateData['relative_death_date'] = extractDeathDate(relativeReference);
-                    templateData['relative_funeral_date'] = extractFuneralDate(relativeReference);
-                    templateData['relative_job'] = extractJob(relativeReference);
-                    templateData['relative_job_class'] = extractJobClass(relativeReference);
-                    templateData['relative_nation'] = extractNation(relativeReference);
-                    templateData['relative_educations'] = extractEducations(relativeReference);
-
+                    templateData['relativeData'] = getPersonDataTemplate(relativeReference);
 
                     $(".existing-relations-container").append(template(templateData));
                 }
@@ -70,16 +49,29 @@ RelativesCorrection.RelativesView = (function () {
             getRelationshipTestBasedOnIdentifier = function(identifier){
                 switch(identifier){
                     case 'parents':
-                        return "ist Kind von";
+                        return "parent";
                     case 'children':
-                        return "ist Elterteil von";
+                        return "child";
                     case 'siblings':
-                        return "ist Geschwister von";
+                        return "sibling";
                     case 'marriagePartners':
-                        return "ist verheiratet mit";
+                        return "marriagePartner";
                 }
                 return "";
-            }
+            },
+            
+            extractGender = function(data){
+              switch(data['gender']){
+                    case 0:
+                        return "keine Angabe";
+                    case 1:
+                        return "männlich";
+                    case 2:
+                        return "weiblich";
+                }
+                return "";
+                
+            },
             
             extractBirthDate = function(data){
                 if(data['birth']){
@@ -133,7 +125,7 @@ RelativesCorrection.RelativesView = (function () {
             extractEducations = function(data){
                 if(data['educations']){
                     var educationsString = "";
-                    for(var i = 0; data['educations'].length; i++){
+                    for(var i = 0; i < data['educations'].length; i++){
                         if(i > 0){
                             educationsString += ",";
                         }
@@ -149,10 +141,127 @@ RelativesCorrection.RelativesView = (function () {
             
             displayPossibleRelatives = function(data){
                 console.log('displayPossibleRelatives', data);
+                internalDisplayPossibleRelatives(data);
+            },
+            
+            internalDisplayPossibleRelatives = function(data){
+                for(var i = 0; i < data.length; i++){
+                    var template = _.template($("script#possibleRelationTemplate").html());
+                    
+                    var relativeReference = data[i];
+
+                    var templateData = [];
+                    
+                    templateData['personData'] = personDataTemplate;
+                    
+                    templateData['relativeData'] = getPersonDataTemplate(relativeReference);
+
+                    templateData['relation_suggestion'] = extractRelationSuggestion(relativeReference);
+
+                    $(".possible-relations-container").append(template(templateData));
+                }
+            },
+            
+            extractRelationSuggestion = function(relativeReference){
+                var suggestion = "";
+                if(personData['birth'] && relativeReference['birth']){
+                    suggestion = relationSuggestionBasedOnDate(personData['birth']['birth_date'],relativeReference['birth']['birth_date']);
+                }
+                
+                if(suggestion == "" && personData['baptism'] && relativeReference['baptism']){
+                    suggestion = relationSuggestionBasedOnDate(personData['baptism']['baptism_date'],relativeReference['baptism']['baptism_date']);
+                }
+                
+                return suggestion;  
+            },
+            
+            relationSuggestionBasedOnDate = function(personDate, relativeDate){
+                var personYears = extractDateYears(personDate);
+                var relativeYears = extractDateYears(relativeDate);
+                
+                if(personYears.length == 0 || relativeYears.length == 0){
+                    return "";
+                }
+                
+                if(personYears[0] < relativeYears[0]){
+                    var diff = relativeYears[0] - personYears[0];
+                    
+                    if(diff < 20){
+                        return "sibling";
+                    } else if(diff < 50){
+                        return "parent";
+                    } else {
+                        return "";
+                    }
+                } else if(personYears[0] > relativeYears[0]){
+                    var diff = personYears[0] - relativeYears[0];
+                    
+                    if(diff < 20){
+                        return "sibling";
+                    } else if(diff < 50){
+                        return "child";
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return "sibling";
+                }
+                
+                return "";
+            },
+            
+            extractDateYears = function(dateReference){
+                if(typeof(dateReference) === 'undefined'){
+                    return [];
+                }
+
+                var years = [];
+
+                for(var i = 0; i < dateReference.length; i++){
+                    if(typeof(dateReference[i]['from']) !== 'undefined') {
+                        if(dateReference[i]['from']['year'] && years.indexOf(dateReference[i]['from']['year']) == -1){
+                            years.push(dateReference[i]['from']['year']);
+                        }
+                        
+                        if(dateReference[i]['to']['year'] && years.indexOf(dateReference[i]['to']['year']) == -1){
+                            years.push(dateReference[i]['to']['year']);
+                        }
+                    }else {
+                        if(dateReference[i]['year'] && years.indexOf(dateReference[i]['year']) == -1){
+                            years.push(dateReference[i]['year']);
+                        }
+                    }
+                }
+                
+                return years;
+            },
+            
+            getPersonDataTemplate = function(data){
+                var template = _.template($("script#personDataTemplate").html());
+                    
+                var templateData = [];
+                    
+                templateData['id'] = data['ID'];
+                templateData['first_name'] = data['first_name'];
+                templateData['last_name'] = data['last_name'];
+                templateData['patronym'] = data['patronym'];
+                templateData['gender'] = extractGender(data);
+                templateData['birth_date'] = extractBirthDate(data);
+                templateData['baptism_date'] = extractBaptismDate(data);
+                templateData['death_date'] = extractDeathDate(data);
+                templateData['funeral_date'] = extractFuneralDate(data);
+                templateData['job'] = extractJob(data);
+                templateData['job_class'] = extractJobClass(data);
+                templateData['nation'] = extractNation(data);
+                templateData['educations'] = extractEducations(data);
+                    
+                return template(templateData);
             },
             
             setPersonData = function(data){
                 personData = data;
+                
+                personDataTemplate = getPersonDataTemplate(personData);
             };
             
 
