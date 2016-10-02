@@ -51,7 +51,7 @@ class DateReferenceSubscriber implements EventSubscriber {
     
     public function postLoad(LifecycleEventArgs $event)
     {
-        $this->LOGGER->info("postLoad called: ". get_class($event->getEntity()));
+        $this->LOGGER->debug("postLoad called: ". get_class($event->getEntity()));
         $this->loadDatesFromDB($event);
     }
     

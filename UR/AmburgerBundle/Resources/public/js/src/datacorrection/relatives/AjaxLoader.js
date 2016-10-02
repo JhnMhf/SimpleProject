@@ -47,6 +47,45 @@ RelativesCorrection.AjaxLoader = (function () {
 
                     $(that).trigger("directRelativesLoaded", {data: data});
                 });
+            },
+            
+            createRelationship = function(data){
+                $.ajax({
+                    type: "PUT",
+                    url: 'create',
+                    data: JSON.stringify(data)
+                }).always(function (data, textStatus, jqXHR) {
+                    console.log(data,textStatus, jqXHR);
+
+                    
+                    
+                });
+            },
+            
+            updateRelationship = function(data){
+                $.ajax({
+                    type: "POST",
+                    url: 'update',
+                    data: JSON.stringify(data)
+                }).always(function (data, textStatus, jqXHR) {
+                    console.log(data,textStatus, jqXHR);
+
+                    
+                    
+                });
+            },
+            
+            removeRelationship = function(data){
+                $.ajax({
+                    type: "POST",
+                    url: 'remove',
+                    data: JSON.stringify(data)
+                }).always(function (data, textStatus, jqXHR) {
+                    console.log(data,textStatus, jqXHR);
+
+                    
+                    
+                });
             };
             
 
@@ -54,6 +93,9 @@ RelativesCorrection.AjaxLoader = (function () {
     that.loadPossibleRelatives = loadPossibleRelatives;
     that.loadDirectRelatives = loadDirectRelatives;
     that.loadPerson = loadPerson;
+    that.createRelationship = createRelationship;
+    that.updateRelationship = updateRelationship;
+    that.removeRelationship = removeRelationship;
     
     return that;
 })();

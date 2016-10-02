@@ -72,7 +72,6 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         $this->getLogger()->debug("Saving person data: ".$OID);
         $response = new Response();
 
-        //@TODO: Validate if this user is currently working on this person
         $content = $this->get("request")->getContent();
         
         

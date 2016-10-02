@@ -200,3 +200,7 @@ input.form-control {
 .relation-disabled > .relation-controls {
     display: none;
 }
+
+.clickable {
+    cursor: pointer;
+}

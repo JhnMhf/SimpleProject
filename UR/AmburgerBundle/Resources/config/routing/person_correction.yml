@@ -68,3 +68,18 @@ person_relatives_direct:
     path:    /correction/{OID}/relatives/direct
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:loadDirectRelatives } 
     methods: [GET]
+    
+person_relatives_create:
+    path:    /correction/{OID}/relatives/create
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:create } 
+    methods: [PUT]
+        
+person_relatives_update:
+    path:    /correction/{OID}/relatives/update
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:update } 
+    methods: [POST]
+    
+person_relatives_remove:
+    path:    /correction/{OID}/relatives/remove
+    defaults: { _controller: AmburgerBundle:CorrectionRelatives:remove } 
+    methods: [POST]

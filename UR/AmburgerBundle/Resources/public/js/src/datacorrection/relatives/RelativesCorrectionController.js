@@ -21,6 +21,10 @@ RelativesCorrection.RelativesCorrectionController = (function(){
         
         relativesView = RelativesCorrection.RelativesView.init();
         
+        $(relativesView).on('relationUpdated',onRelationUpdated);
+        $(relativesView).on('relationCreated',onRelationCreated);
+        $(relativesView).on('relationRemoved',onRelationRemoved);
+        
         
         ajaxLoader.loadPerson();
 
@@ -41,6 +45,21 @@ RelativesCorrection.RelativesCorrectionController = (function(){
     
     onDirectRelativesLoaded = function (event, data){
         relativesView.displayDirectRelatives(data['data']);
+    },
+    
+    onRelationUpdated = function(event, data){
+        console.log('onRelationUpdated', data);
+        ajaxLoader.updateRelationship(data);
+    },
+    
+    onRelationCreated = function(event, data){
+        console.log('onRelationCreated', data);
+        ajaxLoader.createRelationship(data);
+    },
+    
+    onRelationRemoved = function(event, data){
+        console.log('onRelationRemoved', data);
+        ajaxLoader.removeRelationship(data);
     };
 
 
