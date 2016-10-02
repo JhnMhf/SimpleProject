@@ -28,10 +28,8 @@ class CorrectionPersonController extends Controller implements CorrectionSession
     public function loadAction($OID)
     {
         $this->getLogger()->debug("Loading person data: ".$OID);
-        // return json response, with old, new and final in one?
         $response = array();
         
-        //@TODO: Load person from old db and format like json of new db
         $response["old"] = $this->loadOldPersonByOID($OID);
         $response["new"] = $this->loadNewPersonByOID($OID);
         $response["final"] = $this->loadFinalPersonByOID($OID);

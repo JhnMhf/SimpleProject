@@ -90,6 +90,9 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $relationData = $serializer->deserialize($content, 'array', 'json');
             
             $this->createRelation($relationData);
+            
+            $session = $this->get("request")->getSession();
+            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -111,8 +114,15 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $serializer = $this->get('serializer');
             
             $relationData = $serializer->deserialize($content, 'array', 'json');
+            
+            $oldRelation = $this->loadRelation($relationData);
+            
             $this->updateRelation($relationData);
 
+            $oldData = $serializer->serialize($oldRelation, 'json');
+            
+            $session = $this->get("request")->getSession();
+            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -134,8 +144,14 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $serializer = $this->get('serializer');
             
             $relationData = $serializer->deserialize($content, 'array', 'json');
+            $oldRelation = $this->loadRelation($relationData);
+            
             $this->removeRelation($relationData);
 
+            $oldData = $serializer->serialize($oldRelation, 'json');
+            
+            $session = $this->get("request")->getSession();
+            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -231,5 +247,51 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         $stmt->bindValue('relativeId', $relationData['relativeId']);
 
         $stmt->execute();
+    }
+    
+    private function loadRelation($relationData){
+        $em = $this->get('doctrine')->getManager('final');
+
+        $type = $relationData['originRelation'];
+        
+        switch($type){
+            case 'parent':
+                $queryBuilder = $em->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
+
+                return $queryBuilder
+                        ->where('p.childID = :personId AND p.parentID = :relativeId')
+                        ->setParameter('personId', $relationData['personId'])
+                        ->setParameter('relativeId', $relationData['relativeId'])
+                        ->getQuery()
+                        ->getResult();
+            case 'child':
+                $queryBuilder = $em->getRepository('NewBundle:IsParent')->createQueryBuilder('p');
+
+                return $queryBuilder
+                        ->where('p.childID = :relativeId AND p.parentID = :personId')
+                        ->setParameter('personId', $relationData['personId'])
+                        ->setParameter('relativeId', $relationData['relativeId'])
+                        ->getQuery()
+                        ->getResult();
+            case 'sibling':
+                $queryBuilder = $em->getRepository('NewBundle:IsSibling')->createQueryBuilder('s');
+
+                return $queryBuilder
+                        ->where('(s.siblingOneid = :personId AND s.siblingTwoid = :relativeId) OR (s.siblingOneid = :relativeId AND s.siblingTwoid = :personId)')
+                        ->setParameter('personId', $relationData['personId'])
+                        ->setParameter('relativeId', $relationData['relativeId'])
+                        ->getQuery()
+                        ->getResult();
+            case 'marriagePartner':
+                $queryBuilder = $em->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
+
+                return $queryBuilder
+                        ->where('(w.husbandId = :personId AND w.wifeId = :relativeId) OR (w.husbandId = :relativeId AND w.wifeId = :personId)')
+                        ->setParameter('personId', $relationData['personId'])
+                        ->setParameter('relativeId', $relationData['relativeId'])
+                        ->getQuery()
+                        ->getResult();
+        }
+        
     }
 }
