@@ -791,7 +791,7 @@ class MigrationUtil {
                                                 
                         $this->getLogger()->debug("Extracted father OID: ".$fathersOID);
                         
-                        $newFather = $this->createFather($oldFather, $mother);
+                        $newFather = $this->createFather($oldFather, $mother, $newPerson);
                         
                         try{
                             $fathersMainID = $this->getIDForOID($fathersOID, $oldDBManager);
@@ -805,14 +805,14 @@ class MigrationUtil {
                         $this->getMigrationService()->migrateIsParent($newPerson, $newFather, $result[1]);
                     }
                 } else {
-                    $newFather = $this->createFather($oldFather, $mother);
+                    $newFather = $this->createFather($oldFather, $mother, $newPerson);
 
                     $this->getMigrationService()->migrateIsParent($newPerson, $newFather, $result[1]);
 
                     $this->migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager);
                 }
             } else {
-                $newFather = $this->createFather($oldFather, $mother);
+                $newFather = $this->createFather($oldFather, $mother, $newPerson);
 
                 $this->getMigrationService()->migrateIsParent($newPerson, $newFather);
 
@@ -823,10 +823,17 @@ class MigrationUtil {
         }
     }
 
-    private function createFather($oldFather, $mother) {
-        $this->LOGGER->info("Creating Father for " . $oldFather["vornamen"] . " " . $oldFather["name"]);
+    private function createFather($oldFather, $mother, $newPerson) {
+        $lastName = $oldFather['name'];
+        
+        if(is_null($lastName) || $lastName == ''){
+            $lastName = $newPerson->getLastName();
+            $this->getLogger()->info("Setting main persons lastname for this father: ".$lastName);
+        }
+        
+        $this->LOGGER->info("Creating Father for " . $oldFather["vornamen"] . " " . $lastName);
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
-        $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $oldFather["name"], "männlich", $oldFather["nation"], $oldFather["kommentar"]);
+        $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $lastName, "männlich", $oldFather["nation"], $oldFather["kommentar"]);
 
         $father->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldFather["rufnamen"]));
 
@@ -1379,7 +1386,7 @@ class MigrationUtil {
                     for ($j = 0; $j < count($referenceIds); $j++) {
                         $childsOID = $referenceIds[$j];
 
-                        $childToMerge = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+                        $childToMerge = $this->createChild($oldChild, $oldPersonID, $oldDBManager, $newPerson);
 
                         try{
                             $childsMainId = $this->getIDForOID($childsOID, $oldDBManager);
@@ -1395,7 +1402,7 @@ class MigrationUtil {
                     }
                     //don't try to load marriage partners etc. because there won't be any and it would not be possible to related them
                 } else {
-                    $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+                    $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager, $newPerson);
 
                     $this->getMigrationService()->migrateIsParent($newChild, $newPerson, $result[1]);
                     $this->getMigrationService()->migrateIsParent($newChild, $newMarriagePartner, $result[1]);
@@ -1403,7 +1410,7 @@ class MigrationUtil {
                     $this->migrateMarriagePartnersOfChildren($newPerson, $newChild, $marriageOrder, $oldChild['order2'], $oldPersonID, $oldDBManager);
                 }
             } else {
-                $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager);
+                $newChild = $this->createChild($oldChild, $oldPersonID, $oldDBManager, $newPerson);
 
                 $this->getMigrationService()->migrateIsParent($newChild, $newPerson);
                 $this->getMigrationService()->migrateIsParent($newChild, $newMarriagePartner);
@@ -1414,9 +1421,16 @@ class MigrationUtil {
         }
     }
 
-    private function createChild($oldChild, $oldPersonID, $oldDBManager) {
+    private function createChild($oldChild, $oldPersonID, $oldDBManager, $newPerson) {
+        $lastName = $oldChild['name'];
+        
+        if((is_null($lastName) || $lastName == '' ) && $newPerson->getGender() == \UR\DB\NewBundle\Utils\Gender::MALE){
+            $lastName = $newPerson->getLastName();
+            $this->getLogger()->info("Setting main persons lastname for this child: ".$lastName);
+        }
+        
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
-        $child = $this->getMigrationService()->migrateRelative($oldChild["vornamen"], $oldChild["russ_vornamen"], $oldChild["name"], $oldChild["geschlecht"], null, $oldChild["kommentar"]);
+        $child = $this->getMigrationService()->migrateRelative($oldChild["vornamen"], $oldChild["russ_vornamen"], $lastName, $oldChild["geschlecht"], null, $oldChild["kommentar"]);
 
         $child->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldChild["rufnamen"]));
 
@@ -1512,10 +1526,6 @@ class MigrationUtil {
                 $this->getMigrationService()->migrateHonour($child, $honour["order3"], $honour["ehren"], $honour["land"], null, $honour["ort"], $honour["von-ab"]);
             }
         }
-
-
-
-
 
         if (count($childRoadOfLife) > 0) {
             //roadOfLife
