@@ -55,8 +55,18 @@ class PossibleRelativesFinder {
             
             $this->getLogger()->info("After filtering ".count($possibleRelatives). " possible relatives remain.");
         }
+        
+        //necessary to fill possible unsetted values
+        $possibleRelatives = array_values($possibleRelatives);
+        
+        //enrich possibleRelatives with Data
+        $fullPossibleRelatives = [];
 
-        return $possibleRelatives;
+        for($i = 0; $i < count($possibleRelatives); $i++){
+            $fullPossibleRelatives[] = $this->loadPerson($em, $possibleRelatives[$i]['ID']);
+        }
+
+        return $fullPossibleRelatives;
     }
     
     private function removeElementWithValue($array, $key, $value){
@@ -66,6 +76,24 @@ class PossibleRelativesFinder {
              }
         }
         return $array;
+   }
+   
+   private function loadPerson($em, $ID){
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
+
+        if (is_null($person)) {
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+
+        if (is_null($person)) {
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+
+        if (is_null($person)) {
+            //throw exception
+        }
+
+        return $person;
    }
     
     private function loadPossibleRelatives($em, $gender, $firstName, $lastName, $patronym){
