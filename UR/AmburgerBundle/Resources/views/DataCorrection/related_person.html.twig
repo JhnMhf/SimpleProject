@@ -49,18 +49,26 @@
 
     <script type="text/template" id="directRelationTemplate">
         <div class="row">
-            <div class="large-4 columns">
-                Vorname: <span><%= person_first_name %></span></br>
-                Nachname: <span><%= person_last_name %></span></br>
-                Vatersname: <span><%= person_patronym %></span></br>
+            <div class="large-4 columns box">
+                <% if(person_first_name) { %>Vorname: <span><%= person_first_name %></span></br> <% } %>
+                <% if(person_last_name) { %>Nachname: <span><%= person_last_name %></span></br><% } %>
+                <% if(person_patronym) { %>Vatersname: <span><%= person_patronym %></span></br><% } %>
+                <% if(person_birth_date) { %>Geboren: <span><%= person_birth_date %></span></br><% } %>
+                <% if(person_baptism_date) { %>Getauft: <span><%= person_baptism_date %></span></br><% } %>
+                <% if(person_death_date) { %>Gestorben: <span><%= person_death_date %></span></br><% } %>
+                <% if(person_funeral_date) { %>Beerdigt: <span><%= person_funeral_date %></span></br><% } %>
             </div>
             <div class="large-4 columns">
                 
             </div>
-            <div class="large-4 columns">
-                Vorname: <span><%= relative_first_name %></span></br>
-                Nachname: <span><%= relative_last_name %></span></br>
-                Vatersname: <span><%= relative_patronym %></span></br>
+            <div class="large-4 columns box">
+                <% if(relative_first_name) { %>Vorname: <span><%= relative_first_name %></span></br><% } %>
+                <% if(relative_last_name) { %>Nachname: <span><%= relative_last_name %></span></br><% } %>
+                <% if(relative_patronym) { %>Vatersname: <span><%= relative_patronym %></span></br><% } %>
+                <% if(relative_birth_date) { %>Geboren: <span><%= relative_birth_date %></span></br><% } %>
+                <% if(relative_baptism_date) { %>Getauft: <span><%= relative_baptism_date %></span></br><% } %>
+                <% if(relative_death_date) { %>Gestorben: <span><%= relative_death_date %></span></br><% } %>
+                <% if(relative_funeral_date) { %>Beerdigt: <span><%= relative_funeral_date %></span></br><% } %>
             </div>
         </div>
     </script>

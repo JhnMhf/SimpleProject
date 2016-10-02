@@ -5,77 +5,83 @@
 RelativesCorrection.RelativesView = (function () {
     var that = {},
     
+    dateReferenceTransformer = {},
+    
     personData = undefined,
             /* 
              Initialises the object 
              */
             init = function () {
-
-
+                dateReferenceTransformer = DateReferenceTransformer;
+            
                 return that;
             },
             
             displayDirectRelatives = function(data){
                 console.log('displayDirectRelatives', data, personData);
-                for(var i = 0; i < data['parents'].length; i++){
-                    var template = _.template($("script#directRelationTemplate").html());
-
-                    var templateData = [];
-                    templateData['person_first_name'] = personData['first_name'];
-                    templateData['person_last_name'] = personData['last_name'];
-                    templateData['person_patronym'] = personData['patronym'];
-                    templateData['relative_first_name'] = data['parents'][i]['person']['first_name'];
-                    templateData['relative_last_name'] = data['parents'][i]['person']['last_name'];
-                    templateData['relative_patronym'] = data['parents'][i]['person']['patronym'];
-
-
-                    $(".existing-relations-container").append(template(templateData));
-                }
                 
-                for(var i = 0; i < data['children'].length; i++){
-                    var template = _.template($("script#directRelationTemplate").html());
-
-                    var templateData = [];
-                    templateData['person_first_name'] = personData['first_name'];
-                    templateData['person_last_name'] = personData['last_name'];
-                    templateData['person_patronym'] = personData['patronym'];
-                    templateData['relative_first_name'] = data['children'][i]['person']['first_name'];
-                    templateData['relative_last_name'] = data['children'][i]['person']['last_name'];
-                    templateData['relative_patronym'] = data['children'][i]['person']['patronym'];
-
-
-                    $(".existing-relations-container").append(template(templateData));
-                }
+                internalDisplayDirectRelatives(data, 'parents');
+                internalDisplayDirectRelatives(data, 'children');
+                internalDisplayDirectRelatives(data, 'siblings');
+                internalDisplayDirectRelatives(data, 'marriagePartners');
                 
-                for(var i = 0; i < data['siblings'].length; i++){
+            },
+            
+            internalDisplayDirectRelatives = function(data, identifier){
+                for(var i = 0; i < data[identifier].length; i++){
                     var template = _.template($("script#directRelationTemplate").html());
+                    
+                    var relativeReference = data[identifier][i]['person'];
 
                     var templateData = [];
                     templateData['person_first_name'] = personData['first_name'];
                     templateData['person_last_name'] = personData['last_name'];
                     templateData['person_patronym'] = personData['patronym'];
-                    templateData['relative_first_name'] = data['siblings'][i]['person']['first_name'];
-                    templateData['relative_last_name'] = data['siblings'][i]['person']['last_name'];
-                    templateData['relative_patronym'] = data['siblings'][i]['person']['patronym'];
+                    templateData['person_birth_date'] = extractBirthDate(personData);
+                    templateData['person_baptism_date'] = extractBaptismDate(personData);
+                    templateData['person_death_date'] = extractDeathDate(personData);
+                    templateData['person_funeral_date'] = extractFuneralDate(personData);
+                    
+                    
+                    templateData['relative_first_name'] = relativeReference['first_name'];
+                    templateData['relative_last_name'] = relativeReference['last_name'];
+                    templateData['relative_patronym'] = relativeReference['patronym'];
+                    templateData['relative_birth_date'] = extractBirthDate(relativeReference);
+                    templateData['relative_baptism_date'] = extractBaptismDate(relativeReference);
+                    templateData['relative_death_date'] = extractDeathDate(relativeReference);
+                    templateData['relative_funeral_date'] = extractFuneralDate(relativeReference);
 
 
                     $(".existing-relations-container").append(template(templateData));
                 }
-                
-                for(var i = 0; i < data['marriagePartners'].length; i++){
-                    var template = _.template($("script#directRelationTemplate").html());
-
-                    var templateData = [];
-                    templateData['person_first_name'] = personData['first_name'];
-                    templateData['person_last_name'] = personData['last_name'];
-                    templateData['person_patronym'] = personData['patronym'];
-                    templateData['relative_first_name'] = data['marriagePartners'][i]['person']['first_name'];
-                    templateData['relative_last_name'] = data['marriagePartners'][i]['person']['last_name'];
-                    templateData['relative_patronym'] = data['marriagePartners'][i]['person']['patronym'];
-
-
-                    $(".existing-relations-container").append(template(templateData));
+            },
+            
+            extractBirthDate = function(data){
+                if(data['birth']){
+                  return dateReferenceTransformer.dateReferenceToString(data['birth']['birth_date']);
                 }
+                return "";
+            },
+            
+            extractBaptismDate = function(data){
+                if(data['baptism']){
+                  return dateReferenceTransformer.dateReferenceToString(data['baptism']['baptism_date']);
+                }
+                return "";
+            },
+            
+            extractDeathDate = function(data){
+                if(data['death']){
+                  return dateReferenceTransformer.dateReferenceToString(data['death']['death_date']);
+                }
+                return "";
+            },
+            
+            extractFuneralDate = function(data){
+                if(data['death']){
+                  return dateReferenceTransformer.dateReferenceToString(data['death']['funeral_date']);
+                }
+                return "";
             },
             
             displayPossibleRelatives = function(data){
