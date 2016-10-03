@@ -26,6 +26,7 @@ class PossibleRelativesFinder {
         return $this->LOGGER;
     }
 
+    //@TODO: Find mothers based on siblings, marriage partner etc.
     public function findPossibleRelatives($em, $OID){
         $this->getLogger()->info("Searching possible relatives for OID: ".$OID);
         
