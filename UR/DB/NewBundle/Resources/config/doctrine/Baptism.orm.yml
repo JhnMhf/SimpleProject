@@ -36,5 +36,4 @@ UR\DB\NewBundle\Entity\Baptism:
             cascade: ["persist"]
                 
     lifecycleCallbacks:
-        #postLoad: [loadDates]
       

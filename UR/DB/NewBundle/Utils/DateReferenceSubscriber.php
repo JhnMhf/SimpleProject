@@ -65,7 +65,7 @@ class DateReferenceSubscriber implements EventSubscriber {
          switch(get_class($entity)){
             case "UR\DB\NewBundle\Entity\Baptism":
                 $this->LOGGER->debug("Found baptism entity");
-                $entity->getBaptismDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBaptismDate()));
+                $entity->setBaptismDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBaptismDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Birth":
                 $this->LOGGER->debug("Found birth entity");
