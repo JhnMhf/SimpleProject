@@ -70,6 +70,7 @@ class DateReferenceSubscriber implements EventSubscriber {
             case "UR\DB\NewBundle\Entity\Birth":
                 $this->LOGGER->debug("Found birth entity");
                 $entity->setBirthDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBirthDate()));
+                $entity->setProvenDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getProvenDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Death":
                 $this->LOGGER->debug("Found death entity");
@@ -110,6 +111,7 @@ class DateReferenceSubscriber implements EventSubscriber {
                 $entity->setWeddingDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getWeddingDate()));
                 $entity->setBannsDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBannsDate()));
                 $entity->setBreakupDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getBreakupDate()));
+                $entity->setProvenDate($this->dateReferenceLoader->loadDateReferenceFromArray($em, $entity->getProvenDate()));
                 break;
             case "UR\DB\NewBundle\Entity\Works":
                 $this->LOGGER->debug("Found works entity");
