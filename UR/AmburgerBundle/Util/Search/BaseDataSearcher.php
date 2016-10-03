@@ -781,7 +781,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInStatus($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM status WHERE ";
+        $sql = "SELECT DISTINCT person_id FROM status_information WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
