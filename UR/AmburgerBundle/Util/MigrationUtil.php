@@ -138,10 +138,6 @@ class MigrationUtil {
 
         $this->migrateSibling($newPerson, $ID, $oldDBManager);
 
-        $this->migrateGrandmothers($newPerson, $ID, $oldDBManager);
-
-        $this->migrateGrandfathers($newPerson, $ID, $oldDBManager);
-
         $this->migrateMarriagePartner($newPerson, $ID, $oldDBManager);
 
         // migrate GrandChild after marriagepartners of child
@@ -429,9 +425,8 @@ class MigrationUtil {
 
         return $stmt->fetchAll();
     }
-
-    private function migrateGrandmothers($newPerson, $oldPersonID, $oldDBManager) {
-
+    
+    private function migrateNonPaternalGrandparents($newPerson, $mother, $oldPersonID, $oldDBManager){
         //non paternal
         $grandmothers = $oldDBManager->getRepository('OldBundle:GroßmutterMuetterlicherseits')->findById($oldPersonID);
 
@@ -441,40 +436,12 @@ class MigrationUtil {
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
             $grandmother = $this->getMigrationService()->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation());
 
-            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother["ID"], 'großmutter_muetterlicherseits', $oldGrandmother["order"], $oldGrandmother["order2"]);
+            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother->getId(), 'großmutter_muetterlicherseits', $oldGrandmother->getOrder(), $oldGrandmother->getOrder2());
             
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandmother, false);
+            $this->getMigrationService()->migrateIsParent($mother, $grandmother);
         }
-
-        //paternal
-        $grandmothers = $oldDBManager->getRepository('OldBundle:GroßmutterVaeterlicherseits')->findById($oldPersonID);
-
-        for ($i = 0; $i < count($grandmothers); $i++) {
-            $oldGrandmother = $grandmothers[$i];
-
-            //$firstName, $patronym, $lastName, $gender, $nation, $comment
-            $grandmother = $this->getMigrationService()->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich");
-
-            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother["ID"], 'großmutter_vaeterlicherseits', $oldGrandmother["order"], $oldGrandmother["order2"]);
-            
-            //insert additional data
-            if (!is_null($oldGrandmother->getGeburtsland())) {
-                $this->getMigrationService()->migrateBirth($grandmother, null, null, null, $oldGrandmother->getGeburtsland());
-            }
-
-            if (!is_null($oldGrandmother->getBeruf())) {
-                $jobID = $this->getMigrationService()->migrateJob($oldGrandmother->getBeruf());
-
-                $grandmother->setJob($jobID);
-            }
-
-
-            $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandmother, true);
-        }
-    }
-
-    private function migrateGrandfathers($newPerson, $oldPersonID, $oldDBManager) {
-
+        
         //non paternal
         $grandfathers = $this->getGrandfatherMaternalWithNativeQuery($oldPersonID, $oldDBManager);
 
@@ -485,8 +452,7 @@ class MigrationUtil {
 
             $this->trackOriginOfData($grandfather->getId(), $oldGrandfather["ID"], 'großvater_muetterlicherseits', $oldGrandfather["order"], $oldGrandfather["order2"]);
             
-            
-//insert additional data
+            //insert additional data
             if (!is_null($oldGrandfather["beruf"])) {
                 $jobID = $this->getMigrationService()->migrateJob($oldGrandfather["beruf"]);
 
@@ -515,8 +481,38 @@ class MigrationUtil {
             }
 
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, false);
+            $this->getMigrationService()->migrateIsParent($mother, $grandfather);
         }
+    }
+    
+    private function migratePaternalGrandparents($newPerson, $father, $oldPersonID, $oldDBManager){
+       //paternal
+        $grandmothers = $oldDBManager->getRepository('OldBundle:GroßmutterVaeterlicherseits')->findById($oldPersonID);
 
+        for ($i = 0; $i < count($grandmothers); $i++) {
+            $oldGrandmother = $grandmothers[$i];
+
+            //$firstName, $patronym, $lastName, $gender, $nation, $comment
+            $grandmother = $this->getMigrationService()->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich");
+
+            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother->getId(), 'großmutter_vaeterlicherseits', $oldGrandmother->getOrder(), $oldGrandmother->getOrder2());
+            
+            //insert additional data
+            if (!is_null($oldGrandmother->getGeburtsland())) {
+                $this->getMigrationService()->migrateBirth($grandmother, null, null, null, $oldGrandmother->getGeburtsland());
+            }
+
+            if (!is_null($oldGrandmother->getBeruf())) {
+                $jobID = $this->getMigrationService()->migrateJob($oldGrandmother->getBeruf());
+
+                $grandmother->setJob($jobID);
+            }
+
+            $this->getMigrationService()->migrateIsParent($father, $grandmother);
+            $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandmother, true);
+        }
+        
+        
         //paternal
         $grandfathers = $this->getGrandfatherPaternalWithNativeQuery($oldPersonID, $oldDBManager);
 
@@ -525,8 +521,6 @@ class MigrationUtil {
 
             $grandfather = $this->createGrandfatherPaternal($oldGrandfather);
             
-            
-
             //check if reference to person
             if (!is_null($oldGrandfather["vät_großvater_id-nr"])) {
                 $this->LOGGER->debug("Found paternal grandfather reference");
@@ -543,10 +537,11 @@ class MigrationUtil {
                 }
             }
 
+            $this->getMigrationService()->migrateIsParent($father, $grandfather);
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandfather, true);
         }
     }
-
+    
     private function createGrandfatherPaternal($oldGrandfather) {
         $grandfather = $this->getMigrationService()->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
@@ -645,6 +640,8 @@ class MigrationUtil {
 
             $this->getMigrationService()->migrateIsParent($newPerson, $newMother);
 
+            $this->migrateNonPaternalGrandparents($newPerson, $newMother, $oldPersonID, $oldDBManager);
+            
             //partners of mother
             $this->migratePartnersOfMother($newMother, $oldPersonID, $oldDBManager);
 
@@ -816,11 +813,17 @@ class MigrationUtil {
                         }
 
                         $this->getMigrationService()->migrateIsParent($newPerson, $newFather, $result[1]);
+                        
+                        $this->migratePaternalGrandparents($newPerson, $newFather, $oldPersonID, $oldDBManager);
+                        
+                        $this->migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager);
                     }
                 } else {
                     $newFather = $this->createFather($oldFather, $mother, $newPerson);
 
                     $this->getMigrationService()->migrateIsParent($newPerson, $newFather, $result[1]);
+                    
+                    $this->migratePaternalGrandparents($newPerson, $newFather, $oldPersonID, $oldDBManager);
 
                     $this->migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager);
                 }
@@ -828,6 +831,8 @@ class MigrationUtil {
                 $newFather = $this->createFather($oldFather, $mother, $newPerson);
 
                 $this->getMigrationService()->migrateIsParent($newPerson, $newFather);
+                
+                $this->migratePaternalGrandparents($newPerson, $newFather, $oldPersonID, $oldDBManager);
 
                 $this->migratePartnersOfFather($newFather, $oldPersonID, $oldDBManager);
             }
