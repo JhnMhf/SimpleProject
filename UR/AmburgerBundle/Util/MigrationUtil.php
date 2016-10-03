@@ -409,11 +409,11 @@ class MigrationUtil {
 
     private function migrateRoadOfLife($newPerson, $oldPersonID, $oldDBManager) {
 
-        $roadOfLive = $this->getRoadOfLifeWithNativeQuery($oldPersonID, $oldDBManager);
+        $roadOfLife = $this->getRoadOfLifeWithNativeQuery($oldPersonID, $oldDBManager);
 
-        if (count($roadOfLive) > 0) {
-            for ($i = 0; $i < count($roadOfLive); $i++) {
-                $step = $roadOfLive[$i];
+        if (count($roadOfLife) > 0) {
+            for ($i = 0; $i < count($roadOfLife); $i++) {
+                $step = $roadOfLife[$i];
                 $this->getMigrationService()->migrateRoadOfLife($newPerson, $step["order"], $step["stammland"], $step["stammterritorium"], $step["beruf"], $step["land"], $step["territorium"], $step["ort"], $step["von-ab"], $step["bis"], $step["belegt"], $step["kommentar"]);
             }
         }
@@ -996,7 +996,7 @@ class MigrationUtil {
 
         $siblingOrigin = $this->getSiblingsOriginWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
 
-        $siblingRoadOfLive = $this->getSiblingsRoadOfLiveWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
+        $siblingRoadOfLife = $this->getSiblingsRoadOfLifeWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
 
         $siblingRank = $this->getSiblingsRankWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
 
@@ -1040,10 +1040,10 @@ class MigrationUtil {
         }
 
 
-        if (count($siblingRoadOfLive) > 0) {
+        if (count($siblingRoadOfLife) > 0) {
             //roadOfLife
-            for ($i = 0; $i < count($siblingRoadOfLive); $i++) {
-                $step = $siblingRoadOfLive[$i];
+            for ($i = 0; $i < count($siblingRoadOfLife); $i++) {
+                $step = $siblingRoadOfLife[$i];
                 $this->getMigrationService()->migrateRoadOfLife($sibling, $step["order2"], $step["stammland"], null, $step["beruf"], null, $step["territorium"], $step["ort"], $step["von-ab"], $step["bis"], $step["belegt"], $step["kommentar"]);
             }
         }
@@ -1137,7 +1137,7 @@ class MigrationUtil {
         return $stmt->fetchAll();
     }
 
-    private function getSiblingsRoadOfLiveWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+    private function getSiblingsRoadOfLifeWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
         $sql = "SELECT ID, `order`, order2, ort, territorium, stammland, beruf, `von-ab`, bis, belegt, kommentar
                 FROM `lebensweg_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
 
