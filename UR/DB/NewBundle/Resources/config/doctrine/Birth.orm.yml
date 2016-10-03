@@ -49,6 +49,10 @@ UR\DB\NewBundle\Entity\Birth:
             type: date_reference
             column: birth_dateID
             nullable: true
+        provenDate:
+            type: date_reference
+            column: proven_dateID
+            nullable: true
         birthTerritoryid:
             type: integer
             nullable: true

@@ -1486,9 +1486,9 @@ class MigrationUtil {
                         }
                     }
 
-                    if (!is_null($geboren) || !is_null($geburtsOrt) || !is_null($origin['geburtsland']) || !is_null($origin['geburtsterritorium']) || !is_null($origin['kommentar'])) {
+                    if (!is_null($geboren) || !is_null($geburtsOrt) || !is_null($origin['geburtsland']) || !is_null($origin['geburtsterritorium']) || !is_null($origin['kommentar']) || !is_null($origin['belegt'])) {
                         //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
-                        $this->getMigrationService()->migrateBirth($child, null, null, null, $origin["geburtsland"], $geburtsOrt, $geboren, $origin['geburtsterritorium'], $origin['kommentar']);
+                        $this->getMigrationService()->migrateBirth($child, null, null, null, $origin["geburtsland"], $geburtsOrt, $geboren, $origin['geburtsterritorium'], $origin['kommentar'], $origin['belegt']);
                     }
 
 

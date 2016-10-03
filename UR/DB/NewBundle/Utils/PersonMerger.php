@@ -633,6 +633,10 @@ class PersonMerger {
             $dataMasterBirth->setBirthLocation($this->mergeLocationObject($dataMasterBirth->getBirthLocation(), $toBeDeletedBirth->getBirthLocation()));
             $dataMasterBirth->setBirthDate($this->mergeDateReference($dataMasterBirth->getBirthDate(), $toBeDeletedBirth->getBirthDate()));
             $toBeDeletedBirth->setBirthDate(null);
+            
+            $dataMasterBirth->setProvenDate($this->mergeDateReference($dataMasterBirth->getProvenDate(), $toBeDeletedBirth->getProvenDate()));
+            $toBeDeletedBirth->setProvenDate(null);
+            
             $dataMasterBirth->setComment($this->mergeComment($dataMasterBirth->getComment(), $toBeDeletedBirth->getComment()));
 
             $dataMaster->setBirth($dataMasterBirth);

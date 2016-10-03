@@ -503,7 +503,7 @@ abstract class BaseDataSearcher {
                 array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid'), $possibleDateReferenceIds,
+                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
                 array('id'), $personReferenceIds);
         
         if(!$onlyMainPerson) {
@@ -511,7 +511,7 @@ abstract class BaseDataSearcher {
                 array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid'), $possibleDateReferenceIds,
+                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
                 array('id'), $personReferenceIds);
         
             $personIds = array_merge($personIds, $relativeIds);
@@ -520,7 +520,7 @@ abstract class BaseDataSearcher {
                 array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
                 array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
                 array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid'), $possibleDateReferenceIds,
+                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
                 array('id'), $personReferenceIds);
 
             $personIds = array_merge($personIds, $partnerIds);

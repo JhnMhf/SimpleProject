@@ -655,7 +655,7 @@ class MigrateData {
 
     /* end helper method */
 
-    public function migrateBirth($person, $originCountry, $originTerritory = null, $originLocation = null, $birthCountry = null, $birthLocation = null, $birthDate = null, $birthTerritory = null, $comment = null) {
+    public function migrateBirth($person, $originCountry, $originTerritory = null, $originLocation = null, $birthCountry = null, $birthLocation = null, $birthDate = null, $birthTerritory = null, $comment = null, $provenDate = null) {
         //insert into new data
         $newBirth = new Birth();
 
@@ -666,6 +666,7 @@ class MigrateData {
         $newBirth->setBirthLocation($this->getLocation($birthLocation));
         $newBirth->setBirthTerritory($this->getTerritory($birthTerritory, $birthLocation));
         $newBirth->setComment($this->normalize($comment));
+        $newBirth->setProvenDate($this->getDate($provenDate));
 
         $newBirth->setBirthDate($this->getDate($birthDate));
 

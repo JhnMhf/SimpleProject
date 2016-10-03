@@ -287,6 +287,10 @@ class PersonComparer {
         if ($this->unmatchedArrays($birthOne->getBirthDate(), $birthTwo->getBirthDate(), "date", $allowLessInformation)) {
             return false;
         }
+        
+        if ($this->unmatchedArrays($birthOne->getProvenDate(), $birthTwo->getProvenDate(), "date", $allowLessInformation)) {
+            return false;
+        }
 
         return true;
     }
