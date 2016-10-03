@@ -46,4 +46,5 @@ UR\DB\NewBundle\Entity\IsParent:
             length: 65535
             options:
                 fixed: false
+            column: is_parent_comment
     lifecycleCallbacks: {  }

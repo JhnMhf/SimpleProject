@@ -73,6 +73,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             options:
                 fixed: false
                 default: null
+            column: person_comment
         bornInMarriage:
             type: text
             nullable: true

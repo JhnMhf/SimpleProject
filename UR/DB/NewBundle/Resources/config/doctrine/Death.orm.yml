@@ -58,6 +58,7 @@ UR\DB\NewBundle\Entity\Death:
             length: 65535
             options:
                 fixed: false
+            column: death_comment
         deathDate:
             type: date_reference
             column: death_dateId

@@ -27,4 +27,5 @@ UR\DB\NewBundle\Entity\Job:
             length: 65535
             options:
                 fixed: false
+            column: job_comment
     lifecycleCallbacks: {  }

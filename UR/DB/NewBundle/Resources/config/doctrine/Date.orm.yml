@@ -1,16 +1,16 @@
 UR\DB\NewBundle\Entity\Date:
     type: entity
-    table: date
+    table: date_information
     options:
         collate: utf8_general_ci
         charset: utf8
     indexes:
         day_idx:
-            columns: [ day ]
+            columns: [ day_value ]
         month_idx:
-            columns: [ month ]
+            columns: [ month_value ]
         year_idx:
-            columns: [ year ]
+            columns: [ year_value ]
         before_idx:
             columns: [ before_date ]
         after_idx:
@@ -31,16 +31,19 @@ UR\DB\NewBundle\Entity\Date:
             nullable: true
             options:
                 fixed: false
+            column: day_value
         month:
             type: integer
             nullable: true
             options:
                 fixed: false
+            column: month_value
         year:
             type: integer
             nullable: true
             options:
                 fixed: false
+            column: year_value
         weekday:
             type: string
             nullable: true
@@ -53,6 +56,7 @@ UR\DB\NewBundle\Entity\Date:
             length: 65535
             options:
                 fixed: false
+            column: date_comment
         beforeDate:
             type: boolean
             nullable: false

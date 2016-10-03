@@ -9,7 +9,7 @@ UR\DB\NewBundle\Entity\Religion:
         name_idx:
             # Columns is an array, specify multiple columns for 
             # a compound index
-            columns: [ name ]
+            columns: [ religion_name ]
     id:
         id:
             type: integer
@@ -27,12 +27,14 @@ UR\DB\NewBundle\Entity\Religion:
             length: 100
             options:
                 fixed: false
+            column: religion_name
         comment:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+            column: religion_comment
         religionOrder:
             type: integer
             nullable: false

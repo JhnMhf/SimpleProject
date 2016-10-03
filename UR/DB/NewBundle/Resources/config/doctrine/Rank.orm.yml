@@ -69,6 +69,7 @@ UR\DB\NewBundle\Entity\Rank:
             length: 65535
             options:
                 fixed: false
+            column: rank_comment
     manyToOne:
         person:
             targetEntity: BasePerson

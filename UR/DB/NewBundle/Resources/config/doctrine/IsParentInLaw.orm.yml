@@ -46,4 +46,5 @@ UR\DB\NewBundle\Entity\IsParentInLaw:
             length: 65535
             options:
                 fixed: false
+            column: is_parent_in_law_comment
     lifecycleCallbacks: {  }

@@ -21,12 +21,14 @@ UR\DB\NewBundle\Entity\Location:
             length: 200
             options:
                 fixed: false
+            column: location_name
         comment:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+            column: location_comment
         latitude:
             type: decimal
             nullable: true

@@ -52,4 +52,5 @@ UR\DB\NewBundle\Entity\IsGrandparent:
             length: 65535
             options:
                 fixed: false
+            column: is_grandparent_comment
     lifecycleCallbacks: {  }

@@ -75,6 +75,7 @@ UR\DB\NewBundle\Entity\RoadOfLife:
             length: 65535
             options:
                 fixed: false
+            column: road_of_life_comment
     manyToOne:
         person:
             targetEntity: BasePerson

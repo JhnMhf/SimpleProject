@@ -46,7 +46,7 @@ abstract class BaseDataSearcher {
     protected function findLocation($location){
         $finalDBManager = $this->finalDBManager;
         
-        $sql = "SELECT id FROM location WHERE name LIKE :location";
+        $sql = "SELECT id FROM location WHERE location_name LIKE :location";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('location', '%'.$location.'%');
@@ -60,7 +60,7 @@ abstract class BaseDataSearcher {
         $finalDBManager = $this->finalDBManager;
         
         
-        $sql = "SELECT id FROM territory WHERE name LIKE :territory";
+        $sql = "SELECT id FROM territory WHERE territory_name LIKE :territory";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('territory', '%'.$territory.'%');
@@ -74,7 +74,7 @@ abstract class BaseDataSearcher {
         $finalDBManager = $this->finalDBManager;
         
         
-        $sql = "SELECT id FROM country WHERE name LIKE :country";
+        $sql = "SELECT id FROM country WHERE country_name LIKE :country";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
 
         $stmt->bindValue('country', '%'.$country.'%');
@@ -87,7 +87,7 @@ abstract class BaseDataSearcher {
     protected function findNation($queryString){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT id FROM nation WHERE name LIKE :nation";
+        $sql = "SELECT id FROM nation WHERE nation_name LIKE :nation";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('nation', '%'.$queryString.'%');
@@ -135,19 +135,20 @@ abstract class BaseDataSearcher {
         $year = !empty($parts[2]) ? $parts[2] : null;
         
         $finalDBManager = $this->finalDBManager;
+        $sql = "";
         $stmt = null;
         
         if(!is_null($year)){
             if(!is_null($month)){
                 if(!is_null($day)){
-                    $sql = "SELECT id FROM date WHERE year = :year AND month = :month AND day = :day";
+                    $sql = "SELECT id FROM date_information WHERE year_value = :year AND month_value = :month AND day_value = :day";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('year', $year);
                     $stmt->bindValue('month', $month);
                     $stmt->bindValue('day', $day);
                 } else {
-                    $sql = "SELECT id FROM date WHERE year = :year AND month = :month";
+                    $sql = "SELECT id FROM date_information WHERE year_value = :year AND month_value = :month";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('year', $year);
@@ -155,13 +156,13 @@ abstract class BaseDataSearcher {
                 }
             } else {
                 if(!is_null($day)){
-                    $sql = "SELECT id FROM date WHERE year = :year AND day = :day";
+                    $sql = "SELECT id FROM date_information WHERE year_value = :year AND day_value = :day";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('year', $year);
                     $stmt->bindValue('day', $day);
                 } else {
-                    $sql = "SELECT id FROM date WHERE year = :year";
+                    $sql = "SELECT id FROM date_information WHERE year_value = :year";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('year', $year);
@@ -170,20 +171,20 @@ abstract class BaseDataSearcher {
         } else {
             if(!is_null($month)){
                 if(!is_null($day)){
-                    $sql = "SELECT id FROM date WHERE month = :month AND day = :day";
+                    $sql = "SELECT id FROM date_information WHERE month_value = :month AND day_value = :day";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('month', $month);
                     $stmt->bindValue('day', $day);
                 } else {
-                    $sql = "SELECT id FROM date WHERE month = :month";
+                    $sql = "SELECT id FROM date_information WHERE month_value = :month";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('month', $month);
                 }
             } else {
                 if(!is_null($day)){
-                    $sql = "SELECT id FROM date WHERE day = :day";
+                    $sql = "SELECT id FROM date_information WHERE day_value = :day";
                     $stmt = $finalDBManager->getConnection()->prepare($sql);
 
                     $stmt->bindValue('day', $day);
@@ -192,6 +193,8 @@ abstract class BaseDataSearcher {
                 }
             }
         }
+        
+        $this->LOGGER->debug("Using query: ".$sql);
 
         $stmt->execute();
 
@@ -221,12 +224,14 @@ abstract class BaseDataSearcher {
 
         $sql = "";
         if(!empty($fromQueryPart) && !empty($toQueryPart)){
-            $sql = "SELECT id FROM date WHERE ".$fromQueryPart. " AND ". $toQueryPart;
+            $sql = "SELECT id FROM date_information WHERE ".$fromQueryPart. " AND ". $toQueryPart;
         } else if(!empty($fromQueryPart)){
-            $sql = "SELECT id FROM date WHERE ".$fromQueryPart;
+            $sql = "SELECT id FROM date_information WHERE ".$fromQueryPart;
         } else if(!empty($toQueryPart)){
-            $sql = "SELECT id FROM date WHERE ".$toQueryPart;
+            $sql = "SELECT id FROM date_information WHERE ".$toQueryPart;
         }
+        
+        $this->LOGGER->debug("Using query: ".$sql);
         
         $stmt = $stmt = $finalDBManager->getConnection()->prepare($sql);
         
@@ -258,27 +263,27 @@ abstract class BaseDataSearcher {
         if(!is_null($fromYear)){
             if(!is_null($fromMonth)){
                 if(!is_null($fromDay)){
-                    return "(year > :fromYear OR (year = :fromYear AND (month > :fromMonth OR (month = :fromMonth AND day >= :fromDay))))";
+                    return "(year_value > :fromYear OR (year_value = :fromYear AND (month_value > :fromMonth OR (month_value = :fromMonth AND day_value >= :fromDay))))";
                 } else {
-                    return "(year > :fromYear OR (year = :fromYear AND month >= :fromMonth))";
+                    return "(year_value > :fromYear OR (year_value = :fromYear AND month_value >= :fromMonth))";
                 }
             } else {
                 if(!is_null($fromDay)){
-                    return "(year > :fromYear OR (year = :fromYear AND day >= :fromDay))";
+                    return "(year_value > :fromYear OR (year_value = :fromYear AND day_value >= :fromDay))";
                 } else {
-                    return "(year >= :fromYear )";
+                    return "(year_value >= :fromYear )";
                 }
             }
         } else {
             if(!is_null($fromMonth)){
                 if(!is_null($fromDay)){
-                    return "(month > :fromMonth OR (month = :fromMonth AND day >= :fromDay))";
+                    return "(month_value > :fromMonth OR (month_value = :fromMonth AND day_value >= :fromDay))";
                 } else {
-                    return "(month >= :fromMonth)";
+                    return "(month_value >= :fromMonth)";
                 }
             } else {
                 if(!is_null($fromDay)){
-                   return "(day >= :fromDay)";
+                   return "(day_value >= :fromDay)";
                 } else {
                    return "";
                 }
@@ -290,27 +295,27 @@ abstract class BaseDataSearcher {
         if(!is_null($toYear)){
             if(!is_null($toMonth)){
                 if(!is_null($toDay)){
-                    return "(year < :toYear OR (year = :toYear AND (month < :toMonth OR (month = :toMonth AND day <= :toDay))))";
+                    return "(year_value < :toYear OR (year_value = :toYear AND (month_value < :toMonth OR (month_value = :toMonth AND day_value <= :toDay))))";
                 } else {
-                    return "(year < :toYear OR (year = :toYear AND month <= :toMonth))";
+                    return "(year_value < :toYear OR (year_value = :toYear AND month_value <= :toMonth))";
                 }
             } else {
                 if(!is_null($toDay)){
-                    return "(year < :toYear OR (year = :toYear AND day <= :toDay))";
+                    return "(year_value < :toYear OR (year_value = :toYear AND day_value <= :toDay))";
                 } else {
-                    return "(year <= :toYear)";
+                    return "(year_value <= :toYear)";
                 }
             }
         } else {
             if(!is_null($toMonth)){
                 if(!is_null($toDay)){
-                    return "(month < :toMonth OR (month = :toMonth AND day <= :toDay))";
+                    return "(month_value < :toMonth OR (month_value = :toMonth AND day_value <= :toDay))";
                 } else {
-                    return "(month <= :toMonth)";
+                    return "(month_value <= :toMonth)";
                 }
             } else {
                 if(!is_null($toDay)){
-                   return "(day <= :toDay)";
+                   return "(day_value <= :toDay)";
                 } else {
                    return "";
                 }
@@ -653,7 +658,7 @@ abstract class BaseDataSearcher {
     protected function searchForNationInPerson($onlyMainPerson,$nation){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT id FROM person WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+        $sql = "SELECT DISTINCT id FROM person WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('nation', $nation);
@@ -663,7 +668,7 @@ abstract class BaseDataSearcher {
         $personIds = $this->extractIdArray($stmt->fetchAll());
         
         if(!$onlyMainPerson) {
-            $sql = "SELECT DISTINCT id FROM relative WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+            $sql = "SELECT DISTINCT id FROM relative WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('nation', $nation);
@@ -674,7 +679,7 @@ abstract class BaseDataSearcher {
         
             $personIds = array_merge($personIds, $relativeIds);
 
-            $sql = "SELECT DISTINCT id FROM partner WHERE nationid IN (SELECT id FROM nation WHERE name LIKE :nation)";
+            $sql = "SELECT DISTINCT id FROM partner WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('nation', $nation);

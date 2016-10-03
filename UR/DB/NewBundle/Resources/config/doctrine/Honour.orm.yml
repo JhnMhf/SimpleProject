@@ -63,6 +63,7 @@ UR\DB\NewBundle\Entity\Honour:
             length: 65535
             options:
                 fixed: false
+            column: honour_comment
     manyToOne:
         person:
             targetEntity: BasePerson

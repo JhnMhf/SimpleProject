@@ -46,4 +46,5 @@ UR\DB\NewBundle\Entity\IsSibling:
             length: 65535
             options:
                 fixed: false
+            column: is_sibling_comment
     lifecycleCallbacks: {  }

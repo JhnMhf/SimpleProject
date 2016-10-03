@@ -80,6 +80,7 @@ UR\DB\NewBundle\Entity\Education:
             length: 65535
             options:
                 fixed: false
+            column: education_comment
     manyToOne:
         person:
             targetEntity: BasePerson

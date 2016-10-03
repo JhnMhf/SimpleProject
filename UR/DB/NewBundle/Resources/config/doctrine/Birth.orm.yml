@@ -61,6 +61,7 @@ UR\DB\NewBundle\Entity\Birth:
             length: 65535
             options:
                 fixed: false
+            column: birth_comment
     manyToOne:
         originCountry:
             targetEntity: Country

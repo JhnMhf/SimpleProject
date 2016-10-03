@@ -21,10 +21,12 @@ UR\DB\NewBundle\Entity\Country:
             length: 100
             options:
                 fixed: false
+            column: country_name
         comment:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+            column: country_comment
     lifecycleCallbacks: {  }

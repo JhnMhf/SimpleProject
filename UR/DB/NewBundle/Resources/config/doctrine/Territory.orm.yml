@@ -21,10 +21,12 @@ UR\DB\NewBundle\Entity\Territory:
             length: 100
             options:
                 fixed: false
+            column: territory_name
         comment:
             type: text
             nullable: true
             length: 65535
             options:
                 fixed: false
+            column: territory_comment
     lifecycleCallbacks: {  }

@@ -46,6 +46,7 @@ UR\DB\NewBundle\Entity\Source:
             length: 65535
             options:
                 fixed: false
+            column: source_comment
     manyToOne:
         person:
             targetEntity: BasePerson

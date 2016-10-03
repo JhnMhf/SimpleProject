@@ -63,6 +63,7 @@ UR\DB\NewBundle\Entity\Property:
             length: 65535
             options:
                 fixed: false
+            column: property_comment
     manyToOne:
         person:
             targetEntity: BasePerson

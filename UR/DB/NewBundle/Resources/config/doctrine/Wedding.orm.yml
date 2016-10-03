@@ -103,6 +103,7 @@ UR\DB\NewBundle\Entity\Wedding:
             length: 65535
             options:
                 fixed: false
+            column: wedding_comment
     manyToOne:     
         weddingTerritory:
             targetEntity: Territory

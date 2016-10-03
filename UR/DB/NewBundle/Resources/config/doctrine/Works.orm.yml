@@ -57,6 +57,7 @@ UR\DB\NewBundle\Entity\Works:
             length: 65535
             options:
                 fixed: false
+            column: works_comment
         worksOrder:
             type: integer
             nullable: false
