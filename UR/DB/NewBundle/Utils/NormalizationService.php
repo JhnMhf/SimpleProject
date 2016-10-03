@@ -31,7 +31,6 @@ class NormalizationService {
         $this->createAbbreviationsMap();
     }
     
-    //@TODO: Add unification for "?", "keine Angabe", "keine An gabe", "Unbekannt", leer
     private function createAbbreviationsMap(){
         $abbreviationsMap = [];
         

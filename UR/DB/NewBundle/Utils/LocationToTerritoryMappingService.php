@@ -30,7 +30,6 @@ class LocationToTerritoryMappingService {
         $this->loadMapping();
     }
     
-    //@TODO: Add unification for "?", "keine Angabe", "keine An gabe", "Unbekannt", leer
     private function loadMapping(){
         $path = $this->get('kernel')->locateResource(self::CSV_FILE);
        

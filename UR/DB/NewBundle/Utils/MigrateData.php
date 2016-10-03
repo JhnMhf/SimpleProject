@@ -63,7 +63,6 @@ class MigrateData {
     private $locationToTerritoryService;
     private $locationGeodataService;
 
-    //@TODO: Check if abbrevations are checked at all necessary places!
     public function __construct($container) {
         $this->container = $container;
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
@@ -459,7 +458,6 @@ class MigrateData {
         
         $this->LOGGER->debug("Extracted datestring: ".$dateString);
 
-        //@TODO: Adapt code to handle 00.0.1881, 0.00.1867 currently not found by regex
         preg_match(self::DATE_REGEX, $dateString, $date);
         $newDate = new Date();
         if (count($date) > 0) {
