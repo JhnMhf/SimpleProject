@@ -87,6 +87,10 @@ class MigrateData {
     /* helper method */
 
     private function normalize($string) {
+        if ($string == "" || $string == null) {
+            return null;
+        }
+        
         $lowerCaseString = strtolower($string);
         
         $containsAnmerkung = strpos($string, strtolower("- Anmerkung:"));
@@ -106,12 +110,11 @@ class MigrateData {
     }
 
     public function getCountry($countryName, $comment = null) {
-
+        $countryName = $this->normalize($countryName);
+        
         if ($countryName == "" || $countryName == null) {
             return null;
         }
-
-        $countryName = $this->normalize($countryName);
 
         // check if country exists
         if ($comment == null || $comment == "") {
@@ -145,7 +148,8 @@ class MigrateData {
     }
 
     public function getTerritory($territoryName, $locationName = null, $comment = null) {
-
+        $territoryName = $this->normalize($territoryName);
+        
         if ($territoryName == "" || $territoryName == null) {
             if ($locationName == "" || $locationName == null) {
                 return null;
@@ -161,9 +165,7 @@ class MigrateData {
                 return null;
             }
         }
-
-        $territoryName = $this->normalize($territoryName);
-
+        
         // check if territory exists
         if ($comment == null || $comment == "") {
             $result = $this->tryExtractingNameAndCommentFromString($territoryName);
@@ -196,11 +198,11 @@ class MigrateData {
     }
 
     public function getLocation($locationName, $comment = null) {
+        $locationName = $this->normalize($locationName);
+        
         if ($locationName == "" || $locationName == null) {
             return null;
         }
-
-        $locationName = $this->normalize($locationName);
 
         // check if location exists
         if ($comment == null || $comment == "") {
@@ -245,11 +247,11 @@ class MigrateData {
     //This should be done to prevent someone from changing it in the person correction for all persons
     //Thus it is necessary to ignore the ids for this fields during serialization
     public function getNation($nationName, $comment = null) {
+        $nationName = $this->normalize($nationName);
+        
         if ($nationName == "" || $nationName == null) {
             return null;
         }
-
-        $nationName = $this->normalize($nationName);
 
         // check if location exists
         if ($comment == null || $comment == "") {
@@ -284,12 +286,12 @@ class MigrateData {
 
     //Perhaps it belongs to the jobclass and not the job?
     public function getJob($jobLabel, $comment = null) {
+        $jobLabel = $this->normalize($jobLabel);
+        
         $this->LOGGER->debug("Getting job: ".$jobLabel);
         if ($jobLabel == "" || $jobLabel == null) {
             return null;
         }
-
-        $jobLabel = $this->normalize($jobLabel);
 
         // check if job exists
         if ($comment == null || $comment == "") {
@@ -326,11 +328,11 @@ class MigrateData {
 
     // can get multiple jobclasses?
     public function getJobClass($jobClassLabel, $comment = null) {
+        $jobClassLabel = $this->normalize($jobClassLabel);
+        
         if ($jobClassLabel == "" || $jobClassLabel == null) {
             return null;
         }
-
-        $jobClassLabel = $this->normalize($jobClassLabel);
 
         // check if jobClass exists
         if ($comment == null || $comment == "") {
@@ -355,6 +357,7 @@ class MigrateData {
         $newJobClass = new JobClass();
 
         $newJobClass->setLabel($jobClassLabel);
+        $newJobClass->setComment($comment);
 
         $this->getDBManager()->persist($newJobClass);
         $this->getDBManager()->flush();
