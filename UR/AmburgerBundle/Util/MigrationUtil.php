@@ -441,6 +441,8 @@ class MigrationUtil {
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
             $grandmother = $this->getMigrationService()->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich", $oldGrandmother->getNation());
 
+            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother["ID"], 'großmutter_muetterlicherseits', $oldGrandmother["order"], $oldGrandmother["order2"]);
+            
             $this->getMigrationService()->migrateIsGrandparent($newPerson, $grandmother, false);
         }
 
@@ -453,6 +455,8 @@ class MigrationUtil {
             //$firstName, $patronym, $lastName, $gender, $nation, $comment
             $grandmother = $this->getMigrationService()->migrateRelative($oldGrandmother->getVornamen(), null, $oldGrandmother->getName(), "weiblich");
 
+            $this->trackOriginOfData($grandmother->getId(), $oldGrandmother["ID"], 'großmutter_vaeterlicherseits', $oldGrandmother["order"], $oldGrandmother["order2"]);
+            
             //insert additional data
             if (!is_null($oldGrandmother->getGeburtsland())) {
                 $this->getMigrationService()->migrateBirth($grandmother, null, null, null, $oldGrandmother->getGeburtsland());
@@ -479,6 +483,9 @@ class MigrationUtil {
 
             $grandfather = $this->getMigrationService()->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
+            $this->trackOriginOfData($grandfather->getId(), $oldGrandfather["ID"], 'großvater_muetterlicherseits', $oldGrandfather["order"], $oldGrandfather["order2"]);
+            
+            
 //insert additional data
             if (!is_null($oldGrandfather["beruf"])) {
                 $jobID = $this->getMigrationService()->migrateJob($oldGrandfather["beruf"]);
@@ -517,6 +524,8 @@ class MigrationUtil {
             $oldGrandfather = $grandfathers[$i];
 
             $grandfather = $this->createGrandfatherPaternal($oldGrandfather);
+            
+            
 
             //check if reference to person
             if (!is_null($oldGrandfather["vät_großvater_id-nr"])) {
@@ -541,6 +550,8 @@ class MigrationUtil {
     private function createGrandfatherPaternal($oldGrandfather) {
         $grandfather = $this->getMigrationService()->migrateRelative($oldGrandfather["vornamen"], null, $oldGrandfather["name"], "männlich", $oldGrandfather["nation"], $oldGrandfather["kommentar"]);
 
+        $this->trackOriginOfData($grandfather->getId(), $oldGrandfather["ID"], 'großvater_vaeterlicherseits', $oldGrandfather["order"], $oldGrandfather["order2"]);  
+        
         //insert additional data
         if (!is_null($oldGrandfather["beruf"])) {
             $jobID = $this->getMigrationService()->migrateJob($oldGrandfather["beruf"]);
@@ -647,6 +658,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $mother = $this->getMigrationService()->migrateRelative($oldMother["vornamen"], $oldMother["russ_vornamen"], $oldMother["name"], "weiblich", $oldMother["nation"], $oldMother["kommentar"]);
 
+        $this->trackOriginOfData($mother->getId(), $oldMother["ID"], 'mutter', $oldMother["order"]);
+        
         $mother->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMother["rufnamen"]));
 
         //additional data
@@ -835,6 +848,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $father = $this->getMigrationService()->migrateRelative($oldFather["vornamen"], $oldFather["russ_vornamen"], $lastName, "männlich", $oldFather["nation"], $oldFather["kommentar"]);
 
+        $this->trackOriginOfData($father->getId(), $oldFather["ID"], 'vater', $oldFather["order"]);
+        
         $father->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldFather["rufnamen"]));
 
         //additional data
@@ -987,6 +1002,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $sibling = $this->getMigrationService()->migrateRelative($oldSibling["vornamen"], $oldSibling["russ_vornamen"], $oldSibling["name"], $oldSibling["geschlecht"], null, $oldSibling["kommentar"]);
 
+        $this->trackOriginOfData($sibling->getId(), $oldSibling["ID"], 'geschwister', $oldSibling["order"]);
+        
         $sibling->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldSibling["rufnamen"]));
 
         //additional data
@@ -1255,6 +1272,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $marriagePartner = $this->getMigrationService()->migratePartner($oldMarriagePartner["vornamen"], $oldMarriagePartner["russ_vornamen"], $oldMarriagePartner["name"], $gender, $oldMarriagePartner["nation"], $oldMarriagePartner["kommentar"]);
 
+        $this->trackOriginOfData($marriagePartner->getId(), $oldMarriagePartner["ID"], 'ehepartner', $oldMarriagePartner["order"]);   
+        
         $marriagePartner->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartner["rufnamen"]));
 
         //additional data
@@ -1432,6 +1451,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $child = $this->getMigrationService()->migrateRelative($oldChild["vornamen"], $oldChild["russ_vornamen"], $lastName, $oldChild["geschlecht"], null, $oldChild["kommentar"]);
 
+        $this->trackOriginOfData($child->getId(), $oldChild["ID"], 'kind', $oldChild["order"], $oldChild["order2"]); 
+        
         $child->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldChild["rufnamen"]));
 
         //additional data
@@ -1768,6 +1789,7 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $fatherInLaw = $this->getMigrationService()->migrateRelative($oldFatherInLaw["vornamen"], $oldFatherInLaw["russ_vornamen"], $oldFatherInLaw["name"], "männlich", $oldFatherInLaw["nation"], $oldFatherInLaw["kommentar"]);
 
+        $this->trackOriginOfData($fatherInLaw->getId(), $oldFatherInLaw["ID"], 'schwiegervater', $oldFatherInLaw["order"], $oldFatherInLaw["order2"]); 
 
         //birth
         if (!is_null($oldFatherInLaw["herkunftsort"]) ||
@@ -1877,6 +1899,7 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $motherInLaw = $this->getMigrationService()->migrateRelative($oldMotherInLaw["vornamen"], $oldMotherInLaw["russ_vornamen"], $oldMotherInLaw["name"], "weiblich", $oldMotherInLaw["nation"], $oldMotherInLaw["kommentar"]);
 
+        $this->trackOriginOfData($motherInLaw->getId(), $oldMotherInLaw["ID"], 'schwiegermutter', $oldMotherInLaw["order"], $oldMotherInLaw["order2"]);   
 
         //birth
         if (!is_null($oldMotherInLaw["herkunftsort"]) ||
@@ -1967,6 +1990,9 @@ class MigrationUtil {
         $gender = $this->getOppositeGender($newMarriagePartner);
         $otherPartner = $this->getMigrationService()->migratePartner($oldOtherPartner["vornamen"], $oldOtherPartner["russ_vornamen"], $oldOtherPartner["name"], $gender, null, $oldOtherPartner["kommentar"]);
 
+        $this->trackOriginOfData($otherPartner->getId(), $oldOtherPartner["ID"], 'anderer_partner', $oldOtherPartner["order"], $oldOtherPartner["order2"]);   
+        
+        
         //birth
         if (!is_null($oldOtherPartner["herkunftsort"]) ||
                 !is_null($oldOtherPartner["herkunftsterritorium"]) ||
@@ -2057,6 +2083,8 @@ class MigrationUtil {
     private function createPartnersOfFather($newFather, $oldPartnersOfFather) {
         $partnerOfFather = $this->getMigrationService()->migratePartner($oldPartnersOfFather["vornamen"], null, $oldPartnersOfFather["name"], "weiblich", null, $oldPartnersOfFather["kommentar"]);
 
+        $this->trackOriginOfData($partnerOfFather->getId(), $oldPartnersOfFather["ID"], 'partnerin_des_vaters', $oldPartnersOfFather["order"], $oldPartnersOfFather["order2"]);   
+        
         //birth
         if (!is_null($oldPartnersOfFather["geburtsort"]) ||
                 !is_null($oldPartnersOfFather["geboren"])) {
@@ -2117,6 +2145,8 @@ class MigrationUtil {
     private function createPartnersOfMother($newMother, $oldPartnersOfMother) {
         $partnerOfMother = $this->getMigrationService()->migratePartner($oldPartnersOfMother["vornamen"], null, $oldPartnersOfMother["name"], "männlich", null, $oldPartnersOfMother["kommentar"]);
 
+        $this->trackOriginOfData($partnerOfMother->getId(), $oldPartnersOfMother["ID"], 'partner_der_mutter', $oldPartnersOfMother["order"], $oldPartnersOfMother["order2"]); 
+        
         //status
         if (!is_null($oldPartnersOfMother["stand"])) {
             $this->getMigrationService()->migrateStatus($partnerOfMother, 1, $oldPartnersOfMother["stand"]);
@@ -2184,6 +2214,8 @@ class MigrationUtil {
         $gender = $this->getOppositeGender($newSibling);
         $marriagePartnersOfSibling = $this->getMigrationService()->migratePartner($oldMarriagePartnersOfSibling["vornamen"], $oldMarriagePartnersOfSibling["russ_vornamen"], $oldMarriagePartnersOfSibling["name"], $gender, null, $oldMarriagePartnersOfSibling["kommentar"]);
 
+        $this->trackOriginOfData($marriagePartnersOfSibling->getId(), $oldMarriagePartnersOfSibling["ID"], 'ehepartner_des_geschwisters', $oldMarriagePartnersOfSibling["order"], $oldMarriagePartnersOfSibling["order2"]); 
+        
         //birth
         if (!is_null($oldMarriagePartnersOfSibling["herkunftsort"]) ||
                 !is_null($oldMarriagePartnersOfSibling["geboren"])) {
@@ -2273,6 +2305,8 @@ class MigrationUtil {
     private function createChildrenOfSibling($oldChildOfSibling, $newSibling, $newMarriagePartner) {
         $childOfSibling = $this->getMigrationService()->migrateRelative($oldChildOfSibling["vornamen"], null, $oldChildOfSibling["name"], $oldChildOfSibling["geschlecht"], null, $oldChildOfSibling["kommentar"]);
 
+        $this->trackOriginOfData($childOfSibling->getId(), $oldChildOfSibling["ID"], 'geschwisterkind', $oldChildOfSibling["order"], $oldChildOfSibling["order2"], $oldChildOfSibling["order3"]); 
+        
         //birth
         if (!is_null($oldChildOfSibling["geburtsort"]) ||
                 !is_null($oldChildOfSibling["geboren"])) {
@@ -2366,6 +2400,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $marriagePartnerOfChild = $this->getMigrationService()->migratePartner($oldMarriagePartnerOfChild["vornamen"], $oldMarriagePartnerOfChild["russ_vornamen"], $oldMarriagePartnerOfChild["name"], $gender, $oldMarriagePartnerOfChild["nation"], $oldMarriagePartnerOfChild["kommentar"]);
 
+        $this->trackOriginOfData($marriagePartnerOfChild->getId(), $oldMarriagePartnerOfChild["ID"], 'ehepartner_des_kindes', $oldMarriagePartnerOfChild["order"], $oldMarriagePartnerOfChild["order2"], $oldMarriagePartnerOfChild["order3"]); 
+        
         $marriagePartnerOfChild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartnerOfChild["rufnamen"]));
 
         //birth
@@ -2455,6 +2491,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $otherPartnerOfChild = $this->getMigrationService()->migratePartner($oldOtherPartnerOfChild["vornamen"], null, $oldOtherPartnerOfChild["name"], $gender, null, $oldOtherPartnerOfChild["kommentar"]);
 
+        $this->trackOriginOfData($otherPartnerOfChild->getId(), $oldOtherPartnerOfChild["ID"], 'anderer_partner_des_kindes', $oldOtherPartnerOfChild["order"], $oldOtherPartnerOfChild["order2"], $oldOtherPartnerOfChild["order3"], $oldOtherPartnerOfChild["order4"]); 
+        
         //birth
         if (!is_null($oldOtherPartnerOfChild["geburtsort"]) ||
                 !is_null($oldOtherPartnerOfChild["geboren"])) {
@@ -2512,6 +2550,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $fatherInLawOfChild = $this->getMigrationService()->migrateRelative($oldFatherInLawOfChild["vornamen"], null, $oldFatherInLawOfChild["name"], $gender);
 
+        $this->trackOriginOfData($fatherInLawOfChild->getId(), $oldFatherInLawOfChild["ID"], 'schwiegervater_des_kindes', $oldFatherInLawOfChild["order"], $oldFatherInLawOfChild["order2"], $oldFatherInLawOfChild["order3"], $oldFatherInLawOfChild["order4"]); 
+        
         //rank
         if (!is_null($oldFatherInLawOfChild["rang"])) {
             $this->getMigrationService()->migrateRank($fatherInLawOfChild, 1, $oldFatherInLawOfChild["rang"]);
@@ -2565,6 +2605,9 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $motherInLawOfChild = $this->getMigrationService()->migrateRelative($oldMotherInLawOfChild["vornamen"], null, $oldMotherInLawOfChild["name"], $gender);
 
+        $this->trackOriginOfData($motherInLawOfChild->getId(), $oldMotherInLawOfChild["ID"], 'schwiegermutter_des_kindes', $oldMotherInLawOfChild["order"], $oldMotherInLawOfChild["order2"], $oldMotherInLawOfChild["order3"], $oldMotherInLawOfChild["order4"]); 
+        
+        
         //born_in_marriage
         if (!is_null($oldMotherInLawOfChild["ehelich"])) {
             $motherInLawOfChild->setBornInMarriage($this->getNormalizationService()->writeOutAbbreviations($oldMotherInLawOfChild["ehelich"]));
@@ -2602,6 +2645,9 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $motherOfSibling = $this->getMigrationService()->migrateRelative($oldMotherOfSibling["vornamen"], null, $oldMotherOfSibling["name"], $gender);
 
+        $this->trackOriginOfData($motherOfSibling->getId(), $oldMotherOfSibling["ID"], 'mutter_des_geschwisters', $oldMotherOfSibling["order"], $oldMotherOfSibling["order2"]); 
+        
+        
         //birth
         if (!is_null($oldMotherOfSibling["geboren"])) {
             //$originCountry, $originTerritory=null, $originLocation=null, $birthCountry=null, $birthLocation=null, $birthDate=null, $birthTerritory=null, $comment=null
@@ -2693,9 +2739,7 @@ class MigrationUtil {
 
             $paternal = true;
             $this->getMigrationService()->migrateIsGrandparent($newGrandChild, $newPerson, $paternal);
-
-            $this->addSecondGrandparentToChild($newPerson, $newGrandChild, $oldGrandchild);
-
+            
             $this->getMigrationService()->migrateIsParent($newGrandChild, $newChild);
             $this->getMigrationService()->migrateIsParent($newGrandChild, $newMarriagePartner);
         }
@@ -2705,6 +2749,8 @@ class MigrationUtil {
         //$firstName, $patronym, $lastName, $gender, $nation, $comment
         $grandchild = $this->getMigrationService()->migrateRelative($oldGrandchild["vornamen"], $oldGrandchild["russ_vornamen"], $oldGrandchild["name"], $oldGrandchild["geschlecht"], null, $oldGrandchild["kommentar"]);
 
+        $this->trackOriginOfData($grandchild->getId(), $oldGrandchild["ID"], 'enkelkind', $oldGrandchild["order"], $oldGrandchild["order2"], $oldGrandchild["order3"], $oldGrandchild["order4"]); 
+        
         $grandchild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldGrandchild["rufnamen"]));
 
         //birth
@@ -2756,10 +2802,6 @@ class MigrationUtil {
         }
 
         return $grandchild;
-    }
-
-    private function addSecondGrandparentToChild($newPerson, $grandchild, $oldGrandchild) {
-        
     }
 
     private function getGrandchildWithNativeQuery($oldPersonID, $parentMarriageOrder, $childOrder, $childMarriageOrder, $oldDBManager) {
@@ -2891,4 +2933,16 @@ class MigrationUtil {
         return [$stringOfReferenceIds];
     }
 
+    
+    private function trackOriginOfData($newDBIdOfPerson,$idOfMainPerson,  $tableAsString, $order, $order2=null, $order3=null,$order4=null){
+        $data = array();
+        $data['idOfMainPerson'] = $idOfMainPerson;
+        $data['table'] = $tableAsString;
+        $data['order'] = $order;
+        $data['order2'] = $order2;
+        $data['order3'] = $order3;
+        $data['order4'] = $order4;
+
+        $this->get('origin_of_data_tracker')->trackData($newDBIdOfPerson, $data);
+    }
 }

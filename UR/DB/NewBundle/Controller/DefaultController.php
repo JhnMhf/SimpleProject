@@ -130,6 +130,14 @@ class DefaultController extends Controller {
 
             $stmt->execute();
         }
+        
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $originOfDataSQL = "TRUNCATE origin_of_data;";
+       
+        
+        $stmt = $systemDBManager->getConnection()->prepare($originOfDataSQL);
+
+        $stmt->execute();
 
 
         return new Response('Truncated the whole new database!');

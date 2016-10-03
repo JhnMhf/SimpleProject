@@ -45,3 +45,8 @@ services:
             container: "@service_container"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            
+    origin_of_data_tracker:
+        class: UR\AmburgerBundle\Util\OriginOfDataTracker
+        arguments: 
+           container: "@service_container"  
