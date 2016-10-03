@@ -689,6 +689,9 @@ class PersonComparer {
             return false;
         }
         
+        if ($this->unmatchedArrays($weddingOne->getProvenDate(), $weddingTwo->getProvenDate(), "date", $allowLessInformation)) {
+            return false;
+        }
         
         if (!$this->compareStrings($weddingOne->getBeforeAfter(), $weddingTwo->getBeforeAfter(), $allowLessInformation)) {
             return false;

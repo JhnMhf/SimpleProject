@@ -97,6 +97,10 @@ UR\DB\NewBundle\Entity\Wedding:
             options:
                 fixed: false
             column: before_after
+        provenDate:
+            type: date_reference
+            column: proven_dateID
+            nullable: true
         comment:
             type: text
             nullable: true

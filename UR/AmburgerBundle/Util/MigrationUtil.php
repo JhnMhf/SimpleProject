@@ -2136,7 +2136,7 @@ class MigrationUtil {
 
         //belegt
         //$weddingOrder, $husband, $wife, $weddingDateid, $weddingLocationid, $weddingTerritoryid, $bannsDateid, $breakupReason, $breakupDateid, $marriageComment, $beforeAfter, $comment
-        $this->getMigrationService()->migrateWedding($oldPartnersOfMother['order2'], $newMother, $partnerOfMother, $oldPartnersOfMother['hochzeitstag'], $oldPartnersOfMother['hochzeitsort'], null, null, $oldPartnersOfMother['auflösung'], $oldPartnersOfMother['gelöst'], $oldPartnersOfMother['verheiratet'], $oldPartnersOfMother['vorher-nachher'], null);
+        $this->getMigrationService()->migrateWedding($oldPartnersOfMother['order2'], $newMother, $partnerOfMother, $oldPartnersOfMother['hochzeitstag'], $oldPartnersOfMother['hochzeitsort'], null, null, $oldPartnersOfMother['auflösung'], $oldPartnersOfMother['gelöst'], $oldPartnersOfMother['verheiratet'], $oldPartnersOfMother['vorher-nachher'], null, $oldPartnersOfMother['belegt']);
     }
 
     private function getPartnersOfMotherWithNativeQuery($oldPersonID, $oldDBManager) {

@@ -1198,11 +1198,13 @@ class PersonMerger {
         $dataMasterWedding->setBreakupDate($this->mergeDateReference($dataMasterWedding->getBreakupDate(), $toBeDeletedWedding->getBreakupDate()));
         $dataMasterWedding->setMarriageComment($this->mergeComment($dataMasterWedding->getMarriageComment(), $toBeDeletedWedding->getMarriageComment()));
         $dataMasterWedding->setBeforeAfter($this->mergeStrings($dataMasterWedding->getBeforeAfter(), $toBeDeletedWedding->getBeforeAfter()));
+        $dataMasterWedding->setProvenDate($this->mergeDateReference($dataMasterWedding->getProvenDate(), $toBeDeletedWedding->getProvenDate()));
         $dataMasterWedding->setComment($this->mergeComment($dataMasterWedding->getComment(), $toBeDeletedWedding->getComment()));
 
         $toBeDeletedWedding->setWeddingDate(null);
         $toBeDeletedWedding->setBannsDate(null);
         $toBeDeletedWedding->setBreakupDate(null);
+        $toBeDeletedWedding->setProvenDate(null);
         
         return $dataMasterWedding;
     }

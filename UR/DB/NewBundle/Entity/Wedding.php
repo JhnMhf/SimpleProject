@@ -466,4 +466,33 @@ class Wedding
     {
         return $this->breakupDate;
     }
+    /**
+     * @var date_reference
+     */
+    private $provenDate;
+
+
+    /**
+     * Set provenDate
+     *
+     * @param date_reference $provenDate
+     *
+     * @return Wedding
+     */
+    public function setProvenDate($provenDate)
+    {
+        $this->provenDate = $provenDate;
+
+        return $this;
+    }
+
+    /**
+     * Get provenDate
+     *
+     * @return date_reference
+     */
+    public function getProvenDate()
+    {
+        return $this->provenDate;
+    }
 }

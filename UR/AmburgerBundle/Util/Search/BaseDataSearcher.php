@@ -809,7 +809,7 @@ abstract class BaseDataSearcher {
                 array('wedding_locationid'), $locationReferenceId, 
                 array('wedding_territoryid'), $territoryReferenceId, 
                 array('countryid'), $countryReferenceId, 
-                array('wedding_dateid', 'banns_dateid', 'breakup_dateid'), $possibleDateReferenceIds,
+                array('wedding_dateid', 'banns_dateid', 'breakup_dateid', 'proven_dateid'), $possibleDateReferenceIds,
                 array('husband_ID', 'wife_ID'), $personReferenceIds);
         
         

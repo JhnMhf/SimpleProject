@@ -878,10 +878,6 @@ class MigrateData {
         return $newPartner;
     }
 
-    //@TODO: Check
-    //add additional stuff?
-    //born_in_marriage (from mother/ father?)
-    //weddingID
     public function migratePerson($oid, $firstName, $patronym, $lastName, $foreName, $birthName, $gender, $jobClass, $comment = null) {
         $this->LOGGER->debug("Migrating Person with oid '".$oid."' : ".$firstName." ".$lastName);
         //insert into new data
@@ -1061,7 +1057,7 @@ class MigrateData {
         return $this->getTerritory($name, null, $comment);
     }
 
-    public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate = null, $weddingLocation = null, $weddingTerritory = null, $bannsDate = null, $breakupReason = null, $breakupDate = null, $marriageComment = null, $beforeAfter = null, $comment = null) {
+    public function migrateWedding($weddingOrder, $personOne, $personTwo, $weddingDate = null, $weddingLocation = null, $weddingTerritory = null, $bannsDate = null, $breakupReason = null, $breakupDate = null, $marriageComment = null, $beforeAfter = null, $comment = null, $provenDate = null) {
         //create new wedding obj
         $newWedding = new Wedding();
         $husband = $personOne;
@@ -1088,6 +1084,7 @@ class MigrateData {
         $newWedding->setMarriageComment($this->normalize($marriageComment));
         $newWedding->setBeforeAfter($beforeAfter);
         $newWedding->setComment($this->normalize($comment));
+        $newWedding->setProvenDate($this->getDate($provenDate));
 
         $existingWedding = $this->checkIfWeddingAlreadyExists($weddingOrder, $personOne, $personTwo);
 
