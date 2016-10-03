@@ -87,6 +87,21 @@ class MigrateData {
     /* helper method */
 
     private function normalize($string) {
+        $lowerCaseString = strtolower($string);
+        
+        $containsAnmerkung = strpos($string, strtolower("- Anmerkung:"));
+        $containsImOriginal = strpos($string, strtolower("- im Original"));
+        
+        if($containsAnmerkung || $containsImOriginal){
+            return $string;
+        }
+        
+        if($string == "keine Angaben" || $string == "keine An gabe" || $string == "Unbekannt"){
+            return "keine Angabe";
+        } else if($string == "?"){
+            return null;
+        }
+        
         return $this->normalizationService->writeOutAbbreviations($string);
     }
 
@@ -400,14 +415,7 @@ class MigrateData {
 
         return $newDatesArray;
     }
-
-    private function createStringFromIdArray($idArray) {
-
-        $uniqueArray = array_unique($idArray);
-
-        return implode(",", $uniqueArray);
-    }
-
+    
     private function extractDatesArray($dateString) {
         $datesArray = [];
 
@@ -437,7 +445,7 @@ class MigrateData {
         $separatedResult = $this->tryExtractingNameAndCommentFromString($dateString);
         
         $dateString = $separatedResult[0];
-        $comment = $separatedResult[1];
+        $comment = $this->normalize($separatedResult[1]);
         
         if(is_null($dateString) || count($dateString) == 0){
             $newDate = new Date();

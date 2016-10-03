@@ -626,7 +626,7 @@ class MigrationUtil {
                         $newMotherObj = $this->migratePerson($mothersMainID, $mothersOID);
                         $newMother = $this->get("person_merging.service")->mergePersons($newMother, $newMotherObj);
                     }catch(\UR\AmburgerBundle\Exception\NotFoundException $e){
-                        $this->LOGGER->info("Could not found ID for OID: ".$mothersOID);
+                        $this->LOGGER->info("Could not find ID for OID: ".$mothersOID);
                         $newMother->setComment($newMother->getComment() ? $newMother->getComment()."ReferencedOID: ".$mothersOID : "ReferencedOID: ".$mothersOID);
                     }
                 }
