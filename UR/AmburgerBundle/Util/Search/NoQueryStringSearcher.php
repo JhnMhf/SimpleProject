@@ -72,6 +72,7 @@ class NoQueryStringSearcher extends BaseDataSearcher {
         $personIds = array_merge($personIds,$this->searchInRoadOfLife(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
         $personIds = array_merge($personIds,$this->searchInStatus(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
         $personIds = array_merge($personIds,$this->searchInWorks(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInWedding(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
         
         //baptism, birth, death
         $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));

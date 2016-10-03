@@ -802,6 +802,39 @@ abstract class BaseDataSearcher {
                 array('person_id'), $personReferenceIds);
     }
     
+    protected function searchInWedding($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+        $sql = "SELECT DISTINCT id FROM wedding WHERE ";
+        
+        $weddingIds =  $this->baseSearchForPerson($sql, 'id', $isAndCondition,
+                array('wedding_locationid'), $locationReferenceId, 
+                array('wedding_territoryid'), $territoryReferenceId, 
+                array('countryid'), $countryReferenceId, 
+                array('wedding_dateid', 'banns_dateid', 'breakup_dateid'), $possibleDateReferenceIds,
+                array('husband_ID', 'wife_ID'), $personReferenceIds);
+        
+        
+        if(count($weddingIds) == 0){
+            return array();
+        }
+        
+        $sql = "SELECT husband_ID, wife_ID FROM wedding WHERE id IN (?)";
+        
+        $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $weddingIds, $typeArray);
+
+        $stmt->execute();
+
+        $ids = $stmt->fetchAll();
+        
+        $personIds = array();
+        
+        for($i = 0; $i < count($ids); $i++){
+            $personIds[] = $ids[$i]['husband_ID'];
+            $personIds[] = $ids[$i]['wife_ID'];
+        }
+        
+        return $personIds;
+    }
+    
     private function baseSearchForPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $personIdentifier, $personReferenceIds){
         $finalDBManager = $this->finalDBManager;
 

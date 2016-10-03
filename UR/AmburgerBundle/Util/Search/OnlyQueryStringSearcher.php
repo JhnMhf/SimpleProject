@@ -57,7 +57,9 @@ class OnlyQueryStringSearcher extends BaseDataSearcher {
             $personIds = array_merge($personIds,$this->searchInRoadOfLife(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
             $personIds = array_merge($personIds,$this->searchInStatus(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
             $personIds = array_merge($personIds,$this->searchInWorks(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
+            $personIds = array_merge($personIds,$this->searchInWedding(false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
 
+            
             //baptism, birth, death
             $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));
             $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,false,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds));

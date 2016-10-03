@@ -1460,8 +1460,6 @@ class MigrationUtil {
             if (count($childOrigin) == 0) {
                 $this->getMigrationService()->migrateBirth($child, null, null, null, null, $oldChild["geburtsort"], $oldChild["geboren"]);
             } else {
-                //BELEGT?!?!?!
-                //origin
                 for ($i = 0; $i < count($childOrigin); $i++) {
                     $origin = $childOrigin[$i];
 
