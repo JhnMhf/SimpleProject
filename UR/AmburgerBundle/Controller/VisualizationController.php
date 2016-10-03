@@ -196,7 +196,7 @@ class VisualizationController extends Controller{
                   UNION ALL
                   SELECT locationid,COUNT(*) AS c FROM road_of_life WHERE locationid IS NOT NULL GROUP BY locationid
                   UNION ALL
-                  SELECT locationid,COUNT(*) AS c FROM status WHERE locationid IS NOT NULL GROUP BY locationid
+                  SELECT locationid,COUNT(*) AS c FROM status_information WHERE locationid IS NOT NULL GROUP BY locationid
                   UNION ALL
                   SELECT wedding_locationid as locationid,COUNT(*) AS c FROM wedding WHERE wedding_locationid IS NOT NULL GROUP BY wedding_locationid
                   UNION ALL
@@ -265,7 +265,7 @@ class VisualizationController extends Controller{
                   UNION ALL
                   SELECT locationid,COUNT(*) AS c FROM road_of_life WHERE locationid IS NOT NULL AND person_id IN (?) GROUP BY locationid
                   UNION ALL
-                  SELECT locationid,COUNT(*) AS c FROM status WHERE locationid IS NOT NULL AND person_id IN (?) GROUP BY locationid
+                  SELECT locationid,COUNT(*) AS c FROM status_information WHERE locationid IS NOT NULL AND person_id IN (?) GROUP BY locationid
                   UNION ALL
                   SELECT wedding_locationid as locationid,COUNT(*) AS c FROM wedding WHERE wedding_locationid IS NOT NULL 
                   AND (
