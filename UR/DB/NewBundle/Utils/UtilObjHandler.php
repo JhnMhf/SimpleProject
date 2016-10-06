@@ -23,7 +23,7 @@ class UtilObjHandler {
         }
         
         if($country->getComment() != null){
-            $existingCountry = $em->getRepository('NewBundle:Country')->findOneBy(array('name' => $country->getName(), 'comment' => $country->getComment()));
+            $existingCountry = $em->getRepository('NewBundle:Country')->findOneBy(array('country_name' => $country->getName(), 'comment' => $country->getComment()));
 
             if ($existingCountry != null && $country->getId() != $existingCountry->getId()) {
                 return $existingCountry;
@@ -37,7 +37,7 @@ class UtilObjHandler {
             }
         }
         
-        $this->LOGGER->debug("Did not found existing country");
+        $this->LOGGER->debug("Did not find existing country");
         
         
         $em->persist($country);
@@ -52,7 +52,7 @@ class UtilObjHandler {
         }
         
         if($territory->getComment() != null){
-            $existingTerritory = $em->getRepository('NewBundle:Territory')->findOneBy(array('name' => $territory->getName(), 'comment' => $territory->getComment()));
+            $existingTerritory = $em->getRepository('NewBundle:Territory')->findOneBy(array('territory_name' => $territory->getName(), 'comment' => $territory->getComment()));
 
             if ($existingTerritory != null && $existingTerritory->getId() != $territory->getId()) {
                 return $existingTerritory;
@@ -66,7 +66,7 @@ class UtilObjHandler {
             }
         }
             
-        $this->LOGGER->debug("Did not found existing territory");
+        $this->LOGGER->debug("Did not find existing territory");
         
         $em->persist($territory);
         $em->flush();
@@ -80,7 +80,7 @@ class UtilObjHandler {
         }
         
         if($location->getComment() != null){
-            $existingLocation = $em->getRepository('NewBundle:Location')->findOneBy(array('name' => $location->getName(), 'comment' => $location->getComment()));
+            $existingLocation = $em->getRepository('NewBundle:Location')->findOneBy(array('location_name' => $location->getName(), 'comment' => $location->getComment()));
 
             if ($existingLocation != null  && $existingLocation->getId() != $location->getId()) {
                 return $existingLocation;
@@ -94,7 +94,7 @@ class UtilObjHandler {
             }
         }
         
-        $this->LOGGER->debug("Did not found existing location");
+        $this->LOGGER->debug("Did not find existing location");
             
         $em->persist($location);
         $em->flush();
@@ -108,7 +108,7 @@ class UtilObjHandler {
         }
         
         if($nation->getComment() != null){
-            $existingNation = $em->getRepository('NewBundle:Nation')->findOneBy(array('name' => $nation->getName(), 'comment' => $nation->getComment()));
+            $existingNation = $em->getRepository('NewBundle:Nation')->findOneBy(array('nation_name' => $nation->getName(), 'comment' => $nation->getComment()));
 
             if ($existingNation != null  && $existingNation->getId() != $nation->getId()) {
                 return $existingNation;
@@ -122,7 +122,7 @@ class UtilObjHandler {
             }
         }
         
-        $this->LOGGER->debug("Did not found existing nation");
+        $this->LOGGER->debug("Did not find existing nation");
             
         $em->persist($nation);
         $em->flush();
@@ -150,7 +150,7 @@ class UtilObjHandler {
             }
         }
         
-        $this->LOGGER->debug("Did not found existing job");
+        $this->LOGGER->debug("Did not find existing job");
             
         $em->persist($job);
         $em->flush();
@@ -179,7 +179,7 @@ class UtilObjHandler {
             }
         }
         
-        $this->LOGGER->debug("Did not found existing jobclass");
+        $this->LOGGER->debug("Did not find existing jobclass");
             
         $em->persist($jobClass);
         $em->flush();

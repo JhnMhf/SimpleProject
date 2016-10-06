@@ -564,6 +564,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                         locationObj['name'] = $(identifier + ' .location-container input[name="name"]').val();
                         locationObj['comment'] = $(identifier + ' .location-container input[name="comment"]').val();
+                        locationObj['latitude'] = $(identifier + ' .location-container input[name="latitude"]').val();
+                        locationObj['longitude'] = $(identifier + ' .location-container input[name="longitude"]').val();
 
                         return locationObj;
                     }
@@ -573,6 +575,8 @@ PersonCorrection.FinalPersonView = (function () {
 
                         locationObj['name'] = $(identifier).find('.location-container input[name="name"]').val();
                         locationObj['comment'] = $(identifier).find('.location-container input[name="comment"]').val();
+                        locationObj['latitude'] = $(identifier).find('.location-container input[name="latitude"]').val();
+                        locationObj['longitude'] = $(identifier).find('.location-container input[name="longitude"]').val();
 
                         return locationObj;
                     }

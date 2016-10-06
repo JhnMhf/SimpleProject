@@ -377,6 +377,8 @@
                             
                             array['name'] = baptism_location['name'];
                             array['comment'] = baptism_location['comment'];
+                            array['latitude'] = baptism_location['latitude'];
+                            array['longitude'] = baptism_location['longitude'];
                             
                             if(typeof(enabled) !== 'undefined') {
                                 array['enabled'] = true;
@@ -464,6 +466,8 @@
                             
                             array['name'] = origin_location['name'];
                             array['comment'] = origin_location['comment'];
+                            array['latitude'] = origin_location['latitude'];
+                            array['longitude'] = origin_location['longitude'];
                             
                             if(typeof(enabled) !== 'undefined') {
                                 array['enabled'] = true;
@@ -522,6 +526,8 @@
                             
                             array['name'] = birth_location['name'];
                             array['comment'] = birth_location['comment'];
+                            array['latitude'] = birth_location['latitude'];
+                            array['longitude'] = birth_location['longitude'];
                             
                             if(typeof(enabled) !== 'undefined') {
                                 array['enabled'] = true;
@@ -633,6 +639,8 @@
                             
                             array['name'] = death_location['name'];
                             array['comment'] = death_location['comment'];
+                            array['latitude'] = death_location['latitude'];
+                            array['longitude'] = death_location['longitude'];
                             
                             if(typeof(enabled) !== 'undefined') {
                                 array['enabled'] = true;
@@ -672,6 +680,8 @@
                             
                             array['name'] = funeral_location['name'];
                             array['comment'] = funeral_location['comment'];
+                            array['latitude'] = funeral_location['latitude'];
+                            array['longitude'] = funeral_location['longitude'];
                             
                             if(typeof(enabled) !== 'undefined') {
                                 array['enabled'] = true;
@@ -774,6 +784,8 @@
 
                                     array['name'] = educationObj['location']['name'];
                                     array['comment'] = educationObj['location']['comment'];
+                                    array['latitude'] = educationObj['location']['latitude'];
+                                    array['longitude'] = educationObj['location']['longitude'];
 
                                     if(typeof(enabled) !== 'undefined') {
                                         array['enabled'] = true;
@@ -866,6 +878,8 @@
 
                                 array['name'] = educationObj['graduation_location']['name'];
                                 array['comment'] = educationObj['graduation_location']['comment'];
+                                array['latitude'] = educationObj['graduation_location']['latitude'];
+                                array['longitude'] = educationObj['graduation_location']['longitude'];
 
                                 if(typeof(enabled) !== 'undefined') {
                                     array['enabled'] = true;
@@ -957,6 +971,8 @@
 
                         array['name'] = honourObj['location']['name'];
                         array['comment'] = honourObj['location']['comment'];
+                        array['latitude'] = honourObj['location']['latitude'];
+                        array['longitude'] = honourObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1100,6 +1116,8 @@
 
                         array['name'] = propertyObj['location']['name'];
                         array['comment'] = propertyObj['location']['comment'];
+                        array['latitude'] = propertyObj['location']['latitude'];
+                        array['longitude'] = propertyObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1244,6 +1262,8 @@
 
                         array['name'] = rankObj['location']['name'];
                         array['comment'] = rankObj['location']['comment'];
+                        array['latitude'] = rankObj['location']['latitude'];
+                        array['longitude'] = rankObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1457,6 +1477,8 @@
 
                         array['name'] = residenceObj['residence_location']['name'];
                         array['comment'] = residenceObj['residence_location']['comment'];
+                        array['latitude'] = residenceObj['residence_location']['latitude'];
+                        array['longitude'] = residenceObj['residence_location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1592,6 +1614,8 @@
 
                         array['name'] = roadOfLifeObj['location']['name'];
                         array['comment'] = roadOfLifeObj['location']['comment'];
+                        array['latitude'] = roadOfLifeObj['location']['latitude'];
+                        array['longitude'] = roadOfLifeObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1754,6 +1778,8 @@
 
                         array['name'] = statusObj['location']['name'];
                         array['comment'] = statusObj['location']['comment'];
+                        array['latitude'] = statusObj['location']['latitude'];
+                        array['longitude'] = statusObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -1899,6 +1925,8 @@
 
                         array['name'] = worksObj['location']['name'];
                         array['comment'] = worksObj['location']['comment'];
+                        array['latitude'] = worksObj['location']['latitude'];
+                        array['longitude'] = worksObj['location']['longitude'];
 
                         if(typeof(enabled) !== 'undefined') {
                             array['enabled'] = true;
@@ -2047,6 +2075,8 @@
             <input type="hidden" name="locationId"> 
             <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="latitude" value="<%= typeof(latitude)!== 'undefined' ?  latitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="longitude" value="<%= typeof(longitude)!== 'undefined' ?  longitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
         </div>
     </script>
     

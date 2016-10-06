@@ -20,6 +20,7 @@ class PersonSaver {
     }
     
     public function savePerson($em, $session,$payload, $personEntity){
+        $this->LOGGER->info("savePerson called in PersonSaver ".$personEntity->getId());
         $this->preparePerson($em, $personEntity);
         $oldData = null;
         
@@ -50,6 +51,8 @@ class PersonSaver {
     }
     
     private function preparePerson($em, $personEntity){
+        
+        $this->LOGGER->info("Preparing Person for save: ".$personEntity->getId());
         
         $personEntity->setNation($this->utilObjHandler->getNation($em, $personEntity->getNation()));
         $personEntity->setJob($this->utilObjHandler->getJob($em, $personEntity->getJob()));
@@ -141,53 +144,53 @@ class PersonSaver {
     }
     
     private function prepareBaptism($em, $entity){
-        $entity->setBaptismLocation($this->utilObjHandler->getLocation($em, $entity->getBaptismLocation()));
+        $entity->setBaptismLocation($this->getAndEnrichLocation($em, $entity->getBaptismLocation()));
     }
     
     private function prepareBirth($em, $entity){
         $entity->setOriginCountry($this->utilObjHandler->getCountry($em, $entity->getOriginCountry()));
         $entity->setOriginTerritory($this->utilObjHandler->getTerritory($em, $entity->getOriginTerritory()));
-        $entity->setOriginLocation($this->utilObjHandler->getLocation($em, $entity->getOriginLocation()));
+        $entity->setOriginLocation($this->getAndEnrichLocation($em, $entity->getOriginLocation()));
         $entity->setBirthCountry($this->utilObjHandler->getCountry($em, $entity->getBirthCountry()));
         $entity->setBirthTerritory($this->utilObjHandler->getTerritory($em, $entity->getBirthTerritory()));
-        $entity->setBirthLocation($this->utilObjHandler->getLocation($em, $entity->getBirthLocation()));
+        $entity->setBirthLocation($this->getAndEnrichLocation($em, $entity->getBirthLocation()));
     }
     
     private function prepareDeath($em, $entity){
         $entity->setDeathCountry($this->utilObjHandler->getCountry($em, $entity->getDeathCountry()));
         $entity->setTerritoryOfDeath($this->utilObjHandler->getTerritory($em, $entity->getTerritoryOfDeath()));
-        $entity->setDeathLocation($this->utilObjHandler->getLocation($em, $entity->getDeathLocation()));
+        $entity->setDeathLocation($this->getAndEnrichLocation($em, $entity->getDeathLocation()));
     }
     
     private function prepareEducation($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
-        $entity->setGraduationLocation($this->utilObjHandler->getLocation($em, $entity->getGraduationLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
+        $entity->setGraduationLocation($this->getAndEnrichLocation($em, $entity->getGraduationLocation()));
     }
     
     private function prepareHonour($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
     }
     
     private function prepareProperty($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
     }
     
     private function prepareRank($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));        
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));        
     }
     
     private function prepareResidence($em, $entity){
         $entity->setResidenceCountry($this->utilObjHandler->getCountry($em, $entity->getResidenceCountry()));
         $entity->setResidenceTerritory($this->utilObjHandler->getTerritory($em, $entity->getResidenceTerritory()));
-        $entity->setResidenceLocation($this->utilObjHandler->getLocation($em, $entity->getResidenceLocation()));       
+        $entity->setResidenceLocation($this->getAndEnrichLocation($em, $entity->getResidenceLocation()));       
     }
     
     private function prepareRoadOfLife($em, $entity){
@@ -196,19 +199,45 @@ class PersonSaver {
         $entity->setOriginTerritory($this->utilObjHandler->getTerritory($em, $entity->getOriginTerritory()));
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
     }
     
     private function prepareStatus($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
     }
     
     private function prepareWorks($em, $entity){
         $entity->setCountry($this->utilObjHandler->getCountry($em, $entity->getCountry()));
         $entity->setTerritory($this->utilObjHandler->getTerritory($em, $entity->getTerritory()));
-        $entity->setLocation($this->utilObjHandler->getLocation($em, $entity->getLocation()));
+        $entity->setLocation($this->getAndEnrichLocation($em, $entity->getLocation()));
+    }
+    
+    private function getAndEnrichLocation($em, $location){
+        if(is_null($location)){
+            return null;
+        }
+        
+        $this->LOGGER->info("Calling getAndEnrichLocation");
+        
+        $locationFromDB = $this->utilObjHandler->getLocation($em, $location);
+        
+        if(is_null($locationFromDB)){
+            return $location;
+        } else if(!is_null($location->getLatitude()) && !is_null($location->getLongitude())
+                && $location->getLatitude() != 0 && $location->getLongitude() != 0
+                && $location->getLatitude() != $locationFromDB->getLatitude()
+                && $location->getLongitude() != $locationFromDB->getLongitude()){
+            $this->LOGGER->info("New/changed latitude/ longitude found.");
+            $this->LOGGER->debug("Latitude: '".$location->getLatitude()."' Longitude: '".$location->getLongitude()."'");
+            
+            $locationFromDB->setLatitude($location->getLatitude());
+            $locationFromDB->setLongitude($location->getLongitude());
+        }
+        
+        
+        return $locationFromDB;
     }
 }
 
