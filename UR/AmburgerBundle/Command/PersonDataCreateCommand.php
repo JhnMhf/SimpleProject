@@ -7,26 +7,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class MigratterCommand extends ContainerAwareCommand
+class PersonDataCreateCommand extends ContainerAwareCommand
 {
     private $output;
 
     protected function configure()
     {
         $this
-            ->setName('personmigration:run')
-            ->setDescription('Migrate unmigratted persons from old to new db.');
+            ->setName('createpersondata:run')
+            ->setDescription('Creates missing person data objects in SystemDB for entries of the FinalDB.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('monolog.logger.cron')->info("Running the migratter crontask.");
+        
+        $this->getContainer()->get('monolog.logger.default')->info("Running the PersonDataCreator command.");
         $startTime = time();
-        $output->writeln('<comment>Migrating persons from old to new...</comment>');
+        $output->writeln('<comment>Creating missing person data.</comment>');
 
         $this->output = $output;
         
-        $this->getContainer()->get("migration_process.service")->run();
+        $this->getContainer()->get("person_data_creator.service")->createMissingEntries();
         
         
         $duration = time() - $startTime;

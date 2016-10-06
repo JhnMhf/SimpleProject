@@ -30,25 +30,12 @@ class PersonDataCreator {
     }
    
     public function createMissingEntries(){
-        $entries = $this->findMissingEntries();
-        
-        for($i = 0; $i < count($entries); $i++){
-            $personData = new PersonData();
-            $personData->setOid($entries[$i]['OID']);
-            
-            $this->getSystemDBManager()->persist($personData);
-        }
-        
-        $this->getSystemDBManager()->flush();
-    }
-    
-    private function findMissingEntries(){
-        $sql = 'SELECT OID FROM NewAmburgerDB.person WHERE OID NOT IN (SELECT OID FROM AmburgerSystemDB.person_data)';
+        $sql = 'INSERT INTO AmburgerSystemDB.person_data (OID) SELECT OID FROM FinalAmburgerDB.person WHERE OID NOT IN (SELECT OID FROM AmburgerSystemDB.person_data)';
         $stmt = $this->getSystemDBManager()->getConnection()->prepare($sql);
         
         $stmt->execute();
         
-        return $stmt->fetchAll();
+        $this->getSystemDBManager()->flush();
     }
 }
 
