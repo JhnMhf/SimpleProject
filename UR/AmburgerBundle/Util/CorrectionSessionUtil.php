@@ -38,7 +38,7 @@ class CorrectionSessionUtil {
         return true;
     } 
     
-    public function checkCorrectionSession($OID, $session){
+    public function checkCorrectionSession($ID, $session){
         $this->LOGGER->debug("Checking the correction session.");
         if(!$this->checkSession($session)){
             return false;
@@ -47,17 +47,22 @@ class CorrectionSessionUtil {
         $userId = $session->get('userid');
         
         $correctionSession = $this->getSystemDBManager()->getRepository('AmburgerBundle:CorrectionSession')
-                ->findOneBy(array('oid' => $OID, 'activeUserId' => $userId));
+                ->findOneBy(array('personId' => $ID, 'activeUserId' => $userId));
                 
         if(is_null($correctionSession)){
             $this->LOGGER->debug("This user is not working on this currently.");
             return false;
         }
+        
+        //update correction session to keep it alive
+        
+        $this->getSystemDBManager()->persist($correctionSession);
+        $this->getSystemDBManager()->flush();
                 
         return true;
     } 
     
-    public function startCorrectionSession($OID, $personData, $session){
+    public function startCorrectionSession($ID, $personData, $session){
         $username = $session->get('name');
         $userId = $session->get('userid');
         $this->LOGGER->debug("Starting the correction session for User: ".$username. " with ID: ".$userId);
@@ -66,7 +71,7 @@ class CorrectionSessionUtil {
         $this->getSystemDBManager()->merge($personData);
         
         $correctionSession = new CorrectionSession();
-        $correctionSession->setOid($OID);
+        $correctionSession->setPersonId($ID);
         $correctionSession->setActiveUserName($username);
         $correctionSession->setActiveUserId($userId);
         $correctionSession->setSessionIdentifier($session->getId());      

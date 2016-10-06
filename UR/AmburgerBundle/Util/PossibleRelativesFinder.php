@@ -25,17 +25,23 @@ class PossibleRelativesFinder {
         
         return $this->LOGGER;
     }
-
-    //@TODO: Find mothers based on siblings, marriage partner etc.
-    public function findPossibleRelatives($em, $OID){
-        $this->getLogger()->info("Searching possible relatives for OID: ".$OID);
+    
+    public function findPossibleRelatives($em, $ID){
         
-        $person = $em->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
         
         if(is_null($person)){
-            throw new Exception("No person with OID '".$OID."' is saved in the database.");
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
         }
-
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            throw new Exception("No person with ID '".$ID."' is saved in the database.");
+        }
+        
         $possibleRelatives = $this->loadPossibleRelatives($em, $person->getGender(), $person->getFirstName(), $person->getLastName(), $person->getPatronym());
         
         //remove the person itself
@@ -68,6 +74,19 @@ class PossibleRelativesFinder {
         }
 
         return $fullPossibleRelatives;
+    }
+
+    //@TODO: Find mothers based on siblings, marriage partner etc.
+    public function findPossibleRelativesByOID($em, $OID){
+        $this->getLogger()->info("Searching possible relatives for OID: ".$OID);
+        
+        $person = $em->getRepository('NewBundle:Person')->findOneByOid($OID);
+        
+        if(is_null($person)){
+            throw new Exception("No person with OID '".$OID."' is saved in the database.");
+        }
+        
+        return $this->findPossibleRelatives($em, $person->getId());
     }
     
     private function removeElementWithValue($array, $key, $value){

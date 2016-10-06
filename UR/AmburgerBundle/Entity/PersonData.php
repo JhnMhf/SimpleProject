@@ -163,4 +163,33 @@ class PersonData
 
         return $this;
     }
+    /**
+     * @var integer
+     */
+    private $personId;
+
+
+    /**
+     * Set personId
+     *
+     * @param integer $personId
+     *
+     * @return PersonData
+     */
+    public function setPersonId($personId)
+    {
+        $this->personId = $personId;
+
+        return $this;
+    }
+
+    /**
+     * Get personId
+     *
+     * @return integer
+     */
+    public function getPersonId()
+    {
+        return $this->personId;
+    }
 }

@@ -9,7 +9,7 @@ Start.StartController = (function(){
     ajaxLoader = null,
     
     /* Variables */
-    currentOid = null,
+    currentId = null,
     
     /* 
         Initialises the object and sets default values.
@@ -36,17 +36,17 @@ Start.StartController = (function(){
         ajaxLoader.nextPerson();
     },
     
-    selectedPersonClicked = function(event, oid){
-        console.log("selectedPersonClicked", oid);
-        currentOid = oid;
-        ajaxLoader.checkPerson(currentOid);
+    selectedPersonClicked = function(event, id){
+        console.log("selectedPersonClicked", id);
+        currentId = id;
+        ajaxLoader.checkPerson(currentId);
     },
     
     onPersonChecked = function(event, responseCode){
         console.log("onPersonChecked", responseCode);
         if(responseCode == "200"){
             //everything alright
-            ajaxLoader.startWork(currentOid);
+            ajaxLoader.startWork(currentId);
         } else if (responseCode == "300"){ 
             //already corrected
             startView.showAlreadyCorrectedMessage();
@@ -60,10 +60,10 @@ Start.StartController = (function(){
         
     },
     
-    onNextPerson = function(event, oid){
-        console.log("onNextPerson", oid);
-        currentOid = oid;
-        ajaxLoader.startWork(currentOid);
+    onNextPerson = function(event, id){
+        console.log("onNextPerson", id);
+        currentId = id;
+        ajaxLoader.startWork(currentId);
     },
     
         
@@ -75,7 +75,7 @@ Start.StartController = (function(){
     
     startCorrectingNonetheless = function(){
         console.log("startCorrectingNonetheless");
-        ajaxLoader.startWork(currentOid);
+        ajaxLoader.startWork(currentId);
     },
     
     onWorkStarted = function(event, responseCode){
@@ -88,7 +88,7 @@ Start.StartController = (function(){
                 newUrl += "/";
             }
             
-            newUrl += currentOid +"/duplicate/";
+            newUrl += currentId +"/duplicate/";
             
             //move to next step
             window.location.href = newUrl;

@@ -34,10 +34,11 @@ class CorrectionStartController extends Controller implements SessionController
         $this->getLogger()->debug("Next person action called.");
         $response = array();
         
+        //@TODO: Somehow randomize the result
         $systemDBManager = $this->get('doctrine')->getManager('system');
         $query = $systemDBManager->getRepository('AmburgerBundle:PersonData')->createQueryBuilder('p')
             ->where('p.currentlyInProcess = false AND p.completed = false')
-            ->orderBy('p.oid', 'ASC')
+            ->orderBy('p.personId', 'ASC')
             ->getQuery();
         $personData = $query->getResult();
         
@@ -53,9 +54,9 @@ class CorrectionStartController extends Controller implements SessionController
             $personData = $personData[0];
         }
         
-        $this->getLogger()->debug("Next person found: ".$personData->getOid());
+        $this->getLogger()->debug("Next person found: ".$personData->getPersonId());
         
-        $response["oid"] = $personData->getOid();
+        $response["id"] = $personData->getPersonId();
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');
@@ -65,13 +66,13 @@ class CorrectionStartController extends Controller implements SessionController
         return $jsonResponse;
     }
 
-    public function checkAction($OID){
-        $this->getLogger()->debug("Check action called: ".$OID);
+    public function checkAction($ID){
+        $this->getLogger()->debug("Check action called: ".$ID);
         $systemDBManager = $this->get('doctrine')->getManager('system');
-        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByOid($OID);
+        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($ID);
         
         if(is_null($personData)){
-            throw $this->createNotFoundException("The person with the OID:'".$OID."' does not exist");
+            throw $this->createNotFoundException("The person with the ID:'".$ID."' does not exist");
         }
 
         $statusCode = "200";
@@ -90,10 +91,10 @@ class CorrectionStartController extends Controller implements SessionController
         return $response;
     }
     
-    public function startWorkAction($OID){
-        $this->getLogger()->debug("Start work action called ".$OID);
+    public function startWorkAction($ID){
+        $this->getLogger()->debug("Start work action called ".$ID);
         $systemDBManager = $this->get('doctrine')->getManager('system');
-        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByOid($OID);
+        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($ID);
         
         if($personData->getCurrentlyInProcess()){
             $this->getLogger()->debug("Already in progress.");
@@ -102,7 +103,7 @@ class CorrectionStartController extends Controller implements SessionController
             return $response;
         } 
         
-        $this->get('correction_session.service')->startCorrectionSession($OID, $personData, $this->getRequest()->getSession());
+        $this->get('correction_session.service')->startCorrectionSession($ID, $personData, $this->getRequest()->getSession());
         
         $response = new Response();
         $response->setStatusCode("200");

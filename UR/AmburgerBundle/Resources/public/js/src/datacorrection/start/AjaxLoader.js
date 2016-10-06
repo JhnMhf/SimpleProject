@@ -20,9 +20,9 @@ Start.AjaxLoader = (function () {
                 })
                         .always(function (data, textStatus, jqXHR) {
                             if (jqXHR.status == "200") {
-                                var oid = data['oid'];
+                                var id = data['id'];
 
-                                $(that).trigger("nextPerson", [oid]);
+                                $(that).trigger("nextPerson", [id]);
 
                             }
                         }).fail(function (jqXHR) {
@@ -31,10 +31,10 @@ Start.AjaxLoader = (function () {
                     }
                 });
             },
-            startWork = function (oid) {
+            startWork = function (id) {
                 $.ajax({
                     type: "POST",
-                    url: oid
+                    url: id
                 })
                         .always(function (data, textStatus, jqXHR) {
                             $(that).trigger("workStarted", [jqXHR.status]);
@@ -42,10 +42,10 @@ Start.AjaxLoader = (function () {
                     $(that).trigger("workStarted", [jqXHR.status]);
                 });
             },
-            checkPerson = function (oid) {
+            checkPerson = function (id) {
                 $.ajax({
                     type: "GET",
-                    url: oid + "/check",
+                    url: id + "/check",
                 })
                         .done(function (data, textStatus, jqXHR) {
                             $(that).trigger("personChecked", [jqXHR.status]);

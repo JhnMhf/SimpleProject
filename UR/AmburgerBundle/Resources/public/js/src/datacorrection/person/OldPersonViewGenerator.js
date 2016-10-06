@@ -18,9 +18,14 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         console.log("Building person for:",insertId, personData, enabled);
         displayBasePerson(insertId,personData, enabled);
 
-        displayBaptism(insertId, personData['herkunft'], enabled);
-        displayBirth(insertId, personData['herkunft'], enabled);
-        displayDeath(insertId, personData['tod'] , enabled);
+        if(personData['herkunft'] !== undefined){
+            displayBaptism(insertId, personData['herkunft'], enabled);
+            displayBirth(insertId, personData['herkunft'], enabled);
+        }
+        
+        if(personData['tod'] !== undefined){
+            displayDeath(insertId, personData['tod'] , enabled);
+        }
         displayEducations(insertId, personData['ausbildung'], enabled);
         displayHonours(insertId, personData['ehre'], enabled);
         displayProperties(insertId, personData['eigentum'], enabled);

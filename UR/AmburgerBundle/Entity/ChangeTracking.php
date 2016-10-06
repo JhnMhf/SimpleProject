@@ -266,4 +266,33 @@ class ChangeTracking
     {
         return $this->activeUserId;
     }
+    /**
+     * @var integer
+     */
+    private $personId;
+
+
+    /**
+     * Set personId
+     *
+     * @param integer $personId
+     *
+     * @return ChangeTracking
+     */
+    public function setPersonId($personId)
+    {
+        $this->personId = $personId;
+
+        return $this;
+    }
+
+    /**
+     * Get personId
+     *
+     * @return integer
+     */
+    public function getPersonId()
+    {
+        return $this->personId;
+    }
 }

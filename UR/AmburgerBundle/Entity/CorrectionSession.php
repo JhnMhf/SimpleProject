@@ -192,4 +192,33 @@ class CorrectionSession
         }
         $this->setModified(new \DateTime());
     }
+    /**
+     * @var integer
+     */
+    private $personId;
+
+
+    /**
+     * Set personId
+     *
+     * @param integer $personId
+     *
+     * @return CorrectionSession
+     */
+    public function setPersonId($personId)
+    {
+        $this->personId = $personId;
+
+        return $this;
+    }
+
+    /**
+     * Get personId
+     *
+     * @return integer
+     */
+    public function getPersonId()
+    {
+        return $this->personId;
+    }
 }

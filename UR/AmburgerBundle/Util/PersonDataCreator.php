@@ -30,7 +30,18 @@ class PersonDataCreator {
     }
    
     public function createMissingEntries(){
-        $sql = 'INSERT INTO AmburgerSystemDB.person_data (OID) SELECT OID FROM FinalAmburgerDB.person WHERE OID NOT IN (SELECT OID FROM AmburgerSystemDB.person_data)';
+        $sql = 'INSERT INTO AmburgerSystemDB.person_data (person_id) SELECT ID FROM FinalAmburgerDB.person WHERE ID NOT IN (SELECT person_id FROM AmburgerSystemDB.person_data)';
+        $stmt = $this->getSystemDBManager()->getConnection()->prepare($sql);
+        
+        $stmt->execute();
+        
+        $sql = 'INSERT INTO AmburgerSystemDB.person_data (person_id) SELECT ID FROM FinalAmburgerDB.relative WHERE ID NOT IN (SELECT person_id FROM AmburgerSystemDB.person_data)';
+        $stmt = $this->getSystemDBManager()->getConnection()->prepare($sql);
+        
+        $stmt->execute();
+        
+        
+        $sql = 'INSERT INTO AmburgerSystemDB.person_data (person_id) SELECT ID FROM FinalAmburgerDB.partner WHERE ID NOT IN (SELECT person_id FROM AmburgerSystemDB.person_data)';
         $stmt = $this->getSystemDBManager()->getConnection()->prepare($sql);
         
         $stmt->execute();

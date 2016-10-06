@@ -19,20 +19,20 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $this->LOGGER;
     }
     
-    public function indexAction($OID)
+    public function indexAction($ID)
     {
-        $this->getLogger()->debug("Person correction side called: ".$OID);
+        $this->getLogger()->debug("Person correction side called: ".$ID);
         return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
     }
     
-    public function loadAction($OID)
+    public function loadAction($ID)
     {
-        $this->getLogger()->debug("Loading person data: ".$OID);
+        $this->getLogger()->debug("Loading person data: ".$ID);
         $response = array();
         
-        $response["old"] = $this->loadOldPersonByOID($OID);
-        $response["new"] = $this->loadNewPersonByOID($OID);
-        $response["final"] = $this->loadFinalPersonByOID($OID);
+        $response["old"] = $this->loadOldPersonByID($ID);
+        $response["new"] = $this->loadNewPersonByID($ID);
+        $response["final"] = $this->loadFinalPersonByID($ID);
         
         if(is_null($response["final"])){
             $response["final"] = $response["new"];
@@ -46,6 +46,7 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $jsonResponse;
     }
     
+    //@TODO: Not finished
     public function loadWeddingAction($ID){
         $this->getLogger()->debug("Loading wedding data for ID: ".$ID);
         $response = array();
@@ -66,30 +67,54 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $jsonResponse;
     }
     
-    private function loadOldPersonByOID($OID){
-        return $this->get('old_db_loader.service')->loadPersonByOID($OID);
+    private function loadOldPersonByID($ID){
+        $finalDBManager = $this->get('doctrine')->getManager('final');
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            //@TODO: Enable loading of data for other persons
+            return array();
+        }
+        
+        return $this->get('old_db_loader.service')->loadPersonByOID($person->getOid());
     }
     
-    private function loadNewPersonByOID($OID){
+    private function loadNewPersonByID($ID){
         
         $newDBManager = $this->get('doctrine')->getManager('new');
         
-        $person = $newDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $newDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $newDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $newDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
         
         return !is_null($person) ? $person : array();
     }
     
-    private function loadFinalPersonByOID($OID){
+    private function loadFinalPersonByID($ID){
         
         $finalDBManager = $this->get('doctrine')->getManager('final');
         
-        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $finalDBManager->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $finalDBManager->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
                 
         return !is_null($person) ? $person : array();
     }
     
-    public function saveAction($OID){
-        $this->getLogger()->debug("Saving person data: ".$OID);
+    public function saveAction($ID){
+        $this->getLogger()->debug("Saving person data: ".$ID);
         $response = new Response();
 
         $content = $this->get("request")->getContent();
@@ -105,13 +130,13 @@ class CorrectionPersonController extends Controller implements CorrectionSession
 
             $personEntity = $serializer->deserialize($content,'UR\DB\NewBundle\Entity\Person', 'json');
             
-            if($personEntity->getOid() == $OID){
+            if($personEntity->getId() == $ID){
                 $em = $this->get('doctrine')->getManager('final');
                 $this->get('person_saver.service')->savePerson($em,$this->get("request")->getSession(),$content, $personEntity);
 
                 $response->setStatusCode("202");
             }else {
-                $response->setContent("OIDs do not match");
+                $response->setContent("IDs do not match");
                 $response->setStatusCode("406");
             }
 

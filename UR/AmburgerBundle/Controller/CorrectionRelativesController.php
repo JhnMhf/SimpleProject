@@ -19,17 +19,17 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $this->LOGGER;
     }
     
-    public function indexAction($OID)
+    public function indexAction($ID)
     {
-        $this->getLogger()->debug("Relatives page called: ".$OID);
+        $this->getLogger()->debug("Relatives page called: ".$ID);
         return $this->render('AmburgerBundle:DataCorrection:related_person.html.twig');
     }
     
-    public function loadPersonAction($OID){
-        $this->getLogger()->info("loadPersonAction called: ".$OID);
+    public function loadPersonAction($ID){
+        $this->getLogger()->info("loadPersonAction called: ".$ID);
         $finalDBManager = $this->get('doctrine')->getManager('final');
         
-        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
         
         $serializer = $this->container->get('serializer');
         $json = $serializer->serialize($person, 'json');
@@ -39,20 +39,13 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $response;
     }
     
-    public function loadDirectRelativesAction($OID)
+    public function loadDirectRelativesAction($ID)
     {
-        $this->getLogger()->info("LoadDirectRelativesAction called: ".$OID);
+        $this->getLogger()->info("LoadDirectRelativesAction called: ".$ID);
         $relationShipLoader = $this->get('relationship_loader.service');
         $em = $this->get('doctrine')->getManager('final');
         
-        $person = $em->getRepository('NewBundle:Person')->findOneByOid($OID);
-        
-                
-        if(is_null($person)){
-            throw new Exception("No person with OID '".$OID."' is saved in the database.");
-        }
-        
-        $relatives = $relationShipLoader->loadOnlyDirectRelatives($em,$person->getId());
+        $relatives = $relationShipLoader->loadOnlyDirectRelatives($em,$ID);
         
         $serializer = $this->container->get('serializer');
         $json = $serializer->serialize($relatives, 'json');
@@ -62,11 +55,11 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $response;
     }
     
-    public function findPossibleRelativesAction($OID){
-        $this->getLogger()->info("FindPossibleRelativesAction called: ".$OID);
+    public function findPossibleRelativesAction($ID){
+        $this->getLogger()->info("FindPossibleRelativesAction called: ".$ID);
         $em = $this->get('doctrine')->getManager('final');
 
-        $possibleRelatives = $this->get('possible_relatives_finder.service')->findPossibleRelatives($em, $OID);
+        $possibleRelatives = $this->get('possible_relatives_finder.service')->findPossibleRelatives($em, $ID);
         
         $serializer = $this->container->get('serializer');
         $json = $serializer->serialize($possibleRelatives, 'json');
@@ -76,8 +69,8 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $response;
     }
     
-    public function createAction($OID){
-        $this->getLogger()->info("Create relation called: ".$OID);
+    public function createAction($ID){
+        $this->getLogger()->info("Create relation called: ".$ID);
         $response = new Response();
 
         $content = $this->get("request")->getContent();
@@ -92,7 +85,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $this->createRelation($relationData);
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content);
+            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -102,8 +95,8 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $response;
     }
     
-    public function updateAction($OID){
-        $this->getLogger()->info("Update relation called: ".$OID);
+    public function updateAction($ID){
+        $this->getLogger()->info("Update relation called: ".$ID);
         $response = new Response();
 
         $content = $this->get("request")->getContent();
@@ -122,7 +115,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $oldData = $serializer->serialize($oldRelation, 'json');
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
+            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -132,8 +125,8 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         return $response;
     }
     
-    public function removeAction($OID){
-        $this->getLogger()->info("Remove relation called: ".$OID);
+    public function removeAction($ID){
+        $this->getLogger()->info("Remove relation called: ".$ID);
         $response = new Response();
 
         $content = $this->get("request")->getContent();
@@ -151,7 +144,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $oldData = $serializer->serialize($oldRelation, 'json');
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($OID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
+            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");

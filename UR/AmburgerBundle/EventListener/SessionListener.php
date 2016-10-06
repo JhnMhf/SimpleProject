@@ -63,13 +63,11 @@ class SessionListener
         $this->LOGGER->debug("Checking CorrectionSession in filter.");
 
         $session = $event->getRequest()->getSession();
-        $OID = $event->getRequest()->get('OID');
+        $ID = $event->getRequest()->get('ID');
 
-        $this->LOGGER->debug("Found OID: ".$OID);
-        if(!$this->get('correction_session.service')->checkCorrectionSession($OID,$session)){
+        $this->LOGGER->debug("Found ID: ".$ID);
+        if(!$this->get('correction_session.service')->checkCorrectionSession($ID,$session)){
                 throw new AccessDeniedHttpException('The user is currently not working on this!');
         } 
-        
-        //@TODO: Update modified correction session to prevent timeout?
     }
 }

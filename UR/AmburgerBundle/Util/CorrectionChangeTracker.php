@@ -28,10 +28,10 @@ class CorrectionChangeTracker {
         return $this->systemDBManager;
     }
     
-    public function trackChange($OID, $affectedID, $userName,$userId, $newData, $oldData = null){
+    public function trackChange($ID, $affectedID, $userName,$userId, $newData, $oldData = null){
         $change = new \UR\AmburgerBundle\Entity\ChangeTracking();
         $change->setAffectedId($affectedID);
-        $change->setOid($OID);
+        $change->setPersonId($ID);
         $change->setActiveUserId($userId);
         $change->setActiveUserName($userName);
         $change->setNewData($newData);

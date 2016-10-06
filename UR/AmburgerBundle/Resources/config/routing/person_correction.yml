@@ -6,7 +6,7 @@ start:
     methods: [GET]
     
 checkOID:
-    path:     /start/{OID}/check
+    path:     /start/{ID}/check
     defaults: { _controller: AmburgerBundle:CorrectionStart:check }
     methods: [GET]
 
@@ -16,30 +16,30 @@ nextOID:
     methods: [GET]
 
 startWork:
-    path:     /start/{OID}
+    path:     /start/{ID}
     defaults: { _controller: AmburgerBundle:CorrectionStart:startWork }
     methods: [POST]
 
 # duplicate
 duplicate:
-    path:    /correction/{OID}/duplicate/
+    path:    /correction/{ID}/duplicate/
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:index } 
     methods: [GET]
     
 duplicate_load:
-    path:    /correction/{OID}/duplicate/load
+    path:    /correction/{ID}/duplicate/load
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:load } 
     methods: [GET]
     
 # person correction
 
 person:
-    path:    /correction/{OID}/person/
+    path:    /correction/{ID}/person/
     defaults: { _controller: AmburgerBundle:CorrectionPerson:index } 
     methods: [GET]
     
 person_load:
-    path:    /correction/{OID}/person/load
+    path:    /correction/{ID}/person/load
     defaults: { _controller: AmburgerBundle:CorrectionPerson:load } 
     methods: [GET]
     
@@ -50,42 +50,42 @@ person_load_wedding:
 
     
 person_save:
-    path:    /correction/{OID}/person/save
+    path:    /correction/{ID}/person/save
     defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 
     methods: [POST]
 
 #person_relatives
 person_relatives:
-    path:    /correction/{OID}/relatives/
+    path:    /correction/{ID}/relatives/
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:index } 
     methods: [GET]
     
 person_relatives_load:
-    path:    /correction/{OID}/relatives/load
+    path:    /correction/{ID}/relatives/load
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:loadPerson } 
     methods: [GET]
     
 person_relatives_possible:
-    path:    /correction/{OID}/relatives/possible
+    path:    /correction/{ID}/relatives/possible
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:findPossibleRelatives } 
     methods: [GET]
     
 person_relatives_direct:
-    path:    /correction/{OID}/relatives/direct
+    path:    /correction/{ID}/relatives/direct
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:loadDirectRelatives } 
     methods: [GET]
     
 person_relatives_create:
-    path:    /correction/{OID}/relatives/create
+    path:    /correction/{ID}/relatives/create
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:create } 
     methods: [PUT]
         
 person_relatives_update:
-    path:    /correction/{OID}/relatives/update
+    path:    /correction/{ID}/relatives/update
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:update } 
     methods: [POST]
     
 person_relatives_remove:
-    path:    /correction/{OID}/relatives/remove
+    path:    /correction/{ID}/relatives/remove
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:remove } 
     methods: [POST]

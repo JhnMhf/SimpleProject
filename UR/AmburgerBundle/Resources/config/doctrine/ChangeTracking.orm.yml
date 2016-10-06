@@ -11,13 +11,13 @@ UR\AmburgerBundle\Entity\ChangeTracking:
             generator:
                 strategy: IDENTITY
     fields:
-        oid:
+        personId:
             type: integer
             nullable: false
             options:
                 unsigned: false
-            column: OID
-            comment: 'The oid for which this change was done.'
+            column: person_id
+            comment: 'The id for which this change was done.'
         affected_id:
             type: integer
             nullable: false

@@ -6,12 +6,12 @@ UR\AmburgerBundle\Entity\PersonData:
         completed_idx:
             columns: [ completed ]
     id:
-        oid:
+        personId:
             type: integer
             nullable: false
             options:
                 unsigned: false
-            column: OID
+            column: person_id
             id: true
     fields:
         currentlyInProcess:

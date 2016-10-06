@@ -18,15 +18,15 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
         return $this->LOGGER;
     }
     
-    public function indexAction($OID)
+    public function indexAction($ID)
     {
-        $this->getLogger()->debug("Duplicates side called: ".$OID);
+        $this->getLogger()->debug("Duplicates side called: ".$ID);
         return $this->render('AmburgerBundle:DataCorrection:duplicate_persons.html.twig');
     }
     
-    public function loadAction($OID)
+    public function loadAction($ID)
     {
-        $this->getLogger()->debug("Loading duplicates: ".$OID);
+        $this->getLogger()->debug("Loading duplicates: ".$ID);
         $response["duplicate_persons"] = array();
         
         $serializer = $this->get('serializer');

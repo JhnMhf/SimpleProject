@@ -19,7 +19,7 @@ Start.StartView = (function(){
     },
     
     selectedPerson = function(){
-        var oid = $("#selected-oid").val();
+        var oid = $("#selected-id").val();
         
         $(that).trigger('selectedPerson', [oid]);
     },
