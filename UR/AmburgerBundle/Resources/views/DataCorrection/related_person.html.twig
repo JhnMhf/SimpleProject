@@ -63,8 +63,8 @@
                 <div class="relation-box">
                     <select name="selectRelationType" disabled>
                         <option name="" <%= relation == '' ?  'selected' : '' %>></option>
-                        <option name="child" <%= relation == 'child' ?  'selected' : '' %>>ist Kind von</option>
-                        <option name="parent" <%= relation == 'parent' ?  'selected' : '' %>>ist Elterteil von</option>
+                        <option name="parent" <%= relation == 'parent' ?  'selected' : '' %>>ist Kind von</option>
+                        <option name="child" <%= relation == 'child' ?  'selected' : '' %>>ist Elterteil von</option>
                         <option name="sibling" <%= relation == 'sibling' ?  'selected' : '' %>>ist Geschwister von</option>
                         <option name="marriagePartner"<%= relation == 'marriagePartner' ?  'selected' : '' %>>ist verheiratet mit</option>
                     </select>
@@ -98,8 +98,8 @@
             <div class="large-2 columns box center">
                 <select name="selectRelationType">
                     <option name="" <%= relation_suggestion == '' ?  'selected' : '' %>></option>
-                    <option name="child" <%= relation_suggestion == 'child' ?  'selected' : '' %>>ist Kind von</option>
-                    <option name="parent" <%= relation_suggestion == 'parent' ?  'selected' : '' %>>ist Elterteil von</option>
+                    <option name="parent" <%= relation_suggestion == 'parent' ?  'selected' : '' %>>ist Kind von</option>
+                    <option name="child" <%= relation_suggestion == 'child' ?  'selected' : '' %>>ist Elterteil von</option>
                     <option name="sibling" <%= relation_suggestion == 'sibling' ?  'selected' : '' %>>ist Geschwister von</option>
                     <option name="marriagePartner" <%= relation_suggestion == 'marriagePartner' ?  'selected' : '' %>>ist verheiratet mit</option>
                 </select>
