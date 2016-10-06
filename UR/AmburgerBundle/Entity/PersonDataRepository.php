@@ -10,4 +10,21 @@ namespace UR\AmburgerBundle\Entity;
  */
 class PersonDataRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Get random entities
+     *
+     * @param int $count Entities count, default is 10
+     *
+     * @return array
+     */
+    public function getRandomEntities($count = 1)
+    {
+        return $this->createQueryBuilder('p')
+                ->addSelect('RAND() as HIDDEN rand')
+                ->where('p.currentlyInProcess = false AND p.completed = false')
+                ->addOrderBy('rand')
+                ->setMaxResults($count)
+                ->getQuery()
+                ->getResult();
+    }
 }

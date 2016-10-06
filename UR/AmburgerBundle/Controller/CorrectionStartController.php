@@ -34,13 +34,8 @@ class CorrectionStartController extends Controller implements SessionController
         $this->getLogger()->debug("Next person action called.");
         $response = array();
         
-        //@TODO: Somehow randomize the result
         $systemDBManager = $this->get('doctrine')->getManager('system');
-        $query = $systemDBManager->getRepository('AmburgerBundle:PersonData')->createQueryBuilder('p')
-            ->where('p.currentlyInProcess = false AND p.completed = false')
-            ->orderBy('p.personId', 'ASC')
-            ->getQuery();
-        $personData = $query->getResult();
+        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->getRandomEntities(1);
         
         if(is_null($personData) || count($personData) == 0){
             $this->getLogger()->debug("There exists no uncorrected person anymore.");
@@ -49,7 +44,7 @@ class CorrectionStartController extends Controller implements SessionController
         
         $this->getLogger()->debug("Found ".count($personData)." uncorrected persons.");
         
-        if(count($personData) > 1){
+        if(count($personData) >= 1){
             //get first
             $personData = $personData[0];
         }
