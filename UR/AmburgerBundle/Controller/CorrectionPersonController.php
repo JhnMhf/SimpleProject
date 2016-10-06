@@ -46,6 +46,26 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $jsonResponse;
     }
     
+    public function loadWeddingAction($ID){
+        $this->getLogger()->debug("Loading wedding data for ID: ".$ID);
+        $response = array();
+        
+        $response["old"] =  $this->loadWeddingFromOldDB($ID);
+        $response["new"] = $this->loadWeddingFromNewDB($ID);
+        $response["final"] = $this->loadWeddingFromFinalDB($ID);
+        
+        if(is_null($response["final"])){
+            $response["final"] = $response["new"];
+        }
+        
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($response, 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+        
+        return $jsonResponse;
+    }
+    
     private function loadOldPersonByOID($OID){
         return $this->get('old_db_loader.service')->loadPersonByOID($OID);
     }
@@ -63,7 +83,9 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         
         $finalDBManager = $this->get('doctrine')->getManager('final');
         
-        return $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+                
+        return !is_null($person) ? $person : array();
     }
     
     public function saveAction($OID){
@@ -112,5 +134,25 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         print_r($entity);
         
         return new Response();
+    }
+    
+    private function loadWeddingFromOldDB($ID){
+        return array();
+    }
+    
+   private function loadWeddingFromNewDB($ID){
+        $newDBManager = $this->get('doctrine')->getManager('new');
+        
+        $weddings = $newDBManager->getRepository('NewBundle:Wedding')->loadWeddingsForHusband($ID);
+        
+        return !is_null($weddings) ? $weddings : array();
+    }
+    
+    private function loadWeddingFromFinalDB($ID){
+        $finalDBManager = $this->get('doctrine')->getManager('final');
+        
+        $weddings = $finalDBManager->getRepository('NewBundle:Wedding')->loadWeddingsForHusband($ID);
+        
+        return !is_null($weddings) ? $weddings : array();
     }
 }

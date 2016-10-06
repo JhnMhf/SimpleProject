@@ -43,6 +43,12 @@ person_load:
     defaults: { _controller: AmburgerBundle:CorrectionPerson:load } 
     methods: [GET]
     
+person_load_wedding:
+    path:    /correction/{ID}/person/load/wedding
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:loadWedding } 
+    methods: [GET]    
+
+    
 person_save:
     path:    /correction/{OID}/person/save
     defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 

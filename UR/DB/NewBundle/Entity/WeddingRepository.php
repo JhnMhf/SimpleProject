@@ -23,4 +23,28 @@ class WeddingRepository extends EntityRepository
                 ->getQuery()
                 ->getResult();
     }
+    
+   public function loadWeddingsForHusband($ID)
+    {
+        
+        $queryBuilder = $this->_em->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
+
+        return $queryBuilder
+                ->where('w.husbandId = :id')
+                ->setParameter('id', $ID)
+                ->getQuery()
+                ->getResult();
+    }
+    
+    public function loadWeddingsForWife($ID)
+    {
+        
+        $queryBuilder = $this->_em->getRepository('NewBundle:Wedding')->createQueryBuilder('w');
+
+        return $queryBuilder
+                ->where('w.wifeId = :id')
+                ->setParameter('id', $ID)
+                ->getQuery()
+                ->getResult();
+    }
 }
