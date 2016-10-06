@@ -223,11 +223,13 @@ RelativesCorrection.RelativesView = (function () {
         if(data['educations']){
             var educationsString = "";
             for(var i = 0; i < data['educations'].length; i++){
-                if(i > 0){
-                    educationsString += ",";
+                if(data['educations'][i]['label'] !== undefined){
+                    if(educationsString !== ""){
+                        educationsString += ",";
+                    }
+                    
+                    educationsString += data['educations'][i]['label'];
                 }
-
-                educationsString += data['educations'][i]['label'];
             }
 
             return educationsString;
