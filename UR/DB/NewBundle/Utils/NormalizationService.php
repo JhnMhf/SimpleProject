@@ -16,6 +16,7 @@ namespace UR\DB\NewBundle\Utils;
 class NormalizationService {
    
     const CSV_FILE = "@NewBundle/Resources/files/abbreviations.csv";
+    const NAME_CSV_FILE = "@NewBundle/Resources/files/name_abbreviations.csv";
     const DELIMITER = "=";
     
     private $LOGGER;
@@ -24,11 +25,15 @@ class NormalizationService {
     private $abbreviationKeys;
     private $abbreviationValues;
     
+    private $nameAbbreviationKeys;
+    private $nameAbbreviationValues;
+    
     public function __construct($container)
     {
         $this->container = $container;
         $this->LOGGER = $this->get('monolog.logger.migrateNew');
         $this->createAbbreviationsMap();
+        $this->createNameAbbreviationsMap();
     }
     
     private function createAbbreviationsMap(){
@@ -53,12 +58,76 @@ class NormalizationService {
         $this->abbreviationValues = array_values($abbreviationsMap);
     }
     
+    private function createNameAbbreviationsMap(){
+        $abbreviationsMap = [];
+        
+        $path = $this->get('kernel')->locateResource(self::CSV_FILE);
+       
+        $lines = file($path);
+
+        foreach($lines as $line)
+        {
+            $splittedLine = explode(self::DELIMITER,$line);
+            //first trim, to remove more than one empty space, then add one at 
+            //the start and the end, to prevent replacing inside of an word
+            $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
+        }
+        
+        $keys = array_map('strlen', array_keys($abbreviationsMap));
+        array_multisort($keys, SORT_DESC, $abbreviationsMap);
+        
+        $this->nameAbbreviationKeys = array_keys($abbreviationsMap);
+        $this->nameAbbreviationValues = array_values($abbreviationsMap);
+    }
+    
     private function get($identifier){
         return $this->container->get($identifier);
     }
     
     public function writeOutAbbreviations($string){
+        if ($string == "" || $string == null) {
+            return null;
+        }
+        
+        $lowerCaseString = strtolower($string);
+        
+        $containsAnmerkung = strpos($string, strtolower("- Anmerkung:"));
+        $containsImOriginal = strpos($string, strtolower("- im Original"));
+        
+        if($containsAnmerkung || $containsImOriginal){
+            return $string;
+        }
+        
+        if($string == "keine Angaben" || $string == "keine An gabe" || $string == "Unbekannt"){
+            return "keine Angabe";
+        } else if($string == "?"){
+            return null;
+        }
+        
         return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
+    }
+    
+    public function writeOutNameAbbreviations($string){
+        if ($string == "" || $string == null) {
+            return null;
+        }
+        
+        $lowerCaseString = strtolower($string);
+        
+        $containsAnmerkung = strpos($string, strtolower("- Anmerkung:"));
+        $containsImOriginal = strpos($string, strtolower("- im Original"));
+        
+        if($containsAnmerkung || $containsImOriginal){
+            return $string;
+        }
+        
+        if($string == "keine Angaben" || $string == "keine An gabe" || $string == "Unbekannt"){
+            return "keine Angabe";
+        } else if($string == "?"){
+            return null;
+        }
+        
+        return  str_replace($this->nameAbbreviationKeys, $this->nameAbbreviationValues,$string);
     }
     
     //@TODO: Add GND Database?

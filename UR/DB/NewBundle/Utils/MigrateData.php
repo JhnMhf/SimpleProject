@@ -86,26 +86,11 @@ class MigrateData {
     /* helper method */
 
     private function normalize($string) {
-        if ($string == "" || $string == null) {
-            return null;
-        }
-        
-        $lowerCaseString = strtolower($string);
-        
-        $containsAnmerkung = strpos($string, strtolower("- Anmerkung:"));
-        $containsImOriginal = strpos($string, strtolower("- im Original"));
-        
-        if($containsAnmerkung || $containsImOriginal){
-            return $string;
-        }
-        
-        if($string == "keine Angaben" || $string == "keine An gabe" || $string == "Unbekannt"){
-            return "keine Angabe";
-        } else if($string == "?"){
-            return null;
-        }
-        
         return $this->normalizationService->writeOutAbbreviations($string);
+    }
+    
+    private function normalizeName($string) {
+        return $this->normalizationService->writeOutNameAbbreviations($string);
     }
 
     public function getCountry($countryName, $comment = null) {
@@ -868,9 +853,9 @@ class MigrateData {
         //insert into new data
         $newPartner = new Partner();
 
-        $newPartner->setFirstName($this->normalize($firstName));
-        $newPartner->setPatronym($this->normalize($patronym));
-        $newPartner->setLastName($this->normalize($lastName));
+        $newPartner->setFirstName($this->normalizeName($firstName));
+        $newPartner->setPatronym($this->normalizeName($patronym));
+        $newPartner->setLastName($this->normalizeName($lastName));
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newPartner->setGender($genderResult[0]);
         $newPartner->setGenderComment($genderResult[1]);
@@ -893,11 +878,11 @@ class MigrateData {
         $newPerson = new Person();
 
         $newPerson->setOid($oid);
-        $newPerson->setFirstName($this->normalize($firstName));
-        $newPerson->setPatronym($this->normalize($patronym));
-        $newPerson->setLastName($this->normalize($lastName));
-        $newPerson->setForeName($this->normalize($foreName));
-        $newPerson->setBirthName($this->normalize($birthName));
+        $newPerson->setFirstName($this->normalizeName($firstName));
+        $newPerson->setPatronym($this->normalizeName($patronym));
+        $newPerson->setLastName($this->normalizeName($lastName));
+        $newPerson->setForeName($this->normalizeName($foreName));
+        $newPerson->setBirthName($this->normalizeName($birthName));
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newPerson->setGender($genderResult[0]);
         $newPerson->setGenderComment($genderResult[1]);
@@ -955,9 +940,9 @@ class MigrateData {
         //insert into new data
         $newRelative = new Relative();
 
-        $newRelative->setFirstName($this->normalize($firstName));
-        $newRelative->setPatronym($this->normalize($patronym));
-        $newRelative->setLastName($this->normalize($lastName));
+        $newRelative->setFirstName($this->normalizeName($firstName));
+        $newRelative->setPatronym($this->normalizeName($patronym));
+        $newRelative->setLastName($this->normalizeName($lastName));
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newRelative->setGender($genderResult[0]);
         $newRelative->setGenderComment($genderResult[1]);

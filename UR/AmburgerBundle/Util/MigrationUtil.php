@@ -657,7 +657,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($mother->getId(), $oldMother["ID"], 'mutter', $oldMother["order"]);
         
-        $mother->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMother["rufnamen"]));
+        $mother->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldMother["rufnamen"]));
 
         //additional data
         //birth
@@ -855,7 +855,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($father->getId(), $oldFather["ID"], 'vater', $oldFather["order"]);
         
-        $father->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldFather["rufnamen"]));
+        $father->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldFather["rufnamen"]));
 
         //additional data
         //birth
@@ -1009,7 +1009,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($sibling->getId(), $oldSibling["ID"], 'geschwister', $oldSibling["order"]);
         
-        $sibling->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldSibling["rufnamen"]));
+        $sibling->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldSibling["rufnamen"]));
 
         //additional data
         $siblingEducation = $this->getSiblingsEducationWithNativeQuery($oldPersonID, $oldSibling["order"], $oldDBManager);
@@ -1279,7 +1279,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($marriagePartner->getId(), $oldMarriagePartner["ID"], 'ehepartner', $oldMarriagePartner["order"]);   
         
-        $marriagePartner->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartner["rufnamen"]));
+        $marriagePartner->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldMarriagePartner["rufnamen"]));
 
         //additional data
         //birth
@@ -1458,7 +1458,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($child->getId(), $oldChild["ID"], 'kind', $oldChild["order"], $oldChild["order2"]); 
         
-        $child->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldChild["rufnamen"]));
+        $child->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldChild["rufnamen"]));
 
         //additional data
         $childEducation = $this->getChildsEducationWithNativeQuery($oldPersonID, $oldChild["order"], $oldChild["order2"], $oldDBManager);
@@ -2407,7 +2407,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($marriagePartnerOfChild->getId(), $oldMarriagePartnerOfChild["ID"], 'ehepartner_des_kindes', $oldMarriagePartnerOfChild["order"], $oldMarriagePartnerOfChild["order2"], $oldMarriagePartnerOfChild["order3"]); 
         
-        $marriagePartnerOfChild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldMarriagePartnerOfChild["rufnamen"]));
+        $marriagePartnerOfChild->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldMarriagePartnerOfChild["rufnamen"]));
 
         //birth
         if (!is_null($oldMarriagePartnerOfChild["herkunftsort"]) ||
@@ -2756,7 +2756,7 @@ class MigrationUtil {
 
         $this->trackOriginOfData($grandchild->getId(), $oldGrandchild["ID"], 'enkelkind', $oldGrandchild["order"], $oldGrandchild["order2"], $oldGrandchild["order3"], $oldGrandchild["order4"]); 
         
-        $grandchild->setForeName($this->getNormalizationService()->writeOutAbbreviations($oldGrandchild["rufnamen"]));
+        $grandchild->setForeName($this->getNormalizationService()->writeOutNameAbbreviations($oldGrandchild["rufnamen"]));
 
         //birth
         if (!is_null($oldGrandchild["geburtsort"]) ||
