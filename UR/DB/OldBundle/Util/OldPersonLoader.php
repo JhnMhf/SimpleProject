@@ -193,8 +193,7 @@ class OldPersonLoader {
             case 'ehepartner':
                 return $this->loadDataForMarriagePartner($oldMainPersonID, $order);
             case 'kind':
-                
-                break;
+                return $this->loadDataForKind($oldMainPersonID, $order, $order2);
             case 'schwiegervater':
                 
                 break;
@@ -400,7 +399,7 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großvater_vaeterlicherseits");
+            throw new \Exception("Could not load data from old DB for mutter");
         }
         
         $entry = $dbData[0];
@@ -438,7 +437,7 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großvater_vaeterlicherseits");
+            throw new \Exception("Could not load data from old DB for vater");
         }
         
         $entry = $dbData[0];
@@ -473,7 +472,7 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großvater_vaeterlicherseits");
+            throw new \Exception("Could not load data from old DB for geschwister");
         }
         
         $entry = $dbData[0];
@@ -505,7 +504,7 @@ class OldPersonLoader {
             for ($i = 0; $i < count($siblingOrigin); $i++) {
                 $entry = $siblingOrigin[$i];
                 if ($entry['geboren'] != null || $entry['geburtsort'] != null || $entry['geburtsland'] != null || $entry['kommentar'] != null || $entry['getauft'] != null || $entry['taufort'] != null) {
-                    $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'], null,$entry['geburtsland'], $entry['geboren'],$entry["taufort"], $entry["getauft"], $entry['kommentar']);
+                    $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'], null,$entry['geburtsland'], $entry['geboren'],$entry["taufort"], $entry["getauft"],null, $entry['kommentar']);
                 }
             }
         }
@@ -532,7 +531,7 @@ class OldPersonLoader {
             //education
             for ($i = 0; $i < count($siblingEducation); $i++) {
                 $education = $siblingEducation[$i];
-                $data['ausbildung'][] = $this->createAusbildungsArray($entry['ausbildung'], $education['ort'],null,$education['land'],$education['bildungsabschluss'],null,null,$education['von-ab'],$education['bis'], $education['belegt']);
+                $data['ausbildung'][] = $this->createAusbildungsArray($education['ausbildung'], $education['ort'],null,$education['land'],$education['bildungsabschluss'],null,null,$education['von-ab'],$education['bis'], $education['belegt']);
             }
         }
 
@@ -577,6 +576,423 @@ class OldPersonLoader {
         return $data;
     }
     
+    private function getSiblingsEducationWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, land, ort, `von-ab`, bis, ausbildung, bildungsabschluss, belegt 
+        FROM `ausbildung_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsHonourWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, land, ehren
+                FROM `ehren_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsOriginWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, geboren, geburtsort, geburtsland, getauft, taufort, kommentar
+                FROM `herkunft_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsRoadOfLifeWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, ort, territorium, stammland, beruf, `von-ab`, bis, belegt, kommentar
+                FROM `lebensweg_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsRankWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, land, rang, kommentar
+                FROM `rang_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsStatusWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, land, stand, `von-ab`
+                FROM `stand_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getSiblingsDeathWithNativeQuery($oldPersonID, $siblingNr, $oldDBManager) {
+        $sql = "SELECT `ID`,`order`,`order2`,`begräbnisort`,`gestorben`,`todesort`,`friedhof`,`kommentar`,`todesursache` 
+                FROM `tod_des_geschwisters` WHERE ID=:personID AND `order`=:siblingNr";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('siblingNr', $siblingNr);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+    
+    private function loadDataForMarriagePartner($oldMainPersonID, $order){
+        $sql = "SELECT vornamen, russ_vornamen, name, rufnamen, nation, herkunftsort, herkunftsland, 
+                herkunftsterritorium, geboren, geburtsort, geburtsland, geburtsterritorium, 
+                getauft, taufort, gestorben, todesort, friedhof, begraben, 
+                begräbnisort, todesterritorium, todesland, todesursache, konfession, 
+                beruf, stand, rang, ehren, besitz, 
+                bildungsabschluss, kommentar
+                FROM `ehepartner` WHERE ID=:personID AND `order` = :order";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for ehepartner");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('unbekannt', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, $entry['nation'], $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],$entry['herkunftsterritorium'],$entry['herkunftsland'],$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren'],$entry['taufort'],$entry['getauft']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],$entry['todesterritorium'],$entry['todesursache'],$entry['gestorben'],null,$entry['friedhof'],$entry['begräbnisort'],$entry['begraben']);
+        $data['ausbildung'] = $this->asArray($this->createAusbildungsArray(null,null,null,null,$entry['bildungsabschluss']));
+        $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
+        $data['eigentum'] = $this->asArray($this->createEigentumArray($entry['besitz']));
+        $data['rang'] = $this->asArray($this->createRangArray($entry['rang']));
+        $data['religion'] = $this->asArray($this->createReligionArray($entry['konfession']));
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+        
+        return $data;
+    }
+    
+    private function loadDataForKind($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, russ_vornamen, name, rufnamen, geboren, geburtsort, geschlecht, kommentar
+                FROM `kind` WHERE ID=:personID AND `order` = :order AND `order2`=:order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for ehepartner");
+        }
+        
+        $entry = $dbData[0];
+        
+        return $this->createKind($entry, $oldMainPersonID, $order, $order2, $this->getOldDBManager());
+    }
+    
+    private function createKind($entry, $oldPersonId, $order, $order2, $oldDBManager){
+        $data = array();
+        $data['person'] = $this->createPersonArray($entry['geschlecht'], $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, null, null,null,null, $entry['kommentar']);
+        
+
+        //additional data
+        $childEducation = $this->getChildsEducationWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childProperty = $this->getChildsPropertyWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childHonour = $this->getChildsHonourWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childOrigin = $this->getChildsOriginWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childRoadOfLife = $this->getChildsRoadOfLifeWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childRank = $this->getChildsRankWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childReligion = $this->getChildsReligionWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childStatus = $this->getChildsStatusWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        $childDeath = $this->getChildsDeathWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
+
+        //birth
+        //geboren, geburtsort, from oldChild
+        if (!is_null($entry["geboren"]) || !is_null($entry["geburtsort"]) || count($childOrigin) > 0) {
+           
+            if (count($childOrigin) == 0) {
+                $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],null,null,$entry['geboren']);
+            } else {
+                for ($i = 0; $i < count($childOrigin); $i++) {
+                    $origin = $childOrigin[$i];
+
+                    $geburtsOrt = $oldChild["geburtsort"];
+                    $geboren = $oldChild["geboren"];
+
+                    if (!is_null($origin['geburtsort']) && $origin['geburtsort'] != $geburtsOrt) {
+                        if (!is_null($geburtsOrt)) {
+                            // add it with oder
+                            $geburtsOrt .= " ODER " . $origin['geburtsort'];
+                        } else {
+                            $geburtsOrt = $origin['geburtsort'];
+                        }
+                    }
+
+                    if (!is_null($origin['geboren']) && $origin['geboren'] != $geboren) {
+                        if (!is_null($geboren)) {
+                            //create date array? add comment?
+                            $geboren .= ";" . $origin['geboren'];
+                        } else {
+                            $geboren = $origin['geboren'];
+                        }
+                    }
+                    
+                    $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren'],$origin['taufort'],$origin['getauft'],$origin['belegt'],$origin['kommentar']);
+                }
+            }
+        }
+
+        if (count($childDeath) > 0) {
+            //death
+            for ($i = 0; $i < count($childDeath); $i++) {
+                $death = $childDeath[$i];
+                //death
+                $data['tod'] = $this->createTodArray($death['todesort'], $death['todesterritorium'], $death['todesland'], $death["todesursache"], $death["gestorben"], $death["friedhof"], $death["begräbnisort"], $death["begraben"], $death["kommentar"]);
+            }
+        }
+        
+        if (count($childEducation) > 0) {
+            $data['ausbildung'] = array();
+            //education
+            for ($i = 0; $i < count($childEducation); $i++) {
+                $education = $childEducation[$i];
+                $data['ausbildung'][] = $this->createAusbildungsArray($education['ausbildung'], $education['ort'],null,$education['land'],$education['bildungsabschluss'], $education["bildungsabschlussdatum"], $education["bildungsabschlussort"],$education['von-ab'],$education['bis'], $education['belegt'], $education["kommentar"]);
+            }
+        }
+
+
+        if (count($childProperty) > 0) {
+            $data['eigentum'] = array();
+            //property
+            for ($i = 0; $i < count($childProperty); $i++) {
+                $property = $childProperty[$i];
+                $data['eigentum'][] = $this->createEigentumArray($property['besitz'], $property['ort'],$property['territorium'],$property['land'],$property['von-ab'],null,$property['belegt']);
+            }
+        }
+
+
+        if (count($childHonour) > 0) {
+            $data['ehren'] = $array();
+            //honour
+            for ($i = 0; $i < count($childHonour); $i++) {
+                $honour = $childHonour[$i];
+                $data['ehren'][] = $this->createEhreArray($honour['ehren'],$honour["ort"],null,$honour["land"], $honour["von-ab"]);
+            }
+        }
+
+        if (count($childRoadOfLife) > 0) {
+            $data['lebensweg'] = array();
+            //roadOfLife
+            for ($i = 0; $i < count($childRoadOfLife); $i++) {
+                $step = $childRoadOfLife[$i];
+                $data['lebensweg'][] = $this->createLebenswegArray($step['ort'],$step['territorium'], $step['land'], null, $step['stammland'], $step['beruf'], $step['von-ab'], $step['bis'], $step['belegt'], $step['kommentar']);
+            }
+        }
+
+
+        if (count($childRank) > 0) {
+            $data['rang'] = array();
+            //rank
+            for ($i = 0; $i < count($childRank); $i++) {
+                $rank = $childRank[$i];
+                $data['rang'][] = $this->createRangArray($rank['rang'],$rank["rangklasse"],$rank["ort"],null,$rank['land'],$rank["von-ab"], $rank["bis"], $rank["belegt"],$rank['kommentar']);
+            }
+        }
+
+        //religion
+        if (count($childReligion) > 0) {
+            $data['religion'] = array();
+            //religion
+            for ($i = 0; $i < count($childReligion); $i++) {
+                $religion = $childReligion[$i];
+                $data['religion'][] = $this->createReligionArray($religion["konfession"],null,null,null,$religion["kommentar"]);
+            }
+        }
+
+
+        if (count($childStatus) > 0) {
+            $data['status'] = array();
+            //status
+            for ($i = 0; $i < count($childStatus); $i++) {
+                $status = $childStatus[$i];
+                $data['status'][] = $this->createStatusArray($status['stand'], $status["ort"],$status["territorium"],$status['land'],$status['von-ab'],null, $status["belegt"], $status["kommentar"]);
+            }
+        }
+
+        
+        return $data;
+    }
+
+    private function getChildsEducationWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, land, ort, ausbildung, `von-ab`, bis, bildungsabschluss, bildungsabschlussdatum, bildungsabschlussort, belegt, kommentar
+            FROM `ausbildung_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsPropertyWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, land, ort, territorium, besitz, `von-ab`, belegt
+                FROM `besitz_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsHonourWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, ort, land, `von-ab`, ehren
+                    FROM `ehren_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsOriginWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, geboren, geburtsort, geburtsterritorium, geburtsland, getauft, taufort, belegt, kommentar
+                FROM `herkunft_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsRoadOfLifeWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, ort, territorium, land, stammland, beruf, `von-ab`, bis, belegt, kommentar
+                FROM `lebensweg_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsRankWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, ort, land, rang, rangklasse, `von-ab`, bis, belegt, kommentar
+                FROM `rang_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsReligionWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, konfession, kommentar
+                FROM `religion_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsStatusWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT ID, `order`, order2, order3, ort, territorium, land, stand, `von-ab`, belegt, kommentar
+                FROM `stand_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+
+    private function getChildsDeathWithNativeQuery($oldPersonID, $marriageOrder, $childOrder, $oldDBManager) {
+        $sql = "SELECT `ID`,`order`,`order2`,`order3`,`todesort`,`todesterritorium`,`gestorben`,`begräbnisort`,`todesursache`,`friedhof`,`begraben`,`todesland`,`kommentar` 
+                FROM `tod_des_kindes` WHERE ID=:personID AND `order`=:marriageOrder AND `order2`=:childOrder";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('marriageOrder', $marriageOrder);
+        $stmt->bindValue('childOrder', $childOrder);
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
+    
     private function asArray($element){
         $array = array();
         $array[] = $element;
@@ -601,7 +1017,7 @@ class OldPersonLoader {
         return $person;
     }
     
-    private function createHerkunftArray($herkunftsort, $herkunftsterritorium=null, $herkunftsland=null, $geburtsort=null, $geburtsterritorium=null, $geburtsland=null, $geboren=null, $taufort=null,$getauft=null,$kommentar=null){
+    private function createHerkunftArray($herkunftsort, $herkunftsterritorium=null, $herkunftsland=null, $geburtsort=null, $geburtsterritorium=null, $geburtsland=null, $geboren=null, $taufort=null,$getauft=null,$belegt=null,$kommentar=null){
         $herkunft = [];
         $herkunft['taufort'] = $taufort;
         $herkunft['getauft'] = $getauft;
@@ -612,6 +1028,7 @@ class OldPersonLoader {
         $herkunft['geburtsterritorium'] = $geburtsterritorium;
         $herkunft['geburtsland'] = $geburtsland;
         $herkunft['geboren'] = $geboren;
+        $herkunft['belegt'] = $belegt;
         $herkunft['kommentar'] = $kommentar;
         
         return $herkunft;
