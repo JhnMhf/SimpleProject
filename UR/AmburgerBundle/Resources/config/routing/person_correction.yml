@@ -54,6 +54,12 @@ person_save:
     defaults: { _controller: AmburgerBundle:CorrectionPerson:save } 
     methods: [POST]
 
+    
+person_wedding_save:
+    path:    /correction/{ID}/person/save/wedding
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:saveWedding } 
+    methods: [POST]
+
 #person_relatives
 person_relatives:
     path:    /correction/{ID}/relatives/

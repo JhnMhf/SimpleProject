@@ -18,11 +18,6 @@ UR\AmburgerBundle\Entity\ChangeTracking:
                 unsigned: false
             column: person_id
             comment: 'The id for which this change was done.'
-        affected_id:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: 'The affected id of the person of the change'
         old_data:
             type: blob
             nullable: true

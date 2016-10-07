@@ -85,7 +85,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $this->createRelation($relationData);
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content);
+            $this->get('correction_change_tracker')->trackChange($ID,$session->get('name'),$session->get('userid'), $content);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -115,7 +115,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $oldData = $serializer->serialize($oldRelation, 'json');
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
+            $this->get('correction_change_tracker')->trackChange($ID,$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");
@@ -144,7 +144,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
             $oldData = $serializer->serialize($oldRelation, 'json');
             
             $session = $this->get("request")->getSession();
-            $this->get('correction_change_tracker')->trackChange($ID, $relationData['personId'],$session->get('name'),$session->get('userid'), $content,$oldData);
+            $this->get('correction_change_tracker')->trackChange($ID,$session->get('name'),$session->get('userid'), $content,$oldData);
             $response->setStatusCode("202");
         } else {
             $response->setContent("Missing Content.");

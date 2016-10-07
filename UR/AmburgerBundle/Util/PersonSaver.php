@@ -25,7 +25,7 @@ class PersonSaver {
         $oldData = null;
         
         //@TODO: Current highest id?
-        $existingPerson = $this->loadFinalPersonByOID($personEntity->getOid());
+        $existingPerson = $this->loadFinalPersonByOID($em, $personEntity->getOid());
         if(is_null($existingPerson)){
             //@TODO: Necessary only for testing? In the "real" case, the data should already exist and only be updated?
             //first persist if not existant
@@ -40,14 +40,42 @@ class PersonSaver {
         $em->merge($personEntity);
         $em->flush();
         
-        $this->get('correction_change_tracker')->trackChange($personEntity->getOid(), $personEntity->getId(),$session->get('name'),$session->get('userid'), $payload, $oldData);
+        $this->get('correction_change_tracker')->trackChange($personEntity->getId(),$session->get('name'),$session->get('userid'), $payload, $oldData);
     }
     
-    private function loadFinalPersonByOID($OID){
+    public function saveWeddings($ID, $em, $session,$payload, $weddingData){
+        $this->LOGGER->info("saveWeddings called in PersonSaver with ".count($weddingData)." weddings");
         
-        $finalDBManager = $this->get('doctrine')->getManager('final');
+        for($i = 0; $i < count($weddingData); $i++){
+            $wedding = $weddingData[$i];
+            $this->prepareWedding($em, $wedding);
+            $existingWedding = $this->loadWeddingById($em, $wedding->getId());
+            
+            $oldData = null;
+            if(is_null($existingWedding)){
+                //@TODO: Necessary only for testing? In the "real" case, the data should already exist and only be updated?
+                //first persist if not existant
+                $em->persist($wedding);
+                $em->flush();
+            } else {
+                $serializer = $this->get('serializer');
+                $oldData = $serializer->serialize($existingWedding, 'json');
+            }
+            
+            $em->merge($wedding);
+            $this->get('correction_change_tracker')->trackChange($ID,$session->get('name'),$session->get('userid'), $payload, $oldData);
+        }
         
-        return $finalDBManager->getRepository('NewBundle:Person')->findOneByOid($OID);
+        $em->flush();
+       
+    }
+    
+    private function loadWeddingById($em, $ID){
+        return $em->getRepository('NewBundle:Wedding')->findOneById($ID);
+    }
+    
+    private function loadFinalPersonByOID($em, $OID){
+        return $em->getRepository('NewBundle:Person')->findOneByOid($OID);
     }
     
     private function preparePerson($em, $personEntity){
@@ -141,6 +169,13 @@ class PersonSaver {
             $this->prepareWorks($em, $worksArray[$i]);
             $worksArray[$i]->setPerson($personEntity);
         }
+    }
+    
+    private function prepareWedding($em, $wedding){
+        $this->LOGGER->info("Preparing Wedding for save: ".$wedding->getId());
+
+        $wedding->setWeddingTerritory($this->utilObjHandler->getTerritory($em, $wedding->getWeddingTerritory()));
+        $wedding->setWeddingLocation($this->getAndEnrichLocation($em, $wedding->getWeddingLocation()));
     }
     
     private function prepareBaptism($em, $entity){

@@ -1,7 +1,6 @@
 
 PersonCorrection.FinalPersonView = (function () {
-    var that = {},
-            finalPersonData = null,
+            var that = {},
             personViewGenerator = null,
             /* 
              Initialises the object and sets default values.
@@ -11,10 +10,20 @@ PersonCorrection.FinalPersonView = (function () {
                 return that;
             },
             displayPerson = function (personData) {
-                finalPersonData = personData;
                 personViewGenerator.displayPerson("#final", personData, true);
-
             },
+            displayWeddings = function (weddingData) {
+                personViewGenerator.displayWeddings("#final", weddingData, true);
+            },
+            
+            extractWeddingData = function(){
+              var weddingData = extractArrayData('wedding','wedding-container','wedding-row')
+              
+              console.log("Extracted WeddingData: ", weddingData);
+              
+              return weddingData;
+            },
+            
             extractPersonData = function () {
                 var basePerson = extractBasePerson();
                 basePerson['baptism'] = extractBaptism();
@@ -125,7 +134,8 @@ PersonCorrection.FinalPersonView = (function () {
             extractArrayData = function (type, containerClass, rowClass) {
                 var baseIdentifier = '#final .' + containerClass;
 
-                var array = {};
+                //@TODO: Changed from {} to [], does still everything work?
+                var array = [];
 
                 var rows = $(baseIdentifier + ' .' + rowClass);
 
@@ -162,6 +172,8 @@ PersonCorrection.FinalPersonView = (function () {
                         case 'works':
                             array[i] = extractWorksObj(rows[i]);
                             break;
+                        case 'wedding':
+                            array[i] = extractWeddingObj(rows[i]);
                     }
 
                 }
@@ -367,6 +379,30 @@ PersonCorrection.FinalPersonView = (function () {
 
                 return worksObj;
             },
+            extractWeddingObj = function (element) {
+                console.log("Wedding: ", element, $(element));
+
+                var $element = $(element);
+
+                var weddingObj = {};
+
+                weddingObj['id'] = parseInt($element.find('input[name="id"]').val());
+                weddingObj['wedding_order'] = parseInt($element.find('input[name="order"]').val());
+                weddingObj['husband_id'] = parseInt($element.find('input[name="husband_id"]').val());
+                weddingObj['wife_id'] = parseInt($element.find('input[name="wife_id"]').val());
+                weddingObj['wedding_territory'] = extractTerritoryObj($element.find('.wedding-territory'));
+                weddingObj['wedding_location'] = extractLocationObj($element.find('.wedding-location'));
+                weddingObj['wedding_date'] = extractDateReferenceObj($element.find('.wedding-date'));
+                weddingObj['banns_date'] = extractDateReferenceObj($element.find('.banns-date'));
+                weddingObj['breakup_reason'] = $element.find('input[name="breakupReason"]').val();
+                weddingObj['breakup_date'] = extractDateReferenceObj($element.find('.breakup-date'));
+                weddingObj['proven_date'] = extractDateReferenceObj($element.find('.proven-date'));
+                weddingObj['wedding_comment'] = $element.find('input[name="weddingComment"]').val();
+                weddingObj['before_after'] = $element.find('input[name="beforeAfter"]').val();
+                weddingObj['comment'] = $element.find('input[name="comment"]').val();
+
+                return weddingObj;
+            },
             extractNationObj = function (identifier) {
                 if ($.type(identifier) === "string") {
                     //if it is an identifier
@@ -433,6 +469,7 @@ PersonCorrection.FinalPersonView = (function () {
                     }
                 }
             },
+            //@TODO: Rendering empty objects
             extractDateReferenceObj = function (identifier) {
                 if ($.type(identifier) === "string") {
                     //if it is an identifier
@@ -586,7 +623,9 @@ PersonCorrection.FinalPersonView = (function () {
 
     that.init = init;
     that.displayPerson = displayPerson;
+    that.displayWeddings = displayWeddings;
     that.extractPersonData = extractPersonData;
+    that.extractWeddingData = extractWeddingData;
 
     return that;
 })();

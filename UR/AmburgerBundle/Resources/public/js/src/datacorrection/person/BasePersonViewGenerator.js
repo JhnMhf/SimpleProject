@@ -10,6 +10,27 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         return that;
     },
     
+    //@TODO: Add information about wedding partner
+    displayWeddings = function(insertId, weddingData, enabled){
+        if(enabled === undefined){
+            enabled = false;
+        }
+
+        console.log("Building weddings for:",insertId, weddingData, enabled);
+        
+        var template = _.template($("script#wedding").html());
+
+        var data = [];
+        
+        data['weddings'] = weddingData;
+        
+        if(enabled){
+            data['enabled'] = true;
+        }
+        
+        $(insertId  + " .wedding-container").append(template(data));
+    },
+    
     displayPerson = function(insertId, personData, enabled){
         if(enabled === undefined){
             enabled = false;
@@ -233,6 +254,7 @@ PersonCorrection.BasePersonViewGenerator = (function(){
 
     that.init = init;
     that.displayPerson = displayPerson;
+    that.displayWeddings = displayWeddings;
 
     return that;
 })();

@@ -14,11 +14,16 @@ PersonCorrection.OldPersonView = (function(){
     
     displayPerson = function(personData){
         oldPersonViewGenerator.displayPerson("#old", personData);
+    },
+    
+    displayWeddings = function(weddingData){
+        oldPersonViewGenerator.displayWeddings('#old', weddingData);
     };
 
 
     that.init = init;
     that.displayPerson = displayPerson;
+    that.displayWeddings = displayWeddings;
 
     return that;
 })();

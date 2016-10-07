@@ -148,6 +148,35 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $response;
     }
     
+    public function saveWeddingAction($ID){
+        $this->getLogger()->debug("Saving wedding data: ".$ID);
+        $response = new Response();
+
+        $content = $this->get("request")->getContent();
+        
+        
+        if (!empty($content))
+        {
+            //http://jmsyst.com/libs/serializer/master/usage
+            
+            //Alternative: http://symfony.com/doc/current/components/serializer.html#deserializing-an-object
+            $serializer = $this->get('serializer');
+            
+
+            $weddingData = $serializer->deserialize($content,'array<UR\DB\NewBundle\Entity\Wedding>', 'json');
+            
+
+            $em = $this->get('doctrine')->getManager('final');
+            $this->get('person_saver.service')->saveWeddings($ID,$em,$this->get("request")->getSession(),$content, $weddingData);
+
+            $response->setStatusCode("202");
+        } else {
+            $response->setContent("Missing Content.");
+            $response->setStatusCode("406");
+        }
+
+        return $response;
+    }
     
     
     public function dateSerializeAction(){

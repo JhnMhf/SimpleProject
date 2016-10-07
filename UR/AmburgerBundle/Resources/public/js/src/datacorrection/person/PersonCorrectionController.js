@@ -20,7 +20,11 @@ PersonCorrection.PersonCorrectionController = (function(){
         
         $(ajaxLoader).on("personLoaded", onPersonLoaded);
         
+        $(ajaxLoader).on("weddingsLoaded", onWeddingsLoaded);
+        
         $(ajaxLoader).on("saveFinished", onSaveFinished);
+        
+        $(ajaxLoader).on("weddingSaveFinished", onWeddingSaveFinished);
         
         $(ajaxLoader).on("errorOccured", onErrorOccured);
 
@@ -34,6 +38,7 @@ PersonCorrection.PersonCorrectionController = (function(){
         
         
         ajaxLoader.loadPersonToCorrect();
+        ajaxLoader.loadWeddingsToCorrect();
            
         return that;
     },
@@ -49,14 +54,38 @@ PersonCorrection.PersonCorrectionController = (function(){
         personCorrectionView.hideLoader();
     },
     
+    onWeddingsLoaded = function(event, oldWeddings,newWeddings, finalWeddings){
+        console.log("OldPerson", oldWeddings);
+        oldPersonView.displayWeddings(oldWeddings);
+        console.log("NewPerson", newWeddings);
+        newPersonView.displayWeddings(newWeddings);
+        console.log("FinalPerson", finalWeddings);
+        finalPersonView.displayWeddings(finalWeddings);
+    },
+    
     onSave = function(){
         personCorrectionView.showLoader();
-        var changedFinalPerson = finalPersonView.extractPersonData();
+
+        var changedWeddings = finalPersonView.extractWeddingData();
         
-        console.log(changedFinalPerson);
+        if(changedWeddings.length > 0){
+            console.log(changedWeddings);
         
-        ajaxLoader.saveFinalPerson(changedFinalPerson);
+            ajaxLoader.saveWeddings(changedWeddings);
+        } else {
+            savePerson();
+        }
     },
+    
+    onWeddingSaveFinished = function(){
+        savePerson();
+    },
+    
+    savePerson = function(){
+        var changedFinalPerson = finalPersonView.extractPersonData();
+        console.log(changedFinalPerson);
+        ajaxLoader.saveFinalPerson(changedFinalPerson);
+    }
     
     onSaveFinished = function(){
         personCorrectionView.hideLoader();

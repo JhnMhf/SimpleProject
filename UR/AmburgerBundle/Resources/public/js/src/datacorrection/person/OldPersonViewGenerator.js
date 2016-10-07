@@ -10,6 +10,39 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         return that;
     },
     
+    displayWeddings = function(insertId, weddingData, enabled){
+        if(enabled === undefined){
+            enabled = false;
+        }
+        console.log("Building weddings for:",insertId, weddingData, enabled);
+        
+        var template = _.template($("script#wedding-old").html());
+
+        var data = [];
+        
+        data['weddings'] = extractWeddingData(weddingData);
+        
+        if(enabled){
+            data['enabled'] = true;
+        }
+        
+        $(insertId  + " .wedding-container").append(template(data));
+    },
+    
+    extractWeddingData = function(weddingData){
+        var data = [];
+        
+        for(var i = 0; i < weddingData.length; i++){
+            var weddingElement = [];
+            
+
+            
+            data[i] = weddingElement;
+        }
+        
+        return data;
+    },
+    
     displayPerson = function(insertId, personData, enabled){
         if(enabled === undefined){
             enabled = false;
@@ -502,6 +535,7 @@ PersonCorrection.OldPersonViewGenerator = (function(){
 
     that.init = init;
     that.displayPerson = displayPerson;
+    that.displayWeddings = displayWeddings;
 
     return that;
 })();

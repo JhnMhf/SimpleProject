@@ -68,6 +68,11 @@
                         Werke
                     </h3>
                 </div>
+                <div class="wedding-container collapsible collapsed">
+                    <h3 class="header">
+                        Hochzeiten
+                    </h3>
+                </div>
                 <div class="source-container collapsible collapsed">
                     <h3 class="header">
                         Quellen
@@ -141,6 +146,11 @@
                         Werke
                     </h3>
                 </div>
+                <div class="wedding-container collapsible collapsed">
+                    <h3 class="header">
+                        Hochzeiten
+                    </h3>
+                </div>
                 <div class="source-container collapsible collapsed">
                     <h3 class="header">
                         Quellen
@@ -212,6 +222,11 @@
                 <div class="works-container collapsible collapsed">
                     <h3 class="header">
                         Werke
+                    </h3>
+                </div>
+                <div class="wedding-container collapsible collapsed">
+                    <h3 class="header">
+                        Hochzeiten
                     </h3>
                 </div>
                 <div class="source-container collapsible collapsed">
@@ -1858,7 +1873,7 @@
         %>
         <div class="row">
                 <input type="hidden" name="id"> 
-                <input type="hidden" name="statusOrder">
+                <input type="hidden" name="order">
                 <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="country">Land<input type="text" name="country" value="<%= typeof(statusObj['country']) !== 'undefined' ?  statusObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(statusObj['territory']) !== 'undefined' ?  statusObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -2005,7 +2020,7 @@
         %>
         <div class="row">
                 <input type="hidden" name="id"> 
-                <input type="hidden" name="worksOrder">
+                <input type="hidden" name="order">
                 <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="country">Land<input type="text" name="country" value="<%= typeof(worksObj['country']) !== 'undefined' ?  worksObj['country'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="territory">Territorium<input type="text" name="territory" value="<%= typeof(worksObj['territory']) !== 'undefined' ?  worksObj['territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -2014,6 +2029,162 @@
                 <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(worksObj['to_date']) !== 'undefined' ?  worksObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(worksObj['proven_date']) !== 'undefined' ?  worksObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
                 <label>Kommentar<input type="text" name="comment" value="<%= typeof(worksObj['comment']) !== 'undefined' ? worksObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        </div>
+        <% }); %>
+    </script>
+    
+        <script type="text/template" id="wedding">
+        <% 
+            _.forEach(weddings, function (weddingObj,i) {       
+                
+        %>
+        <div class="row wedding-row">
+                <input type="hidden" name="id" value="<%= typeof(weddingObj['id']) !== 'undefined' ?  weddingObj['id'] : '' %>"> 
+                <input type="hidden" name="order" value="<%= typeof(weddingObj['wedding_order']) !== 'undefined' ?  weddingObj['wedding_order'] : '' %>">
+                <input type="hidden" name="order" value="<%= typeof(weddingObj['husband_id']) !== 'undefined' ?  weddingObj['husband_id'] : '' %>">
+                <input type="hidden" name="order" value="<%= typeof(weddingObj['wife_id']) !== 'undefined' ?  weddingObj['wife_id'] : '' %>">
+                <label class="wedding-territory">Hochzeitsterritorium
+                    <% if(typeof(weddingObj['wedding_territory']) !== 'undefined') { 
+                        var territoryTemplate = _.template($("script#territory").html());
+
+                        var array = [];
+
+                        array['name'] = weddingObj['wedding_territory']['name'];
+                        array['comment'] = weddingObj['wedding_territory']['comment'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= territoryTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label class="wedding-location">Hochzeitsort
+                 <% if(typeof(weddingObj['wedding_location']) !== 'undefined') { 
+                        var locationTemplate = _.template($("script#location").html());
+
+                        var array = [];
+
+                        array['name'] =weddingObj['wedding_location']['name'];
+                        array['comment'] = weddingObj['wedding_location']['comment'];
+                        array['latitude'] = weddingObj['wedding_location']['latitude'];
+                        array['longitude'] = weddingObj['wedding_location']['longitude'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= locationTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label class="wedding-date">Hochzeitstag
+            <% 
+                if(typeof(weddingObj['wedding_date']) !== 'undefined') { 
+                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                    var array = [];
+
+                    array['dateReference'] = weddingObj['wedding_date'];
+
+                    if(typeof(enabled) !== 'undefined') {
+                        array['enabled'] = true;
+                    }
+                %>
+
+                <%= dateReferenceTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label class="banns-date">Verlobungstag
+            <% 
+                if(typeof(weddingObj['banns_date']) !== 'undefined') { 
+                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                    var array = [];
+
+                    array['dateReference'] = weddingObj['banns_date'];
+
+                    if(typeof(enabled) !== 'undefined') {
+                        array['enabled'] = true;
+                    }
+                %>
+
+                <%= dateReferenceTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label>Scheidungsgrund<input type="text" name="breakupReason" value="<%= typeof(weddingObj['breakup_reason']) !== 'undefined' ? weddingObj['breakup_reason'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label class="breakup-date">Scheidungsdatum                       
+            <% if(typeof(weddingObj['breakup_date']) !== 'undefined') { 
+                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                    var array = [];
+
+                    array['dateReference'] = weddingObj['breakup_date'];
+
+                    if(typeof(enabled) !== 'undefined') {
+                        array['enabled'] = true;
+                    }
+                %>
+
+                <%= dateReferenceTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label class="proven-date">belegt                       
+            <% if(typeof(weddingObj['proven_date']) !== 'undefined') { 
+                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                    var array = [];
+
+                    array['dateReference'] = weddingObj['proven_date'];
+
+                    if(typeof(enabled) !== 'undefined') {
+                        array['enabled'] = true;
+                    }
+                %>
+
+                <%= dateReferenceTemplate(array) %>
+
+                <%  } %>
+            </label>
+            <label>Hochzeitskommentar<input type="text" name="weddingComment" value="<%= typeof(weddingObj['wedding_comment']) !== 'undefined' ? weddingObj['wedding_comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Davor/Danach<input type="text" name="beforeAfter" value="<%= typeof(weddingObj['before_after']) !== 'undefined' ? weddingObj['before_after'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        
+        </div>
+        <% }); %>
+    </script>
+    
+        
+    
+    <script type="text/template" id="wedding-old">
+        <% 
+            _.forEach(weddings, function (weddingObj,i) {       
+                
+        %>
+        <div class="row wedding-row">
+            <input type="hidden" name="id" value="<%= typeof(weddingObj['id']) !== 'undefined' ?  weddingObj['id'] : '' %>"> 
+            <input type="hidden" name="order" value="<%= typeof(weddingObj['wedding_order']) !== 'undefined' ?  weddingObj['wedding_order'] : '' %>">
+            <input type="hidden" name="order" value="<%= typeof(weddingObj['husband_id']) !== 'undefined' ?  weddingObj['husband_id'] : '' %>">
+            <input type="hidden" name="order" value="<%= typeof(weddingObj['wife_id']) !== 'undefined' ?  weddingObj['wife_id'] : '' %>">
+            <label class="wedding-territory">Hochzeitsterritorium<input type="text" name="territory" value="<%= typeof(weddingObj['wedding_territory']) !== 'undefined' ?  weddingObj['wedding_territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label class="wedding-location">Hochzeitsort<input type="text" name="location" value="<%= typeof(weddingObj['wedding_location']) !== 'undefined' ?  weddingObj['wedding_location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label class="wedding-date">Hochzeitstag<input type="text" name="provenDate" value="<%= typeof(weddingObj['wedding_date']) !== 'undefined' ?  weddingObj['wedding_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+            <label class="banns-date">Verlobungstag<input type="text" name="provenDate" value="<%= typeof(weddingObj['banns_date']) !== 'undefined' ?  weddingObj['banns_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+            <label>Scheidungsgrund<input type="text" name="breakupReason" value="<%= typeof(weddingObj['breakup_reason']) !== 'undefined' ? weddingObj['breakup_reason'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label class="breakup-date">Scheidungsdatum<input type="text" name="provenDate" value="<%= typeof(weddingObj['breakup_date']) !== 'undefined' ?  weddingObj['breakup_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+            <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(weddingObj['proven_date']) !== 'undefined' ?  weddingObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
+            <label>Hochzeitskommentar<input type="text" name="weddingComment" value="<%= typeof(weddingObj['wedding_comment']) !== 'undefined' ? weddingObj['wedding_comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Davor/Danach<input type="text" name="beforeAfter" value="<%= typeof(weddingObj['before_after']) !== 'undefined' ? weddingObj['before_after'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
     </script>
