@@ -193,29 +193,21 @@ class OldPersonLoader {
             case 'ehepartner':
                 return $this->loadDataForMarriagePartner($oldMainPersonID, $order);
             case 'kind':
-                return $this->loadDataForKind($oldMainPersonID, $order, $order2);
+                return $this->loadDataForChild($oldMainPersonID, $order, $order2);
             case 'schwiegervater':
-                
-                break;
+                return $this->loadFatherInLaw($oldMainPersonID, $order, $order2);
             case 'schwiegermutter':
-                
-                break;
-            
+                return $this->loadMotherInLaw($oldMainPersonID, $order, $order2);
             case 'anderer_partner':
-                
-                break;
+                return $this->loadOtherPartner($oldMainPersonID, $order, $order2);
             case 'partnerin_des_vaters':
-                
-                break;
+                return $this->loadPartnerOfFather($oldMainPersonID, $order, $order2);
             case 'partner_der_mutter':
-                
-                break;
+                return $this->loadPartnerOfMother($oldMainPersonID, $order, $order2);
             case 'ehepartner_des_geschwisters':
-                
-                break;
+                return $this->loadMarriagePartnerOfSibling($oldMainPersonID, $order, $order2);
             case 'geschwisterkind':
-                
-                break;
+                return $this->loadChildOfSibling($oldMainPersonID, $order, $order2, $order3);
             case 'ehepartner_des_kindes':
                 
                 break;
@@ -295,7 +287,7 @@ class OldPersonLoader {
         $data = array();
         $data['person'] = $this->createPersonArray('männlich', $entry['name'], $entry['vornamen'], null,null,null, $entry['nation'], $entry['beruf'],null,null, $entry['kommentar']);
         $data['herkunft'] = array();
-        $data['tod'] = $this->createTodArray(null,null,$entry['gestorben']);
+        $data['tod'] = $this->createTodArray(null,null,null,$entry['gestorben']);
         $data['ausbildung'] = array();
         $data['ehre'] = array();
         $data['eigentum'] = array();
@@ -368,7 +360,7 @@ class OldPersonLoader {
         $data = array();
         $data['person'] = $this->createPersonArray('männlich', $entry['name'], $entry['vornamen'], null,null,null, $entry['nation'], $entry['beruf'],null,null, $entry['kommentar']);
         $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren']);
-        $data['tod'] = $this->createTodArray(null,null,$entry['gestorben']);
+        $data['tod'] = $this->createTodArray(null,null,null,$entry['gestorben']);
         $data['ausbildung'] = array();
         $data['ehre'] = array();
         $data['eigentum'] = array();
@@ -444,7 +436,7 @@ class OldPersonLoader {
         $data = array();
         $data['person'] = $this->createPersonArray('männlich', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, $entry['nation'], $entry['beruf'],null,$entry['ehelich'], $entry['kommentar']);
         $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],$entry['herkunftsterritorium'],$entry['herkunftsland'],$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren'],$entry['taufort'],$entry['getauft']);
-        $data['tod'] = $this->createTodArray($entry['todesort'],$entry['todesterritorium'],null,$entry['gestorben'],null,$entry['friedhof'],$entry['begräbnisort'],$entry['begraben']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],$entry['todesterritorium'],null,$entry['gestorben'],null,null,$entry['begräbnisort'],$entry['begraben']);
         $data['ausbildung'] = $this->asArray($this->createAusbildungsArray($entry['ausbildung']));
         $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
         $data['eigentum'] = $this->asArray($this->createEigentumArray($entry['besitz']));
@@ -676,7 +668,7 @@ class OldPersonLoader {
                 bildungsabschluss, kommentar
                 FROM `ehepartner` WHERE ID=:personID AND `order` = :order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
@@ -691,7 +683,7 @@ class OldPersonLoader {
         $data = array();
         $data['person'] = $this->createPersonArray('unbekannt', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, $entry['nation'], $entry['beruf'],null,null, $entry['kommentar']);
         $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],$entry['herkunftsterritorium'],$entry['herkunftsland'],$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren'],$entry['taufort'],$entry['getauft']);
-        $data['tod'] = $this->createTodArray($entry['todesort'],$entry['todesterritorium'],$entry['todesursache'],$entry['gestorben'],null,$entry['friedhof'],$entry['begräbnisort'],$entry['begraben']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],$entry['todesterritorium'],null,$entry['gestorben'],$entry['todesursache'],$entry['friedhof'],$entry['begräbnisort'],$entry['begraben']);
         $data['ausbildung'] = $this->asArray($this->createAusbildungsArray(null,null,null,null,$entry['bildungsabschluss']));
         $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
         $data['eigentum'] = $this->asArray($this->createEigentumArray($entry['besitz']));
@@ -706,7 +698,7 @@ class OldPersonLoader {
         return $data;
     }
     
-    private function loadDataForKind($oldMainPersonID, $order, $order2){
+    private function loadDataForChild($oldMainPersonID, $order, $order2){
         $sql = "SELECT vornamen, russ_vornamen, name, rufnamen, geboren, geburtsort, geschlecht, kommentar
                 FROM `kind` WHERE ID=:personID AND `order` = :order AND `order2`=:order2";
 
@@ -792,7 +784,7 @@ class OldPersonLoader {
             for ($i = 0; $i < count($childDeath); $i++) {
                 $death = $childDeath[$i];
                 //death
-                $data['tod'] = $this->createTodArray($death['todesort'], $death['todesterritorium'], $death['todesland'], $death["todesursache"], $death["gestorben"], $death["friedhof"], $death["begräbnisort"], $death["begraben"], $death["kommentar"]);
+                $data['tod'] = $this->createTodArray($death['todesort'], $death['todesterritorium'], $death['todesland'], $death["gestorben"], $death["todesursache"], $death["friedhof"], $death["begräbnisort"], $death["begraben"], $death["kommentar"]);
             }
         }
         
@@ -991,6 +983,263 @@ class OldPersonLoader {
 
 
         return $stmt->fetchAll();
+    }
+    
+    private function loadFatherInLaw($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, russ_vornamen, name, geboren, gestorben, todesort, 
+            begraben, begräbnisort, ehelich, wohnort, wohnland, wohnterritorium, nation, 
+            getauft, taufort, konfession, herkunftsort, herkunftsterritorium, bildungsabschluss, beruf, 
+            rang, ehren, stand, besitz, kommentar
+                FROM `schwiegervater` WHERE ID=:personID AND `order` = :order AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for schwiegervater");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('männlich', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],null,null, $entry['nation'], $entry['beruf'],null,$entry['ehelich'], $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],$entry['herkunftsterritorium'],null,null,null,null,$entry['geboren'],$entry['taufort'],$entry['getauft']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],null,null,$entry['gestorben'],null,null,$entry['begräbnisort'],$entry['begraben']);
+        $data['ausbildung'] = $this->asArray($this->createAusbildungsArray(null,null,null,null,$entry['bildungsabschluss']));
+        $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
+        $data['eigentum'] = $this->asArray($this->createEigentumArray($entry['besitz']));
+        $data['rang'] = $this->asArray($this->createRangArray($entry['rang']));
+        $data['religion'] = $this->asArray($this->createReligionArray($entry['konfession']));
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = $this->asArray($this->createWohnungArray($entry['wohnland'], $entry['wohnterritorium'], $entry['wohnort']));
+        
+        return $data;
+    }
+    
+    private function loadMotherInLaw($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, russ_vornamen, name, geboren, geburtsort, 
+            gestorben, todesort, nation, ehelich, herkunftsort, beruf, stand, kommentar
+                FROM `schwiegermutter` WHERE ID=:personID AND `order` = :order  AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for schwiegermutter");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('weiblich', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],null,null, $entry['nation'], $entry['beruf'],null,$entry['ehelich'], $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],null,null,$entry['geburtsort'],null,null,$entry['geboren']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],null,null,$entry['gestorben']);
+        $data['ausbildung'] =  array();
+        $data['ehre'] = array();
+        $data['eigentum'] =  array();
+        $data['rang'] =  array();
+        $data['religion'] =  array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+        
+        return $data;
+    }
+    
+    private function loadOtherPartner($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, russ_vornamen, name,
+            geboren, geburtsort, gestorben, todesort, friedhof, herkunftsort, 
+            herkunftsterritorium, konfession,  beruf, 
+            stand, rang, ehren, besitz, bildungsabschluss,  kommentar
+        FROM `anderer_partner` WHERE ID=:personID AND `order` = :order  AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for anderer_partner");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('unbekannt', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],null,null, null, $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],$entry['herkunftsterritorium'],null,$entry['geburtsort'],null,null,$entry['geboren']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],null,null,$entry['gestorben'],null,$entry['friedhof'],null,$entry['begraben']);
+        $data['ausbildung'] = $this->asArray($this->createAusbildungsArray(null,null,null,null,$entry['bildungsabschluss']));
+        $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
+        $data['eigentum'] = $this->asArray($this->createEigentumArray($entry['besitz']));
+        $data['rang'] = $this->asArray($this->createRangArray($entry['rang']));
+        $data['religion'] = $this->asArray($this->createReligionArray($entry['konfession']));
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+       
+        return $data;
+    }
+    
+    private function loadPartnerOfFather($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, name, geboren, geburtsort, getauft, 
+        taufort, gestorben, todesort, beruf, stand, kommentar
+        FROM `partnerin_des_vaters` WHERE ID=:personID AND `order` = :order  AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for partnerin_des_vaters");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('weiblich', $entry['name'], $entry['vornamen'], null,null,null, null, $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],null,null,$entry['geboren'], $entry['taufort'], $entry['getauft']);
+        $data['tod'] = $this->createTodArray($entry['todesort'],null,null,$entry['gestorben']);
+        $data['ausbildung'] = array();
+        $data['ehre'] = array();
+        $data['eigentum'] = array();
+        $data['rang'] = array();
+        $data['religion'] = array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+       
+        return $data;
+    }
+    
+    private function loadPartnerOfMother($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, name,  rang, beruf, stand, kommentar
+        FROM `partner_der_mutter` WHERE ID=:personID AND `order` = :order  AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for partner_der_mutter");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('männlich', $entry['name'], $entry['vornamen'], null,null,null, null, $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = array();
+        $data['tod'] = array();
+        $data['ausbildung'] = array();
+        $data['ehre'] = array();
+        $data['eigentum'] = array();
+        $data['rang'] = $this->asArray($this->createRangArray($entry['rang']));
+        $data['religion'] = array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+       
+        return $data;
+    }
+    
+    private function loadMarriagePartnerOfSibling($oldMainPersonID, $order, $order2){
+        $sql = "SELECT vornamen, russ_vornamen, name, geboren, herkunftsort, 
+        gestorben, begraben, begräbnisort, friedhof, konfession, bildungsabschluss, stand, beruf, 
+        ehren, rang, kommentar
+        FROM `ehepartner_des_geschwisters` WHERE ID=:personID AND `order` = :order AND `order2` = :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for ehepartner_des_geschwisters");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray('unbekannt', $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],null,null, null, $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray($entry['herkunftsort'],null,null,null,null,null,$entry['geboren']);
+        $data['tod'] = $this->createTodArray(null,null,null,$entry['gestorben'],null,$entry['friedhof'],$entry['begräbnisort'],$entry['begraben']);
+        $data['ausbildung'] = $this->asArray($this->createAusbildungsArray(null,null,null,null,$entry['bildungsabschluss']));
+        $data['ehre'] = $this->asArray($this->createEhreArray($entry['ehren']));
+        $data['eigentum'] = array();
+        $data['rang'] = $this->asArray($this->createRangArray($entry['rang']));
+        $data['religion'] = $this->asArray($this->createReligionArray($entry['konfession']));
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = $this->asArray($this->createStatusArray($entry['stand']));
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+       
+        return $data;
+    }
+    
+    private function loadChildOfSibling($oldMainPersonID, $order, $order2, $order3){
+        $sql = "SELECT vornamen, name, geschlecht, geboren, 
+        geburtsort, getauft, taufort, gestorben, beruf, kommentar
+        FROM `geschwisterkind` WHERE ID=:personID AND `order` = :order AND `order2` = :order2 AND `order3` = :order3";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldMainPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->bindValue('order3', $order3);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for geschwisterkind");
+        }
+        
+        $entry = $dbData[0];
+        $data = array();
+        $data['person'] = $this->createPersonArray($entry['geschlecht'], $entry['name'], $entry['vornamen'], null,null,null, null, $entry['beruf'],null,null, $entry['kommentar']);
+        $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],null,null,$entry['geboren'], $entry['taufort'], $entry['getauft']);
+        $data['tod'] = $this->createTodArray(null,null,null,$entry['gestorben']);
+        $data['ausbildung'] = array();
+        $data['ehre'] = array();
+        $data['eigentum'] = array();
+        $data['rang'] = array();
+        $data['religion'] = array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = array();
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+       
+        return $data;
     }
     
     private function asArray($element){
