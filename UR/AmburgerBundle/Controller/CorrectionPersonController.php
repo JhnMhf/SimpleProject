@@ -72,8 +72,18 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
         
         if(is_null($person)){
-            //@TODO: Enable loading of data for other persons
-            return array();
+            $systemDBManager = $this->get('doctrine')->getManager('system');
+            
+            $originOfData = $systemDBManager->getRepository('AmburgerBundle:OriginOfData')->findOneBy(array('person_id' => $ID));
+            
+            if(is_null($originOfData)){
+                throw new \Exception("Person with ID: ".$ID." is not in the system.");
+            }
+            
+            $serializer = $this->get('serializer');
+            $originOfDataElement = $serializer->deserialize(stream_get_contents($originOfData->getData()),'array', 'json');
+            
+            return $this->get('old_db_loader.service')->loadRelativeOrPartner($originOfDataElement);
         }
         
         return $this->get('old_db_loader.service')->loadPersonByOID($person->getOid());
