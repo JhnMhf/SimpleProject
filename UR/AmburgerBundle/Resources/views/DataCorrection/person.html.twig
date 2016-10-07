@@ -2041,8 +2041,10 @@
         <div class="row wedding-row">
                 <input type="hidden" name="id" value="<%= typeof(weddingObj['id']) !== 'undefined' ?  weddingObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(weddingObj['wedding_order']) !== 'undefined' ?  weddingObj['wedding_order'] : '' %>">
-                <input type="hidden" name="order" value="<%= typeof(weddingObj['husband_id']) !== 'undefined' ?  weddingObj['husband_id'] : '' %>">
-                <input type="hidden" name="order" value="<%= typeof(weddingObj['wife_id']) !== 'undefined' ?  weddingObj['wife_id'] : '' %>">
+                <input type="hidden" name="husband_id" value="<%= typeof(weddingObj['husband_id']) !== 'undefined' ?  weddingObj['husband_id'] : '' %>">
+                <input type="hidden" name="wife_id" value="<%= typeof(weddingObj['wife_id']) !== 'undefined' ?  weddingObj['wife_id'] : '' %>">
+                <label class="lastname">Nachname des Ehepartners<input type="text" name="lastname" value="<%= typeof(weddingObj['last_name']) !== 'undefined' ?  weddingObj['last_name'] : '' %>" disabled/></label>
+                <label class="firstname">Vorname des Ehepartners<input type="text" name="firstname" value="<%= typeof(weddingObj['first_name']) !== 'undefined' ?  weddingObj['first_name'] : '' %>" disabled></label>
                 <label class="wedding-territory">Hochzeitsterritorium
                     <% if(typeof(weddingObj['wedding_territory']) !== 'undefined') { 
                         var territoryTemplate = _.template($("script#territory").html());
@@ -2175,6 +2177,8 @@
             <input type="hidden" name="order" value="<%= typeof(weddingObj['wedding_order']) !== 'undefined' ?  weddingObj['wedding_order'] : '' %>">
             <input type="hidden" name="order" value="<%= typeof(weddingObj['husband_id']) !== 'undefined' ?  weddingObj['husband_id'] : '' %>">
             <input type="hidden" name="order" value="<%= typeof(weddingObj['wife_id']) !== 'undefined' ?  weddingObj['wife_id'] : '' %>">
+            <label class="lastname">Nachname des Ehepartners<input type="text" name="lastname" value="<%= typeof(weddingObj['last_name']) !== 'undefined' ?  weddingObj['last_name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label class="firstname">Vorname des Ehepartners<input type="text" name="firstname" value="<%= typeof(weddingObj['first_name']) !== 'undefined' ?  weddingObj['first_name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             <label class="wedding-territory">Hochzeitsterritorium<input type="text" name="territory" value="<%= typeof(weddingObj['wedding_territory']) !== 'undefined' ?  weddingObj['wedding_territory'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             <label class="wedding-location">Hochzeitsort<input type="text" name="location" value="<%= typeof(weddingObj['wedding_location']) !== 'undefined' ?  weddingObj['wedding_location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             <label class="wedding-date">Hochzeitstag<input type="text" name="provenDate" value="<%= typeof(weddingObj['wedding_date']) !== 'undefined' ?  weddingObj['wedding_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     

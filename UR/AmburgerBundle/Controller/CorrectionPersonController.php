@@ -191,22 +191,81 @@ class CorrectionPersonController extends Controller implements CorrectionSession
     }
     
     private function loadWeddingFromOldDB($ID){
+        //for main person find it over the oid.
+        $sql = "SELECT vornamen, name,`order`, nation, aufgebot, 
+                verheiratet,  hochzeitstag, hochzeitsort, hochzeitsterritorium, 
+                auflösung, gelöst, `vorher-nachher`
+                FROM OldAmburgerDB.`ehepartner` 
+                WHERE ID=
+                (SELECT id FROM OldAmburgerDB.ids 
+                    WHERE oid = 
+                    (SELECT oid FROM FinalAmburgerDB.person WHERE id = :personID)
+                )";
+
+        $stmt = $this->get('doctrine')->getManager('old')->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $ID);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+        
         return array();
     }
     
    private function loadWeddingFromNewDB($ID){
         $newDBManager = $this->get('doctrine')->getManager('new');
+       
+        $data = array();
+
+        $data['weddings'] = $this->internalLoadWeddingData($newDBManager, $ID);
         
-        $weddings = $newDBManager->getRepository('NewBundle:Wedding')->loadWeddingsForHusband($ID);
+        $data['personData'] = array();
         
-        return !is_null($weddings) ? $weddings : array();
+        for($i = 0; $i < count($data['weddings']); $i++){
+            $data['personData'][] = $this->loadFirstnameAndLastnameById($newDBManager, $data['weddings'][$i]->getWifeId());
+        }
+        
+        return $data;
     }
     
     private function loadWeddingFromFinalDB($ID){
         $finalDBManager = $this->get('doctrine')->getManager('final');
+
+        $data = array();
         
-        $weddings = $finalDBManager->getRepository('NewBundle:Wedding')->loadWeddingsForHusband($ID);
+        $data['weddings'] = $this->internalLoadWeddingData($finalDBManager, $ID);
         
+        $data['personData'] = array();
+        
+        for($i = 0; $i < count($data['weddings']); $i++){
+            $data['personData'][] = $this->loadFirstnameAndLastnameById($finalDBManager, $data['weddings'][$i]->getWifeId());
+        }
+        
+        return $data;
+    }
+    
+    private function internalLoadWeddingData($em, $ID){
+        $weddings = $em->getRepository('NewBundle:Wedding')->loadWeddingsForHusband($ID);
+         
         return !is_null($weddings) ? $weddings : array();
+    }
+    
+    private function loadFirstnameAndLastnameById($em, $personID){
+        $person = $em->getRepository('NewBundle:Person')->findOneById($personID);
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($personID);
+        }
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($personID);
+        }
+                
+        $personData = array();
+        
+        $personData['id'] = $personID;
+        $personData['first_name'] = $person->getFirstName();
+        $personData['last_name'] = $person->getLastName();
+        
+        return $personData;
     }
 }

@@ -22,13 +22,30 @@ PersonCorrection.BasePersonViewGenerator = (function(){
 
         var data = [];
         
-        data['weddings'] = weddingData;
+        data['weddings'] = extractWeddingData(weddingData);
         
         if(enabled){
             data['enabled'] = true;
         }
         
         $(insertId  + " .wedding-container").append(template(data));
+    },
+    
+    extractWeddingData = function(weddingData){
+        var weddingDataArray = weddingData['weddings'];
+        var personDataArray = weddingData['personData'];
+        
+        
+        for(var i = 0; i < weddingDataArray.length; i++){
+            var weddingDataObj = weddingDataArray[i];
+            var personDataObj = personDataArray[i];
+            
+            weddingDataObj['first_name'] = personDataObj['first_name'];
+            weddingDataObj['last_name'] = personDataObj['last_name'];
+        }
+        
+        
+        return weddingDataArray;
     },
     
     displayPerson = function(insertId, personData, enabled){

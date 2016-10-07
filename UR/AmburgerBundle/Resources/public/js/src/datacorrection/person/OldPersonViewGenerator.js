@@ -33,9 +33,19 @@ PersonCorrection.OldPersonViewGenerator = (function(){
         var data = [];
         
         for(var i = 0; i < weddingData.length; i++){
-            var weddingElement = [];
+            var weddingElement = {};
             
-
+            weddingElement['last_name'] = weddingData[i]['name'];
+            weddingElement['first_name'] = weddingData[i]['vornamen'];
+            weddingElement['wedding_order'] = weddingData[i]['order'];
+            weddingElement['wedding_territory'] = weddingData[i]['hochzeitsterritorium'];
+            weddingElement['wedding_location'] = weddingData[i]['hochzeitsort'];
+            weddingElement['wedding_date'] = weddingData[i]['hochzeitstag'];
+            weddingElement['banns_date'] = weddingData[i]['aufgebot'];
+            weddingElement['breakup_reason'] = weddingData[i]['gelöst'];
+            weddingElement['breakup_date'] = weddingData[i]['auflösung'];
+            weddingElement['marriage_comment'] = weddingData[i]['verheiratet'];
+            weddingElement['before_after'] = weddingData[i]['vorher-nachher'];
             
             data[i] = weddingElement;
         }
