@@ -34,10 +34,6 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         $response["new"] = $this->loadNewPersonByID($ID);
         $response["final"] = $this->loadFinalPersonByID($ID);
         
-        if(is_null($response["final"])){
-            $response["final"] = $response["new"];
-        }
-        
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');
         $jsonResponse = new JsonResponse();
@@ -50,14 +46,17 @@ class CorrectionPersonController extends Controller implements CorrectionSession
     public function loadWeddingAction($ID){
         $this->getLogger()->debug("Loading wedding data for ID: ".$ID);
         $response = array();
+        $newDB =  $this->loadWeddingFromNewDB($ID);
         
-        $response["old"] =  $this->loadWeddingFromOldDB($ID);
-        $response["new"] = $this->loadWeddingFromNewDB($ID);
-        $response["final"] = $this->loadWeddingFromFinalDB($ID);
-        
-        if(is_null($response["final"])){
-            $response["final"] = $response["new"];
+        //this is easier to filter to load the weddings only for the male persons
+        if(count($newDB) > 0){
+            $response["old"] =  $this->loadWeddingFromOldDB($ID);
+        } else{
+            $response["old"] = array();
         }
+        
+        $response["new"] = $newDB;
+        $response["final"] = $this->loadWeddingFromFinalDB($ID);
         
         $serializer = $this->get('serializer');
         $json = $serializer->serialize($response, 'json');
@@ -201,24 +200,39 @@ class CorrectionPersonController extends Controller implements CorrectionSession
     }
     
     private function loadWeddingFromOldDB($ID){
-        //for main person find it over the oid.
-        $sql = "SELECT vornamen, name,`order`, nation, aufgebot, 
-                verheiratet,  hochzeitstag, hochzeitsort, hochzeitsterritorium, 
-                auflösung, gelöst, `vorher-nachher`
-                FROM OldAmburgerDB.`ehepartner` 
-                WHERE ID=
-                (SELECT id FROM OldAmburgerDB.ids 
-                    WHERE oid = 
-                    (SELECT oid FROM FinalAmburgerDB.person WHERE id = :personID)
-                )";
-
-        $stmt = $this->get('doctrine')->getManager('old')->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $ID);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+        $finalDBManager = $this->get('doctrine')->getManager('final');
+        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
         
-        return array();
+        if(is_null($person)){
+            $systemDBManager = $this->get('doctrine')->getManager('system');
+            
+            $originOfData = $systemDBManager->getRepository('AmburgerBundle:OriginOfData')->findOneBy(array('person_id' => $ID));
+            
+            if(is_null($originOfData)){
+                throw new \Exception("Person with ID: ".$ID." is not in the system.");
+            }
+            
+            $serializer = $this->get('serializer');
+            $originOfDataElement = $serializer->deserialize(stream_get_contents($originOfData->getData()),'array', 'json');
+            
+            return $this->get('old_db_loader.service')->loadWeddingOfRelativeOrPartner($originOfDataElement);
+        } else {
+            //for main person find it over the oid.
+            $sql = "SELECT vornamen, name,`order`, aufgebot, 
+                    verheiratet,  hochzeitstag, hochzeitsort, hochzeitsterritorium, 
+                    auflösung, gelöst, `vorher-nachher`
+                    FROM OldAmburgerDB.`ehepartner` 
+                    WHERE ID=
+                    (SELECT id FROM OldAmburgerDB.ids 
+                        WHERE oid = :personOid
+                    )";
+
+            $stmt = $this->get('doctrine')->getManager('old')->getConnection()->prepare($sql);
+            $stmt->bindValue('personOid', $person->getOid());
+            $stmt->execute();
+
+            return $stmt->fetchAll();
+        }
     }
     
    private function loadWeddingFromNewDB($ID){
