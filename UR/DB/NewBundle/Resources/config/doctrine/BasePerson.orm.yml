@@ -66,6 +66,7 @@ UR\DB\NewBundle\Entity\BasePerson:
             options:
                 fixed: false
                 default: null
+            column: gender_comment
         comment:
             type: text
             nullable: true

@@ -1,6 +1,6 @@
 UR\DB\NewBundle\Entity\Source:
     type: entity
-    table: source
+    table: source_information
     options:
         collate: utf8_general_ci
         charset: utf8
