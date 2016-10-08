@@ -29,7 +29,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         $this->getLogger()->info("loadPersonAction called: ".$ID);
         $finalDBManager = $this->get('doctrine')->getManager('final');
         
-        $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);
+        $person = $this->loadPerson($finalDBManager,$ID);
         
         $serializer = $this->container->get('serializer');
         $json = $serializer->serialize($person, 'json');
@@ -37,6 +37,21 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
         $response->setContent($json);
         
         return $response;
+    }
+    
+    private function loadPerson($em, $ID){
+        
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+                
+        return !is_null($person) ? $person : array();
     }
     
     public function loadDirectRelativesAction($ID)

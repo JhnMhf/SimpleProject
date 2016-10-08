@@ -138,7 +138,7 @@ class CorrectionPersonController extends Controller implements CorrectionSession
             $serializer = $this->get('serializer');
             
 
-            $personEntity = $serializer->deserialize($content,'UR\DB\NewBundle\Entity\Person', 'json');
+            $personEntity = $serializer->deserialize($content, $this->getClassName($this->get('doctrine')->getManager('final'), $ID), 'json');
             
             if($personEntity->getId() == $ID){
                 $em = $this->get('doctrine')->getManager('final');
@@ -277,5 +277,27 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         $personData['last_name'] = $person->getLastName();
         
         return $personData;
+    }
+    
+    private function getClassName($em, $personID){
+        $person = $em->getRepository('NewBundle:Person')->findOneById($personID);
+        
+        if(!is_null($person)){
+            return 'UR\DB\NewBundle\Entity\Person';
+        }
+        
+        $person = $em->getRepository('NewBundle:Relative')->findOneById($personID);
+        
+        if(!is_null($person)){
+            return 'UR\DB\NewBundle\Entity\Relative';
+        }
+        
+        $person = $em->getRepository('NewBundle:Partner')->findOneById($personID);
+        
+        if(!is_null($person)){
+            return 'UR\DB\NewBundle\Entity\Partner';
+        }
+        
+        throw new \Exception("Couldn't find data for ID: ".$personID);
     }
 }

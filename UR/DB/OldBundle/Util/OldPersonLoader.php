@@ -471,6 +471,19 @@ class OldPersonLoader {
      private function createSibling($entry,$order, $oldPersonID, $oldDBManager) {
         $data = array();
         $data['person'] = $this->createPersonArray($entry['geschlecht'], $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, null, null,null,null, $entry['kommentar']);
+        $data['herkunft'] = array();
+        $data['tod'] = array();
+        $data['ausbildung'] = array();
+        $data['ehre'] = array();
+        $data['eigentum'] = array();
+        $data['rang'] = array();
+        $data['religion'] = array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = array();
+        $data['werke'] = array();
+        $data['wohnung'] = array();
+        
         
         //additional data
         $siblingEducation = $this->getSiblingsEducationWithNativeQuery($oldPersonID, $order, $oldDBManager);
@@ -497,7 +510,6 @@ class OldPersonLoader {
             }
         }
 
-        
         if (count($siblingDeath) > 0) {
             //death
             for ($i = 0; $i < count($siblingDeath); $i++) {
@@ -515,7 +527,7 @@ class OldPersonLoader {
         }
 
         if (count($siblingEducation) > 0) {
-            $data['ausbildung'] = array();
+            
             //education
             for ($i = 0; $i < count($siblingEducation); $i++) {
                 $education = $siblingEducation[$i];
@@ -524,7 +536,7 @@ class OldPersonLoader {
         }
 
         if (count($siblingHonour) > 0) {
-            $data['ehre'] = array();
+            
             //honour
             for ($i = 0; $i < count($siblingHonour); $i++) {
                 $honour = $siblingHonour[$i];
@@ -533,7 +545,7 @@ class OldPersonLoader {
         }
 
         if (count($siblingRoadOfLife) > 0) {
-            $data['lebensweg'] = array();
+            
             //roadOfLife
             for ($i = 0; $i < count($siblingRoadOfLife); $i++) {
                 $step = $siblingRoadOfLife[$i];
@@ -541,9 +553,8 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($siblingRank) > 0) {
-            $data['rang'] = array();
+           
             //rank
             for ($i = 0; $i < count($siblingRank); $i++) {
                 $rank = $siblingRank[$i];
@@ -551,9 +562,8 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($siblingStatus) > 0) {
-            $data['status'] = array();
+            
             //status
             for ($i = 0; $i < count($siblingStatus); $i++) {
                 $status = $siblingStatus[$i];
@@ -715,10 +725,21 @@ class OldPersonLoader {
         return $this->createKind($entry, $oldMainPersonID, $order, $order2, $this->getOldDBManager());
     }
     
-    private function createKind($entry, $oldPersonId, $order, $order2, $oldDBManager){
+    private function createKind($entry, $oldPersonID, $order, $order2, $oldDBManager){
         $data = array();
         $data['person'] = $this->createPersonArray($entry['geschlecht'], $entry['name'], $entry['vornamen'], $entry['russ_vornamen'],$entry['rufnamen'],null, null, null,null,null, $entry['kommentar']);
-        
+        $data['herkunft'] = array();
+        $data['tod'] = array();
+        $data['ausbildung'] = array();
+        $data['ehre'] = array();
+        $data['eigentum'] = array();
+        $data['rang'] = array();
+        $data['religion'] = array();
+        $data['lebensweg'] = array();
+        $data['quellen'] = array();
+        $data['status'] = array();
+        $data['werke'] = array();
+        $data['wohnung'] = array();
 
         //additional data
         $childEducation = $this->getChildsEducationWithNativeQuery($oldPersonID, $order, $order2, $oldDBManager);
@@ -783,9 +804,7 @@ class OldPersonLoader {
                 $data['tod'] = $this->createTodArray($death['todesort'], $death['todesterritorium'], $death['todesland'], $death["gestorben"], $death["todesursache"], $death["friedhof"], $death["begräbnisort"], $death["begraben"], $death["kommentar"]);
             }
         }
-        
         if (count($childEducation) > 0) {
-            $data['ausbildung'] = array();
             //education
             for ($i = 0; $i < count($childEducation); $i++) {
                 $education = $childEducation[$i];
@@ -793,9 +812,7 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($childProperty) > 0) {
-            $data['eigentum'] = array();
             //property
             for ($i = 0; $i < count($childProperty); $i++) {
                 $property = $childProperty[$i];
@@ -803,18 +820,16 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($childHonour) > 0) {
-            $data['ehren'] = $array();
             //honour
             for ($i = 0; $i < count($childHonour); $i++) {
                 $honour = $childHonour[$i];
-                $data['ehren'][] = $this->createEhreArray($honour['ehren'],$honour["ort"],null,$honour["land"], $honour["von-ab"]);
+                $data['ehre'][] = $this->createEhreArray($honour['ehren'],$honour["ort"],null,$honour["land"], $honour["von-ab"]);
             }
         }
 
         if (count($childRoadOfLife) > 0) {
-            $data['lebensweg'] = array();
+            
             //roadOfLife
             for ($i = 0; $i < count($childRoadOfLife); $i++) {
                 $step = $childRoadOfLife[$i];
@@ -822,9 +837,8 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($childRank) > 0) {
-            $data['rang'] = array();
+            
             //rank
             for ($i = 0; $i < count($childRank); $i++) {
                 $rank = $childRank[$i];
@@ -834,7 +848,6 @@ class OldPersonLoader {
 
         //religion
         if (count($childReligion) > 0) {
-            $data['religion'] = array();
             //religion
             for ($i = 0; $i < count($childReligion); $i++) {
                 $religion = $childReligion[$i];
@@ -842,9 +855,7 @@ class OldPersonLoader {
             }
         }
 
-
         if (count($childStatus) > 0) {
-            $data['status'] = array();
             //status
             for ($i = 0; $i < count($childStatus); $i++) {
                 $status = $childStatus[$i];

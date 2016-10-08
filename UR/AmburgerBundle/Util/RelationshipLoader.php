@@ -17,6 +17,8 @@ use UR\DB\NewBundle\Utils\PersonClasses;
  */
 class RelationshipLoader {
 
+    const MAX_TIMES_OF_RECURSION = 30;
+    
     private $LOGGER;
     private $container;
 
@@ -60,10 +62,12 @@ class RelationshipLoader {
 
         $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
 
+        $i = 0;
         do {
             $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
             $this->loadRelativesWhichWereNotLoadedYet($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
-        } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
+            $i++;
+        } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded) && $i < MAX_TIMES_OF_RECURSION);
 
         $this->getLogger()->info("loadRelatives end: " . $id);
             
@@ -79,10 +83,12 @@ class RelationshipLoader {
 
         $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
 
+        $i = 0;
         do {
             $numberOfCurrentlyLoadedRelatives = count($alreadyLoaded);
             $this->loadRelativesWhichWereNotLoadedYet($em, $relatives, $alreadyLoaded, $skipRelativesForPersons);
-        } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded));
+            $i++;
+        } while ($numberOfCurrentlyLoadedRelatives < count($alreadyLoaded)  && $i < MAX_TIMES_OF_RECURSION);
 
         $this->getLogger()->info("loadOnlyRelativeIds end: " . $id);
 

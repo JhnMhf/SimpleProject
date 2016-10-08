@@ -42,6 +42,8 @@ class PossibleRelativesFinder {
             throw new Exception("No person with ID '".$ID."' is saved in the database.");
         }
         
+        $this->getLogger()->info("Searching possible Relatives for: ".$person);
+        
         $possibleRelatives = $this->loadPossibleRelatives($em, $person->getGender(), $person->getFirstName(), $person->getLastName(), $person->getPatronym());
         
         //remove the person itself
@@ -117,23 +119,30 @@ class PossibleRelativesFinder {
    }
     
     private function loadPossibleRelatives($em, $gender, $firstName, $lastName, $patronym){
+        $this->getLogger()->debug("Searching for Person with firstName: '".$firstName."', patronym: '".$patronym."' and lastName: '".$lastName."'");
         $possibleRelatives = array();
-        if(!is_null($lastName)){
+        if(!is_null($lastName) && trim($lastName) != ''){
             $this->getLogger()->info("Person with firstName: '".$firstName."', patronym: '".$patronym."' and lastName: '".$lastName."' loaded.");
             $matchingPatronyms = $this->generateMatchingPatronyms($gender, $firstName, $patronym);
             $matchingFirstNames = $this->generateMatchingFirstNames($gender, $firstName, $patronym);
             
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'person', $lastName, $matchingPatronyms, $matchingFirstNames));
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'partner', $lastName, $matchingPatronyms, $matchingFirstNames));
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'relative', $lastName, $matchingPatronyms, $matchingFirstNames));
-        }  else if(is_null($lastName) && (!is_null($firstName) || !is_null($lastName))){
+            if(count($matchingFirstNames) > 0 && count($matchingPatronyms) > 0){
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'person', $lastName, $matchingPatronyms, $matchingFirstNames));
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'partner', $lastName, $matchingPatronyms, $matchingFirstNames));
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithLastName($em, 'relative', $lastName, $matchingPatronyms, $matchingFirstNames));
+            }
+        }  else if((!is_null($firstName) && trim($firstName) != '') 
+                    || (!is_null($patronym) && trim($patronym) != '')
+                ){
             $this->getLogger()->info("Person  with firstName: '".$firstName.", patronym: '".$patronym."' and without lastName loaded.");
             $matchingPatronyms = $this->generateMatchingPatronyms($gender,$firstName, $patronym);
             $matchingFirstNames = $this->generateMatchingFirstNames($gender, $firstName, $patronym);
             
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'person', $matchingPatronyms, $matchingFirstNames));
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'partner', $matchingPatronyms, $matchingFirstNames));
-            $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'relative', $matchingPatronyms, $matchingFirstNames));
+            if(count($matchingFirstNames) > 0 && count($matchingPatronyms) > 0){
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'person', $matchingPatronyms, $matchingFirstNames));
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'partner', $matchingPatronyms, $matchingFirstNames));
+                $possibleRelatives = array_merge($possibleRelatives, $this->loadWithoutLastName($em, 'relative', $matchingPatronyms, $matchingFirstNames));
+            }
         } else {
             $this->getLogger()->info("Person has no firstname, patronym and lastname.");
         }
@@ -146,7 +155,7 @@ class PossibleRelativesFinder {
         if($gender == \UR\DB\NewBundle\Utils\Gender::FEMALE){
            $this->getLogger()->debug("Not generating matching patronyms from firstNames for female persons.");
         } else {
-            if(!is_null($firstName)){
+            if(!is_null($firstName) && trim($firstName) != ''){
                 $this->getLogger()->debug("Generating matching patronyms from firstName: ".$firstName);
                 $firstNames = explode(" ", $firstName);
 
@@ -156,7 +165,7 @@ class PossibleRelativesFinder {
             }
         }
         
-        if(!is_null($patronym)){
+        if(!is_null($patronym) && trim($patronym) != ''){
             $matchingPatronyms[] = $patronym;
             $this->getLogger()->debug("generateMatchingPatronyms: Trying to extract firstName from patronym: ".$patronym);
             
@@ -181,7 +190,7 @@ class PossibleRelativesFinder {
     private function generateMatchingFirstNames($gender,$firstName, $patronym){
         $matchingFirstNames = array();
         
-        if(!is_null($patronym)){
+        if(!is_null($patronym) && trim($patronym) != ''){
             $this->getLogger()->debug("generateMatchingFirstNames: Trying to extract firstName from patronym: ".$patronym);
             
             $patronyms = explode(" ", $patronym);

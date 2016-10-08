@@ -25,7 +25,7 @@ class PersonSaver {
         $oldData = null;
         
         //@TODO: Current highest id?
-        $existingPerson = $this->loadFinalPersonByOID($em, $personEntity->getOid());
+        $existingPerson = $this->loadPersonByID($em, $personEntity->getId());
         if(is_null($existingPerson)){
             //@TODO: Necessary only for testing? In the "real" case, the data should already exist and only be updated?
             //first persist if not existant
@@ -74,13 +74,24 @@ class PersonSaver {
         return $em->getRepository('NewBundle:Wedding')->findOneById($ID);
     }
     
-    private function loadFinalPersonByOID($em, $OID){
-        return $em->getRepository('NewBundle:Person')->findOneByOid($OID);
+    private function loadPersonByID($em, $ID){
+        
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+                
+        return $person;
     }
     
     private function preparePerson($em, $personEntity){
         
-        $this->LOGGER->info("Preparing Person for save: ".$personEntity->getId());
+        $this->LOGGER->info("Preparing Person for save: ".$personEntity);
         
         $personEntity->setNation($this->utilObjHandler->getNation($em, $personEntity->getNation()));
         $personEntity->setJob($this->utilObjHandler->getJob($em, $personEntity->getJob()));
@@ -149,13 +160,7 @@ class PersonSaver {
             $this->prepareRoadOfLife($em, $roadOfLifeArray[$i]);
             $roadOfLifeArray[$i]->setPerson($personEntity);
         }
-        
-        $sourceArray = $personEntity->getSources()->toArray();
-        
-        for($i = 0; $i < count($sourceArray); $i++){
-            $sourceArray[$i]->setPerson($personEntity);
-        }
-                
+
         $statusArray = $personEntity->getStati()->toArray();
         
         for($i = 0; $i < count($statusArray); $i++){
@@ -169,6 +174,16 @@ class PersonSaver {
             $this->prepareWorks($em, $worksArray[$i]);
             $worksArray[$i]->setPerson($personEntity);
         }
+
+        if(get_class($personEntity) == 'UR\DB\NewBundle\Entity\Person'){
+            $this->LOGGER->debug("Found person, preparing sources");
+            $sourceArray = $personEntity->getSources()->toArray();
+        
+            for($i = 0; $i < count($sourceArray); $i++){
+                $sourceArray[$i]->setPerson($personEntity);
+            }
+        }    
+       
     }
     
     private function prepareWedding($em, $wedding){
