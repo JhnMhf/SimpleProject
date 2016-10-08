@@ -4,15 +4,40 @@ namespace UR\AmburgerBundle\Util;
 
 class PossibleRelativesFinder {
     
+    const CSV_FILE = "@AmburgerBundle/Resources/files/patronym_exceptions.csv";
+    const DELIMITER = "=";
+    
     private $LOGGER;
     private $container;
     private $relationShipLoader;
+    
+    private $exceptionsMap;
     
     public function __construct($container)
     {
         $this->container = $container;
         $this->relationShipLoader = $this->get('relationship_loader.service');
-    } 
+        $this->createExceptionsMap();
+    }
+    
+    private function createExceptionsMap(){
+        $exceptionsMap = [];
+        
+        $path = $this->get('kernel')->locateResource(self::CSV_FILE);
+       
+        $lines = file($path);
+
+        foreach($lines as $line)
+        {
+            $splittedLine = explode(self::DELIMITER,$line);
+            $exceptionsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+        }
+        
+        $keys = array_map('strlen', array_keys($exceptionsMap));
+        array_multisort($keys, SORT_DESC, $exceptionsMap);
+        
+        $this->exceptionsMap = $exceptionsMap;
+    }
     
     private function get($identifier){
         return $this->container->get($identifier);
@@ -225,12 +250,19 @@ class PossibleRelativesFinder {
         $matchingPatronyms[] = $firstName."owič";
         $matchingPatronyms[] = $firstName."evna";
         $matchingPatronyms[] = $firstName."ewič";
+        
+        if(array_key_exists($firstName, $this->exceptionsMap)){
+            $matchingPatronyms[] = $this->exceptionsMap[$firstName];
+        }
             
         return $matchingPatronyms;
     }
     
     private function extractFirstNameFromPatronym($patronym){
-        if(stripos($patronym, "owna")){
+        $exceptionFirstname = array_search($patronym, $this->exceptionsMap);
+        if($exceptionFirstname){
+            return $exceptionFirstname;
+        } else if(stripos($patronym, "owna")){
             $pos = stripos($patronym, "owna");
             
             return substr($patronym, 0, $pos);
