@@ -243,13 +243,19 @@ class PossibleRelativesFinder {
     private function generatePatronymsFromFirstName($firstName){
         $matchingPatronyms = array();
         $matchingPatronyms[] = $firstName."owna";
-        $matchingPatronyms[] = $firstName."owitsch";
-        $matchingPatronyms[] = $firstName."ewna";
-        $matchingPatronyms[] = $firstName."ewitsch";
         $matchingPatronyms[] = $firstName."ovna";
-        $matchingPatronyms[] = $firstName."owič";
+        $matchingPatronyms[] = $firstName."ewna";
         $matchingPatronyms[] = $firstName."evna";
+        $matchingPatronyms[] = $firstName."ična";
+        $matchingPatronyms[] = $firstName."inična";
+        $matchingPatronyms[] = $firstName."owič";
+        $matchingPatronyms[] = $firstName."ovič";
+        $matchingPatronyms[] = $firstName."owitsch";
         $matchingPatronyms[] = $firstName."ewič";
+        $matchingPatronyms[] = $firstName."evič";
+        $matchingPatronyms[] = $firstName."ewitsch";
+        $matchingPatronyms[] = $firstName."ič";
+        $matchingPatronyms[] = $firstName."itsch";
         
         if(array_key_exists($firstName, $this->exceptionsMap)){
             $matchingPatronyms[] = $this->exceptionsMap[$firstName];
@@ -266,32 +272,56 @@ class PossibleRelativesFinder {
             $pos = stripos($patronym, "owna");
             
             return substr($patronym, 0, $pos);
-        } else if(stripos($patronym, "owitsch")){
-            $pos = stripos($patronym, "owitsch");
+        } else if(stripos($patronym, "ovna")){
+            $pos = stripos($patronym, "ovna");
             
             return substr($patronym, 0, $pos);
-        }else if(stripos($patronym, "ewna")){
+        } else if(stripos($patronym, "ewna")){
             $pos = stripos($patronym, "ewna");
             
             return substr($patronym, 0, $pos);
-        }else if(stripos($patronym, "ewitsch")){
-            $pos = stripos($patronym, "ewitsch");
+        } else if(stripos($patronym, "evna")){
+            $pos = stripos($patronym, "evna");
             
             return substr($patronym, 0, $pos);
-        }else if(stripos($patronym, "ovna")){
-            $pos = stripos($patronym, "ovna");
+        }else if(stripos($patronym, "ična")){
+            $pos = stripos($patronym, "ična");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "inična")){
+            $pos = stripos($patronym, "inična");
             
             return substr($patronym, 0, $pos);
         }else if(stripos($patronym, "owič")){
             $pos = stripos($patronym, "owič");
             
             return substr($patronym, 0, $pos);
-        }else if(stripos($patronym, "evna")){
-            $pos = stripos($patronym, "evna");
+        } else if(stripos($patronym, "ovič")){
+            $pos = stripos($patronym, "ovič");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "owitsch")){
+            $pos = stripos($patronym, "owitsch");
             
             return substr($patronym, 0, $pos);
         }else if(stripos($patronym, "ewič")){
             $pos = stripos($patronym, "ewič");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "evič")){
+            $pos = stripos($patronym, "evič");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "ewitsch")){
+            $pos = stripos($patronym, "ewitsch");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "ič")){
+            $pos = stripos($patronym, "ič");
+            
+            return substr($patronym, 0, $pos);
+        } else if(stripos($patronym, "itsch")){
+            $pos = stripos($patronym, "itsch");
             
             return substr($patronym, 0, $pos);
         }
