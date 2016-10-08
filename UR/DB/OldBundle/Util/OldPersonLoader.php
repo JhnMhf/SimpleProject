@@ -222,6 +222,9 @@ class OldPersonLoader {
                 return $this->loadGrandchild($oldMainPersonID, $order, $order2, $order3, $order4);
         }
         
+        $this->getLogger()->error("No Data Strategy for ".$table." found.");
+        
+        return array();
     }
     
     private function loadDataForNonPaternalGrandmother($oldMainPersonID, $order, $order2){
@@ -1675,7 +1678,9 @@ class OldPersonLoader {
             case 'großvater_muetterlicherseits':
             case 'großvater_vaeterlicherseits':
             case 'vater des geschwisters':
-            
+            case 'geschwisterkind':
+            case 'schwiegervater_des_kindes':
+            case 'enkelkind':
             //female
             case 'großmutter_muetterlicherseits':
             case 'großmutter_vaeterlicherseits':
@@ -1685,7 +1690,6 @@ class OldPersonLoader {
             case 'schwiegermutter_des_kindes':
             case 'mutter_des_geschwisters':
                 return array();
-            
             case 'vater':
                 return $this->loadWeddingDataForFather($oldMainPersonID, $order);
             case 'geschwister':
@@ -1695,24 +1699,22 @@ class OldPersonLoader {
             case 'kind':
                 return $this->loadWeddingDataForChild($oldMainPersonID, $order, $order2);
             case 'schwiegervater':
-                
+                return $this->loadWeddingDataForFatherInLaw($oldMainPersonID, $order, $order2);
             case 'anderer_partner':
-
+                return $this->loadWeddingDataForOtherPartner($oldMainPersonID, $order, $order2);
             case 'partner_der_mutter':
-                
+                return $this->loadWeddingDataPartnersOfMother($oldMainPersonID, $order, $order2);
             case 'ehepartner_des_geschwisters':
                 return $this->loadWeddingDataForMarriagePartnerOfSibling($oldMainPersonID, $order, $order2);
-            case 'geschwisterkind':
-                
             case 'ehepartner_des_kindes':
                 return $this->loadWeddingDataForMarriagePartnerOfChild($oldMainPersonID, $order, $order2, $order3);
             case 'anderer_partner_des_kindes':
-                
-            case 'schwiegervater_des_kindes':
-
-            case 'enkelkind':
-                
+                return $this->loadWeddingDataForOtherPartnerOfChild($oldMainPersonID, $order, $order2, $order3, $order4);
         }
+        
+        $this->getLogger()->error("No Wedding Strategy for ".$table." found.");
+        
+        return array();
     }
     
     private function loadWeddingDataForFather($oldPersonID, $order){
@@ -1914,7 +1916,6 @@ class OldPersonLoader {
         return $weddingsData;  
     }
     
-    //@TODO: other partners of child
     private function loadWeddingDataForMarriagePartnerOfChild($oldMainPersonID, $order, $order2, $order3){
         $sql = "SELECT vornamen, name,aufgebot, verheiratet, hochzeitstag, 
             hochzeitsort, auflösung, gelöst
@@ -1972,6 +1973,178 @@ class OldPersonLoader {
             $partner = $otherPartners[$i];
             $weddingsData[] = $this->createWeddingObj($partner['vornamen'], $partner['name'], null, $partner['verheiratet'], $partner['hochzeitstag'], $partner['hochzeitsort'],null,$partner['auflösung'], null,$partner['vorher-nachher']);
         }
+        
+        return $weddingsData;  
+    }
+    
+    private function loadWeddingDataForFatherInLaw($oldMainPersonID, $order, $order2){
+        $sql = "SELECT hochzeitsort 
+            FROM `schwiegervater` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for schwiegervater");
+        }
+        
+        $fatherInLaw = $dbData[0];
+        
+        $sql = "SELECT vornamen, name 
+            FROM `schwiegermutter` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for schwiegermutter");
+        }
+        
+        $motherInLaw = $dbData[0];
+
+        $weddingsData = array();
+        $weddingsData[] = $this->createWeddingObj($motherInLaw['vornamen'], $motherInLaw['name'], null, null, null, $fatherInLaw['hochzeitsort']);
+        
+        return $weddingsData;
+    }
+    
+    private function loadWeddingDataForOtherPartnerOfChild($oldMainPersonID, $order, $order2, $order3, $order4){
+
+        $sql = "SELECT `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
+        FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3 AND `order4` = :order4";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->bindValue('order3', $order3);
+        $stmt->bindValue('order4', $order4);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for anderer_partner_des_kindes");
+        }
+        
+        $partner = $dbData[0];
+        
+        $sql = "SELECT vornamen, name 
+            FROM `ehepartner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->bindValue('order3', $order3);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for ehepartner_des_kindes");
+        }
+        
+        $marriagePartner = $dbData[0];
+
+        
+        $weddingsData = array();
+        $weddingsData[] = $this->createWeddingObj($marriagePartner['vornamen'], $marriagePartner['name'], null, $partner['verheiratet'], $partner['hochzeitstag'], $partner['hochzeitsort'],null,$partner['auflösung'], null, $partner['vorher-nachher']);
+        
+        return $weddingsData;
+    }
+    
+    private function loadWeddingDataForOtherPartner($oldMainPersonID, $order, $order2){
+        $sql = "SELECT `vorher-nachher`, aufgebot, 
+        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, 
+        FROM `anderer_partner` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for anderer_partner");
+        }
+        
+        $partner = $dbData[0];
+        
+        $sql = "SELECT vornamen, name 
+            FROM `ehepartner` WHERE ID=:personID AND `order`=:order";
+
+        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->execute();
+        
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for ehepartner");
+        }
+        
+        $marriagePartner = $dbData[0];
+
+        
+        $weddingsData = array();
+        $weddingsData[] = $this->createWeddingObj($marriagePartner['vornamen'], $marriagePartner['name'], $partner['aufgebot'], $partner['verheiratet'], $partner['hochzeitstag'], $partner['hochzeitsort'],null,$partner['auflösung'], $partner['gelöst']);
+        
+        return $weddingsData;
+    }
+    
+    private function loadWeddingDataPartnersOfMother($oldPersonID, $order, $order2){
+        $sql = "SELECT verheiratet, hochzeitstag, hochzeitsort, 
+            auflösung, gelöst, `vorher-nachher`
+            FROM `partner_der_mutter` WHERE ID=:personID AND `order`= :order AND `order2`= :order2";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->bindValue('order2', $order2);
+        $stmt->execute();
+
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for partner_der_mutter");
+        }
+        
+        $otherPartner = $dbData[0];
+        
+        $sql = "SELECT vornamen,  name"
+                . "FROM `mutter` WHERE ID=:personID AND `order`= :order";
+
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
+        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('order', $order);
+        $stmt->execute();
+
+        $dbData = $stmt->fetchAll();
+        
+        if(count($dbData) == 0){
+            throw new \Exception("Could not load data from old DB for mutter");
+        }
+        
+        $mother = $dbData[0];
+        
+        $weddingsData = array();
+        
+        $weddingsData[] = $this->createWeddingObj($mother['vornamen'], $mother['name'], null, $otherPartner['verheiratet'], $otherPartner['hochzeitstag'], $otherPartner['hochzeitsort'], null,$otherPartner['auflösung'],$otherPartner['gelöst'],$otherPartner['vorher-nachher']);
         
         return $weddingsData;  
     }
