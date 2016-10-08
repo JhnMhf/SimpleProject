@@ -92,6 +92,14 @@ class MigrateData {
     private function normalizeName($string) {
         return $this->normalizationService->writeOutNameAbbreviations($string);
     }
+    
+    private function normalizePatronym($string) {
+        return $this->normalizationService->writeOutPatronymAbbreviations($string);
+    }
+    
+    private function normalizeFirstname($string) {
+        return $this->normalizationService->writeOutFirstnameAbbreviations($string);
+    }
 
     public function getCountry($countryName, $comment = null) {
         $countryName = $this->normalize($countryName);
@@ -853,8 +861,8 @@ class MigrateData {
         //insert into new data
         $newPartner = new Partner();
 
-        $newPartner->setFirstName($this->normalizeName($firstName));
-        $newPartner->setPatronym($this->normalizeName($patronym));
+        $newPartner->setFirstName($this->normalizeFirstname($firstName));
+        $newPartner->setPatronym($this->normalizePatronym($patronym));
         $newPartner->setLastName($this->normalizeName($lastName));
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newPartner->setGender($genderResult[0]);
@@ -878,8 +886,8 @@ class MigrateData {
         $newPerson = new Person();
 
         $newPerson->setOid($oid);
-        $newPerson->setFirstName($this->normalizeName($firstName));
-        $newPerson->setPatronym($this->normalizeName($patronym));
+        $newPerson->setFirstName($this->normalizeFirstname($firstName));
+        $newPerson->setPatronym($this->normalizePatronym($patronym));
         $newPerson->setLastName($this->normalizeName($lastName));
         $newPerson->setForeName($this->normalizeName($foreName));
         $newPerson->setBirthName($this->normalizeName($birthName));
@@ -940,8 +948,8 @@ class MigrateData {
         //insert into new data
         $newRelative = new Relative();
 
-        $newRelative->setFirstName($this->normalizeName($firstName));
-        $newRelative->setPatronym($this->normalizeName($patronym));
+        $newRelative->setFirstName($this->normalizeFirstname($firstName));
+        $newRelative->setPatronym($this->normalizePatronym($patronym));
         $newRelative->setLastName($this->normalizeName($lastName));
         $genderResult = $this->extractGenderAndGenderComment($gender);
         $newRelative->setGender($genderResult[0]);
