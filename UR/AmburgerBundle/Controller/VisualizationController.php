@@ -171,7 +171,7 @@ class VisualizationController extends Controller{
     }
     
     private function internalLoadAllLocations(){
-        $sql = "SELECT id,name,latitude, longitude, locationData.sum as count FROM location
+        $sql = "SELECT id,location_name,latitude, longitude, locationData.sum as count FROM location
                 JOIN (SELECT locations.locationid as locationid,SUM(locations.c) as sum
                 FROM (
                   SELECT baptism_locationid as locationid,COUNT(*) AS c FROM baptism WHERE baptism_locationid IS NOT NULL GROUP BY baptism_locationid
