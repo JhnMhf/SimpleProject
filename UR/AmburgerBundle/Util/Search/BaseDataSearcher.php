@@ -817,19 +817,20 @@ abstract class BaseDataSearcher {
             return array();
         }
         
-        $sql = "SELECT husband_ID, wife_ID FROM wedding WHERE id IN (?)";
-        
-        $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $weddingIds, $typeArray);
+        $query = $this->finalDBManager->createQuery('SELECT w.husbandId, w.wifeId FROM NewBundle:Wedding w');
 
-        $stmt->execute();
-
-        $ids = $stmt->fetchAll();
+        $weddings = $query->getResult();
         
         $personIds = array();
         
-        for($i = 0; $i < count($ids); $i++){
-            $personIds[] = $ids[$i]['husband_ID'];
-            $personIds[] = $ids[$i]['wife_ID'];
+        for($i = 0; $i < count($weddings); $i++){
+            if(!is_null($weddings[$i]['husbandId'])){
+               $personIds[] = $weddings[$i]['husbandId']; 
+            }
+            
+            if(!is_null($weddings[$i]['wifeId'])){
+                $personIds[] = $weddings[$i]['wifeId'];
+            }
         }
         
         return $personIds;

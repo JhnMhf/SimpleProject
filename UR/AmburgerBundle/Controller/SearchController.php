@@ -48,8 +48,6 @@ class SearchController extends Controller{
         $fromDate = $request->query->get('fromDate');
         $toDate = $request->query->get('toDate');
         
-        
-        
         $listOfPossibleIds = $this->get('search.util')->search($searchQuery, 
                 $onlyMainPersons, $lastname, $firstname, $patronym, $location,
                 $territory, $country, $date, $fromDate, $toDate);

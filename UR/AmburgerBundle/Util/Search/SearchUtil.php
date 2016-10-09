@@ -94,7 +94,7 @@ class SearchUtil {
             if($searcher->isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
                 $this->getLogger()->info("Searching with the class: ".get_class($searcher));
                 
-                return $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
+                return (array) $searcher->search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate);
             }
         }
 
