@@ -26,7 +26,10 @@ services:
         class: UR\AmburgerBundle\Util\PossibleRelativesFinder
         arguments: 
            container: "@service_container"         
-                      
+    possible_duplicates_finder.service:
+        class: UR\AmburgerBundle\Util\PossibleDuplicatesFinder
+        arguments: 
+           container: "@service_container"                    
     relationship_loader.service:
         class: UR\AmburgerBundle\Util\RelationshipLoader
         arguments: 

@@ -4,6 +4,7 @@ namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CorrectionDuplicateController extends Controller implements CorrectionSessionController
 {
@@ -27,13 +28,22 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
     public function loadAction($ID)
     {
         $this->getLogger()->debug("Loading duplicates: ".$ID);
-        $response["duplicate_persons"] = array();
+        $em = $this->get('doctrine')->getManager('final');
+        $duplicatePersons = $this->get('possible_duplicates_finder.service')->findPossibleDuplicates($em,$ID);
         
-        $serializer = $this->get('serializer');
-        $json = $serializer->serialize($response, 'json');
-        $jsonResponse = new JsonResponse();
-        $jsonResponse->setContent($json);
-        
-        return $jsonResponse;
+        if(count($duplicatePersons) > 0){
+            $serializer = $this->get('serializer');
+            $json = $serializer->serialize($duplicatePersons, 'json');
+            $jsonResponse = new JsonResponse();
+            $jsonResponse->setContent($json);
+
+            return $jsonResponse;
+        } else {
+            $response = new Response();
+            $response->setStatusCode("204");
+            
+            return $response;
+        }
+
     }
 }
