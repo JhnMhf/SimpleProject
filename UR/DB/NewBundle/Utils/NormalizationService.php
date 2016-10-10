@@ -59,6 +59,7 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
+            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -81,6 +82,7 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
+            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -103,6 +105,7 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
+            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -125,6 +128,7 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
+            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -158,7 +162,26 @@ class NormalizationService {
             return null;
         }
         
-        return  str_replace($this->abbreviationKeys, $this->abbreviationValues,$string);
+        $trimmedString = trim($string);
+        
+        $newString = $string;
+        
+        if(in_array($trimmedString, $this->abbreviationKeys)){
+            $this->LOGGER->debug("Found in keys");
+            $newString = $this->abbreviationValues[array_search($trimmedString, $this->abbreviationKeys)];
+        } else {
+            $this->LOGGER->debug("Using str_replace");
+            $newString = str_replace($this->abbreviationKeys, $this->abbreviationValues,$newString);
+        }
+
+        if($newString != $string){
+            $this->LOGGER->debug("Normalized ".$string." to ".$newString);
+            
+        } else {
+            $this->LOGGER->debug("Could not/ Didn't need to normalize string: ".$string);
+        }
+        
+        return $newString;
     }
     
     public function writeOutNameAbbreviations($string){
@@ -181,7 +204,7 @@ class NormalizationService {
             return null;
         }
         
-        return  str_replace($this->nameAbbreviationKeys, $this->nameAbbreviationValues,$string);
+        return str_replace($this->nameAbbreviationKeys, $this->nameAbbreviationValues,$string);
     }
     
     public function writeOutPatronymAbbreviations($string){
