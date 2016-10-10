@@ -49,14 +49,19 @@ class DateReferenceLoader {
 
         for($i = 0; $i < count($dateReference); $i++){
             $this->LOGGER->debug("Loading: ".$dateReference[$i]);
+            $dateReferenceOjb = null;
             if (DateRange::isDateRange($dateReference[$i])) {
                 //date range found
-               $objArray[] = DateRange::createDateRange($dateReference[$i], $repository);
+                $dateReferenceOjb = DateRange::createDateRange($dateReference[$i], $repository);
             }else {
-                $objArray[] = $repository->findOneById($dateReference[$i]);
+                $dateReferenceOjb = $repository->findOneById($dateReference[$i]);
             }
             
-            $this->LOGGER->debug("Loading finished: ".$dateReference[$i]);
+            $this->LOGGER->debug("Loading finished: ".$dateReferenceOjb);
+            
+            if(!is_null($dateReferenceOjb)){
+                $objArray[] = $dateReferenceOjb;
+            }
         }
         
         $this->LOGGER->debug("Finished loading DateReference.");

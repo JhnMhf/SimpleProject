@@ -524,6 +524,7 @@ class Birth
     }
     /**
      * @var date_reference
+     * @Type("array<UR\DB\NewBundle\Types\DateReference>")
      */
     private $provenDate;
 

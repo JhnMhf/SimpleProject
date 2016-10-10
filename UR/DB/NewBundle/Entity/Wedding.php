@@ -407,35 +407,7 @@ class Wedding
     {
         return $this->weddingLocation;
     }
-    /**
-     * @var date_reference
-     */
-    private $breakupDateid;
-
-
-    /**
-     * Set breakupDateid
-     *
-     * @param date_reference $breakupDateid
-     *
-     * @return Wedding
-     */
-    public function setBreakupDateid($breakupDateid)
-    {
-        $this->breakupDateid = $breakupDateid;
-
-        return $this;
-    }
-
-    /**
-     * Get breakupDateid
-     *
-     * @return date_reference
-     */
-    public function getBreakupDateid()
-    {
-        return $this->breakupDateid;
-    }
+   
     /**
      * @var date_reference
      * @Type("array<UR\DB\NewBundle\Types\DateReference>")

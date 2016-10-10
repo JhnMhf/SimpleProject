@@ -59,7 +59,9 @@ class PossibleDuplicatesFinder {
             $idsOfDuplicates[] = $remainingCheckedDuplicates[$i]->getId();
         }
         
-        return $remainingCheckedDuplicates;
+        //returning the remainCheckedDuplicates will result in errors, not sure why this is happening.
+        
+        return $idsOfDuplicates;
     }
     
     private function findPossibleDuplicatesInDB($em, $person){
@@ -188,7 +190,7 @@ class PossibleDuplicatesFinder {
         $remainingPossibleDuplicates = array();
         
         for($i = 0; $i < count($listOfPossibleDuplicates); $i++){
-            if($this->personComparer->comparePersons($person, $listOfPossibleDuplicates[$i])){
+            if($this->personComparer->comparePersons($person, $listOfPossibleDuplicates[$i], true)){
                 $remainingPossibleDuplicates[] = $listOfPossibleDuplicates[$i];
             }
         }

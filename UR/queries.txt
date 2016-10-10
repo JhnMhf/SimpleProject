@@ -99,3 +99,21 @@ ORDER BY type
 /* get all comments which contain a digit */
 SELECT ID,kommentar FROM `person` WHERE kommentar REGEXP '[0-9]' GROUP BY kommentar ORDER BY count(*) 
 
+/* FINAL DB Persons */
+
+SELECT persons.first_name, persons.last_name,count(*) 
+FROM ( 
+      SELECT first_name, last_name 
+      FROM FinalAmburgerDB.person
+      WHERE last_name IS NOT NULL AND first_name IS NOT NULL
+      UNION ALL
+      SELECT first_name, last_name 
+      FROM FinalAmburgerDB.relative
+      WHERE last_name IS NOT NULL AND first_name IS NOT NULL
+      UNION ALL
+      SELECT first_name, last_name 
+      FROM FinalAmburgerDB.partner
+      WHERE last_name IS NOT NULL AND first_name IS NOT NULL
+) persons
+GROUP BY persons.first_name,persons.last_name 
+ORDER BY count(*) DESC
