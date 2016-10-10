@@ -71,6 +71,8 @@ class LoginController extends Controller
     {
         $this->getLogger()->debug("Logout request");
         
+        $this->get('correction_session.service')->stopCorrectionSessionsForUser($userId);
+        
         $session = $request->getSession();
         $session->invalidate();
         

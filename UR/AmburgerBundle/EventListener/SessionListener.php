@@ -67,7 +67,15 @@ class SessionListener
 
         $this->LOGGER->debug("Found ID: ".$ID);
         if(!$this->get('correction_session.service')->checkCorrectionSession($ID,$session)){
-                throw new AccessDeniedHttpException('The user is currently not working on this!');
+                //throw new AccessDeniedHttpException'(The user is currently not working on this!');
+            
+            $redirectUrl = $controller->generateUrl('start');
+
+            $this->LOGGER->debug("Redirecting to start at: ".$redirectUrl);
+
+            $event->setController(function() use ($redirectUrl) {
+                return new RedirectResponse($redirectUrl);
+            });
         } 
     }
 }

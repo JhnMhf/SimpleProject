@@ -81,10 +81,16 @@ class CorrectionSessionUtil {
         $this->getSystemDBManager()->flush($personData);
     }
     
-    private function stopCorrectionSessionsForUser($sessions){
+    public function stopCorrectionSessionsForUser($userId){
         
+        $correctionSessions = $this->getSystemDBManager()->getRepository('AmburgerBundle:CorrectionSession')
+                ->findBy(array('activeUserId' => $userId));
         
+        for($i = 0; $i < $correctionSessions; $i++){
+            $this->getSystemDBManager()->remove($correctionSessions);
+        }
        
+        $this->getSystemDBManager()->flush();
     }
 }
 
