@@ -34,17 +34,9 @@ class CorrectionSessionInvalidateCommand extends ContainerAwareCommand
             $lastModified = $session->getModified() ? $session->getModified()->format('U') : 0;
             
             if($lastModified <= $olderThan){
-                $output->writeln(sprintf('Removing correction session for OID: <info>%s</info>', $session->getOid()));
+                $output->writeln(sprintf('Removing correction session for ID: <info>%s</info>', $session->getId()));
                 
-                //remove currently in progress flag from personData
-                $personData = $em->getRepository('AmburgerBundle:PersonData')->findOneByOid($session->getOid());
-                
-                if(!is_null($personData)){
-                    $personData->setCurrentlyInProcess(false);
-                    $em->merge($personData);
-                }
-                
-                $em->remove($session);
+                $this->getContainer()->get('correction_session.service')->stopCorrectionSession($session);
             }
         }
 
