@@ -121,9 +121,15 @@ Index.SearchView = (function () {
         }
         
         return selectedDay+"."+selectedMonth+"."+year;
+    },
+    
+    displayPopup = function(message){
+        //@TODO: Add nicer popup (example from correction start?)
+        alert(message);
     };
 
 
     that.init = init;
+    that.displayPopup = displayPopup;
     return that;
 })();

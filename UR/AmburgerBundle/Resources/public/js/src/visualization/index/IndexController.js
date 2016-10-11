@@ -41,8 +41,13 @@ Index.IndexController = (function(){
     
     onIdListLoaded = function(event,data){
          console.log("onIdListLoaded: ", data);
-         personListView.setPersonListIds(data['data']);
-         ajaxLoader.loadLocationsForPersonList(data['data']);
+         if(data['data'].length == 0){
+            searchView.displayPopup("Es wurden keine Suchergebnisse gefunden.");
+         } else {
+            personListView.setPersonListIds(data['data']);
+            ajaxLoader.loadLocationsForPersonList(data['data']);
+         }
+
     },
     
     onIdListLoadedAll = function(event,data){
