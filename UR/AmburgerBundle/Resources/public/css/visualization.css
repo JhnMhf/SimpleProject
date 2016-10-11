@@ -1,5 +1,6 @@
 .center  {
     text-align: center;
+    vertical-align: middle;
 }
 
 /* Search */
@@ -7,6 +8,37 @@
 .simple-search label,
 .simple-search label input{
     display: inline-block;
+}
+
+select.single-date,
+input.single-date{
+    width: 30%;
+    display: inline-block;
+}
+
+select.daterange,
+input.daterange{
+    width: 30%;
+    display: inline-block;
+}
+
+.centered-input {
+   
+}
+
+.search {
+    
+}
+
+.extended-search {
+    border: 1px solid black;
+    padding: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.column, .columns{
+  min-height: 1px;
 }
 
 /* PersonList */

@@ -8,100 +8,120 @@
             </div>
         </div>
         <div class="row simple-search">
-            <div class="large-10 columns">
+            <div class="large-9 columns">
                 <label>Freie Suche (Boolesche Logik und Klammerung wird unterstützt)</label><input name="searchQuery"/>
             </div>
-            <div class="large-2 columns">
+            <div class="large-3 columns">
                 <label>
-                    Auf Hauptpersonen einschränken
-                    <input type="checkbox" name="only-main-persons"/>
+                    Nur Hauptpersonen durchsuchen<br/>
+                    <input class="center" type="checkbox" name="only-main-persons"/>
                 </label>
             </div>
         </div>
-        <div class="row extended-search">
+        <div class="row extended-search box">
             <div class="large-12 columns">
-                <label>
-                    Nachname
-                    <input name="lastname"/>
-                </label>
-                <label>
-                    Vorname
-                    <input name="firstname"/>
-                </label>
-                <label>
-                    Russischer Vorname
-                    <input name="patronym"/>
-                </label>
-                <label>
-                    Ort
-                    <input name="location"/>
-                </label>
-                <label>
-                    Region
-                    <input name="territory"/>
-                </label>
-                <label>
-                    Land
-                    <input name="country"/>
-                </label>
+                <div class="large-4 columns">
+                    <label>
+                        Nachname
+                        <input name="lastname"/>
+                    </label>
+                </div>
+                <div class="large-4 columns">
+                    <label>
+                        Vorname
+                        <input name="firstname"/>
+                    </label>
+                </div>
+                <div class="large-4 columns">
+                    <label>
+                        Russischer Vorname
+                        <input name="patronym"/>
+                    </label>
+                </div>
+                <div class="large-4 columns">
+                    <label>
+                        Ort
+                        <input name="location"/>
+                    </label>
+                </div>
+                <div class="large-4 columns">
+                    <label>
+                        Region
+                        <input name="territory"/>
+                    </label>
+                </div>
+                <div class="large-4 columns">
+                    <label>
+                        Land
+                        <input name="country"/>
+                    </label>
+                </div>
 
                 <!--TODO: Enforce date with specific format -->
-                <label>
-                    Bestimmtes Datum
-                    Tag <select name="date-day">
-                        <option value=""></item>
-                        {% for i in 1..31 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    Monat <select name="date-month">
-                        <option value=""></item>
-                        {% for i in 1..12 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    
-                    Jahr <input name="date-year"/>
-                </label>
-                <label>
-                    Bestimmter Zeitraum
-                    Tag <select name="from-date-day">
-                        <option value=""></item>
-                        {% for i in 1..31 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    Monat <select name="from-date-month">
-                        <option value=""></item>
-                        {% for i in 1..12 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    
-                    Jahr <input name="from-date-year"/>
-                    
-                    bis
-                    
-                    Tag <select name="to-date-day">
-                        <option value=""></item>
-                        {% for i in 1..31 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    Monat <select name="to-date-month">
-                        <option value=""></item>
-                        {% for i in 1..12 %}
-                            <option value="{{ i }}">{{ i }}</item>
-                        {% endfor %}
-                    </select>
-                    
-                    Jahr <input name="to-date-year"/>
-                </label>
+                <div class="large-4 columns">
+                    <label>
+                        Datum
+                        <br/>
+                        <select name="date-day" class="single-date">
+                            <option value="">Tag</item>
+                            {% for i in 1..31 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+                        <select name="date-month"  class="single-date">>
+                            <option value="">Monat</item>
+                            {% for i in 1..12 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+                        <input class="single-date" name="date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                    </label>
+                </div>
+                <div class="large-8 columns">
+                    <label>
+                        Zeitraum
+                        <br/>
+                        <select name="from-date-day" class="daterange">
+                            <option value="">Tag</item>
+                            {% for i in 1..31 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+                        <select name="from-date-month" placeholder="Jahr" class="daterange">
+                            <option value="">Monat</item>
+                            {% for i in 1..12 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+                        <input class="daterange" name="from-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                        <br/>
+                        bis
+                        <br/>
+                        <select name="to-date-day" class="daterange">
+                            <option value="">Tag</item>
+                            {% for i in 1..31 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+                        <select name="to-date-month" class="daterange">
+                            <option value="">Monat</item>
+                            {% for i in 1..12 %}
+                                <option value="{{ i }}">{{ i }}</item>
+                            {% endfor %}
+                        </select>
+
+                        <input class="daterange" name="to-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="large-12 columns centered">
-                <button id="search-btn">Suchen</button>
+            <div class="large-4 columns">
+            </div>
+            <div class="large-4 columns centered">
+                <button id="search-btn" class="button radius expand">Suchen</button>
+            </div>
+            <div class="large-4 columns">
             </div>
         </div>
 
