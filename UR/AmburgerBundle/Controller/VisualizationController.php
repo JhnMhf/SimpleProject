@@ -62,6 +62,16 @@ class VisualizationController extends Controller{
         return $jsonResponse;
     }
     
+    public function detailRelationsAction($ID){
+        
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($array(), 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+
+        return $jsonResponse;
+    }
+    
     private function loadPersonById($ID){
         $finalDBManager = $this->getDBManager();
         $person = $finalDBManager->getRepository('NewBundle:Person')->findOneById($ID);

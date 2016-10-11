@@ -30,6 +30,57 @@ class CorrectionStartController extends Controller implements SessionController
         }
     }
     
+        
+    public function statisticsAction() {
+        $this->getLogger()->debug("statisticsAction called.");
+        
+        $statistics = $array();
+        
+        $statistics['total'] = $this->totalNumberOfPersonsToCorrect();
+        $statistics['inProcess'] = $this->totalNumberOfPersonsToCorrect();
+        $statistics['completed'] = $this->totalNumberOfPersonsToCorrect();
+
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($statistics, 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+        
+        return $jsonResponse;
+    }
+    
+    private function totalNumberOfPersonsToCorrect(){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        
+        $qb = $systemDBManager->getRepostiory('AmburgerBundle:PersonData')->createQueryBuilder('pd');
+        return $qb
+            ->select('count(pd.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    private function numberOfPersonsInProcess(){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        
+        $qb = $systemDBManager->getRepostiory('AmburgerBundle:PersonData')->createQueryBuilder('pd');
+        return $qb
+            ->select('count(pd.id)')
+            ->where('pd.currentlyInProcess = 1')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+        
+    private function numberOfPersonsCompleted(){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        
+        $qb = $systemDBManager->getRepostiory('AmburgerBundle:PersonData')->createQueryBuilder('pd');
+        return $qb
+            ->select('count(pd.id)')
+            ->where('pd.completed = 1')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
     public function nextAction(){
         $this->getLogger()->debug("Next person action called.");
         $response = array();
@@ -104,5 +155,4 @@ class CorrectionStartController extends Controller implements SessionController
         $response->setStatusCode("200");
         return $response;
     }
-    
 }

@@ -61,7 +61,7 @@ class LoginController extends Controller
             $session->set('userid', $user->getId());
             
             $this->getLogger()->debug("Successfully logged in user: ".$username);
-            return $this->redirect($this->generateUrl('start'));
+            return $this->redirect($this->generateUrl('correction'));
         }
     }
     /* 
@@ -71,7 +71,7 @@ class LoginController extends Controller
     {
         $this->getLogger()->debug("Logout request");
         
-        $this->get('correction_session.service')->stopCorrectionSessionsForUser($userId);
+        $this->get('correction_session.service')->stopCorrectionSessionsForUser($this->getSession()->get('userid'));
         
         $session = $request->getSession();
         $session->invalidate();

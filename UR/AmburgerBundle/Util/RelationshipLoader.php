@@ -38,6 +38,23 @@ class RelationshipLoader {
         return $this->LOGGER;
     }
     
+    
+    /* ??? Relatives loading for family tree 
+    public function loadMarriagePartnersWithCommChildren($em, $ID){
+        $children = $this->loadChildren($em, $ID);
+        
+        $marriagePartners = $this->loadMarriagePartners($em, $ID);
+        
+        for($i = 0; $i < count($marriagePartners); $i++){
+            $commonChildren = $this->findCommonChildren($em, $ID, $marriagePartners[$i]['id']);
+
+        }
+        
+    }
+     * 
+     * 
+     */
+    
     public function loadOnlyDirectRelatives($em, $id){
         $this->getLogger()->info("Loading direct relatives for ID: " . $id);
         

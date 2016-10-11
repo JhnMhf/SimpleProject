@@ -1,24 +1,29 @@
 
 #@TODO: Think about moving start to correction?
-start:
-    path:     /start/
+correction:
+    path:     /correction/
     defaults: { _controller: AmburgerBundle:CorrectionStart:index }
     methods: [GET]
     
 checkOID:
-    path:     /start/{ID}/check
+    path:     /correction/{ID}/check
     defaults: { _controller: AmburgerBundle:CorrectionStart:check }
     methods: [GET]
 
 nextOID:
-    path:     /start/next
+    path:     /correction/next
     defaults: { _controller: AmburgerBundle:CorrectionStart:next }
     methods: [GET]
 
-startWork:
-    path:     /start/{ID}
+correctionWork:
+    path:     /correction/{ID}
     defaults: { _controller: AmburgerBundle:CorrectionStart:startWork }
     methods: [POST]
+    
+correctionStatistics:
+    path:     /correction/statistics
+    defaults: { _controller: AmburgerBundle:CorrectionStart:statistics }
+    methods: [GET]
 
 # duplicate
 duplicate:
