@@ -8,6 +8,10 @@ DuplicatePerson.DuplicatePersonController = (function(){
     /* Controllers */
     ajaxLoader = null,
     
+    duplicatesData = null,
+    
+    personData = null,
+    
     
     /* 
         Initialises the object and sets default values.
@@ -16,19 +20,38 @@ DuplicatePerson.DuplicatePersonController = (function(){
         ajaxLoader = DuplicatePerson.AjaxLoader.init();
         
         $(ajaxLoader).on("duplicatePersonsLoaded", onDuplicatePersonsLoaded);
+        $(ajaxLoader).on("personDataLoaded", onPersonDataLoaded);
 
         duplicatePersonView = DuplicatePerson.DuplicatePersonView.init();
         
         $(duplicatePersonView).on("save", onSave);
         
+        ajaxLoader.loadPersonData();
         ajaxLoader.loadDuplicatePersons();
 
         return that;
     },
     
+    onPersonDataLoaded = function(event, loadedPersonData){
+        console.log("PersonData: ", loadedPersonData);
+        personData = loadedPersonData;
+        checkDisplay();
+    },
     
-    onDuplicatePersonsLoaded = function(event, duplicatePersons){
-        console.log("DuplicatePersons: ", duplicatePersons);
+    onDuplicatePersonsLoaded = function(event, loadedDuplicatePersons){
+        console.log("DuplicatePersons: ", loadedDuplicatePersons);
+        duplicatesData = loadedDuplicatePersons;
+        checkDisplay();
+    },
+    
+    checkDisplay = function(){
+        if(duplicatesData  && personData){
+            startDisplay();
+        }
+    },
+    
+    startDisplay = function(){
+        duplicatePersonView.displayDuplicates(personData, duplicatesData);
     },
     
     onSave = function(event){

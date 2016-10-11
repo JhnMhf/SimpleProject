@@ -31,7 +31,11 @@ DateReferenceTransformer = (function () {
        var dateString = "";
 
        if(dateObj['before_date']){
-           dateString += "-";
+           dateString += "vor ";
+       } 
+       
+       if(dateObj['after_date']){
+           dateString += "nach ";
        } 
 
        if(typeof(dateObj['day']) !== 'undefined'){
@@ -46,10 +50,6 @@ DateReferenceTransformer = (function () {
 
        if(typeof(dateObj['year']) !== 'undefined'){
            dateString += dateObj['year'];
-       } 
-
-       if(dateObj['after_date']){
-           dateString += "-";
        } 
 
        return dateString;

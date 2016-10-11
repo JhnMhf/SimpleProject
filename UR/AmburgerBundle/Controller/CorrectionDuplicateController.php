@@ -25,15 +25,34 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
         return $this->render('AmburgerBundle:DataCorrection:duplicate_persons.html.twig');
     }
     
-    public function loadAction($ID)
+    public function loadPersonWithRelativesAction($ID)
+    {
+        $this->getLogger()->debug("Loading person data: ".$ID);
+
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize($this->loadPersonWithRelatives($ID), 'json');
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($json);
+        
+        return $jsonResponse;
+    }
+   
+    
+    public function loadDuplicatesAction($ID)
     {
         $this->getLogger()->debug("Loading duplicates: ".$ID);
         $em = $this->get('doctrine')->getManager('final');
         $duplicatePersons = $this->get('possible_duplicates_finder.service')->findPossibleDuplicates($em,$ID);
         
         if(count($duplicatePersons) > 0){
+            $duplicatesData = array();
+            
+            for($i = 0; $i < count($duplicatePersons); $i++){
+                $duplicatesData[] = $this->loadPersonWithRelativesFromObj($duplicatePersons[$i]);
+            }
+            
             $serializer = $this->get('serializer');
-            $json = $serializer->serialize($duplicatePersons, 'json');
+            $json = $serializer->serialize($duplicatesData, 'json');
             $jsonResponse = new JsonResponse();
             $jsonResponse->setContent($json);
 
@@ -45,5 +64,39 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
             return $response;
         }
 
+    }
+    
+    private function loadPersonWithRelatives($ID){
+        $relationShipLoader = $this->get('relationship_loader.service');
+        $em = $this->get('doctrine')->getManager('final');
+        $response = array();
+        $response['person'] = $this->loadPersonByID($em, $ID);
+        $response['relatives'] = $relationShipLoader->loadOnlyDirectRelatives($em,$ID);
+        
+        return $response;
+    }
+    
+    private function loadPersonWithRelativesFromObj($person){
+        $relationShipLoader = $this->get('relationship_loader.service');
+        $em = $this->get('doctrine')->getManager('final');
+        $response = array();
+        $response['person'] = $person;
+        $response['relatives'] = $relationShipLoader->loadOnlyDirectRelatives($em,$person->getId());
+        
+        return $response;
+    }
+    
+    private function loadPersonByID($em, $ID){
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+                
+        return !is_null($person) ? $person : array();
     }
 }

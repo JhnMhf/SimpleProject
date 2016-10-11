@@ -69,7 +69,7 @@ class SessionListener
         if(!$this->get('correction_session.service')->checkCorrectionSession($ID,$session)){
                 //throw new AccessDeniedHttpException'(The user is currently not working on this!');
             
-            $redirectUrl = $controller->generateUrl('start');
+            $redirectUrl = $controller->generateUrl('correction');
 
             $this->LOGGER->debug("Redirecting to start at: ".$redirectUrl);
 

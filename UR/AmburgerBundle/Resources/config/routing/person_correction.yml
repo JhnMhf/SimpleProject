@@ -31,9 +31,14 @@ duplicate:
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:index } 
     methods: [GET]
     
-duplicate_load:
-    path:    /correction/{ID}/duplicate/load
-    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:load } 
+duplicate_load_person:
+    path:    /correction/{ID}/duplicate/load/person
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:loadPersonWithRelatives } 
+    methods: [GET]
+    
+duplicate_load_duplicates:
+    path:    /correction/{ID}/duplicate/load/duplicates
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:loadDuplicates } 
     methods: [GET]
     
 # person correction

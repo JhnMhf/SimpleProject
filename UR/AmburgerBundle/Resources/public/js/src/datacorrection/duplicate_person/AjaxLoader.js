@@ -15,27 +15,32 @@ DuplicatePerson.AjaxLoader = (function(){
         return that;
     },
     
-    loadDuplicatePersons = function(oid){
+    loadPersonData = function () {
         $.ajax({
             type: "GET",
-            url: 'load',
-            dataType: 'json',
-            data: {
-            },
-            success: function(data){
-                //@TODO: Handle json?
-                console.log(data);
-                $(that).trigger("duplicatePersonsLoaded", data['duplicate_persons']);
-            },
-            error: function(data){
-                if(data.status == 200){
-                    //data.responseText
-                }
-            }
+            url: 'load/person',
+            dataType: 'json'
+        }).always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("personDataLoaded", [data]);
         });
-};
+    },
+    
+    loadDuplicatePersons = function(){
+       $.ajax({
+            type: "GET",
+            url: 'load/duplicates',
+            dataType: 'json'
+        }).always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("duplicatePersonsLoaded", [data]);
+        });
+    };
 
     that.init = init;
     that.loadDuplicatePersons = loadDuplicatePersons;
+    that.loadPersonData = loadPersonData;
     return that;
 })();

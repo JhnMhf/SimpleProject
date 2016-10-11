@@ -1,8 +1,16 @@
 {% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
 {% block body %}
+    <div id="duplicates-container">
+
+    </div>
+    
     <div class="row">
+        <div class="large-3 columns">
+        </div>
         <div class="large-6 columns large-centered center">
             <a href="../person/"<button id="save-button" class="round button" type="submit">Speichern und weiter...</button></a>
+        </div>
+        <div class="large-3 columns">
         </div>
     </div>
 {% endblock %}
@@ -14,24 +22,1730 @@
 
     {# Models #}
 
-     {# Views #}
-     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonView.js') }}"></script>
+    {# Views #}
+    <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonView.js') }}"></script>
+    <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/BasePersonViewGenerator.js') }}"></script>
+    <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/RelativesViewGenerator.js') }}"></script>
+
+    {# Manager #}
 
 
-     {# Manager #}
-
-
-     {# Controllers #}
-     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/AjaxLoader.js') }}"></script>
-     <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonController.js') }}"></script>
+    {# Controllers #}
+    <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/AjaxLoader.js') }}"></script>
+    <script src="{{ asset('bundles/amburger/js/src/datacorrection/duplicate_person/DuplicatePersonController.js') }}"></script>
 
 
 
-     {# As last init the Start #}
-     <script>
-        $(document).ready(function(){
-          DuplicatePerson.init();
+    {# As last init the Start #}
+    <script>
+        $(document).ready(function () {
+            DuplicatePerson.init();
         });
-     </script>
+    </script>
+
+{% endblock %}
+
+
+{% block templates %}
+    {% verbatim %}
+         <script type="text/template" id="fullDuplicateTemplate">
+            <div class="row duplicate">
+                    <div class="row person-data">
+                        <h3 class="header">
+                            Daten der Person
+                        </h3>
+                        <div class="large-4 columns">
+                            <%= personData %>
+                        </div>
+                        <div class="large-4 columns">
+                        </div>
+                        <div class="large-4 columns">
+                            <%= duplicateData %>
+                        </div>
+                    </div>
+                    <div class="row relative-data">
+                        <h3 class="header">
+                            Direkte Verwandte
+                        </h3>
+                        <div class="large-4 columns">
+                            <%= personRelatives %>
+                        </div>
+                        <div class="large-4 columns">
+                        </div>
+                        <div class="large-4 columns">
+                            <%= duplicateRelatives %>
+                        </div>
+                    </div>
+            </div>
+        </script>   
+        
+        <script type="text/template" id="fullRelativesTemplate">
+            <div class="row children">
+                    <%= children %>
+            </div>
+            <div class="row parents">
+                    <%= parents %>
+            </div>
+            <div class="row partners">
+                    <%= partners %>
+            </div>
+            <div class="row siblings">
+                    <%= siblings %>
+            </div>
+        </script>    
+        
+        <script type="text/template" id="personDataTemplate">
+            <% if(id) { %>ID: <span><%= id %></span></br> <% } %>
+            <% if(first_name) { %>Vorname: <span><%= first_name %></span></br> <% } %>
+            <% if(last_name) { %>Nachname: <span><%= last_name %></span></br><% } %>
+            <% if(patronym) { %>Vatersname: <span><%= patronym %></span></br><% } %>
+            <% if(gender) { %>Geschlecht: <span><%= gender %></span></br><% } %>
+            <% if(birth_date) { %>Geboren: <span><%= birth_date %></span></br><% } %>
+            <% if(baptism_date) { %>Getauft: <span><%= baptism_date %></span></br><% } %>
+            <% if(death_date) { %>Gestorben: <span><%= death_date %></span></br><% } %>
+            <% if(funeral_date) { %>Beerdigt: <span><%= funeral_date %></span></br><% } %>
+            <% if(job) { %>Job: <span><%= job %></span></br><% } %>
+            <% if(job_class) { %>Jobklasse: <span><%= job_class %></span></br><% } %>
+            <% if(nation) { %>Nation: <span><%= nation %></span></br><% } %>
+            <% if(educations) { %>Ausbildung(en): <span><%= educations %></span></br><% } %>
+        </script>    
+
+
+        <script type="text/template" id="basePerson">
+             <div class="base-person-container collapsible">
+                        <h3 class="header">
+                            Personendaten
+                        </h3>
+                <div class="row">
+                        <input type="hidden" name="id" value="<%= id %>"> 
+                        <% if(typeof(oid) !== 'undefined') {%>
+                            <label>OID<input type="text" name="oid" value="<%=oid %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <% } %>
+                        <label>Vorname<input type="text" name="firstName" value="<%= typeof(first_name) !== 'undefined' ?  first_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Vatersname<input type="text" name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Nachname<input type="text" name="lastName" value="<%= typeof(last_name) !== 'undefined' ?  last_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Geschlecht
+                            <select name="gender" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>>
+                                <option value="0" <%= gender == '0' ?  'selected' : '' %>>Unbekannt</option>
+                                <option value="1" <%= gender == '1' ?  'selected' : '' %>>Männlich</option> 
+                                <option value="2" <%= gender == '2' ?  'selected' : '' %>>Weiblich</option>
+                            </select>
+                        </label>
+                        <label>Geschlechtskommentar
+                            <input type="text" name="genderComment" value="<%= typeof(gender_comment) !== 'undefined' ?  gender_comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                        </label>
+                        <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Job
+                            <% 
+                                if(typeof(job) !== 'undefined') { 
+                                    var jobTemplate = _.template($("script#job").html());
+
+                                    var array = [];
+
+                                    array['label'] = job['label'];
+                                    array['comment'] = job['comment'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= jobTemplate(array) %>
+
+                            <%  } %>
+                        </label>
+                        <label>Jobklasse
+                            <% 
+                                if(typeof(job_class) !== 'undefined') { 
+                                    var jobClassTemplate = _.template($("script#jobClass").html());
+
+                                    var array = [];
+
+                                    array['label'] = job_class['label'];
+                                    array['comment'] = job_class['comment'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= jobClassTemplate(array) %>
+
+                            <%  } %>
+                        </label>
+                        <label>Nation
+                            <% 
+                                if(typeof(nation) !== 'undefined') { 
+                                    var nationTemplate = _.template($("script#nation").html());
+
+                                    var array = [];
+
+                                    array['name'] = nation['name'];
+                                    array['comment'] = nation['comment'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= nationTemplate(array) %>
+
+                            <%  } %>
+                        </label>
+                        <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="baptism">
+    <div class="baptism-container collapsible collapsed">
+                        <h3 class="header">
+                            Taufdaten
+                        </h3>
+            <div class="row">
+                   <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
+                    <label>Taufort
+                        <% 
+                            if(typeof(baptism_location) !== 'undefined') { 
+                                var locationTemplate = _.template($("script#location").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = baptism_location['name'];
+                                array['comment'] = baptism_location['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= locationTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label>Taufdatum
+                    <% 
+                            if(typeof(baptism_date) !== 'undefined') { 
+                                var dateReferenceTemplate = _.template($("script#dateReference").html());
+                            
+                                var array = [];
+                            
+                                array['dateReference'] = baptism_date;
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= dateReferenceTemplate(array) %>
+                        
+                        <%  } %>
+                </label>
+            </div>
+    </div>
+        </script>
+
+        <script type="text/template" id="birth">
+                           <div class="birth-container collapsible collapsed">
+                        <h3 class="header">
+                            Geburtsdaten
+                        </h3>
+            <div class="row">
+                   <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
+                    <label class="origin-country">Herkunftsland
+                        <% if(typeof(origin_country) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = origin_country['name'];
+                                array['comment'] = origin_country['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="origin-territory">Herkunftsterritory
+                        <% if(typeof(origin_territory) !== 'undefined') { 
+                                var territoryTemplate = _.template($("script#territory").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = origin_territory['name'];
+                                array['comment'] = origin_territory['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= territoryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="origin-location">Herkunftsort
+                        <% 
+                            if(typeof(origin_location) !== 'undefined') { 
+                                var locationTemplate = _.template($("script#location").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = origin_location['name'];
+                                array['comment'] = origin_location['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= locationTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+        
+                    <label class="country">Geburtsland
+                        <% 
+                            if(typeof(birth_country) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = birth_country['name'];
+                                array['comment'] = birth_country['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+        
+                    <label class="territory">Geburtsterritorium
+                        <% if(typeof(birth_territory) !== 'undefined') { 
+                                var territoryTemplate = _.template($("script#territory").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = birth_territory['name'];
+                                array['comment'] = birth_territory['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= territoryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+            
+                    <label class="location">Geburtsort
+                        <% if(typeof(birth_location) !== 'undefined') { 
+                                var locationTemplate = _.template($("script#location").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = birth_location['name'];
+                                array['comment'] = birth_location['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= locationTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="birth-date">Geburtsdatum
+                        <% 
+                            if(typeof(birth_date) !== 'undefined') { 
+                                var dateReferenceTemplate = _.template($("script#dateReference").html());
+                            
+                                var array = [];
+                            
+                                array['dateReference'] = birth_date;
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= dateReferenceTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+
+                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+    </div>
+        </script>
+
+        <script type="text/template" id="death">
+                            <div class="death-container collapsible collapsed">
+                        <h3 class="header">
+                            Todesdaten
+                        </h3>
+            <div class="row">
+                    <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
+                    <label class="country">Todesland
+                    <%  if(typeof(death_country) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = death_country['name'];
+                                array['comment'] = death_country['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Todesterritorium
+                        <% if(typeof(death_territory) !== 'undefined') { 
+                                var territoryTemplate = _.template($("script#territory").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = death_territory['name'];
+                                array['comment'] = death_territory['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= territoryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="location">Todesort
+                        <% if(typeof(death_location) !== 'undefined') { 
+                                var locationTemplate = _.template($("script#location").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = death_location['name'];
+                                array['comment'] = death_location['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= locationTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label>Todesgrund<input type="text" name="causeOfDeath" value="<%= typeof(cause_of_death) !== 'undefined' ?  cause_of_death : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label class="death-date">Todesdatum
+                        <% 
+                                if(typeof(death_date) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                                    var array = [];
+
+                                    array['dateReference'] = death_date;
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                        <%  } %>
+                    </label>
+        
+                    <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label class="funeral-location">Begräbnisort
+                        <% if(typeof(funeral_location) !== 'undefined') { 
+                                var locationTemplate = _.template($("script#location").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = funeral_location['name'];
+                                array['comment'] = funeral_location['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= locationTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="funeral-date">Begräbnisdatum
+                            <% 
+                                if(typeof(funeral_date) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                                    var array = [];
+
+                                    array['dateReference'] = funeral_date;
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                        <%  } %>
+                    </label>
+        
+                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+    </div>
+        </script>
+
+        <script type="text/template" id="education">
+                            <div class="educations-container collapsible collapsed">
+                        <h3 class="header">
+                            Ausbildungsdaten
+                        </h3>
+            <% 
+                _.forEach(educations, function (educationObj,i) {       
+                
+            %>
+                    <div class="row education-row">
+                            <input type="hidden" name="id" value="<%= typeof(educationObj['id']) !== 'undefined' ?  educationObj['id'] : '' %>"> 
+                            <input type="hidden" name="order" value="<%= typeof(educationObj['education_order']) !== 'undefined' ?  educationObj['education_order'] : '' %>">
+                            <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="country">Land
+                            <%  if(typeof(educationObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = educationObj['country']['name'];
+                                array['comment'] = educationObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                            <label class="territory">Territorium
+                            <% if(typeof(educationObj['territory']) !== 'undefined') { 
+                                var territoryTemplate = _.template($("script#territory").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = educationObj['territory']['name'];
+                                array['comment'] = educationObj['territory']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= territoryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                            <label class="location">Ort
+                                 <% if(typeof(educationObj['location']) !== 'undefined') { 
+                                        var locationTemplate = _.template($("script#location").html());
+
+                                        var array = [];
+
+                                        array['name'] = educationObj['location']['name'];
+                                        array['comment'] = educationObj['location']['comment'];
+
+                                        if(typeof(enabled) !== 'undefined') {
+                                            array['enabled'] = true;
+                                        }
+                                    %>
+
+                                    <%= locationTemplate(array) %>
+                        
+                                <%  } %>
+                            </label>
+                            <label class="from-date">von
+                            <% 
+                                if(typeof(educationObj['from_date']) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                                    var array = [];
+
+                                    array['dateReference'] = educationObj['from_date'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                                <%  } %>
+                            </label>
+                            <label class="to-date">bis
+                            <% 
+                                if(typeof(educationObj['to_date']) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+ 
+
+                                    var array = [];
+
+                                    array['dateReference'] = educationObj['to_date'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                                <%  } %>
+                            </label>
+                            <label class="proven-date">belegt                       
+                            <% if(typeof(educationObj['proven_date']) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+ 
+
+                                    var array = [];
+
+                                    array['dateReference'] = educationObj['proven_date'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                                <%  } %>
+                            </label>
+                            <label>Abschluss<input type="text" name="graduationLabel" value="<%= typeof(educationObj['graduation_label']) !== 'undefined' ? educationObj['graduation_label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="graduation-date">Abschlussdatum
+                            <% if(typeof(educationObj['graduation_date']) !== 'undefined') { 
+                                    var dateReferenceTemplate = _.template($("script#dateReference").html());
+ 
+
+                                    var array = [];
+
+                                    array['dateReference'] = educationObj['graduation_date'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= dateReferenceTemplate(array) %>
+
+                                <%  } %>
+                            </label>
+                            <label class="graduation-location">Abschlussort 
+                                <% if(typeof(educationObj['graduation_location']) !== 'undefined') { 
+                                    var locationTemplate = _.template($("script#location").html());
+
+                                    var array = [];
+
+                                    array['name'] = educationObj['graduation_location']['name'];
+                                    array['comment'] = educationObj['graduation_location']['comment'];
+
+                                    if(typeof(enabled) !== 'undefined') {
+                                        array['enabled'] = true;
+                                    }
+                                %>
+
+                                <%= locationTemplate(array) %>
+                        
+                                <%  } %>
+                            </label>
+                            <label>Kommentar<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    </div>
+            <% }); %>
+        </div>
+        </script>
+
+        <script type="text/template" id="honour">
+                            <div class="honours-container collapsible collapsed">
+                        <h3 class="header">
+                            Ehren
+                        </h3>
+             <% 
+                _.forEach(honours, function (honourObj,i) {       
+                
+            %>
+            <div class="row honour-row">
+                    <input type="hidden" name="id" value="<%= typeof(honourObj['id']) !== 'undefined' ?  honourObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(honourObj['honour_order']) !== 'undefined' ?  honourObj['honour_order'] : '' %>">
+                    <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="country">Land
+                            <%  if(typeof(honourObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = honourObj['country']['name'];
+                                array['comment'] = honourObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(honourObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = honourObj['territory']['name'];
+                            array['comment'] = honourObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(honourObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = honourObj['location']['name'];
+                            array['comment'] = honourObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(honourObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = honourObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(honourObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = honourObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(honourObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = honourObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+            <% }); %>
+        </div>
+        </script>
+
+        <script type="text/template" id="property">
+                            <div class="properties-container collapsible collapsed">
+                        <h3 class="header">
+                            Besitz
+                        </h3>
+            <% 
+                _.forEach(properties, function (propertyObj,i) {       
+                
+            %>
+            <div class="row property-row">
+                   <input type="hidden" name="id" value="<%= typeof(propertyObj['id']) !== 'undefined' ?  propertyObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(propertyObj['property_order']) !== 'undefined' ?  propertyObj['property_order'] : '' %>">
+                     <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="country">Land
+                            <%  if(typeof(propertyObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = propertyObj['country']['name'];
+                                array['comment'] = propertyObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(propertyObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = propertyObj['territory']['name'];
+                            array['comment'] = propertyObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(propertyObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = propertyObj['location']['name'];
+                            array['comment'] = propertyObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(propertyObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = propertyObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(propertyObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = propertyObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(propertyObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = propertyObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+        <% }); %>
+    </div>
+        </script>
+
+        <script type="text/template" id="rank">
+                            <div class="rank-container collapsible collapsed">
+                        <h3 class="header">
+                            Rang
+                        </h3>
+            <% 
+                _.forEach(ranks, function (rankObj,i) {       
+                
+            %>
+            <div class="row rank-row">
+                   <input type="hidden" name="id" value="<%= typeof(rankObj['id']) !== 'undefined' ?  rankObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(rankObj['rank_order']) !== 'undefined' ?  rankObj['rank_order'] : '' %>">
+                    <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                     <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                            <label class="country">Land
+                            <%  if(typeof(rankObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = rankObj['country']['name'];
+                                array['comment'] = rankObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(rankObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = rankObj['territory']['name'];
+                            array['comment'] = rankObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(rankObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = rankObj['location']['name'];
+                            array['comment'] = rankObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(rankObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = rankObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(rankObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = rankObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(rankObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = rankObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(rankObj['comment']) !== 'undefined' ? rankObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+        <% }); %>
+    </div>
+        </script>
+
+        <script type="text/template" id="religion">
+                            <div class="religion-container collapsible collapsed">
+                        <h3 class="header">
+                            Religion
+                        </h3>
+            <% 
+                _.forEach(religions, function (religionObj,i) {       
+                
+            %>
+            <div class="row religion-row">
+                   <input type="hidden" name="id" value="<%= typeof(religionObj['id']) !== 'undefined' ?  religionObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(religionObj['religion_order']) !== 'undefined' ?  religionObj['religion_order'] : '' %>">
+                     <label>Name<input type="text" name="name" value="<%= typeof(religionObj['name']) !== 'undefined' ?  religionObj['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Religionswechsel<input type="text" name="changeOfReligion" value="<%= typeof(religionObj['change_of_religion']) !== 'undefined' ?  religionObj['change_of_religion'] : '' %>"' <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+
+
+                <label class="from-date">von
+                <% 
+                    if(typeof(religionObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = religionObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(religionObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = religionObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(religionObj['comment']) !== 'undefined' ? religionObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+        <% }); %>
+    </div>
+        </script>
+
+        <script type="text/template" id="residence">
+                            <div class="residence-container collapsible collapsed">
+                        <h3 class="header">
+                            Wohnraum
+                        </h3>
+            <% 
+                _.forEach(residences, function (residenceObj,i) {       
+                
+            %>
+            <div class="row">
+                    <input type="hidden" name="id" value="<%= typeof(residenceObj['id']) !== 'undefined' ? residenceObj['id'] : '' %>"> 
+                     <label class='country'>Wohnland
+                            <%  if(typeof(residenceObj['residence_country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = residenceObj['residence_country']['name'];
+                                array['comment'] = residenceObj['residence_country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class='territory'>Wohnterritorium
+                        <% if(typeof(residenceObj['residence_territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = residenceObj['residence_territory']['name'];
+                            array['comment'] = residenceObj['residence_territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class='location'>Wohnort
+                     <% if(typeof(residenceObj['residence_location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = residenceObj['residence_location']['name'];
+                            array['comment'] = residenceObj['residence_location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+            </div>
+        <% }); %>
+    </div>  
+        </script>
+
+
+        <script type="text/template" id="roadOfLife">
+                            <div class="road-of-life-container collapsible collapsed">
+                        <h3 class="header">
+                            Lebensweg
+                        </h3>
+            <% 
+
+                _.forEach(roadOfLifes, function (roadOfLifeObj,i) {       
+                
+            %>
+            <div class="row road-of-life-row">
+                    <input type="hidden" name="id" value="<%= typeof(roadOfLifeObj['id']) !== 'undefined' ?  roadOfLifeObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(roadOfLifeObj['road_of_life_order']) !== 'undefined' ?  roadOfLifeObj['road_of_life_order'] : '' %>">
+                    <label class="origion-country">Herkunftsland
+                        <%  if(typeof(roadOfLifeObj['origin_country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = roadOfLifeObj['origin_country']['name'];
+                                array['comment'] = roadOfLifeObj['origin_country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="origin-territory">Herkunftsterritorium<% if(typeof(roadOfLifeObj['origin_territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = roadOfLifeObj['origin_territory']['name'];
+                            array['comment'] = roadOfLifeObj['origin_territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                    </label>
+                    <label class='job'>Job
+                    <%  if(typeof(roadOfLifeObj['job']) !== 'undefined') { 
+                                var jobTemplate = _.template($("script#job").html());
+                            
+                                var array = [];
+                            
+                                array['label'] = roadOfLifeObj['job']['label'];
+                                array['comment'] = roadOfLifeObj['job']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= jobTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                     <label class="country">Land
+                            <%  if(typeof(roadOfLifeObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = roadOfLifeObj['country']['name'];
+                                array['comment'] = roadOfLifeObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(roadOfLifeObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = roadOfLifeObj['territory']['name'];
+                            array['comment'] = roadOfLifeObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(roadOfLifeObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = roadOfLifeObj['location']['name'];
+                            array['comment'] = roadOfLifeObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(roadOfLifeObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = roadOfLifeObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(roadOfLifeObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = roadOfLifeObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(roadOfLifeObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = roadOfLifeObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(roadOfLifeObj['comment']) !== 'undefined' ? roadOfLifeObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            </div>
+        <% }); %>
+    </div> 
+        </script>
+
+        <script type="text/template" id="source">
+                            <div class="source-container collapsible collapsed">
+                        <h3 class="header">
+                            Quellen
+                        </h3>
+            <% 
+                _.forEach(sources, function (sourceObj,i) {       
+                
+            %>
+            <div class="row source-row">
+                    <input type="hidden" name="id" value="<%= typeof(sourceObj['id']) !== 'undefined' ?  sourceObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(sourceObj['source_order']) !== 'undefined' ?  sourceObj['source_order'] : '' %>">
+                    <label>Name<input type="text" name="label" value="<%= typeof(sourceObj['label']) !== 'undefined' ?  sourceObj['label'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Fundort<input type="text" name="placeOfDiscovery" value="<%= typeof(sourceObj['place_of_discovery']) !== 'undefined' ?  sourceObj['place_of_discovery'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Bemerkung<input type="text" name="remark" value="<%= typeof(sourceObj['remark']) !== 'undefined' ?  sourceObj['remark'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(sourceObj['comment']) !== 'undefined' ?  sourceObj['comment'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+            </div>
+        <% }); %>
+    </div>
+        </script>    
+
+        <script type="text/template" id="status">
+                            <div class="status-container collapsible collapsed">
+                        <h3 class="header">
+                            Status
+                        </h3>
+            <% 
+                _.forEach(stati, function (statusObj,i) {       
+                
+            %>
+            <div class="row status-row">
+                    <input type="hidden" name="id" value="<%= typeof(statusObj['id']) !== 'undefined' ?  statusObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(statusObj['status_order']) !== 'undefined' ?  statusObj['status_order'] : '' %>">
+                    <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="country">Land
+                            <%  if(typeof(statusObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = statusObj['country']['name'];
+                                array['comment'] = statusObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(statusObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = statusObj['territory']['name'];
+                            array['comment'] = statusObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(statusObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = statusObj['location']['name'];
+                            array['comment'] = statusObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(statusObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = statusObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(statusObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = statusObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(statusObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = statusObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(statusObj['comment']) !== 'undefined' ? statusObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        
+            </div>
+        <% }); %>
+    </div>
+        </script>
+
+        <script type="text/template" id="works">
+                            <div class="works-container collapsible collapsed">
+                        <h3 class="header">
+                            Werke
+                        </h3>
+            <% 
+                _.forEach(works, function (worksObj,i) {       
+                
+            %>
+            <div class="row works-row">
+                    <input type="hidden" name="id" value="<%= typeof(worksObj['id']) !== 'undefined' ?  worksObj['id'] : '' %>"> 
+                    <input type="hidden" name="order" value="<%= typeof(worksObj['works_order']) !== 'undefined' ?  worksObj['works_order'] : '' %>">
+                                     <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label class="country">Land
+                            <%  if(typeof(worksObj['country']) !== 'undefined') { 
+                                var countryTemplate = _.template($("script#country").html());
+                            
+                                var array = [];
+                            
+                                array['name'] = worksObj['country']['name'];
+                                array['comment'] = worksObj['country']['comment'];
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= countryTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
+                    <label class="territory">Territorium
+                        <% if(typeof(worksObj['territory']) !== 'undefined') { 
+                            var territoryTemplate = _.template($("script#territory").html());
+
+                            var array = [];
+
+                            array['name'] = worksObj['territory']['name'];
+                            array['comment'] = worksObj['territory']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= territoryTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="location">Ort
+                     <% if(typeof(worksObj['location']) !== 'undefined') { 
+                            var locationTemplate = _.template($("script#location").html());
+
+                            var array = [];
+
+                            array['name'] = worksObj['location']['name'];
+                            array['comment'] = worksObj['location']['comment'];
+
+                            if(typeof(enabled) !== 'undefined') {
+                                array['enabled'] = true;
+                            }
+                        %>
+
+                        <%= locationTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="from-date">von
+                <% 
+                    if(typeof(worksObj['from_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+                        var array = [];
+
+                        array['dateReference'] = worksObj['from_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="to-date">bis
+                <% 
+                    if(typeof(worksObj['to_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = worksObj['to_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label class="proven-date">belegt                       
+                <% if(typeof(worksObj['proven_date']) !== 'undefined') { 
+                        var dateReferenceTemplate = _.template($("script#dateReference").html());
+
+
+                        var array = [];
+
+                        array['dateReference'] = worksObj['proven_date'];
+
+                        if(typeof(enabled) !== 'undefined') {
+                            array['enabled'] = true;
+                        }
+                    %>
+
+                    <%= dateReferenceTemplate(array) %>
+
+                    <%  } %>
+                </label>
+                <label>Kommentar<input type="text" name="comment" value="<%= typeof(worksObj['comment']) !== 'undefined' ? worksObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+        
+            </div>
+            <% }); %>
+        </div>
+        </script>
+
+        <script type="text/template" id="dateReference">
+            <div class="input-group date-reference-container">
+            <% 
+            _.forEach(dateReference, function (date,i) { 
+            if(typeof(date['from']) !== 'undefined') {
+            var dateTemplate = _.template($("script#date").html()); 
+
+            if(typeof(enabled) !== 'undefined') { 
+            date['from']['enabled'] = true; 
+            date['to']['enabled'] = true; 
+            }
+            %>
+            <div class="input-group date-range-container">
+            <%= dateTemplate(date['from']) %>
+            bis
+            <%= dateTemplate(date['to']) %>
+            </div>
+            <% } else { 
+
+            var dateTemplate = _.template($("script#date").html());
+
+            if(typeof(enabled) !== 'undefined') { 
+            date['enabled'] = true; 
+            }
+            %>
+
+            <%= dateTemplate(date) %>
+            <% } 
+            }) %>
+            </div>
+        </script>
+
+        <script type="text/template" id="date">
+            <div class="input-group date-container">
+            <input type="hidden" name="id" value="<%= typeof(id)!== 'undefined' ?  id : '' %>"> 
+            <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="month" value="<%= typeof(month)!== 'undefined' ?  month : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="year" value="<%= typeof(year)!== 'undefined' ?  year : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="nation">
+            <div class="input-group nation-container">
+            <input type="hidden" name="nationId"> 
+            <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="location">
+            <div class="input-group location-container">
+            <input type="hidden" name="locationId"> 
+            <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="territory">
+            <div class="input-group territory-container">
+            <input type="hidden" name="territoryId"> 
+            <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="country">
+            <div class="input-group country-container">
+            <input type="hidden" name="countryId"> 
+            <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="job">
+            <div class="input-group job-container">
+            <input type="hidden" name="jobId"> 
+            <input type="text" name="label" value="<%= typeof(label)!== 'undefined' ?  label : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+
+        <script type="text/template" id="jobClass">
+            <div class="input-group job-class-container">
+            <input type="hidden" name="jobClassId"> 
+            <input type="text" name="label" value="<%= typeof(label)!== 'undefined' ?  label : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </div>
+        </script>
+    {% endverbatim %}
 
 {% endblock %}

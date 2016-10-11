@@ -2,6 +2,8 @@
 
 namespace UR\AmburgerBundle\Util;
 
+use Doctrine\Common\Collections\Criteria;
+
 class PossibleDuplicatesFinder {
     
     private $LOGGER;
@@ -48,20 +50,21 @@ class PossibleDuplicatesFinder {
         
         $this->getLogger()->info("Found ".count($possibleDuplicatesFromDB). " duplicates from DB.");
         
-        $remainingCheckedDuplicates = $this->checkPossibleDuplicates($person, $possibleDuplicatesFromDB);
+        $duplicateObjects = array();
+        
+        for($i = 0; $i < count($possibleDuplicatesFromDB); $i++){
+            $person = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
+                    
+           if(!is_null($person)){
+                $duplicateObjects[] = $person;
+           }
+        }
+        
+        $remainingCheckedDuplicates = $this->checkPossibleDuplicates($person, $duplicateObjects);
         
         $this->getLogger()->info("After comparing with requested person ".count($remainingCheckedDuplicates). " person(s) remain.");
         
-        //extract ids?
-        $idsOfDuplicates = array();
-        
-        for($i = 0; $i < count($remainingCheckedDuplicates); $i++){
-            $idsOfDuplicates[] = $remainingCheckedDuplicates[$i]->getId();
-        }
-        
-        //returning the remainCheckedDuplicates will result in errors, not sure why this is happening.
-        
-        return $idsOfDuplicates;
+        return $remainingCheckedDuplicates;
     }
     
     private function findPossibleDuplicatesInDB($em, $person){
@@ -82,6 +85,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Person')->createQueryBuilder('p');
             
         $personResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id '
                         . 'AND ((p.firstName = :firstName AND p.lastName = :lastName) '
                         . 'OR (p.firstName = :firstName AND p.lastName IS NULL) '
@@ -91,10 +95,12 @@ class PossibleDuplicatesFinder {
                 ->setParameter('firstName', $person->getFirstName())
                 ->getQuery()
                 ->getResult();
-
+        
+        
         $queryBuilder = $em->getRepository('NewBundle:Relative')->createQueryBuilder('r');
 
         $relativeResults = $queryBuilder
+                ->select('r.id')
                 ->where('r.id != :id '
                         . 'AND ((r.firstName = :firstName AND r.lastName = :lastName) '
                         . 'OR (r.firstName = :firstName AND r.lastName IS NULL) '
@@ -108,6 +114,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Partner')->createQueryBuilder('p');
 
         $partnerResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id '
                         . 'AND ((p.firstName = :firstName AND p.lastName = :lastName) '
                         . 'OR (p.firstName = :firstName AND p.lastName IS NULL) '
@@ -117,7 +124,7 @@ class PossibleDuplicatesFinder {
                 ->setParameter('firstName', $person->getFirstName())
                 ->getQuery()
                 ->getResult();
-
+        
         $fullResults = array_merge($personResults, $relativeResults);
         return array_merge($fullResults, $partnerResults);
     }
@@ -126,6 +133,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Person')->createQueryBuilder('p');
             
         $personResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id AND p.firstName = :firstName')
                 ->setParameter('id', $person->getId())
                 ->setParameter('firstName', $person->getFirstName())
@@ -135,6 +143,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Relative')->createQueryBuilder('r');
 
         $relativeResults = $queryBuilder
+                ->select('r.id')
                 ->where('r.id != :id AND r.firstName = :firstName)')
                 ->setParameter('id', $person->getId())
                 ->setParameter('firstName', $person->getFirstName())
@@ -144,12 +153,13 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Partner')->createQueryBuilder('p');
 
         $partnerResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id AND p.firstName = :firstName')
                 ->setParameter('id', $person->getId())
                 ->setParameter('firstName', $person->getFirstName())
                 ->getQuery()
                 ->getResult();
-
+        
         $fullResults = array_merge($personResults, $relativeResults);
         return array_merge($fullResults, $partnerResults);
     }
@@ -158,6 +168,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Person')->createQueryBuilder('p');
             
         $personResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id AND p.lastName = :lastName')
                 ->setParameter('id', $person->getId())
                 ->setParameter('lastName', $person->getLastName())
@@ -167,6 +178,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Relative')->createQueryBuilder('r');
 
         $relativeResults = $queryBuilder
+                ->select('r.id')
                 ->where('r.id != :id AND r.lastName = :lastName')
                 ->setParameter('id', $person->getId())
                 ->setParameter('lastName', $person->getLastName())
@@ -176,6 +188,7 @@ class PossibleDuplicatesFinder {
         $queryBuilder = $em->getRepository('NewBundle:Partner')->createQueryBuilder('p');
 
         $partnerResults = $queryBuilder
+                ->select('p.id')
                 ->where('p.id != :id AND p.lastName = :lastName')
                 ->setParameter('id', $person->getId())
                 ->setParameter('lastName', $person->getLastName())
@@ -196,6 +209,20 @@ class PossibleDuplicatesFinder {
         }
         
         return $remainingPossibleDuplicates;
+    }
+    
+    private function loadPersonByID($em, $ID){
+        $person = $em->getRepository('NewBundle:Person')->findOneById($ID);
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Relative')->findOneById($ID);
+        }
+        
+        if(is_null($person)){
+            $person = $em->getRepository('NewBundle:Partner')->findOneById($ID);
+        }
+                
+        return !is_null($person) ? $person : array();
     }
 }
 
