@@ -7,10 +7,6 @@ namespace UR\AmburgerBundle\Entity;
  */
 class CorrectionSession
 {
-    /**
-     * @var integer
-     */
-    private $oid;
 
     /**
      * @var String
@@ -37,16 +33,6 @@ class CorrectionSession
      */
     private $modified;
 
-
-    /**
-     * Get oid
-     *
-     * @return integer
-     */
-    public function getOid()
-    {
-        return $this->oid;
-    }
 
     /**
      * Set activeUserName
@@ -167,20 +153,7 @@ class CorrectionSession
     {
         return $this->modified;
     }
-    
-    /**
-     * Set oid
-     *
-     * @param integer $oid
-     *
-     * @return CorrectionSession
-     */
-    public function setOid($oid)
-    {
-        $this->oid = $oid;
-
-        return $this;
-    }
+   
     
     /**
      * @ORM\PreFlush

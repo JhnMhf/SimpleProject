@@ -34,7 +34,7 @@ class CorrectionSessionInvalidateCommand extends ContainerAwareCommand
             $lastModified = $session->getModified() ? $session->getModified()->format('U') : 0;
             
             if($lastModified <= $olderThan){
-                $output->writeln(sprintf('Removing correction session for ID: <info>%s</info>', $session->getId()));
+                $output->writeln(sprintf('Removing correction session for ID: <info>%s</info>', $session->getPersonId()));
                 
                 $this->getContainer()->get('correction_session.service')->stopCorrectionSession($session);
             }

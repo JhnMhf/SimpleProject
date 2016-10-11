@@ -94,7 +94,7 @@ class CorrectionSessionUtil {
     }
     
     public function stopCorrectionSession($correctionSession){
-        $personData = $this->getSystemDBManager()->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($correctionSession->getPersonId);
+        $personData = $this->getSystemDBManager()->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($correctionSession->getPersonId());
 
         //remove currently in progress flag from personData
         $personData->setCurrentlyInProcess(false);
