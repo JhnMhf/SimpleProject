@@ -53,11 +53,13 @@ class PossibleDuplicatesFinder {
         $duplicateObjects = array();
         
         for($i = 0; $i < count($possibleDuplicatesFromDB); $i++){
-            $person = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
+            if($possibleDuplicatesFromDB != $ID){
+                $person = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
                     
-           if(!is_null($person)){
-                $duplicateObjects[] = $person;
-           }
+                if(!is_null($person)){
+                     $duplicateObjects[] = $person;
+                }
+            }
         }
         
         $remainingCheckedDuplicates = $this->checkPossibleDuplicates($person, $duplicateObjects);

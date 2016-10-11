@@ -93,11 +93,25 @@ class PossibleRelativesFinder {
         //necessary to fill possible unsetted values
         $possibleRelatives = array_values($possibleRelatives);
         
+        //check for possible siblings over father and mother
+        $possibleSiblings = $this->searchForPossibleSiblings($em, $ID);
+        
+        //check for possible parents over siblings
+        $possibleParents = $this->searchForPossibleParents($em, $ID);
+        
         //enrich possibleRelatives with Data
         $fullPossibleRelatives = [];
 
         for($i = 0; $i < count($possibleRelatives); $i++){
             $fullPossibleRelatives[] = $this->loadPerson($em, $possibleRelatives[$i]['ID']);
+        }
+        
+        for($i = 0; $i < count($possibleSiblings); $i++){
+            $fullPossibleRelatives[] = $this->loadPerson($em, $possibleSiblings[$i]);
+        }
+        
+        for($i = 0; $i < count($possibleParents); $i++){
+            $fullPossibleRelatives[] = $this->loadPerson($em, $possibleParents[$i]);
         }
 
         return $fullPossibleRelatives;
@@ -417,6 +431,47 @@ class PossibleRelativesFinder {
         }
         
         return $sql;
-    }   
-}
+    }
+    
+    private function searchForPossibleSiblings($em, $ID) {
+        $possibleSiblings = array();
+        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($id);
 
+        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($id);
+        
+        for($i = 0; $i < count($parentIds); $i++){
+            $childrenOfParent = $em->getRepository('NewBundle:IsParent')->loadChildren($parentIds[$i]);
+            
+            for($j = 0; $j < count($childrenOfParent); $i++){
+                if($childrenOfParent[$j] != $ID 
+                        && !in_array($childrenOfParent[$j], $siblingIds)
+                        && !in_array($childrenOfParent[$j], $possibleSiblings)){
+                    $possibleSiblings[] = $childrenOfParent[$j];
+                }
+            }
+        }
+        
+        return $possibleSiblings;
+    }
+    
+    private function searchForPossibleParents($em, $ID) {
+        $possibleParents = array();
+        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($id);
+        
+        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($id);
+
+        for($i = 0; $i < count($siblingIds); $i++){
+            $parentsOfSibling = $em->getRepository('NewBundle:IsParent')->loadParents($siblingIds[$i]);
+            
+            for($j = 0; $j < count($parentsOfSibling); $i++){
+                if(!in_array($parentsOfSibling[$j], $parentIds)
+                        && !in_array($parentsOfSibling[$j], $possibleParents)){
+                    $possibleParents[] = $parentsOfSibling[$j];
+                }
+            }
+        }
+        
+        return $possibleParents;
+    }
+    
+}
