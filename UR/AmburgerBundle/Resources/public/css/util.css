@@ -1,0 +1,81 @@
+.center  {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* dialogs */
+
+#dialogs {
+    display: none;
+}
+
+/* templates */
+
+#templates {
+    display: none;
+}
+
+/* loaders */
+
+#loaders {
+    display: none;
+    
+}
+
+#loader-background {
+    display: none;
+    position: fixed;
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);   
+    z-index: 1;
+}
+
+#loaders > .loader-inner {
+    z-index: 2;
+    width: 100px;
+    height: 100px;
+
+    position: fixed;
+    left:50%;
+    top:50%;
+    margin: auto;
+}
+
+#loaders > .loader-inner > div {
+    background: white;
+}
+
+/* collapsible */
+
+.collapsible.collapsed > .row {
+    display: none;
+}
+
+.collapsible > .header:before {
+    content: "-";
+}
+
+.collapsible.collapsed > .header:before {
+    content: "+";
+}
+
+
+/* collapsible */
+
+.collapsible.collapsed > .container,
+.collapsible.collapsed > .container {
+    display: none;
+}
+
+.collapsible > h2:before {
+    content: "-";
+}
+
+.collapsible.collapsed > h2:before {
+    content: "+";
+}

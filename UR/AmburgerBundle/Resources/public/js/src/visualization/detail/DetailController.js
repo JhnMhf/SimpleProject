@@ -25,6 +25,8 @@ Detail.DetailController = (function(){
         $(ajaxLoader).on("locationsLoaded", onLocationsLoaded);
         $(ajaxLoader).on("personLoaded", onPersonLoaded);
         
+        Loader.showLoader();
+        
         ajaxLoader.loadPersonData();
         ajaxLoader.loadLocationsForPerson();
         

@@ -7,57 +7,23 @@ PersonCorrection.PersonCorrectionView = (function(){
     */
     init = function() {
         $('#save-button').on("click", save);
-        $('.collapsible').on("click", collapse);
+        Collapsible.register();
+        
         showLoader();
         
         return that;
     },
 
     showLoader = function(){
-        $('#loader-background').show();
-        $('#loaders').show();
+        Loader.showLoader();
     },
     
     hideLoader = function(){
-        $('#loaders').hide();
-        $('#loader-background').hide();
+        Loader.hideLoader();
     },
     
     save = function(){
         $(that).trigger('save');
-    },
-    
-    collapse = function(args){
-        console.log(args);
-        
-        if(args.target.localName !== 'input' 
-                && args.target.localName !== 'label' 
-                && args.target.localName  !== 'select'
-                 && args.target.localName  !== 'option'){             
-            var clickedContainer = extractClickedContainer(args.currentTarget.className);
-
-            console.log(clickedContainer);
-
-            if(clickedContainer !== undefined){
-                var elements = $("."+clickedContainer);
-
-                if(elements.hasClass('collapsed')){
-                    elements.removeClass('collapsed');
-                } else{
-                    elements.addClass('collapsed');
-                }
-            }
-        }
-
-    },
-    
-    extractClickedContainer = function(classes){
-        var classList = classes.split(/\s+/);
-        for (i = 0; i < classList.length; i++) {
-           if (classList[i].includes('-container')) {
-               return classList[i];
-           }
-        }
     };
 
 

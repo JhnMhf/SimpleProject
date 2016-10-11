@@ -15,6 +15,8 @@ Detail.PersonView = (function(){
     displayPerson = function(personData){
         setHeader(personData);
         personViewGenerator.displayPerson("#person-data", personData);
+        Collapsible.register();
+        Loader.hideLoader();
     },
     
     setHeader = function(personData){

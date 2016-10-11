@@ -29,6 +29,8 @@ Index.IndexController = (function(){
         $(ajaxLoader).on("loadedPersonData", onLoadedPersonData);
         $(ajaxLoader).on("locationsLoaded", onLocationsLoaded);
         
+        Loader.showLoader();
+        
         ajaxLoader.loadInitialIdList();
 
         return that;
@@ -36,12 +38,14 @@ Index.IndexController = (function(){
     
     onSearch = function(event, data){
         console.log("OnSearch: ", data);
+        Loader.showLoader();
         ajaxLoader.search(data);
     },
     
     onIdListLoaded = function(event,data){
          console.log("onIdListLoaded: ", data);
          if(data['data'].length == 0){
+            Loader.hideLoader();
             searchView.displayPopup("Es wurden keine Suchergebnisse gefunden.");
          } else {
             personListView.setPersonListIds(data['data']);
@@ -54,6 +58,7 @@ Index.IndexController = (function(){
         console.log("onIdListLoadedAll: ", data);
         personListView.setPersonListIds(data['data']);
         ajaxLoader.loadLocationDataForAll();
+        Loader.hideLoader();
     },
     
     onLocationsLoaded = function(event,data){
