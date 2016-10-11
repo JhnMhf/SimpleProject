@@ -1,0 +1,47 @@
+{% extends "AmburgerBundle:Base:base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/amburger/css/admin.css')}}" />
+{% endblock %}
+
+{% block fullbody %}
+    <header>
+        <div class="row" id="header">
+            <div class="large-12 columns">
+                <div class="large-2 columns center">
+
+                </div>
+                <div class="large-8 columns center">
+                    {% block header %}
+                        <h1>Adminbereich der Erik Amburger Datenbank</h1>
+                    {% endblock %}
+                </div>
+                <div class="large-2 columns center">
+
+                </div>
+
+            </div>
+        </div>
+
+        {% block navigation %}
+
+        {% endblock %}
+    </header>
+
+    <div id="body">
+        {% block body %}
+
+        {% endblock %}
+    </div>
+
+
+    <footer id="footer">
+        <div class="row">
+            <div class="large-12 columns">
+                {% block footer %}
+                    <h1>&copy; 2016 IOS Regensburg</h1>
+                {% endblock %}
+            </div>
+        </div>
+    </footer>
+{% endblock %}

@@ -25,27 +25,12 @@ Start.StartView = (function(){
     },
     
     showErrorMessage = function(message){
-        $('#dialog-error .message').text(message);
-        
-        $('#dialog-error').dialog();
+        MessageHelper.showErrorMessage(message);
     },
     
     showAlreadyCorrectedMessage = function(){
-        $( "#dialog-already-corrected" ).dialog({
-            resizable: false,
-            height: "auto",
-            width: 400,
-            modal: true,
-            buttons: {
-              "Ja": function() {
-                $( this ).dialog( "close" );
-                $(that).trigger("startCorrectingNonetheless");
-              },
-              "Nein": function() {
-                $( this ).dialog( "close" );
-              }
-            }
-          });
+        MessageHelper.showYesNoMessage('Die Person wurde bereits korrigiert. Soll die Korrektur trotzdem gestartet werden', 
+        'Person wurde bereits korrigiert', that, "startCorrectingNonetheless");
     };
 
 

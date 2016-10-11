@@ -124,8 +124,7 @@ Index.SearchView = (function () {
     },
     
     displayPopup = function(message){
-        //@TODO: Add nicer popup (example from correction start?)
-        alert(message);
+        MessageHelper.showInfoMessage(message);
     };
 
 
