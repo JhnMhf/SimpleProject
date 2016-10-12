@@ -10,6 +10,8 @@ Detail.DetailController = (function(){
     
     personView = {},
     
+    familyTreeView = {},
+    
     personId = undefined,
 
     /* 
@@ -24,11 +26,15 @@ Detail.DetailController = (function(){
         ajaxLoader = Detail.AjaxLoader.init();
         $(ajaxLoader).on("locationsLoaded", onLocationsLoaded);
         $(ajaxLoader).on("personLoaded", onPersonLoaded);
+        $(ajaxLoader).on("relationsLoaded", onRelationsLoaded);
+        
+        familyTreeView = Detail.FamilyTreeView.init();
         
         Loader.showLoader();
         
         ajaxLoader.loadPersonData();
         ajaxLoader.loadLocationsForPerson();
+        ajaxLoader.loadRelationsForPerson();
         
         return that;
     },
@@ -41,6 +47,11 @@ Detail.DetailController = (function(){
     onPersonLoaded = function(event, data){
         console.log("onPersonLoaded: ", data);
         personView.displayPerson(data);
+    },
+    
+    onRelationsLoaded = function(event, data){
+        console.log('onRelationsLoaded: ', data);
+        familyTreeView.displayFamilyTree(data['data']);
     };
     
     

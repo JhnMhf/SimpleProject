@@ -27,6 +27,10 @@ class DefaultController extends Controller
         return $this->render('AmburgerBundle:DataCorrection:base.html.twig');
     }
     
+    public function familyTreeAction(){
+        return $this->render('AmburgerBundle:Visualization:test.html.twig');
+    }
+    
     public function migrateProcessAction()
     {
         $numberOfMigratedPersons = $this->get("migration_process.service")->runWithTestdata();

@@ -65,7 +65,11 @@ class VisualizationController extends Controller{
     public function detailRelationsAction($ID){
         
         $serializer = $this->get('serializer');
-        $json = $serializer->serialize($array(), 'json');
+        $relationShipLoader = $this->get('relationship_loader.service');
+        $em = $this->get('doctrine')->getManager('final');
+        
+        $familyTree = $relationShipLoader->loadDataForFamilyTree($em,$ID);
+        $json = $serializer->serialize($familyTree, 'json');
         $jsonResponse = new JsonResponse();
         $jsonResponse->setContent($json);
 

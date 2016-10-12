@@ -38,22 +38,103 @@ class RelationshipLoader {
         return $this->LOGGER;
     }
     
+    //load all relatives
+    //and load for all relatives the information of their marriage partners and parents
+    //the reference id is enough
+    //the structure should be:
+    // person: {fullperson}
+    // marriage partners: [referenceOneId, referenceTwoId]
+    // parents: [referenceOneId, referenceTwoId]
     
-    /* ??? Relatives loading for family tree 
-    public function loadMarriagePartnersWithCommChildren($em, $ID){
-        $children = $this->loadChildren($em, $ID);
+    public function loadDataForFamilyTree($em, $ID){
+        $this->getLogger()->info("loadDataForFamilyTree: " . $ID);
+        $familyTreeData = array();
+        $familyTreeData[] = $this->generateFamilyTreeEntry($em, $ID);
         
-        $marriagePartners = $this->loadMarriagePartners($em, $ID);
+        $alreadyLoaded = array();
+        $alreadyLoaded[] = $ID;
         
-        for($i = 0; $i < count($marriagePartners); $i++){
-            $commonChildren = $this->findCommonChildren($em, $ID, $marriagePartners[$i]['id']);
+        $familyTreeData = $this->internalLoadFamilyTree($em, $ID, $alreadyLoaded, $familyTreeData);
+        
+        $this->getLogger()->info("loadDataForFamilyTree end: " . $ID);
+            
+        return $familyTreeData;   
+    }
+    
+    private function internalLoadFamilyTree($em, $ID, &$alreadyLoaded, $familiyTreeData) {
+        $this->getLogger()->info("Internally loading family tree for ID: " . $ID);
 
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        
+        for($i =0; $i < count($parentEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
+            if(!in_array($relativeId, $alreadyLoaded)){
+                $alreadyLoaded[] = $relativeId;
+                $familiyTreeData[] = $this->generateFamilyTreeEntry($em, $relativeId);
+                $familiyTreeData = $this->internalLoadFamilyTree($em, $relativeId, $alreadyLoaded, $familiyTreeData);
+            }
         }
         
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        for($i =0; $i < count($partnerEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
+            if(!in_array($relativeId, $alreadyLoaded)){
+                $alreadyLoaded[] = $relativeId;
+                $familiyTreeData[] = $this->generateFamilyTreeEntry($em, $relativeId);
+                $familiyTreeData = $this->internalLoadFamilyTree($em, $relativeId, $alreadyLoaded, $familiyTreeData);
+            }
+        }
+        
+        
+        $childEntries= $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+        
+        for($i =0; $i < count($childEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $childEntries[$i]);
+            if(!in_array($relativeId, $alreadyLoaded)){
+                $alreadyLoaded[] = $relativeId;
+                $familiyTreeData[] = $this->generateFamilyTreeEntry($em, $relativeId);
+                $familiyTreeData = $this->internalLoadFamilyTree($em, $relativeId, $alreadyLoaded, $familiyTreeData);
+            }
+        }
+        
+        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+        
+        for($i =0; $i < count($siblingEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
+            if(!in_array($relativeId, $alreadyLoaded)){
+                $alreadyLoaded[] = $relativeId;
+                $familiyTreeData[] = $this->generateFamilyTreeEntry($em, $relativeId);
+                $familiyTreeData = $this->internalLoadFamilyTree($em, $relativeId, $alreadyLoaded, $familiyTreeData);
+            }
+        }
+
+        return $familiyTreeData;
     }
-     * 
-     * 
-     */
+    
+    private function generateFamilyTreeEntry($em, $ID) {
+        $entry = array();
+        
+        $entry['id'] = $ID;
+        $entry['person'] = $this->loadPersonByID($em, $ID);
+        $entry['partners'] =  array();
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        for($i =0; $i < count($partnerEntries); $i++){
+            $entry['partners'][] = $this->getRelativeId($ID, $partnerEntries[$i]);
+        }
+        
+        
+        $entry['parents'] =  array();
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        
+        for($i =0; $i < count($parentEntries); $i++){
+            $entry['parents'][] = $this->getRelativeId($ID, $parentEntries[$i]);
+        }
+        
+        return $entry;
+    }
+
     
     public function loadOnlyDirectRelatives($em, $id){
         $this->getLogger()->info("Loading direct relatives for ID: " . $id);
@@ -250,7 +331,7 @@ class RelationshipLoader {
 
         return $relativesArray;
     }
-
+    
     private function loadClosestRelatives($em, &$relatives, &$alreadyLoaded,$loadOnlyDirectRelatives, $skipRelativesForPersons) {
         $this->getLogger()->info("Loading Closest Relatives");
         foreach ($relatives as $key => $value) {

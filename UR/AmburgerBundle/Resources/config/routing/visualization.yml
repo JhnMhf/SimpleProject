@@ -20,6 +20,12 @@ visualization_detail_locations:
     defaults: { _controller: AmburgerBundle:Visualization:detailLocations }
     methods: [GET]   
 
+visualization_detail_relations:
+    path: /visualization/{ID}/relations
+    defaults: { _controller: AmburgerBundle:Visualization:detailRelations }
+    methods: [GET]   
+
+
 visualization_ids:
     path: /visualization/ids/list/
     defaults: { _controller: AmburgerBundle:Visualization:listOfAllIds }

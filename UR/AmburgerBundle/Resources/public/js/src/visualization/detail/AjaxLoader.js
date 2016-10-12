@@ -34,10 +34,23 @@ Detail.AjaxLoader = (function(){
 
             $(that).trigger("locationsLoaded", {'data':data});
         });
+    },
+    
+    loadRelationsForPerson= function(){
+        $.ajax({
+            type: "GET",
+            url: 'relations',
+            dataType: 'json'
+        }).always(function (data, textStatus, jqXHR) {
+            console.log(data,textStatus, jqXHR);
+
+            $(that).trigger("relationsLoaded", {'data':data});
+        });
     };
 
     that.init = init;
     that.loadLocationsForPerson = loadLocationsForPerson;
     that.loadPersonData = loadPersonData;
+    that.loadRelationsForPerson = loadRelationsForPerson;
     return that;
 })();

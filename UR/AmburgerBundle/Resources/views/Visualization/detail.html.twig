@@ -1,5 +1,13 @@
 {% extends "AmburgerBundle:Visualization:base.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+        
+    <!--<link rel="stylesheet" href="{{asset('bundles/amburger/css/bporgeditor.latest.css')}}" />-->
+    <link rel="stylesheet" href="{{asset('bundles/amburger/css/primitives.latest.css')}}" />
+    
+{% endblock %}
+
 {% block body %}
      <div class="row heading">
         <div class="large-12 columns large-centered center">
@@ -10,7 +18,7 @@
     <div class="row family-tree">
         <div class="large-12 columns large-centered center">
             <h2>Stammbaum</h2>
-            
+            <div id="family-tree"/>
         </div>
     </div>
     
@@ -104,6 +112,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    
+    <script src="{{asset('bundles/amburger/js/lib/vendor/primitives.latest.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/lib/vendor/bporgeditor.latest.js')}}"></script>
+    
+    
     {# Start #}
     <script src="{{asset('bundles/amburger/js/src/visualization/detail/Detail.js')}}"></script>
 
@@ -114,6 +127,7 @@
     <script src="{{asset('bundles/amburger/js/src/visualization/detail/MapView.js')}}"></script>
     <script src="{{asset('bundles/amburger/js/src/visualization/detail/BasePersonViewGenerator.js')}}"></script>
     <script src="{{asset('bundles/amburger/js/src/visualization/detail/PersonView.js')}}"></script>
+    <script src="{{asset('bundles/amburger/js/src/visualization/detail/FamilyTreeView.js')}}"></script>
     {# Manager #}
 
 
@@ -129,9 +143,6 @@
             Detail.init('{{ google_api_key }}');
         });
     </script>
-    
-
-    
 {% endblock %}
 
 {% block templates %}

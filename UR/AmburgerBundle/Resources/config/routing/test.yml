@@ -2,7 +2,11 @@ overview:
     path:     /overview/
     defaults: { _controller: AmburgerBundle:Default:overview }
     
-
+familyTreeTest:
+    path:     /family/tree
+    defaults: { _controller: AmburgerBundle:Default:familyTree }
+    
+    
 base:
     path:     /base/
     defaults: { _controller: AmburgerBundle:Default:base }    

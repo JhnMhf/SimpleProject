@@ -49,3 +49,11 @@ input.daterange{
 #map-display {
     height: 500px;
 }
+
+/* Family Tree */
+#family-tree {
+    width: 95%;
+    min-height: 400px;
+    border-style: dotted; 
+    border-width: 1px;
+}
