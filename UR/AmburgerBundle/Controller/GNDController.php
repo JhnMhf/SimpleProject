@@ -3,6 +3,7 @@
 namespace UR\AmburgerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 //https://packagist.org/packages/eightpoints/guzzle-bundle
@@ -30,9 +31,14 @@ class GNDController extends Controller
         
         $responseBodyJson = $response->getBody();
         
-        $responseBody = json_decode($responseBodyJson, true);
+        $serializer = $this->get('serializer');
+        $responseBody = $serializer->deserialize($responseBodyJson, 'array', 'json');
         
-        $preferredName = array();
+        
+        //$responseBody = json_decode($responseBodyJson, true);
+        
+        $preferredNames = array();
+
         
         foreach($responseBody as $element){
             if(isset($element["@graph"])){
@@ -58,15 +64,23 @@ class GNDController extends Controller
 
                     
                     if($geographicNameIdentifierFound && $territoryOrAdministrativeUnitIdenitifierFound){
+                        
                         if(isset($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"])){
-                            $this->getLogger()->debug("Possible preferred Names: ".$element["@graph"][0]["preferredNameForThePlaceOrGeographicName"]);
                             if(is_array($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"])){
                                 foreach($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"] as $name){
-                                    $preferredName[] = $name;
+                                    $name = addslashes(trim($name));
+                                    if(!in_array($name, $preferredNames)){
+                                        $preferredNames[] = $name;
+                                    }
+                                    
                                 }
                                 
                             } else {
-                                $preferredName[] = $element["@graph"][0]["preferredNameForThePlaceOrGeographicName"];
+                                $this->getLogger()->debug("Possible preferred Names: ".$element["@graph"][0]["preferredNameForThePlaceOrGeographicName"]);
+                                $singleName = addslashes(trim($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"]));
+                                if(!in_array($singleName, $preferredNames)){
+                                    $preferredNames[] = $singleName;
+                                }
                             }
                         }
                     }
@@ -76,8 +90,10 @@ class GNDController extends Controller
             
         }
         //Lipsk
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($serializer->serialize($preferredNames, 'json'));
         
-        return new Response(json_encode($preferredName));
+        return $jsonResponse;
     }
     
     public function personAction($name)
