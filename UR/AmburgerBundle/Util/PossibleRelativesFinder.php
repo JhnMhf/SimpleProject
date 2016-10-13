@@ -435,9 +435,9 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleSiblings($em, $ID) {
         $possibleSiblings = array();
-        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($id);
+        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
-        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($id);
+        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
         for($i = 0; $i < count($parentIds); $i++){
             $childrenOfParent = $em->getRepository('NewBundle:IsParent')->loadChildren($parentIds[$i]);
@@ -456,9 +456,9 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleParents($em, $ID) {
         $possibleParents = array();
-        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($id);
+        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
-        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($id);
+        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
         for($i = 0; $i < count($siblingIds); $i++){
             $parentsOfSibling = $em->getRepository('NewBundle:IsParent')->loadParents($siblingIds[$i]);
