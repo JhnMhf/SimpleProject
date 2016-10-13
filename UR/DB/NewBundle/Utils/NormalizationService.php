@@ -59,7 +59,12 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            if(strlen(trim($splittedLine[1])) <= 3 && strpos($splittedLine[1], ".")){
+                $abbreviationsMap[" ".trim($splittedLine[0])] = " ".trim($splittedLine[1]);
+                $abbreviationsMap[trim($splittedLine[0])." "] = trim($splittedLine[1])." ";
+            } else {
+                $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            }
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -82,7 +87,12 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            if(strlen(trim($splittedLine[1])) <= 3 && strpos($splittedLine[1], ".")){
+                $abbreviationsMap[" ".trim($splittedLine[0])] = " ".trim($splittedLine[1]);
+                $abbreviationsMap[trim($splittedLine[0])." "] = trim($splittedLine[1])." ";
+            } else {
+                $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            }
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -105,7 +115,12 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            if(strlen(trim($splittedLine[1])) <= 3 && strpos($splittedLine[1], ".")){
+                $abbreviationsMap[" ".trim($splittedLine[0])] = " ".trim($splittedLine[1]);
+                $abbreviationsMap[trim($splittedLine[0])." "] = trim($splittedLine[1])." ";
+            } else {
+                $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            }
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
@@ -128,7 +143,12 @@ class NormalizationService {
             //first trim, to remove more than one empty space, then add one at 
             //the start and the end, to prevent replacing inside of an word
             $abbreviationsMap[" ".trim($splittedLine[0])." "] = " ".trim($splittedLine[1])." ";
-            $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            if(strlen(trim($splittedLine[1])) <= 3 && strpos($splittedLine[1], ".")){
+                $abbreviationsMap[" ".trim($splittedLine[0])] = " ".trim($splittedLine[1]);
+                $abbreviationsMap[trim($splittedLine[0])." "] = trim($splittedLine[1])." ";
+            } else {
+                $abbreviationsMap[trim($splittedLine[0])] = trim($splittedLine[1]);
+            }
         }
         
         $keys = array_map('strlen', array_keys($abbreviationsMap));
