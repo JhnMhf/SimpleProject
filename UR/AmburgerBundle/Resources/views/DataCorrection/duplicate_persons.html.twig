@@ -385,7 +385,24 @@
                         
                         <%  } %>
                     </label>
-
+                    <label class="proven-date">Belegt
+                        <% 
+                            if(typeof(proven_date) !== 'undefined') { 
+                                var dateReferenceTemplate = _.template($("script#dateReference").html());
+                            
+                                var array = [];
+                            
+                                array['dateReference'] = proven_date;
+                            
+                                if(typeof(enabled) !== 'undefined') {
+                                    array['enabled'] = true;
+                                }
+                            %>
+                        
+                            <%= dateReferenceTemplate(array) %>
+                        
+                        <%  } %>
+                    </label>
                     <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             </div>
     </div>
