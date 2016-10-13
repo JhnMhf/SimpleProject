@@ -74,6 +74,7 @@ Index.IndexController = (function(){
     onLoadedPersonData = function(event,data){
          console.log("onLoadedPersonData: ",data);
          personListView.displayPersonData(data['persons']);
+         Loader.hideLoader();
     };
     
     
