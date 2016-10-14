@@ -9,13 +9,43 @@ user_settings_save:
     path: /settings/
     defaults: { _controller: AmburgerBundle:User:save }    
     methods: [POST]
-
-addUser_index:
-    path: /user/
-    defaults: { _controller: AmburgerBundle:User:index }    
+    
+admin_overview:
+    path: /admin/overview/
+    defaults: { _controller: AmburgerBundle:Admin:overview }
     methods: [GET]
-
-addUser:
-    path: /user/
-    defaults: { _controller: AmburgerBundle:User:addUser }    
+    
+admin_delete_user:
+    path: /admin/user/{USERID}/delete
+    defaults: { _controller: AmburgerBundle:Admin:deleteUser }
+    methods: [POST]
+    
+nominate_admin:
+    path: /admin/user/{USERID}/nominate
+    defaults: { _controller: AmburgerBundle:Admin:nominateAdmin }
+    methods: [POST]
+    
+revoke_admin:
+    path: /admin/user/{USERID}/revoke
+    defaults: { _controller: AmburgerBundle:Admin:revokeAdmin }
+    methods: [POST]
+    
+admin_change_user:
+    path: /admin/user/{USERID}/change
+    defaults: { _controller: AmburgerBundle:Admin:changeUser }
+    methods: [GET]
+    
+admin_change_user_save:
+    path: /admin/user/{USERID}/change
+    defaults: { _controller: AmburgerBundle:Admin:changeUserSave }
+    methods: [POST]
+    
+admin_add_user:
+    path: /admin/user/create
+    defaults: { _controller: AmburgerBundle:Admin:createUser }
+    methods: [GET]
+    
+admin_add_user_save:
+    path: /admin/user/create
+    defaults: { _controller: AmburgerBundle:Admin:createUserSave }
     methods: [POST]

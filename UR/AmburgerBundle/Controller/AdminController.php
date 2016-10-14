@@ -19,37 +19,106 @@ class AdminController extends Controller implements AdminSessionController
         return $this->LOGGER;
     }
     
-    public function userOverviewAction(){
+    public function overviewAction(){
         $systemDBManager = $this->get('doctrine')->getManager('system');
         $users = $systemDBManager->getRepository('AmburgerBundle:User')->findBy(array(), array('id'=>'asc'));
+        
         return $this->render('AmburgerBundle:Administration:user_overview.html.twig', array('logged_in'=>true, 'users'=>$users));
     }
     
-    public function addUserAction(Request $request)
-    {
-        $session = $this->getRequest()->getSession();
-        if($session->get('userid')){
-            //TODO: check rights of user if he is allowed to create a new user?
-            $newUser = $request->request->get('username');
-            $newPassword = $request->request->get('password');
-            
-            $systemDBManager = $this->get('doctrine')->getManager('system');
-            $this->addUser($newUser, $newPassword);
-            return $this->redirect($this->generateUrl('addUser_index'));
-        }else{
-            return $this->redirect($this->generateUrl('login'));
-        }
+    public function deleteUserAction($USERID){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $systemDBManager->getRepository('AmburgerBundle:User')->deleteUser($USERID);
+        
+        $response = new Response();
+        $response->setStatusCode("200");
+        return $response;
     }
     
-    private function addUser($username, $password){
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
-        $newUser = new User();
-        $newUser->setName($username);
-        $newUser->setPassword($hashedPassword);
-        
+    public function nominateAdminAction($USERID){
         $systemDBManager = $this->get('doctrine')->getManager('system');
-        $systemDBManager->persist($newUser);
-        $systemDBManager->flush();
+        $systemDBManager->getRepository('AmburgerBundle:User')->nominateAdmin($USERID);
+        
+        $response = new Response();
+        $response->setStatusCode("200");
+        return $response;
+    }
+    
+    public function revokeAdminAction($USERID){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $systemDBManager->getRepository('AmburgerBundle:User')->revokeAdmin($USERID);
+        
+        $response = new Response();
+        $response->setStatusCode("200");
+        return $response;
+    }
+    
+    public function changeUserAction($USERID){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $user = $systemDBManager->getRepository('AmburgerBundle:User')->getUserByUserId($USERID);
+        
+        return $this->render('AmburgerBundle:Administration:admin_change_user.html.twig', 
+                array('logged_in' => true, 'username' => $user->getName(), 'passwords_empty' => false,
+                    'passwords_do_not_match' => false,'password_updated' => false));
+    }
+    
+    public function changeUserSaveAction($USERID){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        $user = $systemDBManager->getRepository('AmburgerBundle:User')->getUserByUserId($USERID);
+        
+        $newPassword = $this->getRequest()->request->get('password');
+        $newPasswordRepetition = $this->getRequest()->request->get('password-repetition');
+
+        if($newPassword == "" || $newPasswordRepetition == ""){
+            return $this->render('AmburgerBundle:Administration:admin_change_user.html.twig', 
+                    array('logged_in' => true, 'username' => $user->getName(), 'passwords_empty' => true,'passwords_do_not_match' => true));
+        }
+
+        if($newPassword != $newPasswordRepetition){
+            return $this->render('AmburgerBundle:Administration:admin_change_user.html.twig', 
+                    array('logged_in' => true, 'username' => $user->getName(), 'passwords_empty' => false,'passwords_do_not_match' => true));
+        }
+        $systemDBManager->getRepository('AmburgerBundle:User')->updatePassword($USERID, $newPassword);
+
+        return $this->redirect($this->generateUrl('admin_overview'));
+    }
+    
+    public function createUserAction(){
+        return $this->render('AmburgerBundle:Administration:admin_create_user.html.twig', 
+                array('logged_in' => true,'username_exists'=>false, 'passwords_empty' => false,
+                    'passwords_do_not_match' => false));
+    }
+    
+    public function createUserSaveAction(){
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        
+        $newUserName = $this->getRequest()->get('username');
+        
+        $user = $systemDBManager->getRepository('AmburgerBundle:User')->getUser($newUserName);
+        
+        if(!is_null($user)){
+            return $this->render('AmburgerBundle:Administration:admin_create_user.html.twig', 
+                array('logged_in' => true,'username_exists'=>true, 'passwords_empty' => false,
+                    'passwords_do_not_match' => false));
+        }
+        
+        $newPassword = $this->getRequest()->get('password');
+        $newPasswordRepetition = $this->getRequest()->get('password-repetition');
+        
+        if($newPassword == "" || $newPasswordRepetition == ""){
+            return $this->render('AmburgerBundle:Administration:admin_create_user.html.twig', 
+                array('logged_in' => true,'username_exists'=>false, 'passwords_empty' => true,
+                    'passwords_do_not_match' => false));
+        }
+
+        if($newPassword != $newPasswordRepetition){
+            return $this->render('AmburgerBundle:Administration:admin_create_user.html.twig', 
+                array('logged_in' => true,'username_exists'=>false, 'passwords_empty' => false,
+                    'passwords_do_not_match' => true));
+        }
+        
+        $systemDBManager->getRepository('AmburgerBundle:User')->createNewUser($newUserName, $newPassword);
+        
+        return $this->redirect($this->generateUrl('admin_overview'));
     }
 }

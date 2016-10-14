@@ -36,6 +36,14 @@ class UserRepository extends EntityRepository
     public function getUser($username){
         return $this->findOneByName($username);
     }
+    
+     /* 
+        Returns the user if it exists.
+    */
+    public function getUserByUserId($userid){
+        return $this->findOneById($userid);
+    }
+    
     /* 
         Checks if the password is correct.
     */
@@ -79,6 +87,44 @@ class UserRepository extends EntityRepository
         $newUser->setPassword($hashedPassword);
         
         $this->_em->persist($newUser);
+        $this->_em->flush();
+    }
+    
+    public function deleteUser($userid){
+        $query = $this->createQueryBuilder('u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userid)
+            ->getQuery();
+        $user = $query->getOneOrNullResult();
+        
+        $this->_em->remove($user);
+        $this->_em->flush();
+        
+    }
+    
+    public function nominateAdmin($userid){
+        $query = $this->createQueryBuilder('u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userid)
+            ->getQuery();
+        $user = $query->getOneOrNullResult();
+        
+        $user->setAdmin(true);
+        
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+    
+    public function revokeAdmin($userid){
+        $query = $this->createQueryBuilder('u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userid)
+            ->getQuery();
+        $user = $query->getOneOrNullResult();
+        
+        $user->setAdmin(false);
+        
+        $this->_em->persist($user);
         $this->_em->flush();
     }
 }
