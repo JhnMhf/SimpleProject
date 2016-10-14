@@ -23,8 +23,9 @@ class CorrectionStartController extends Controller implements SessionController
     public function indexAction(){
         $this->getLogger()->debug("Start action called.");
         $session = $this->getRequest()->getSession();
+        //@TODO: Check if this can be removed?
         if($this->get('correction_session.service')->checkSession($session)){
-            return $this->render('AmburgerBundle:DataCorrection:start.html.twig');
+            return $this->render('AmburgerBundle:DataCorrection:start.html.twig', array('logged_in'=>true));
         } else {
             return $this->redirect($this->generateUrl('login'));
         }

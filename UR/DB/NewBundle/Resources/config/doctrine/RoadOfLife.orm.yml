@@ -4,6 +4,13 @@ UR\DB\NewBundle\Entity\RoadOfLife:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        rol_from_date_idx:
+            columns: [ from_dateID ]
+        rol_to_date_idx:
+            columns: [ to_dateID ]
+        rol_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer

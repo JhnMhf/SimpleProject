@@ -74,13 +74,20 @@ class OnlyQueryStringSearcher extends BaseDataSearcher {
         
         $personIds = array_merge($personIds, $this->checkAllPersonsByQueryString($onlyMainPersons, $queryString));
         
+        $this->LOGGER->debug("Found possible duplicate " . count($personIds) . " persons.");
+        
         $personIds = array_unique($personIds);
+        
+        $this->LOGGER->debug("Found unique " . count($personIds) . " persons.");
         
         if($onlyMainPersons){
             $personIds = $this->extractMainPersons($personIds);
+            $this->LOGGER->debug("Extracted " . count($personIds) . " main persons.");
         }
         
         sort($personIds);
+        
+        $this->LOGGER->debug("Sorted the persons");
         
         return $personIds;
     }

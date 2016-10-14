@@ -16,6 +16,14 @@ UR\DB\NewBundle\Entity\Wedding:
             columns: [ husband_ID ]
         wife_idx:
             columns: [ wife_ID ]
+        wedding_date_idx:
+            columns: [ wedding_dateID ]
+        banns_date_idx:
+            columns: [ banns_dateID ]
+        breakup_date_idx:
+            columns: [ breakup_dateID ]
+        wedding_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer

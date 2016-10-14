@@ -198,7 +198,11 @@ abstract class BaseDataSearcher {
 
         $stmt->execute();
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $dates = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $dates;
     }
     
     protected function findDatesBasedOnDateRange($fromDate, $toDate){
@@ -256,7 +260,11 @@ abstract class BaseDataSearcher {
         
         $stmt->execute();
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $dates = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $dates;
     }
     
     private function buildFromDateQuery($fromYear, $fromMonth, $fromDay){
@@ -334,7 +342,9 @@ abstract class BaseDataSearcher {
             $searchIds = array_merge($searchIds, $this->checkPartnerByName($lastName, $firstName, $patronym));
             
             sort($searchIds, SORT_NUMERIC);
-
+            
+            $this->finalDBManager->clear();
+        
             return $searchIds;
         }
     }
@@ -396,7 +406,11 @@ abstract class BaseDataSearcher {
         
         $stmt->execute();
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $persons = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $persons;
     }
     
     protected function extractMainPersons($personIds){
@@ -405,7 +419,11 @@ abstract class BaseDataSearcher {
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, array($personIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $persons= $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $persons;
     }
     
     protected function checkAllPersonsByQueryString($onlyMainPersons, $queryString){
@@ -453,7 +471,11 @@ abstract class BaseDataSearcher {
         
         $stmt->execute();
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $persons = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $persons;
     }
 
     protected function searchInBaptism($onlyMainPerson, $isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
@@ -461,105 +483,182 @@ abstract class BaseDataSearcher {
             return array();
         }
         
-        $innerQuery = "SELECT id FROM baptism WHERE ";
-        $personFieldName = "baptism_id";
-        
-        $personIds = $this->baseSearchInPersonWithInnerQuery('person', $personFieldName, $innerQuery, $isAndCondition,
-                array('baptism_locationid'), $locationReferenceId, 
-                array(), $territoryReferenceId, 
-                array(), $countryReferenceId, 
-                array('baptism_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-        if(!$onlyMainPerson) {
-            $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery, $isAndCondition,
-                array('baptism_locationid'), $locationReferenceId, 
-                array(), $territoryReferenceId, 
-                array(), $countryReferenceId, 
-                array('baptism_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-            $personIds = array_merge($personIds, $relativeIds);
+        if(count($personReferenceIds) > 0){
+            $possibleBaptismIds = $this->getFieldForPersonIds($onlyMainPerson, 'baptism_id', $personReferenceIds);
+            
+            $baseQuery = "SELECT id FROM baptism WHERE ";
+            $baptismIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('baptism_locationid'), $locationReferenceId, 
+                    array(), $territoryReferenceId, 
+                    array(), $countryReferenceId, 
+                    array('baptism_dateid'), $possibleDateReferenceIds,
+                    $possibleBaptismIds);
 
-            $partnerIds = $this->baseSearchInPersonWithInnerQuery('partner', $personFieldName, $innerQuery, $isAndCondition,
-                array('baptism_locationid'), $locationReferenceId, 
-                array(), $territoryReferenceId, 
-                array(), $countryReferenceId, 
-                array('baptism_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
+            if(count($baptismIds) == 0){
+                return array();
+            }
+            
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
-            $personIds = array_merge($personIds, $partnerIds);
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
+            
+        } else {
+            $baseQuery = "SELECT id FROM baptism WHERE ";
+            $baptismIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('baptism_locationid'), $locationReferenceId, 
+                    array(), $territoryReferenceId, 
+                    array(), $countryReferenceId, 
+                    array('baptism_dateid'), $possibleDateReferenceIds);
+
+            if(count($baptismIds) == 0){
+                return array();
+            }
+
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
         }
+        
+        $this->finalDBManager->clear();
 
         return $personIds;
     }
     
     protected function searchInBirth($onlyMainPerson,$isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-                
-        $innerQuery = "SELECT id FROM birth WHERE ";
-        $personFieldName = "birth_id";
-        
-        $personIds = $this->baseSearchInPersonWithInnerQuery('person', $personFieldName, $innerQuery, $isAndCondition,
-                array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-        if(!$onlyMainPerson) {
-            $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery, $isAndCondition,
-                array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-            $personIds = array_merge($personIds, $relativeIds);
 
-            $partnerIds = $this->baseSearchInPersonWithInnerQuery('partner', $personFieldName, $innerQuery, $isAndCondition,
-                array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
+        if(count($personReferenceIds) > 0){
+            $possibleBirthIds = $this->getFieldForPersonIds($onlyMainPerson, 'birth_id', $personReferenceIds);
+            
+            $baseQuery = "SELECT id FROM birth WHERE ";
+            $birthIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
+                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
+                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
+                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                    $possibleBirthIds);
 
-            $personIds = array_merge($personIds, $partnerIds);
+            if(count($birthIds) == 0){
+                return array();
+            }
+            
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
+            
+        } else {
+            $baseQuery = "SELECT DISTINCT id FROM birth WHERE ";
+            $birthIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
+                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
+                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
+                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds);
+
+
+            if(count($birthIds) == 0){
+                return array();
+            }
+
+
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative birth_id IN (?)', $birthIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
         }
+        
+        $this->finalDBManager->clear();
 
         return $personIds;
+
     }
     
     protected function searchInDeath($onlyMainPerson,$isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-                
-        $innerQuery = "SELECT id FROM death WHERE ";
-        $personFieldName = "death_id";
-        
-        $personIds = $this->baseSearchInPersonWithInnerQuery('person', $personFieldName, $innerQuery,  $isAndCondition,
-                array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
-                array('territory_of_deathid'), $territoryReferenceId, 
-                array('death_countryid'), $countryReferenceId, 
-                array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-        if(!$onlyMainPerson) {
-            $relativeIds = $this->baseSearchInPersonWithInnerQuery('relative', $personFieldName, $innerQuery,  $isAndCondition,
-                array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
-                array('territory_of_deathid'), $territoryReferenceId, 
-                array('death_countryid'), $countryReferenceId, 
-                array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
-        
-            $personIds = array_merge($personIds, $relativeIds);
+              
+        if(count($personReferenceIds) > 0){
+            $possibleDeathIds = $this->getFieldForPersonIds($onlyMainPerson, 'death_id', $personReferenceIds);
+            
+            $baseQuery = "SELECT id FROM birth WHERE ";
+            $deathIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
+                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
+                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
+                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                    $possibleDeathIds);
 
-            $partnerIds = $this->baseSearchInPersonWithInnerQuery('partner', $personFieldName, $innerQuery,  $isAndCondition,
-                array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
-                array('territory_of_deathid'), $territoryReferenceId, 
-                array('death_countryid'), $countryReferenceId, 
-                array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds,
-                array('id'), $personReferenceIds);
+            if(count($deathIds) == 0){
+                return array();
+            }
+            
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
-            $personIds = array_merge($personIds, $partnerIds);
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
+            
+        } else {
+            $baseQuery = "SELECT DISTINCT id FROM death WHERE ";
+            $deathIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
+                    array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
+                    array('territory_of_deathid'), $territoryReferenceId, 
+                    array('death_countryid'), $countryReferenceId, 
+                    array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds);
+
+
+            if(count($deathIds) == 0){
+                return array();
+            }
+
+
+            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+
+            if(!$onlyMainPerson) {
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative death_id IN (?)', $deathIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $relativeIds);
+
+                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+
+                $personIds = array_merge($personIds, $partnerIds);
+            }
         }
+
+        $this->finalDBManager->clear();
 
         return $personIds;
     }
@@ -599,6 +698,8 @@ abstract class BaseDataSearcher {
 
             $personIds = array_merge($personIds, $partnerIds);
         }
+        
+        $this->finalDBManager->clear();
 
         return $personIds;
     }
@@ -613,7 +714,11 @@ abstract class BaseDataSearcher {
 
         $stmt->execute();
 
-        return $this->extractIdArray($stmt->fetchAll(), 'person_id');
+        $jobs = $this->extractIdArray($stmt->fetchAll(), 'person_id');
+        
+        $this->finalDBManager->clear();
+        
+        return $jobs;
     }
     
     protected function searchForJobClassInPerson($onlyMainPerson,$jobClass){
@@ -652,6 +757,9 @@ abstract class BaseDataSearcher {
             $personIds = array_merge($personIds, $partnerIds);
         }
 
+        
+        $this->finalDBManager->clear();
+        
         return $personIds;
     }
     
@@ -691,6 +799,8 @@ abstract class BaseDataSearcher {
             $personIds = array_merge($personIds, $partnerIds);
         }
 
+        $this->finalDBManager->clear();
+        
         return $personIds;
     }
     
@@ -833,6 +943,8 @@ abstract class BaseDataSearcher {
             }
         }
         
+        $this->finalDBManager->clear();
+        
         return $personIds;
     }
     
@@ -844,6 +956,20 @@ abstract class BaseDataSearcher {
         $foundOne = false;
         $executeArray = array();
         $typeArray = array();
+          
+        $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds). " and number of personIdentifiers: ".count($personIdentifier));
+        
+        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
+            $this->LOGGER->debug("Adding selection on persons to the query");
+            $sql .= $this->buildQueryForIdentifier($personIdentifier);
+            
+            for($i = 0; $i < count($personIdentifier); $i++){
+                $executeArray[] = $personReferenceIds;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+            
+            $sql .= " AND ";
+        }
 
         if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
             $sql .= $this->buildQueryForIdentifier($locationIdentifier);
@@ -893,25 +1019,16 @@ abstract class BaseDataSearcher {
                 $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
             }
         }
-        
-        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= " AND ";
-            }
-            $sql .= $this->buildQueryForIdentifier($personIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($personIdentifier); $i++){
-                $executeArray[] = $personReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
 
         $this->LOGGER->debug("Using query: " . $sql);
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
-        return $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
+        $result = $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
+        
+        $this->finalDBManager->clear();
+        
+        return $result;
     }
     
     private function baseSearchInPersonWithInnerQuery($tableName, $fieldName, $baseInnerQuery,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $personIdentifier, $personReferenceIds){
@@ -922,6 +1039,20 @@ abstract class BaseDataSearcher {
         $foundOne = false;
         $executeArray = array();
         $typeArray = array();
+
+        $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds). " and number of personIdentifiers: ".count($personIdentifier));
+        
+        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
+            $this->LOGGER->debug("Adding selection on persons to the query");
+            $sql .= $this->buildQueryForIdentifier($personIdentifier);
+            $foundOne = true;
+            
+            for($i = 0; $i < count($personIdentifier); $i++){
+                $executeArray[] = $personReferenceIds;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+             $sql .= " AND ";
+        }
 
         if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
             $sql .= $this->buildQueryForIdentifier($locationIdentifier);
@@ -974,16 +1105,115 @@ abstract class BaseDataSearcher {
         
         //close inner query at this point
         $sql .=")";
+
+        $this->LOGGER->debug("Using query: " . $sql);
         
-        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= " AND ";
-            }
-            $sql .= $this->buildQueryForIdentifier($personIdentifier);
+        $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+
+        $result = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $result;
+    }
+    
+    private function searchPersonBasedOn($baseQuery, $referenceIds, $personReferenceIds = array()){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = $baseQuery;
+        $executeArray = array();
+        $typeArray = array();
+
+        $executeArray[] = $referenceIds;
+        $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+
+        
+         $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds));
+        
+        if (count($personReferenceIds) > 0) {
+            $this->LOGGER->debug("Adding selection on persons to the query");
+            $sql .= " AND id IN (?)";
+            
+            $executeArray[] = $personReferenceIds;
+            $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+        }
+        
+        $this->LOGGER->debug("Using query: " . $sql);
+        
+        $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+
+        $result = $this->extractIdArray($stmt->fetchAll());
+        
+        $this->finalDBManager->clear();
+        
+        return $result;
+    }
+
+
+    
+    private function baseSearchWithoutPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $possibleIds = array()){
+        $finalDBManager = $this->finalDBManager;
+
+        $sql = $baseQuery;
+
+        $foundOne = false;
+        $executeArray = array();
+        $typeArray = array();
+        
+        if (count($possibleIds) > 0) {
+            $sql .= "id IN (?)";
+
+            $executeArray[] = $possibleIds;
+            $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            
+            $sql .= " AND ";
+        }
+
+        if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
+            $sql .= $this->buildQueryForIdentifier($locationIdentifier);
             $foundOne = true;
             
-            for($i = 0; $i < count($personIdentifier); $i++){
-                $executeArray[] = $personReferenceIds;
+            for($i = 0; $i < count($locationIdentifier); $i++){
+                $executeArray[] = $locationReferenceId;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+        }
+
+        if (count($territoryReferenceId) > 0 && count($territoriyIdentifier) > 0) {
+            if ($foundOne) {
+                $sql .= $isAndCondition ? " AND " : " OR ";
+            }
+            $sql .= $this->buildQueryForIdentifier($territoriyIdentifier);
+            $foundOne = true;
+            
+            for($i = 0; $i < count($territoriyIdentifier); $i++){
+                $executeArray[] = $territoryReferenceId;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+        }
+
+        if (count($countryReferenceId) > 0  && count($countryIdentifier) > 0) {
+            if ($foundOne) {
+                $sql .= $isAndCondition ? " AND " : " OR ";
+            }
+            $sql .= $this->buildQueryForIdentifier($countryIdentifier);
+            $foundOne = true;
+            
+            for($i = 0; $i < count($countryIdentifier); $i++){
+                $executeArray[] = $countryReferenceId;
+                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            }
+        }
+
+        if (count($possibleDateReferenceIds) > 0 && count($dateIdentifier) > 0) {
+            if ($foundOne) {
+                $sql .= $isAndCondition ? " AND " : " OR ";
+            }
+            $sql .= $this->buildQueryForIdentifier($dateIdentifier);
+            $foundOne = true;
+            
+            for($i = 0; $i < count($dateIdentifier); $i++){
+                $executeArray[] = $possibleDateReferenceIds;
                 $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
             }
         }
@@ -992,7 +1222,11 @@ abstract class BaseDataSearcher {
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
-        return $this->extractIdArray($stmt->fetchAll());
+        $result = $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
+        
+        $this->finalDBManager->clear();
+        
+        return $result;
     }
     
     
@@ -1034,12 +1268,17 @@ abstract class BaseDataSearcher {
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
-        return $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
+        $result = $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
+        
+        $this->finalDBManager->clear();
+        
+        return $result;
     }
     
     private function buildQueryForIdentifier($identifierArray){
+        $sql = null;
         if(count($identifierArray) == 1){
-            return $identifierArray[0]." IN (?)";
+            $sql = $identifierArray[0]." IN (?)";
         } else {
             $sql = "(";
             
@@ -1051,9 +1290,49 @@ abstract class BaseDataSearcher {
             }
             
             $sql .= ")";
-            
-            return $sql;
         }
+        
+        $this->LOGGER->debug("Using identifierSQL: '".$sql."'");
+        
+        return $sql;
+    }
+    
+    private function getFieldForPersonIds($onlyMainPersons, $field,$referencePersonIds){
+        if(count($personIds) < 0 || $field == ""){
+            return array();
+        }
+
+        $executeArray[] = $referencePersonIds;
+        $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+        
+        $sql = "SELECT DISTINCT "+$field+" FROM person WHERE id IN (?)";
+
+        $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+
+        $personIds = $this->extractIdArray($stmt->fetchAll(), $field);
+        
+    
+        if(!$onlyMainPersons){
+            $sql = "SELECT DISTINCT "+$field+" FROM relative WHERE id IN (?)";
+
+            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+            $relativeIds = $this->extractIdArray($stmt->fetchAll(), $field);
+
+            $sql = "SELECT DISTINCT "+$field+" FROM partner WHERE id IN (?)";
+
+            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+
+            $partnerIds = $this->extractIdArray($stmt->fetchAll(), $field);
+            
+            $personIds = array_merge($personIds, $relativeIds);
+            
+            $personIds = array_merge($personIds, $partnerIds);
+            
+        }
+        
+        $this->finalDBManager->clear();
+        
+        return $personIds;
     }
     
 }

@@ -10,6 +10,10 @@ UR\DB\NewBundle\Entity\Religion:
             # Columns is an array, specify multiple columns for 
             # a compound index
             columns: [ religion_name ]
+        religion_from_date_idx:
+            columns: [ from_dateID ]
+        religion_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer

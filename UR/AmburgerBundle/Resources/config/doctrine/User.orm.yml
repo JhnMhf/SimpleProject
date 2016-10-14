@@ -27,4 +27,8 @@ UR\AmburgerBundle\Entity\User:
             length: 100
             fixed: false
             comment: ''
+        admin:
+            type: boolean
+            options:
+                default: false
     lifecycleCallbacks: {  }

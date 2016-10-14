@@ -4,6 +4,11 @@ UR\DB\NewBundle\Entity\Birth:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        birth_date_idx:
+            columns: [ birth_dateID ]
+        birth_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer

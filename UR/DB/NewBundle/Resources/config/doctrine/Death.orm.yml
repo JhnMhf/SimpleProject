@@ -4,6 +4,11 @@ UR\DB\NewBundle\Entity\Death:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        death_date_idx:
+            columns: [ death_dateID ]
+        funeral_date_idx:
+            columns: [ funeral_dateID ]
     id:
         id:
             type: integer

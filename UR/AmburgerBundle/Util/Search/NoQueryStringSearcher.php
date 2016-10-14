@@ -16,6 +16,8 @@ class NoQueryStringSearcher extends BaseDataSearcher {
         //write queries which only use what is set
         if(!empty($lastName) || !empty($firstName) || !empty($patronym)){
             $matchingPersonIds = $this->checkAllPersonsByNames($onlyMainPersons, $lastName, $firstName, $patronym);
+            
+            $this->LOGGER->debug("Found " . count($matchingPersonIds) . " matching persons.");
 
             return $this->findPersons($matchingPersonIds,$onlyMainPersons, $location, $territory, $country, $date, $fromDate, $toDate);
         } else {
@@ -76,12 +78,24 @@ class NoQueryStringSearcher extends BaseDataSearcher {
         
         //baptism, birth, death
         $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        
+        $this->LOGGER->debug("After searching baptism found " . count($personIds) . " persons.");
+        
         $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        
+        $this->LOGGER->debug("After searching birth found " . count($personIds) . " persons.");
+        
         $personIds = array_merge($personIds,$this->searchInDeath($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        
+        $this->LOGGER->debug("Found possible duplicate " . count($personIds) . " persons.");
         
         $personIds = array_unique($personIds);
         
+        $this->LOGGER->debug("Found unique " . count($personIds) . " persons.");
+        
         sort($personIds);
+        
+        $this->LOGGER->debug("Sorted the persons");
         
         return $personIds;
     }

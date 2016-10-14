@@ -4,6 +4,9 @@ UR\DB\NewBundle\Entity\Baptism:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        baptism_date_idx:
+            columns: [ baptism_dateID ]
     id:
         id:
             type: integer

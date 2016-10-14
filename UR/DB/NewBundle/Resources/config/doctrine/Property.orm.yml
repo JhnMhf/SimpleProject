@@ -4,6 +4,13 @@ UR\DB\NewBundle\Entity\Property:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        property_from_date_idx:
+            columns: [ from_dateID ]
+        property_to_date_idx:
+            columns: [ to_dateID ]
+        property_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer

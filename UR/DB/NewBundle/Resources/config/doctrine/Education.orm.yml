@@ -4,6 +4,15 @@ UR\DB\NewBundle\Entity\Education:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        education_from_date_idx:
+            columns: [ from_dateID ]
+        education_to_date_idx:
+            columns: [ to_dateID ]
+        education_proven_date_idx:
+            columns: [ proven_dateID ]
+        education_graduation_date_idx:
+            columns: [ graduation_dateID ]
     id:
         id:
             type: integer

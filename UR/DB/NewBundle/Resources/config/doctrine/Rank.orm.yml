@@ -4,6 +4,13 @@ UR\DB\NewBundle\Entity\Rank:
     options:
         collate: utf8_general_ci
         charset: utf8
+    indexes:
+        rank_from_date_idx:
+            columns: [ from_dateID ]
+        rank_to_date_idx:
+            columns: [ to_dateID ]
+        rank_proven_date_idx:
+            columns: [ proven_dateID ]
     id:
         id:
             type: integer
