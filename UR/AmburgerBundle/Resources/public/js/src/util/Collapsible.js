@@ -11,7 +11,8 @@ Collapsible = (function () {
         if(args.target.localName !== 'input' 
                 && args.target.localName !== 'label' 
                 && args.target.localName  !== 'select'
-                 && args.target.localName  !== 'option'){             
+                && args.target.localName  !== 'option'
+                && args.target.localName !== 'button'){             
             var clickedContainer = extractClickedContainer(args.currentTarget.className);
 
             console.log(clickedContainer);

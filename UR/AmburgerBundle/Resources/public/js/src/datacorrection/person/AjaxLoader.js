@@ -69,6 +69,17 @@ PersonCorrection.AjaxLoader = (function () {
                         $(that).trigger("errorOccured", data);
                     }
                 });
+            },
+            
+            sendGNDRequest = function(searchTerm){
+                $.ajax({
+                    type: "GET",
+                    url: 'gnd/'+searchTerm,
+                    dataType: 'json'
+                }).always(function (data, textStatus, jqXHR) {
+                    console.log('always', data);
+                    $(that).trigger("gndRequestFinished", {results: data });
+                });
             };
 
     that.init = init;
@@ -76,6 +87,7 @@ PersonCorrection.AjaxLoader = (function () {
     that.saveFinalPerson = saveFinalPerson;
     that.loadWeddingsToCorrect = loadWeddingsToCorrect;
     that.saveWeddings =saveWeddings;
+    that.sendGNDRequest = sendGNDRequest;
     
     return that;
 })();

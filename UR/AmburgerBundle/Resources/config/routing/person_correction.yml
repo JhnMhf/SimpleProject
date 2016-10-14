@@ -70,6 +70,12 @@ person_wedding_save:
     defaults: { _controller: AmburgerBundle:CorrectionPerson:saveWedding } 
     methods: [POST]
 
+person_gnd:
+    path:    /correction/{ID}/person/gnd/{searchTerm}
+    defaults: { _controller: AmburgerBundle:CorrectionPerson:searchGND } 
+    methods: [GET]
+
+
 #person_relatives
 person_relatives:
     path:    /correction/{ID}/relatives/

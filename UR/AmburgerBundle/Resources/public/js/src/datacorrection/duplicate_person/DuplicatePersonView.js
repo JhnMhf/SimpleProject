@@ -21,8 +21,6 @@ DuplicatePerson.DuplicatePersonView = (function(){
     displayDuplicates = function(personData, duplicatesData){
         var personTemplate = generatePersonAndRelativesTemplate(personData);
         
-        console.log(personTemplate);
-        
         for(var i = 0; i < duplicatesData.length; i++){
             displayDuplicatePerson(personTemplate, duplicatesData[i]);
         }

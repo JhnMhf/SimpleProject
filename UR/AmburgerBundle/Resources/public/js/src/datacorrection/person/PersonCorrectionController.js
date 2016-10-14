@@ -27,6 +27,8 @@ PersonCorrection.PersonCorrectionController = (function(){
         $(ajaxLoader).on("weddingSaveFinished", onWeddingSaveFinished);
         
         $(ajaxLoader).on("errorOccured", onErrorOccured);
+        
+        $(ajaxLoader).on("gndRequestFinished", onGNDRequestFinished);
 
         personCorrectionView = PersonCorrection.PersonCorrectionView.init();
         
@@ -35,6 +37,8 @@ PersonCorrection.PersonCorrectionController = (function(){
         oldPersonView = PersonCorrection.OldPersonView.init();
         newPersonView = PersonCorrection.NewPersonView.init();
         finalPersonView = PersonCorrection.FinalPersonView.init();
+        
+        $(finalPersonView).on("sendGNDRequest", onSentGNDRequest);
         
         
         ajaxLoader.loadPersonToCorrect();
@@ -99,6 +103,14 @@ PersonCorrection.PersonCorrectionController = (function(){
     onErrorOccured = function(event, data){
         personCorrectionView.hideLoader();
         console.error(data)
+    },
+    
+    onSentGNDRequest = function(event, searchTerm){
+        ajaxLoader.sendGNDRequest(searchTerm);
+    },
+    
+    onGNDRequestFinished = function(event, result){
+        finalPersonView.displayGNDResult(result['results']);
     };
 
 

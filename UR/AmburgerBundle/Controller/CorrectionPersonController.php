@@ -42,7 +42,6 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         return $jsonResponse;
     }
     
-    //@TODO: Not finished
     public function loadWeddingAction($ID){
         $this->getLogger()->debug("Loading wedding data for ID: ".$ID);
         $response = array();
@@ -64,6 +63,83 @@ class CorrectionPersonController extends Controller implements CorrectionSession
         $jsonResponse->setContent($json);
         
         return $jsonResponse;
+    }
+    
+    public function searchGNDAction($searchTerm){
+        $this->getLogger()->info("searchGND: ".$searchTerm);
+         
+        $url = "/subject?name=".$searchTerm;
+        
+        $response = $this->request($url);
+        
+        $responseBodyJson = $response->getBody();
+        
+        $serializer = $this->get('serializer');
+        $responseBody = $serializer->deserialize($responseBodyJson, 'array', 'json');
+        
+        $preferredNames = array();
+
+        
+        foreach($responseBody as $element){
+            if(isset($element["@graph"])){
+                if(isset($element["@graph"][0]["@type"])) {
+                    $types = $element["@graph"][0]["@type"];
+  
+                    $geographicNameIdentifierFound = false;
+                    $territoryOrAdministrativeUnitIdenitifierFound = false;
+                    if(is_array($types)){
+                        foreach($types as $type){
+                            if($type == "http://d-nb.info/standards/elementset/gnd#PlaceOrGeographicName"){
+                                $geographicNameIdentifierFound = true;
+                                continue;
+                            }
+                            
+                            if($type == "http://d-nb.info/standards/elementset/gnd#TerritorialCorporateBodyOrAdministrativeUnit"){
+                                $territoryOrAdministrativeUnitIdenitifierFound = true;
+                            }
+                        }
+                    }else{
+                        // not necessary to check here?
+                    }
+
+                    
+                    if($geographicNameIdentifierFound && $territoryOrAdministrativeUnitIdenitifierFound){
+                        
+                        if(isset($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"])){
+                            if(is_array($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"])){
+                                foreach($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"] as $name){
+                                    $name = addslashes(trim($name));
+                                    if(!in_array($name, $preferredNames)){
+                                        $preferredNames[] = $name;
+                                    }
+                                    
+                                }
+                                
+                            } else {
+                                $this->getLogger()->debug("Possible preferred Names: ".$element["@graph"][0]["preferredNameForThePlaceOrGeographicName"]);
+                                $singleName = addslashes(trim($element["@graph"][0]["preferredNameForThePlaceOrGeographicName"]));
+                                if(!in_array($singleName, $preferredNames)){
+                                    $preferredNames[] = $singleName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+        }
+        $this->getLogger()->info("Found ".count($preferredNames). " GND Results.");
+        
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setContent($serializer->serialize($preferredNames, 'json'));
+        
+        return $jsonResponse;
+    }
+    
+    private function request($url){
+        $client   = $this->get('guzzle.client.gnd_api');
+        return $client->get($url);
     }
     
     private function loadOldPersonByID($ID){

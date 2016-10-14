@@ -2,6 +2,11 @@
 PersonCorrection.FinalPersonView = (function () {
             var that = {},
             personViewGenerator = null,
+            
+            $gndRequestContainer = null,
+            
+            gndRequestSearchTerm = null,
+            
             /* 
              Initialises the object and sets default values.
              */
@@ -11,10 +16,76 @@ PersonCorrection.FinalPersonView = (function () {
             },
             displayPerson = function (personData) {
                 personViewGenerator.displayPerson("#final", personData, true);
+                registerOnGNDButtons();
             },
             displayWeddings = function (weddingData) {
                 personViewGenerator.displayWeddings("#final", weddingData, true);
+                registerOnGNDButtons();
             },
+            
+            registerOnGNDButtons = function(){
+                $('button.gnd-request').off('click');
+                $('button.gnd-request').on('click', onGNDButtonClicked);
+            },
+            
+            onGNDButtonClicked = function(){
+                console.log('GND Button clicked: ', $(this));
+                
+                $gndRequestContainer = $($(this).parent());
+                gndRequestSearchTerm = $gndRequestContainer.find("input[name='name']").val();
+                
+                console.log('Searching for ', gndRequestSearchTerm,' from ' , $gndRequestContainer);
+                
+                $(that).trigger('sendGNDRequest', gndRequestSearchTerm);
+            },
+            
+            displayGNDResult = function(result){
+                console.log('GND Result: ', result);
+                
+                prepareGNDPopup(result);
+                
+                displayGNDPopup();
+            },
+            
+            prepareGNDPopup = function(result){
+                var template = _.template($("script#gnd-popup-template").html());
+
+                var data = [];
+
+                data['suggestions'] = result;
+
+                $("#dialog-gnd").html(template(data));
+                
+                $('.gnd-accept').on('click', onAcceptGNDSuggestion);
+            },
+            
+            displayGNDPopup = function(){
+                $( "#dialog-gnd" ).dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                      "Abbrechen": function() {
+                        $( this ).dialog( "close" );
+                      }
+                    }
+                });
+            },
+            
+            onAcceptGNDSuggestion = function(){
+                $( "#dialog-gnd" ).dialog('close');
+                
+                
+                console.log($(this).parent().parent());
+                console.log($(this).parent().parent().find('td.gnd-value'));
+                
+                var acceptedSuggestion = $(this).parent().parent().find('td.gnd-value').html();
+                
+                console.log('Accepted Suggestion: ', acceptedSuggestion);
+                
+                $gndRequestContainer.find("input[name='name']").val(acceptedSuggestion);
+            }
             
             extractWeddingData = function(){
               var weddingData = extractArrayData('wedding','wedding-container','wedding-row')
@@ -627,6 +698,7 @@ PersonCorrection.FinalPersonView = (function () {
     that.displayWeddings = displayWeddings;
     that.extractPersonData = extractPersonData;
     that.extractWeddingData = extractWeddingData;
+    that.displayGNDResult = displayGNDResult;
 
     return that;
 })();
