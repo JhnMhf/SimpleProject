@@ -74,6 +74,12 @@
                     <i class="fa fa-times-circle fa-3x icon-red left remove-relation clickable" aria-hidden="true"></i>
                     <i class="fa fa-check-circle fa-3x icon-green right accept-relation clickable" aria-hidden="true"></i>
                 </div>
+        
+                <% if(relation_comment) { %>
+                    <span class="comment">
+                            <%= relation_comment %>
+                    </span>
+                <% } %>
             </div>
             <div class="large-1 columns">
             </div>

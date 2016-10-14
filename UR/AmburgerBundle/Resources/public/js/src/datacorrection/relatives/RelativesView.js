@@ -134,6 +134,7 @@ RelativesCorrection.RelativesView = (function () {
             templateData['relativeGender'] = relativeReference['gender'];
             
             templateData['relation'] = getRelationshipTestBasedOnIdentifier(identifier);
+            templateData['relation_comment'] = extractComment(data[identifier][i]['relation']);
 
             templateData['personData'] = personDataTemplate;
 
@@ -141,6 +142,28 @@ RelativesCorrection.RelativesView = (function () {
 
             $(".existing-relations-container").append(template(templateData));
         }
+    },
+    
+    extractComment = function(relation){
+        console.log(relation);
+        
+        if(relation['comment'] !== undefined){
+            return relation['comment'];
+        } else if(relation['is_parent_comment'] !== undefined){
+            return relation['is_parent_comment'];
+        } else if(relation['is_parent_in_law_comment'] !== undefined){
+            return relation['is_parent_in_law_comment'];
+        } else if(relation['is_sibling_comment'] !== undefined){
+            return relation['is_sibling_comment'];
+        } else if(relation['is_grandparent_comment'] !== undefined){
+            return relation['is_grandparent_comment'];
+        } else if(relation['wedding_comment'] !== undefined){
+            return relation['wedding_comment'];
+        } else if(relation['marriage_comment'] !== undefined){
+            return relation['marriage_comment'];
+        } 
+        
+        return "";
     },
 
     getRelationshipTestBasedOnIdentifier = function(identifier){

@@ -296,14 +296,14 @@ class RelationshipLoader {
         return $this->generateRelativesEntry($em, $id, $childrenInLawIds, $alreadyLoaded);
     }
 
-    private function generateRelativesEntry($em, $id, $relativesIds, &$alreadyLoaded = null) {
+    private function generateRelativesEntry($em, $id, $relativeEntries, &$alreadyLoaded = null) {
         $relativesArray = array();
 
-        for ($i = 0; $i < count($relativesIds); $i++) {
-            $idOfRelative = $this->getRelativeId($id, $relativesIds[$i]);
+        for ($i = 0; $i < count($relativeEntries); $i++) {
+            $idOfRelative = $this->getRelativeId($id, $relativeEntries[$i]);
             $entry = array();
             $entry["id"] = $idOfRelative;
-            $entry["relation"] = $relativesIds[$i];
+            $entry["relation"] = $relativeEntries[$i];
 
             if(is_null($alreadyLoaded)){
                 $this->getLogger()->info("Loading Id " . $idOfRelative);
