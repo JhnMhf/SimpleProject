@@ -123,3 +123,63 @@ input.form-control {
 .clickable {
     cursor: pointer;
 }
+
+/* navigation */
+
+.navigation {
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    width: 90%;
+    height: 50px;
+    background-color: #00BFFF;
+    border: 1px solid #999;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.nav-item.active {
+    background-color: #1E90FF;
+}
+
+.nav-item.disabled {
+    background-color: grey;
+}
+
+.nav-item.one-line span {
+    margin-top: 5%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/*
+.nav-item.arrow:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  right: 0x;
+  width: 0;
+  height: 0;
+  margin-right: -25%;
+  border: 20px solid transparent;
+  border-left: 12px solid #ccc;
+}
+*/
+
+.nav-item.arrow:before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  width: 0;
+  height: 0;
+  margin-right: -25%;
+  border: 20px solid transparent;
+  border-left: 12px solid #00BFFF;
+}
+
+.nav-item.arrow.disabled:before {
+    border-left: 12px solid grey;
+}

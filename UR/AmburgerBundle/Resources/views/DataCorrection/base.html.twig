@@ -1,6 +1,46 @@
 {% extends "AmburgerBundle:Administration:base.html.twig" %}
 {% block navigation %}
-     <div class="large-6 columns large-centered center navigation">
-        Start --> Duplicate prüfen --> Person normalisieren --> Verwandte normalisieren-->Verwandschaftsbeziehungen herstellen
+    <div class="row navigation">
+        <div class="large-1 columns">
+        </div>
+        <div class="large-2 columns">
+            <div class="nav-item arrow one-line" type="start">
+                <span>Start</span>
+            </div>
+        </div>
+        <div class="large-2 columns">
+            <div class="nav-item arrow one-line" type="duplicate">
+                <span>Duplicate prüfen</span>
+            </div>
+        </div>
+        <div class="large-2 columns">
+            <div class="nav-item arrow one-line" type="person">
+                <span>Person normalisieren</span>
+            </div>
+        </div>
+        <div class="large-2 columns">
+            <div class="nav-item arrow" type="relatives">
+                <span>Verwandschaftsbeziehungen herstellen</span>
+            </div>
+        </div>
+        <div class="large-2 columns">
+            <div class="nav-item one-line" type="end">
+                <span>Korrektur abschließen</span>
+            </div>
+        </div>
+        <div class="large-1 columns">
+        </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('bundles/amburger/js/src/datacorrection/Navigation.js')}}"></script>
+
+
+    {# As last init the Start #}
+    <script>
+        Navigation.init();
+    </script>
+
 {% endblock %}
