@@ -13,3 +13,7 @@ login_validate:
 logout:
     path: /logout/
     defaults: { _controller: AmburgerBundle:Login:logout }
+    
+admin_overview:
+    path: /user/overview/
+    defaults: { _controller: AmburgerBundle:Admin:userOverview }

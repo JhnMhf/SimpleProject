@@ -22,7 +22,7 @@ class CorrectionRelativesController extends Controller implements CorrectionSess
     public function indexAction($ID)
     {
         $this->getLogger()->debug("Relatives page called: ".$ID);
-        return $this->render('AmburgerBundle:DataCorrection:related_person.html.twig');
+        return $this->render('AmburgerBundle:DataCorrection:related_person.html.twig', array('logged_in'=>true));
     }
     
     public function loadPersonAction($ID){

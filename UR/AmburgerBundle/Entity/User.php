@@ -80,4 +80,33 @@ class User
     {
         return $this->password;
     }
+    /**
+     * @var boolean
+     */
+    private $admin = false;
+
+
+    /**
+     * Set admin
+     *
+     * @param boolean $admin
+     *
+     * @return User
+     */
+    public function setAdmin($admin)
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    /**
+     * Get admin
+     *
+     * @return boolean
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
 }

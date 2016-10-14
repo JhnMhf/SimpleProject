@@ -86,7 +86,7 @@ class CorrectionSessionUtil {
         $correctionSessions = $this->getSystemDBManager()->getRepository('AmburgerBundle:CorrectionSession')
                 ->findBy(array('activeUserId' => $userId));
         
-        for($i = 0; $i < $correctionSessions; $i++){
+        for($i = 0; $i < count($correctionSessions); $i++){
             $this->stopCorrectionSession($correctionSessions[$i]);
         }
        

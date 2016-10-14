@@ -1,0 +1,29 @@
+{% extends "AmburgerBundle:Administration:base.html.twig" %}
+{% block body %}
+
+    <div class="row"
+         <div class="columns large-12">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nutzername</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.name|e }}</td>
+                            <td><button>Password ändern</button></td>
+                            <td><button>User löschen</button></td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

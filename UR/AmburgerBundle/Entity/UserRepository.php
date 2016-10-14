@@ -47,4 +47,13 @@ class UserRepository extends EntityRepository
         $user = $query->getOneOrNullResult();
         return password_verify($password, $user->getPassword());
     }
+    
+    public function isAdmin($userid){
+        $query = $this->createQueryBuilder('u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userid)
+            ->getQuery();
+        $user = $query->getOneOrNullResult();
+        return $user->isAdmin();
+    }
 }

@@ -22,7 +22,11 @@
 
             </div>
         </div>
-
+        {% if logged_in %}
+            <div class="row" id="user-controls">
+                <i id="user-settings" class="fa fa-cog" aria-hidden="true"></i> <i id="logout" class="fa fa-sign-out" aria-hidden="true"></i>
+            </div>
+        {% endif %}
         {% block navigation %}
 
         {% endblock %}
@@ -44,4 +48,17 @@
             </div>
         </div>
     </footer>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('bundles/amburger/js/src/util/User.js')}}"></script>
+
+
+    {# As last init the Start #}
+    <script>
+        User.init();
+    </script>
+
 {% endblock %}

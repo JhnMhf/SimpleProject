@@ -33,32 +33,4 @@ class UserController extends Controller implements SessionController{
             return $this->redirect($this->generateUrl('login'));
         }
     }
-    
-    public function addUserAction(Request $request)
-    {
-        $session = $this->getRequest()->getSession();
-        if($session->get('userid')){
-            //TODO: check rights of user if he is allowed to create a new user?
-            $newUser = $request->request->get('username');
-            $newPassword = $request->request->get('password');
-            
-            $systemDBManager = $this->get('doctrine')->getManager('system');
-            $this->addUser($newUser, $newPassword);
-            return $this->redirect($this->generateUrl('addUser_index'));
-        }else{
-            return $this->redirect($this->generateUrl('login'));
-        }
-    }
-    
-    private function addUser($username, $password){
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
-        $newUser = new User();
-        $newUser->setName($username);
-        $newUser->setPassword($hashedPassword);
-        
-        $systemDBManager = $this->get('doctrine')->getManager('system');
-        $systemDBManager->persist($newUser);
-        $systemDBManager->flush();
-    }
 }

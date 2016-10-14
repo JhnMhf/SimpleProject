@@ -22,7 +22,7 @@ class CorrectionPersonController extends Controller implements CorrectionSession
     public function indexAction($ID)
     {
         $this->getLogger()->debug("Person correction side called: ".$ID);
-        return $this->render('AmburgerBundle:DataCorrection:person.html.twig');
+        return $this->render('AmburgerBundle:DataCorrection:person.html.twig', array('logged_in'=>true));
     }
     
     public function loadAction($ID)

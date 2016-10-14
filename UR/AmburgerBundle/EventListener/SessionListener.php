@@ -40,6 +40,21 @@ class SessionListener
             $this->checkCorrectionSession($event, $controller[0]);
         } else if($controller[0] instanceof SessionController){
             $this->checkNormalSession($event, $controller[0]);
+        } else if($controller[0] instanceof AdminSessionController){
+            $this->checkAdminSession($event, $controller[0]);
+        }
+    }
+    
+    private function checkAdminSession($event, $controller){
+        $this->checkNormalSession($event, $controller);
+        
+        $session = $event->getRequest()->getSession();
+        $userId = $session->get('userid');
+        
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+        
+        if(!$systemDBManager->getRepository('AmburgerBundle:User')->isAdmin($userId)){
+            throw new AccessDeniedttPException("The user has not the necessary rights.");
         }
     }
     

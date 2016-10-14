@@ -22,7 +22,7 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
     public function indexAction($ID)
     {
         $this->getLogger()->debug("Duplicates side called: ".$ID);
-        return $this->render('AmburgerBundle:DataCorrection:duplicate_persons.html.twig');
+        return $this->render('AmburgerBundle:DataCorrection:duplicate_persons.html.twig', array('logged_in'=>true));
     }
     
     public function loadPersonWithRelativesAction($ID)

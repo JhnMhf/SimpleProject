@@ -301,6 +301,7 @@ PersonCorrection.FinalPersonView = (function () {
 
                 return residenceObj;
             },
+            //@TODO: Check this, it does not work correctly
             extractRoadOfLifeObj = function (element) {
                 console.log("RoadOfLife: ", element, $(element));
 

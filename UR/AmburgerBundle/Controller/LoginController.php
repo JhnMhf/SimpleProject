@@ -25,7 +25,7 @@ class LoginController extends Controller
     */
     public function indexAction()
     {
-        return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>false, 'show_password_notice'=>false));
+        return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>false, 'show_password_notice'=>false, 'logged_in'=>false));
     }
     /* 
         Checks if the user exists and if the password is correct. If everything is correct the user gets logged in.
@@ -41,10 +41,10 @@ class LoginController extends Controller
             switch($user){
                 // username
                 case -1:
-                    return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>true, 'show_password_notice'=>false));
+                    return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_username_notice'=>true, 'show_password_notice'=>false,'logged_in'=>false));
                 // password
                 case -2:
-                    return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_password_notice'=>true, 'show_username_notice'=>false));
+                    return $this->render('AmburgerBundle:DataCorrection:login.html.twig', array('show_password_notice'=>true, 'show_username_notice'=>false,'logged_in'=>false));
                 default:
                     return $this->render('AmburgerBundle:DataCorrection:login.html.twig');
             }
@@ -71,7 +71,7 @@ class LoginController extends Controller
     {
         $this->getLogger()->debug("Logout request");
         
-        $this->get('correction_session.service')->stopCorrectionSessionsForUser($this->getSession()->get('userid'));
+        $this->get('correction_session.service')->stopCorrectionSessionsForUser($this->getRequest()->getSession()->get('userid'));
         
         $session = $request->getSession();
         $session->invalidate();
