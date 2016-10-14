@@ -111,3 +111,13 @@ person_relatives_remove:
     path:    /correction/{ID}/relatives/remove
     defaults: { _controller: AmburgerBundle:CorrectionRelatives:remove } 
     methods: [POST]
+    
+correction_end:
+    path:     /correction/{ID}/end/
+    defaults: { _controller: AmburgerBundle:CorrectionEnd:index }
+    methods: [GET]
+    
+correction_complete:
+    path:     /correction/{ID}/end/complete
+    defaults: { _controller: AmburgerBundle:CorrectionEnd:complete }
+    methods: [GET]

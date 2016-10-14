@@ -69,7 +69,7 @@ Navigation = (function () {
     },
     
     forwardToStart = function(){
-         window.location.href = window.location.origin+"/correction/";
+        window.location.href = window.location.origin+"/correction/";
     };
     
     that.init = init;

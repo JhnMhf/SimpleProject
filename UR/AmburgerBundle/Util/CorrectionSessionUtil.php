@@ -101,7 +101,24 @@ class CorrectionSessionUtil {
         
         $this->getSystemDBManager()->merge($personData);
             
-       $this->getSystemDBManager()->remove($correctionSession);
+        $this->getSystemDBManager()->remove($correctionSession);
+    }
+    
+    public function completeCorrectionSession($personId){
+        $personData = $this->getSystemDBManager()->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($personId);
+
+        //remove currently in progress flag from personData
+        $personData->setCurrentlyInProcess(false);
+        $personData->setCompleted(true);
+        
+        $this->getSystemDBManager()->merge($personData);
+            
+        $correctionSession = $this->getSystemDBManager()->getRepository('AmburgerBundle:CorrectionSession')
+                ->findOneBy(array('personId' => $personId));
+        
+        $this->getSystemDBManager()->remove($correctionSession);
+        
+        $this->getSystemDBManager()->flush();
     }
 }
 

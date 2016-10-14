@@ -1,0 +1,40 @@
+{% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="large-6 columns large-centered center">
+            <p>Alle Korrekturschritte sind abgeschlossen.</p>
+            
+            <button class="end-correction">Korrektur beenden</button>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+   {{ parent() }}
+    {# End #}
+    <script src="{{asset('bundles/amburger/js/src/datacorrection/end/End.js')}}"></script>
+
+    {# Models #}
+
+
+     {# Views #}
+
+
+     {# Manager #}
+
+
+     {# Controllers #}
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/end/AjaxLoader.js') }}"></script>
+     <script src="{{ asset('bundles/amburger/js/src/datacorrection/end/EndController.js') }}"></script>
+
+
+
+     {# As last init the Start #}
+     <script>
+        $(document).ready(function(){
+          End.init();
+        });
+     </script>
+
+{% endblock %}
