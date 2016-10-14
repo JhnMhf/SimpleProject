@@ -1,5 +1,15 @@
 # usercontrol
 
+user_settings:
+    path: /settings/
+    defaults: { _controller: AmburgerBundle:User:index }    
+    methods: [GET]
+    
+user_settings_save:
+    path: /settings/
+    defaults: { _controller: AmburgerBundle:User:save }    
+    methods: [POST]
+
 addUser_index:
     path: /user/
     defaults: { _controller: AmburgerBundle:User:index }    

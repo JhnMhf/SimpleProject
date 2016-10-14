@@ -56,4 +56,29 @@ class UserRepository extends EntityRepository
         $user = $query->getOneOrNullResult();
         return $user->isAdmin();
     }
+    
+    public function updatePassword($userid, $newPassword){
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $query = $this->createQueryBuilder('u')
+            ->where('u.id = :userid')
+            ->setParameter('userid', $userid)
+            ->getQuery();
+        $user = $query->getOneOrNullResult();
+        
+        $user->setPassword($hashedPassword);
+        
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+    
+    public function createNewUser($username, $password){
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        $newUser = new User();
+        $newUser->setName($username);
+        $newUser->setPassword($hashedPassword);
+        
+        $this->_em->persist($newUser);
+        $this->_em->flush();
+    }
 }

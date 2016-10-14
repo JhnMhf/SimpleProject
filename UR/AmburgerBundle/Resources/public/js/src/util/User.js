@@ -7,7 +7,7 @@ User = (function () {
     },
     
     openSettings = function(){
-        window.location.host+"/settings";
+       window.location.href = window.location.origin+"/settings";
     },
     
     logout = function(){
