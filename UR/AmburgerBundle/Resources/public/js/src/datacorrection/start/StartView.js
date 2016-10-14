@@ -19,9 +19,16 @@ Start.StartView = (function(){
     },
     
     selectedPerson = function(){
-        var oid = $("#selected-id").val();
+        var idValue = $("#selected-id").val();
         
-        $(that).trigger('selectedPerson', [oid]);
+        var idType = getIDType();
+        
+        if(idType == 'id'){
+            $(that).trigger('selectedPersonByID', [idValue]);
+        } else if(idType == 'oid'){
+            $(that).trigger('selectedPersonByOID', [idValue]);
+        }
+       
     },
     
     showErrorMessage = function(message){
@@ -31,6 +38,13 @@ Start.StartView = (function(){
     showAlreadyCorrectedMessage = function(){
         MessageHelper.showYesNoMessage('Die Person wurde bereits korrigiert. Soll die Korrektur trotzdem gestartet werden', 
         'Person wurde bereits korrigiert', that, "startCorrectingNonetheless");
+    },
+    
+    getIDType = function(){
+        var selected = $("#id-type-container input[type='radio']:checked");
+        if (selected.length > 0) {
+            return selected.val();
+        }
     };
 
 

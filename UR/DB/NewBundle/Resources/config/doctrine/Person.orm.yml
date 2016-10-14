@@ -1,6 +1,7 @@
 UR\DB\NewBundle\Entity\Person:
     type: entity
     table: person
+    repositoryClass: UR\DB\NewBundle\Entity\PersonRepository
     options:
         collate: utf8_general_ci
         charset: utf8

@@ -42,10 +42,14 @@ Start.AjaxLoader = (function () {
                     $(that).trigger("workStarted", [jqXHR.status]);
                 });
             },
-            checkPerson = function (id) {
+            checkPersonByID = function (id) {
                 $.ajax({
                     type: "GET",
                     url: id + "/check",
+                    beforeSend: function (request)
+                    {
+                        request.setRequestHeader("Type", 'ID');
+                    },
                 })
                         .done(function (data, textStatus, jqXHR) {
                             $(that).trigger("personChecked", [jqXHR.status]);
@@ -53,11 +57,31 @@ Start.AjaxLoader = (function () {
                         .fail(function (jqXHR) {
                             $(that).trigger("personChecked", [jqXHR.status]);
                         });
+            },
+            
+            checkPersonByOID = function (id) {
+                $.ajax({
+                    type: "GET",
+                    url: id + "/check",
+                    beforeSend: function (request)
+                    {
+                        request.setRequestHeader("Type", 'OID');
+                    },
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            console.log("ID of person: ",jqXHR.getResponseHeader('ID'));
+                            $(that).trigger("oidPersonChecked", {status: jqXHR.status, id: jqXHR.getResponseHeader('ID') });
+                        })
+                        .fail(function (jqXHR) {
+                            console.log("ID of person: ",jqXHR.getResponseHeader('ID'));
+                            $(that).trigger("oidPersonChecked", {status: jqXHR.status, id: jqXHR.getResponseHeader('ID') });
+                        });
             };
 
 
     that.init = init;
-    that.checkPerson = checkPerson;
+    that.checkPersonByID = checkPersonByID;
+    that.checkPersonByOID = checkPersonByOID;
     that.nextPerson = nextPerson;
     that.startWork = startWork;
     return that;

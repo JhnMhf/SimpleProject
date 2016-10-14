@@ -11,6 +11,8 @@ Start.StartController = (function(){
     /* Variables */
     currentId = null,
     
+    type = null,
+    
     /* 
         Initialises the object and sets default values.
     */
@@ -18,6 +20,7 @@ Start.StartController = (function(){
         ajaxLoader = Start.AjaxLoader.init();
         
         $(ajaxLoader).on("personChecked", onPersonChecked);
+        $(ajaxLoader).on("oidPersonChecked", onOIDPersonChecked);
         $(ajaxLoader).on("nextPerson", onNextPerson);
         $(ajaxLoader).on("noNextPerson", onNoNextPerson);
         $(ajaxLoader).on("workStarted", onWorkStarted);
@@ -25,7 +28,8 @@ Start.StartController = (function(){
         startView = Start.StartView.init();
         
         $(startView).on("nextPerson", nextPersonClicked);
-        $(startView).on("selectedPerson", selectedPersonClicked);
+        $(startView).on("selectedPersonByID", selectedPersonByIDClicked);
+        $(startView).on("selectedPersonByOID", selectedPersonByOIDClicked);
         $(startView).on("startCorrectingNonetheless", startCorrectingNonetheless);
         
         return that;
@@ -36,10 +40,40 @@ Start.StartController = (function(){
         ajaxLoader.nextPerson();
     },
     
-    selectedPersonClicked = function(event, id){
-        console.log("selectedPersonClicked", id);
+    selectedPersonByIDClicked = function(event, id){
+        console.log("selectedPersonByIDClicked", id);
         currentId = id;
-        ajaxLoader.checkPerson(currentId);
+        type = 'ID';
+        ajaxLoader.checkPersonByID(currentId);
+    },
+    
+    selectedPersonByOIDClicked = function(event, oid){
+        console.log("selectedPersonByOIDClicked", oid);
+        currentId = oid;
+        type = 'OID';
+        ajaxLoader.checkPersonByOID(currentId);
+    },
+    
+    onOIDPersonChecked = function(event, responseData){
+        console.log("onOIDPersonChecked", responseData);
+        if(responseData['status'] == "200"){
+            console.log('Setting currentID to real ID: ',responseData['id']);
+            currentId = responseData['id'];
+            //everything alright
+            ajaxLoader.startWork(currentId);
+        } else if (responseData['status'] == "300"){ 
+            //already corrected
+            startView.showAlreadyCorrectedMessage();
+        } else if (responseData['status'] == "404"){ 
+            //oid does not exist
+            startView.showErrorMessage("Die Person existiert nicht.");
+        } else if (responseData['status'] == "409"){ 
+            // somebody is already working on it
+            startView.showErrorMessage("Die Person wird im Moment bereits bearbeitet.");
+        } else {
+            startView.showErrorMessage("Es ist ein Fehler bei der Anfrage an den Server aufgetreten");
+        }
+        
     },
     
     onPersonChecked = function(event, responseCode){

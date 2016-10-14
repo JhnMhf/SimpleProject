@@ -115,13 +115,54 @@ class CorrectionStartController extends Controller implements SessionController
 
     public function checkAction($ID){
         $this->getLogger()->debug("Check action called: ".$ID);
-        $systemDBManager = $this->get('doctrine')->getManager('system');
-        $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($ID);
         
-        if(is_null($personData)){
-            throw $this->createNotFoundException("The person with the ID:'".$ID."' does not exist");
-        }
+        $headers = $this->getRequest()->headers->all();
 
+        $response = new Response();
+        
+        if(!array_key_exists('type', $headers)){
+            $this->getLogger()->debug("Didn't find the header 'type'");
+            $response->setStatusCode(400);
+
+            return $response;
+        }
+        
+        $systemDBManager = $this->get('doctrine')->getManager('system');
+
+        $personData = null;
+
+        if($headers['type'][0] == 'ID'){
+            $this->getLogger()->debug("Check called for ID");
+            $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($ID);
+        
+            if(is_null($personData)){
+                throw $this->createNotFoundException("The person with the ID:'".$ID."' does not exist");
+            }
+        } else if($headers['type'][0] == 'OID'){
+            $this->getLogger()->debug("Check called for OID");
+            $finalDBManager = $this->get('doctrine')->getManager('final');
+            $realID = $finalDBManager->getRepository('NewBundle:Person')->getIDForOID($ID);
+            
+            if(is_null($realID)){
+                throw $this->createNotFoundException("The person with the OID:'".$ID."' does not exist");
+            }
+            
+            $personData = $systemDBManager->getRepository('AmburgerBundle:PersonData')->findOneByPersonId($realID);
+        
+            if(is_null($personData)){
+                throw $this->createNotFoundException("The person with the ID:'".$realID."' does not exist");
+            }
+            
+            $response->headers->set('ID', $realID);
+            
+        } else {
+            $this->getLogger()->debug("Wrong content in the header 'type'");
+            $response->setStatusCode(400);
+
+            return $response;
+        }
+        
+        
         $statusCode = "200";
         
         if($personData->getCurrentlyInProcess()){
@@ -132,7 +173,6 @@ class CorrectionStartController extends Controller implements SessionController
         
         $this->getLogger()->debug("Response code: ".$statusCode);
         
-        $response = new Response();
         $response->setStatusCode($statusCode);
         
         return $response;
