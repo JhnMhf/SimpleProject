@@ -28,6 +28,8 @@ DuplicatePerson.DuplicatePersonController = (function(){
         
         ajaxLoader.loadPersonData();
         ajaxLoader.loadDuplicatePersons();
+        
+        Loader.showLoader();
 
         return that;
     },

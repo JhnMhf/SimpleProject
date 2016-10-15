@@ -118,6 +118,8 @@ RelativesCorrection.RelativesView = (function () {
         
         $('#possible-relations > .container .remove-relation').on('click', onRemove);
         $('#possible-relations > .container .accept-relation').on('click', onAccept);
+        
+        Loader.hideLoader();
     },
 
     internalDisplayDirectRelatives = function(data, identifier){

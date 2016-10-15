@@ -24,6 +24,8 @@ DuplicatePerson.DuplicatePersonView = (function(){
         for(var i = 0; i < duplicatesData.length; i++){
             displayDuplicatePerson(personTemplate, duplicatesData[i]);
         }
+        
+        Loader.hideLoader();
     },
     
     displayDuplicatePerson = function(personTemplate, duplicate){

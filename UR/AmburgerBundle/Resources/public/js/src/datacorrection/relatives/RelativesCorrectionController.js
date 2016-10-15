@@ -28,7 +28,7 @@ RelativesCorrection.RelativesCorrectionController = (function(){
         
         ajaxLoader.loadPerson();
 
-
+        Loader.showLoader();
         return that;
     },
     
