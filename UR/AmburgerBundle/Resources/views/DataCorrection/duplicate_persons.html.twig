@@ -108,6 +108,7 @@
         </script>    
         
         <script type="text/template" id="personDataTemplate">
+            <% if(relation_type) { %>Beziehungstyp: <span><%= relation_type %></span></br> <% } %>
             <% if(id) { %>ID: <span><%= id %></span></br> <% } %>
             <% if(first_name) { %>Vorname: <span><%= first_name %></span></br> <% } %>
             <% if(last_name) { %>Nachname: <span><%= last_name %></span></br><% } %>

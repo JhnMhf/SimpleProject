@@ -227,10 +227,10 @@ class PossibleRelativesFinder {
             $patronyms = explode(" ", $patronym);
             
             for($i= 0; $i < count($patronyms); $i++){
-                 $extractedFirstname = $this->extractFirstNameFromPatronym($patronym);
+                 $extractedFirstname = $this->extractFirstNameFromPatronym($patronyms[$i]);
             
                 if(!is_null($extractedFirstname)){
-                    $this->getLogger()->debug("generateMatchingPatronyms: Extracted firstName '".$extractedFirstname."' from patronym:".$patronym);
+                    $this->getLogger()->debug("generateMatchingPatronyms: Extracted firstName '".$extractedFirstname."' from patronym:".$patronyms[$i]);
 
                     $matchingPatronyms = array_merge($matchingPatronyms, $this->generatePatronymsFromFirstName($extractedFirstname));
                 }
@@ -251,10 +251,10 @@ class PossibleRelativesFinder {
             $patronyms = explode(" ", $patronym);
             
             for($i= 0; $i < count($patronyms); $i++){
-                 $extractedFirstname = $this->extractFirstNameFromPatronym($patronym);
+                 $extractedFirstname = $this->extractFirstNameFromPatronym($patronyms[$i]);
             
                 if(!is_null($extractedFirstname)){
-                    $this->getLogger()->debug("generateMatchingFirstNames: Extracted firstName '".$extractedFirstname."' from patronym:".$patronym);
+                    $this->getLogger()->debug("generateMatchingFirstNames: Extracted firstName '".$extractedFirstname."' from patronym:".$patronyms[$i]);
 
                     $matchingFirstNames[] = $extractedFirstname;
                 }

@@ -15,32 +15,33 @@ DuplicatePerson.RelativesViewGenerator = (function(){
     generateTemplate = function(relativesData){
         var data = {};
         
-        data['parents'] = generateRelativesTemplate(relativesData['parents']);
-        data['children'] = generateRelativesTemplate(relativesData['children']);
-        data['siblings'] = generateRelativesTemplate(relativesData['siblings']);
-        data['partners'] = generateRelativesTemplate(relativesData['marriagePartners']);
+        data['parents'] = generateRelativesTemplate(relativesData['parents'], 'Eltern');
+        data['children'] = generateRelativesTemplate(relativesData['children'], 'Kind');
+        data['siblings'] = generateRelativesTemplate(relativesData['siblings'], 'Geschwister');
+        data['partners'] = generateRelativesTemplate(relativesData['marriagePartners'], 'Ehepartner');
 
         var template = _.template($("script#fullRelativesTemplate").html());
         
         return template(data);
     },
     
-    generateRelativesTemplate = function(relativeData){
+    generateRelativesTemplate = function(relativeData, relationType){
        var fullTemplateForIdentifier = "";
        for(var i = 0; i < relativeData.length; i++){
            var relativeReference = relativeData[i]['person'];
-           fullTemplateForIdentifier += getPersonDataTemplate(relativeReference);
+           fullTemplateForIdentifier += getPersonDataTemplate(relativeReference, relationType);
         }
         
         return fullTemplateForIdentifier;
     },
     
-    getPersonDataTemplate = function(data){
+    getPersonDataTemplate = function(data, relationType){
         var template = _.template($("script#personDataTemplate").html());
 
         var templateData = [];
 
         templateData['id'] = data['ID'];
+        templateData['relation_type'] = relationType;
         templateData['first_name'] = data['first_name'];
         templateData['last_name'] = data['last_name'];
         templateData['patronym'] = data['patronym'];

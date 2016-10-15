@@ -53,23 +53,31 @@ class PossibleDuplicatesFinder {
         //check for possible siblings over father and mother
         $possibleDuplicatesFromSiblings = $this->searchForPossibleDuplicatesFromSiblings($em, $ID);
         
+        $this->getLogger()->info("Found ".count($possibleDuplicatesFromSiblings). " duplicates from siblings.");
+        
         //check for possible parents over siblings
         $possibleDuplicatesFromParents = $this->searchForPossibleDuplicatesFromParents($em, $ID);
+        
+        $this->getLogger()->info("Found ".count($possibleDuplicatesFromParents). " duplicates from parents.");
         
         //check for possible siblings over father and mother
         $possibleDuplicatesFromChildren = $this->searchForPossibleDuplicatesFromChildren($em, $ID);
         
+        $this->getLogger()->info("Found ".count($possibleDuplicatesFromChildren). " duplicates from children.");
+        
         //check for possible parents over siblings
         $possibleDuplicatesFromPartners = $this->searchForPossibleDuplicatesFromPartners($em, $ID);
+        
+        $this->getLogger()->info("Found ".count($possibleDuplicatesFromPartners). " duplicates from partners.");
         
         $duplicateObjects = array();
         
         for($i = 0; $i < count($possibleDuplicatesFromDB); $i++){
             if($possibleDuplicatesFromDB != $ID){
-                $person = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
+                $duplicatePerson = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
                     
-                if(!is_null($person)){
-                    $duplicateObjects[] = $person;
+                if(!is_null($duplicatePerson)){
+                    $duplicateObjects[] = $duplicatePerson;
                 }
             }
         }
