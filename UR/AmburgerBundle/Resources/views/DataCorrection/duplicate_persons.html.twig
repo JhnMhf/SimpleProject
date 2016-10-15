@@ -49,7 +49,7 @@
 {% block templates %}
     {% verbatim %}
          <script type="text/template" id="fullDuplicateTemplate">
-            <div class="row duplicate">
+            <div class="row duplicate" duplicate-id="<%= duplicateId %>">
                     <div class="row person-data">
                         <h3 class="header">
                             Daten der Person
@@ -76,6 +76,19 @@
                             <%= duplicateRelatives %>
                         </div>
                     </div>
+                    <div class="row operations">
+                        <div class="large-5 columns">
+                        </div>
+                        <div class="large-2 columns">
+                            <div class="relation-controls">                
+                                <i class="fa fa-times-circle fa-3x icon-red left ignore-duplicate clickable" aria-hidden="true"></i>
+                                <i class="fa fa-check-circle fa-3x icon-green right merge-duplicate clickable" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="large-5 columns">
+                        </div>
+                    </div>
+            
             </div>
         </script>   
         

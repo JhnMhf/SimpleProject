@@ -66,6 +66,32 @@ class CorrectionDuplicateController extends Controller implements CorrectionSess
 
     }
     
+    public function mergeAction($ID, $duplicateId){
+        $this->getLogger()->debug("Merge duplicates: ".$ID." and ".$duplicateId);
+        
+        $person = $this->loadPersonByID($em, $ID);
+        $duplicate = $this->loadPersonByID($em, $ID);
+        
+        //check if someone else is correcting this person currently?
+        
+        $mergedPerson = $this->get("person_merging.service")->mergePersons($person, $duplicate);
+        
+        //@TODO: Remove correction data?
+        
+        
+        if($mergedPerson->getId() == $ID){
+            $response = new Response();
+            $response->setStatusCode("200");
+
+            return $response;
+        } else {
+            $response = new Response();
+            $response->setStatusCode("406");
+
+            return $response;
+        }
+    }
+    
     private function loadPersonWithRelatives($ID){
         $relationShipLoader = $this->get('relationship_loader.service');
         $em = $this->get('doctrine')->getManager('final');

@@ -21,10 +21,11 @@ DuplicatePerson.DuplicatePersonController = (function(){
         
         $(ajaxLoader).on("duplicatePersonsLoaded", onDuplicatePersonsLoaded);
         $(ajaxLoader).on("personDataLoaded", onPersonDataLoaded);
+        $(ajaxLoader).on("mergeFinished", onMergeFinished);
 
         duplicatePersonView = DuplicatePerson.DuplicatePersonView.init();
         
-        $(duplicatePersonView).on("save", onSave);
+        $(duplicatePersonView).on('mergeDuplicate', onMergeDuplicate);
         
         ajaxLoader.loadPersonData();
         ajaxLoader.loadDuplicatePersons();
@@ -44,6 +45,23 @@ DuplicatePerson.DuplicatePersonController = (function(){
         console.log("DuplicatePersons: ", loadedDuplicatePersons);
         duplicatesData = loadedDuplicatePersons;
         checkDisplay();
+    },
+    
+    onMergeDuplicate = function(event, duplicateId){
+        ajaxLoader.triggerMergeDuplicate(duplicateId);
+    },
+    
+    onMergeFinished = function(event, status){
+        if(status == 200){
+            duplicatePersonView.mergeFinished();
+        } else if(status == 406){
+            MessageHelper.showInfoMessage("Die derzeit ausgewählte Person, wurde als Duplikat erkannt und in eine andere Person gemerged. \n\
+            Die Korrektursession ist somit beendet.", that, forwardToStart);
+        }
+    },
+    
+    forwardToStart = function(){
+        window.location.href = window.location.origin+"/correction/";
     },
     
     checkDisplay = function(){

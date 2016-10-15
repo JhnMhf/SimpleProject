@@ -1,7 +1,7 @@
 MessageHelper = (function () {
     var that = {},
     
-    showInfoMessage = function(message, title){
+    showInfoMessage = function(message, title,callbackObj, trigger){
         $('#dialog-info .message').text(message);
         
         if(title){
@@ -16,13 +16,15 @@ MessageHelper = (function () {
             buttons: {
               "Ok": function() {
                 $( this ).dialog( "close" );
-                
+                if(callbackObj && trigger){
+                    $(callbackObj).trigger(trigger);
+                }
               }
             }
           });
     },
     
-    showErrorMessage = function(message, title){
+    showErrorMessage = function(message, title,callbackObj, trigger){
         $('#dialog-error .message').text(message);
         
         if(title){
@@ -37,7 +39,9 @@ MessageHelper = (function () {
             buttons: {
               "Ok": function() {
                 $( this ).dialog( "close" );
-                
+                if(callbackObj && trigger){
+                    $(callbackObj).trigger(trigger);
+                }
               }
             }
           });

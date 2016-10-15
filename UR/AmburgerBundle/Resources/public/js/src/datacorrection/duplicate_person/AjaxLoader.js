@@ -37,10 +37,21 @@ DuplicatePerson.AjaxLoader = (function(){
 
             $(that).trigger("duplicatePersonsLoaded", [data]);
         });
+    },
+    
+    triggerMergeDuplicate = function(duplicateId){
+        $.ajax({
+            type: "POST",
+            url: 'merge/'+duplicateId,
+            dataType: 'json'
+        }).always(function (data, textStatus, jqXHR) {
+            $(that).trigger("mergeFinished", [jqXHR.status]);
+        });
     };
 
     that.init = init;
     that.loadDuplicatePersons = loadDuplicatePersons;
     that.loadPersonData = loadPersonData;
+    that.triggerMergeDuplicate = triggerMergeDuplicate;
     return that;
 })();

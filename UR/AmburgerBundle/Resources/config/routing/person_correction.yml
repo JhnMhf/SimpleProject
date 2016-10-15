@@ -41,6 +41,11 @@ duplicate_load_duplicates:
     defaults: { _controller: AmburgerBundle:CorrectionDuplicate:loadDuplicates } 
     methods: [GET]
     
+duplicate_merge:
+    path:    /correction/{ID}/duplicate/merge/{duplicateId}
+    defaults: { _controller: AmburgerBundle:CorrectionDuplicate:merge } 
+    methods: [POST]
+    
 # person correction
 
 person:
