@@ -50,6 +50,18 @@ class PossibleDuplicatesFinder {
         
         $this->getLogger()->info("Found ".count($possibleDuplicatesFromDB). " duplicates from DB.");
         
+        //check for possible siblings over father and mother
+        $possibleDuplicatesFromSiblings = $this->searchForPossibleDuplicatesFromSiblings($em, $ID);
+        
+        //check for possible parents over siblings
+        $possibleDuplicatesFromParents = $this->searchForPossibleDuplicatesFromParents($em, $ID);
+        
+        //check for possible siblings over father and mother
+        $possibleDuplicatesFromChildren = $this->searchForPossibleDuplicatesFromChildren($em, $ID);
+        
+        //check for possible parents over siblings
+        $possibleDuplicatesFromPartners = $this->searchForPossibleDuplicatesFromPartners($em, $ID);
+        
         $duplicateObjects = array();
         
         for($i = 0; $i < count($possibleDuplicatesFromDB); $i++){
@@ -57,9 +69,25 @@ class PossibleDuplicatesFinder {
                 $person = $this->loadPersonByID($em, $possibleDuplicatesFromDB[$i]);
                     
                 if(!is_null($person)){
-                     $duplicateObjects[] = $person;
+                    $duplicateObjects[] = $person;
                 }
             }
+        }
+        
+        for($i = 0; $i < count($possibleDuplicatesFromSiblings); $i++){
+            $duplicateObjects[] = $this->loadPersonByID($em, $possibleDuplicatesFromSiblings[$i]);
+        }
+        
+        for($i = 0; $i < count($possibleDuplicatesFromParents); $i++){
+            $duplicateObjects[] = $this->loadPersonByID($em, $possibleDuplicatesFromParents[$i]);
+        }
+        
+        for($i = 0; $i < count($possibleDuplicatesFromChildren); $i++){
+            $duplicateObjects[] = $this->loadPersonByID($em, $possibleDuplicatesFromChildren[$i]);
+        }
+        
+        for($i = 0; $i < count($possibleDuplicatesFromPartners); $i++){
+            $duplicateObjects[] = $this->loadPersonByID($em, $possibleDuplicatesFromPartners[$i]);
         }
         
         $remainingCheckedDuplicates = $this->checkPossibleDuplicates($person, $duplicateObjects);
@@ -210,6 +238,8 @@ class PossibleDuplicatesFinder {
             }
         }
         
+        array_unique($remainingPossibleDuplicates);
+        
         return $remainingPossibleDuplicates;
     }
     
@@ -225,6 +255,137 @@ class PossibleDuplicatesFinder {
         }
                 
         return !is_null($person) ? $person : array();
+    }
+    
+    private function searchForPossibleDuplicatesFromSiblings($em, $ID) {
+        $possibleSiblings = array();
+        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        
+        for($i = 0; $i < count($parentEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
+            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+            
+            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
+                
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $siblingEntries)
+                        && !in_array($secondRelativeId, $possibleSiblings)){
+                    $possibleSiblings[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possibleSiblings;
+    }
+    
+    private function searchForPossibleDuplicatesFromParents($em, $ID) {
+        $possibleParents = array();
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        
+        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+
+        for($i = 0; $i < count($siblingEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
+            $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($siblingEntries[$i]);
+            
+            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $parentEntries)
+                        && !in_array($secondRelativeId, $possibleParents)){
+                    $possibleParents[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possibleParents;
+    }
+    
+   private function searchForPossibleDuplicatesFromChildren($em, $ID) {
+        $possibleChildren = array();
+        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        for($i = 0; $i < count($partnerEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
+            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+            
+            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
+                
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $childrenEntries)
+                        && !in_array($secondRelativeId, $possibleChildren)){
+                    $possibleChildren[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possibleChildren;
+    }
+    
+    private function searchForPossibleDuplicatesFromPartners($em, $ID) {
+        $possiblePartners = array();
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+
+        for($i = 0; $i < count($childrenEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $childrenEntries[$i]);
+            $parentOfSiblingEntries = $em->getRepository('NewBundle:Wedding')->loadParents($childrenEntries[$i]);
+            
+            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $partnerEntries)
+                        && !in_array($secondRelativeId, $possiblePartners)){
+                    $possiblePartners[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possiblePartners;
+    }
+    
+    private function getRelativeId($id, $relationShipObj) {
+        $classOfObj = get_class($relationShipObj);
+
+        switch ($classOfObj) {
+            case "UR\DB\NewBundle\Entity\IsSibling":
+                if ($relationShipObj->getSiblingOneId() == $id) {
+                    return $relationShipObj->getSiblingTwoId();
+                } else {
+                    return $relationShipObj->getSiblingOneId();
+                }
+            case "UR\DB\NewBundle\Entity\IsParent":
+                if ($relationShipObj->getChildId() == $id) {
+                    return $relationShipObj->getParentId();
+                } else {
+                    return $relationShipObj->getChildId();
+                }
+            case "UR\DB\NewBundle\Entity\IsGrandParent":
+                if ($relationShipObj->getGrandChildId() == $id) {
+                    return $relationShipObj->getGrandParentId();
+                } else {
+                    return $relationShipObj->getGrandChildId();
+                }
+            case "UR\DB\NewBundle\Entity\IsParentInLaw":
+                if ($relationShipObj->getChildInLawId() == $id) {
+                    return $relationShipObj->getParentInLawId();
+                } else {
+                    return $relationShipObj->getChildInLawId();
+                }
+            case "UR\DB\NewBundle\Entity\Wedding":
+                if ($relationShipObj->getHusbandid() == $id) {
+                    return $relationShipObj->getWifeid();
+                } else {
+                    return $relationShipObj->getHusbandid();
+                }
+        }
     }
 }
 

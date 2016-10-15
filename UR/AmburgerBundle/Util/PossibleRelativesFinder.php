@@ -99,6 +99,12 @@ class PossibleRelativesFinder {
         //check for possible parents over siblings
         $possibleParents = $this->searchForPossibleParents($em, $ID);
         
+        //check for possible siblings over father and mother
+        $possibleChildren = $this->searchForPossibleChildren($em, $ID);
+        
+        //check for possible parents over siblings
+        $possiblePartners = $this->searchForPossiblePartners($em, $ID);
+        
         //enrich possibleRelatives with Data
         $fullPossibleRelatives = [];
 
@@ -113,6 +119,16 @@ class PossibleRelativesFinder {
         for($i = 0; $i < count($possibleParents); $i++){
             $fullPossibleRelatives[] = $this->loadPerson($em, $possibleParents[$i]);
         }
+        
+        for($i = 0; $i < count($possibleChildren); $i++){
+            $fullPossibleRelatives[] = $this->loadPerson($em, $possibleChildren[$i]);
+        }
+        
+        for($i = 0; $i < count($possiblePartners); $i++){
+            $fullPossibleRelatives[] = $this->loadPerson($em, $possiblePartners[$i]);
+        }
+        
+        array_unique($fullPossibleRelatives);
 
         return $fullPossibleRelatives;
     }
@@ -435,18 +451,21 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleSiblings($em, $ID) {
         $possibleSiblings = array();
-        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
-        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
-        for($i = 0; $i < count($parentIds); $i++){
-            $childrenOfParent = $em->getRepository('NewBundle:IsParent')->loadChildren($parentIds[$i]);
+        for($i = 0; $i < count($parentEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
+            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
             
-            for($j = 0; $j < count($childrenOfParent); $i++){
-                if($childrenOfParent[$j] != $ID 
-                        && !in_array($childrenOfParent[$j], $siblingIds)
-                        && !in_array($childrenOfParent[$j], $possibleSiblings)){
-                    $possibleSiblings[] = $childrenOfParent[$j];
+            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
+                
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $siblingEntries)
+                        && !in_array($secondRelativeId, $possibleSiblings)){
+                    $possibleSiblings[] = $secondRelativeId;
                 }
             }
         }
@@ -456,17 +475,20 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleParents($em, $ID) {
         $possibleParents = array();
-        $parentIds = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
-        $siblingIds = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
-        for($i = 0; $i < count($siblingIds); $i++){
-            $parentsOfSibling = $em->getRepository('NewBundle:IsParent')->loadParents($siblingIds[$i]);
+        for($i = 0; $i < count($siblingEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
+            $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($siblingEntries[$i]);
             
-            for($j = 0; $j < count($parentsOfSibling); $i++){
-                if(!in_array($parentsOfSibling[$j], $parentIds)
-                        && !in_array($parentsOfSibling[$j], $possibleParents)){
-                    $possibleParents[] = $parentsOfSibling[$j];
+            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $parentEntries)
+                        && !in_array($secondRelativeId, $possibleParents)){
+                    $possibleParents[] = $secondRelativeId;
                 }
             }
         }
@@ -474,4 +496,88 @@ class PossibleRelativesFinder {
         return $possibleParents;
     }
     
+   private function searchForPossibleChildren($em, $ID) {
+        $possibleChildren = array();
+        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        for($i = 0; $i < count($partnerEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
+            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+            
+            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
+                
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $childrenEntries)
+                        && !in_array($secondRelativeId, $possibleChildren)){
+                    $possibleChildren[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possibleChildren;
+    }
+    
+    private function searchForPossiblePartners($em, $ID) {
+        $possiblePartners = array();
+        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        
+        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+
+        for($i = 0; $i < count($childrenEntries); $i++){
+            $relativeId = $this->getRelativeId($ID, $childrenEntries[$i]);
+            $parentOfSiblingEntries = $em->getRepository('NewBundle:Wedding')->loadParents($childrenEntries[$i]);
+            
+            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
+                if($secondRelativeId != $ID 
+                        && !in_array($secondRelativeId, $partnerEntries)
+                        && !in_array($secondRelativeId, $possiblePartners)){
+                    $possiblePartners[] = $secondRelativeId;
+                }
+            }
+        }
+        
+        return $possiblePartners;
+    }
+    
+    private function getRelativeId($id, $relationShipObj) {
+        $classOfObj = get_class($relationShipObj);
+
+        switch ($classOfObj) {
+            case "UR\DB\NewBundle\Entity\IsSibling":
+                if ($relationShipObj->getSiblingOneId() == $id) {
+                    return $relationShipObj->getSiblingTwoId();
+                } else {
+                    return $relationShipObj->getSiblingOneId();
+                }
+            case "UR\DB\NewBundle\Entity\IsParent":
+                if ($relationShipObj->getChildId() == $id) {
+                    return $relationShipObj->getParentId();
+                } else {
+                    return $relationShipObj->getChildId();
+                }
+            case "UR\DB\NewBundle\Entity\IsGrandParent":
+                if ($relationShipObj->getGrandChildId() == $id) {
+                    return $relationShipObj->getGrandParentId();
+                } else {
+                    return $relationShipObj->getGrandChildId();
+                }
+            case "UR\DB\NewBundle\Entity\IsParentInLaw":
+                if ($relationShipObj->getChildInLawId() == $id) {
+                    return $relationShipObj->getParentInLawId();
+                } else {
+                    return $relationShipObj->getChildInLawId();
+                }
+            case "UR\DB\NewBundle\Entity\Wedding":
+                if ($relationShipObj->getHusbandid() == $id) {
+                    return $relationShipObj->getWifeid();
+                } else {
+                    return $relationShipObj->getHusbandid();
+                }
+        }
+    }
+
 }
