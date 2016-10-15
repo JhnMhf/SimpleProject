@@ -54,17 +54,6 @@ DuplicatePerson.DuplicatePersonController = (function(){
     
     startDisplay = function(){
         duplicatePersonView.displayDuplicates(personData, duplicatesData);
-    },
-    
-    onSave = function(event){
-        console.log("Save triggered...");
-        
-        //@TODO: Save data to db? If it didn't already happen...
-        
-        //forward to next page
-        var currentUrl = window.location.href;
-        var newUrl = currentUrl.replace("duplicate", "person");
-        window.location.href = newUrl;
     };
 
 

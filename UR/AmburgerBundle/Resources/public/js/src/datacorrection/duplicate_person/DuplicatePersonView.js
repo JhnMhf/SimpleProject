@@ -13,8 +13,6 @@ DuplicatePerson.DuplicatePersonView = (function(){
         basePersonViewGenerator = DuplicatePerson.BasePersonViewGenerator.init();
         relativesViewGenerator = DuplicatePerson.RelativesViewGenerator.init();
         
-        $('#save-button').on("click", save);
-        
         return that;
     },
     
@@ -48,10 +46,6 @@ DuplicatePerson.DuplicatePersonView = (function(){
       var relativesTemplate = relativesViewGenerator.generateTemplate(fullPersonData['relatives']);
       
       return {'person': personTemplate, 'relatives':relativesTemplate};
-    },
-    
-    save = function(){
-        $(that).trigger('save');
     };
 
 
