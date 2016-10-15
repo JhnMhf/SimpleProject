@@ -61,7 +61,12 @@ class LoginController extends Controller
             $session->set('userid', $user->getId());
             
             $this->getLogger()->debug("Successfully logged in user: ".$username);
-            return $this->redirect($this->generateUrl('correction'));
+            
+            if($user->getAdmin()){
+                return $this->redirect($this->generateUrl('admin_overview'));
+            } else{
+                return $this->redirect($this->generateUrl('correction'));
+            }
         }
     }
     /* 

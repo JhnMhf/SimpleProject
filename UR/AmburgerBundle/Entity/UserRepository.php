@@ -62,7 +62,7 @@ class UserRepository extends EntityRepository
             ->setParameter('userid', $userid)
             ->getQuery();
         $user = $query->getOneOrNullResult();
-        return $user->isAdmin();
+        return $user->getAdmin();
     }
     
     public function updatePassword($userid, $newPassword){

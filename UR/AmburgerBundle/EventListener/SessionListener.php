@@ -4,6 +4,7 @@ namespace UR\AmburgerBundle\EventListener;
 
 use UR\AmburgerBundle\Controller\CorrectionSessionController;
 use UR\AmburgerBundle\Controller\SessionController;
+use UR\AmburgerBundle\Controller\AdminSessionController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,17 +36,18 @@ class SessionListener
         if (!is_array($controller)) {
             return;
         }
-
-        if ($controller[0] instanceof CorrectionSessionController) {
+        
+        if($controller[0] instanceof AdminSessionController){
+            $this->checkAdminSession($event, $controller[0]);
+        } else if ($controller[0] instanceof CorrectionSessionController) {
             $this->checkCorrectionSession($event, $controller[0]);
         } else if($controller[0] instanceof SessionController){
             $this->checkNormalSession($event, $controller[0]);
-        } else if($controller[0] instanceof AdminSessionController){
-            $this->checkAdminSession($event, $controller[0]);
         }
     }
     
     private function checkAdminSession($event, $controller){
+        $this->LOGGER->debug("Checking Adminsession in filter.");
         $this->checkNormalSession($event, $controller);
         
         $session = $event->getRequest()->getSession();
@@ -54,7 +56,7 @@ class SessionListener
         $systemDBManager = $this->get('doctrine')->getManager('system');
         
         if(!$systemDBManager->getRepository('AmburgerBundle:User')->isAdmin($userId)){
-            throw new AccessDeniedttPException("The user has not the necessary rights.");
+            throw new AccessDeniedHttpException("The user has not the necessary rights.");
         }
     }
     
