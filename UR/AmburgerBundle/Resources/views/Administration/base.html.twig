@@ -24,7 +24,15 @@
         </div>
         {% if logged_in %}
             <div class="row" id="user-controls">
-                <i id="user-settings" class="fa fa-cog" aria-hidden="true"></i> <i id="logout" class="fa fa-sign-out" aria-hidden="true"></i>
+                 <div class="large-2 columns center">
+                    <i id="back" class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                 <div class="large-10 columns center">
+
+                </div>
+                 <div class="large-1 columns center">
+                    <i id="user-settings" class="fa fa-cog" aria-hidden="true"></i> <i id="logout" class="fa fa-sign-out" aria-hidden="true"></i>
+                </div>
             </div>
         {% endif %}
         {% block navigation %}

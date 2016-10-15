@@ -4,6 +4,7 @@ User = (function () {
     init = function(){
         $('#user-settings').on("click", openSettings);
         $('#logout').on("click", logout);
+        $('#back').on('click', back);
     },
     
     openSettings = function(){
@@ -13,7 +14,11 @@ User = (function () {
     logout = function(){
         //move to next step
         window.location.href = window.location.origin+"/logout";
-    }
+    },
+    
+    back = function(){
+        window.history.back();
+    };
     
     that.init = init;
     
