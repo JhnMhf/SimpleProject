@@ -6,21 +6,10 @@
 
 {% block fullbody %}
     <header>
-        <div class="row" id="header">
-            <div class="large-12 columns">
-                <div class="large-2 columns center">
-
-                </div>
-                <div class="large-8 columns center">
-                    {% block header %}
-                        <h1>Korrekturoberfläche der Erik-Amburger-Datenbank</h1>
-                    {% endblock %}
-                </div>
-                <div class="large-2 columns center">
-
-                </div>
-
-            </div>
+        <div id="header" class="center">
+            {% block header %}
+                <h1>Korrekturoberfläche der Erik-Amburger-Datenbank</h1>
+            {% endblock %}
         </div>
         {% if logged_in %}
             <div class="row" id="user-controls">
@@ -46,15 +35,11 @@
         {% endblock %}
     </div>
 
-
+    <div class="footer-placeholder"></div>
     <footer id="footer">
-        <div class="row">
-            <div class="large-12 columns">
-                {% block footer %}
-                    <h3>&copy; 2016 IOS Regensburg</h3>
-                {% endblock %}
-            </div>
-        </div>
+        {% block footer %}
+            <h3>&copy; 2016 IOS Regensburg</h3>
+        {% endblock %}
     </footer>
 {% endblock %}
 

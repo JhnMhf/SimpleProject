@@ -3,7 +3,7 @@
 }
 
 #header {
-    background-color: #CCCCCC;
+    background-color: #D8D8D8;
     margin-bottom: 30px;
 }
 
@@ -11,13 +11,18 @@
     
 }
 
-#footer div.row {
+#footer{
     position: fixed;
     bottom: 0;
     text-align: center;
-    background-color: #CCCCCC;
+    background-color: #D8D8D8;
+    width: 100%
 }
 
+.footer-placeholder{
+    height: 70px;
+    width: 100%;
+}
 /* login */
 
 .welcome-header{

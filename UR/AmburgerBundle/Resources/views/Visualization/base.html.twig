@@ -5,35 +5,23 @@
 {% endblock %}
 
 {% block fullbody %}
-    <header>
-        <div class="row" id="header">
-                <div class="large-12 columns center">
-                    {% block header %}
-                        <h1>Die Erik-Amburger-Datenbank</h1>
-                        <p>Ausländer im vorrevolutionären Russland</p>
-                    {% endblock %}
-                </div>
-        </div>
-
-        {% block navigation %}
-
+    <header id="header" class="center">
+        {% block header %}
+             <h1>Die Erik-Amburger-Datenbank</h1>
+             <p class="header-subtitle">Ausländer im vorrevolutionären Russland</p>
         {% endblock %}
     </header>
-         
+          
     <div id="body">
        {% block body %}
 
        {% endblock %}
     </div>
 
-        
-    <footer id="footer">
-        <div class="row">
-            <div class="large-12 columns">
-                {% block footer %}
-                    <h3>&copy; 2016 IOS Regensburg</h3>
-                {% endblock %}
-            </div>
-        </div>
+    <div class="footer-placeholder"></div>
+    <footer id="footer" class="center">
+        {% block footer %}
+            <h3>&copy; 2016 IOS Regensburg</h3>
+        {% endblock %}
     </footer>
 {% endblock %}
