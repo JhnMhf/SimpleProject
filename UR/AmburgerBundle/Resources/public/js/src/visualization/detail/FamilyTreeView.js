@@ -110,7 +110,7 @@ Detail.FamilyTreeView = (function(){
         var result = new primitives.orgdiagram.TemplateConfig();
         result.name = "personTemplate";
 
-        result.itemSize = new primitives.common.Size(150, 100);
+        result.itemSize = new primitives.common.Size(200, 150);
         result.minimizedItemSize = new primitives.common.Size(4, 4);
         result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
@@ -131,7 +131,7 @@ Detail.FamilyTreeView = (function(){
             width: '100%',
             height: '100%',
             margin: '5px'
-        }).addClass("bp-item bp-corner-all bt-item-frame");
+        }).addClass("bp-item bp-corner-all bt-item-frame custom-item");
         result.itemTemplate = itemTemplate.wrap('<div>').parent().html();
 
 /*

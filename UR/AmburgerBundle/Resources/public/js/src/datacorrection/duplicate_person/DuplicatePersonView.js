@@ -27,7 +27,21 @@ DuplicatePerson.DuplicatePersonView = (function(){
             displayDuplicatePerson(personTemplate, duplicatesData[i]);
         }
         
+        removeUnusedRows();
+        Collapsible.register();
         Loader.hideLoader();
+    },
+    
+    removeUnusedRows = function(){
+        var higherRows = $('.higher-row');
+        
+        for(var i = 0; i < higherRows.length; i++){
+            var childRows = $(higherRows[i]).find('.row');
+            
+            if(childRows.length == 0){
+                $(higherRows[i]).hide();
+            }
+        }
     },
     
     displayDuplicatePerson = function(personTemplate, duplicate){

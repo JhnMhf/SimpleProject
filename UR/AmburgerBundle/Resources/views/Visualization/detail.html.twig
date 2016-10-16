@@ -157,7 +157,7 @@
                     </label>
                 <% } %>
                 <% if(typeof(born_in_marriage) !== 'undefined'){ %>
-                    <label>ehelig: <span name="bornInMarriage"><%= born_in_marriage %></span></label>
+                    <label>ehelich: <span name="bornInMarriage"><%= born_in_marriage %></span></label>
                 <% } %>
                 <% if(typeof(job) !== 'undefined') { %>
                     <label>Job: 
@@ -242,7 +242,7 @@
                             <%= locationTemplate(array) %>
                     </label>
                 <%  } %>
-                <%  if(typeof(baptism_date) !== 'undefined' && baptism_date.length > 0) { 
+                <%  if(typeof(baptism_date) !== 'undefined' && baptism_date.length > 0) { %>
                     <label>Taufdatum: 
                         <%  
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());

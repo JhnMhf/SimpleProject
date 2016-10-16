@@ -55,7 +55,80 @@ PersonCorrection.PersonCorrectionController = (function(){
         console.log("FinalPerson", finalPerson);
         finalPersonView.displayPerson(finalPerson);
         
+        
+        //removeUnusedRows();
+        alignRowsOfTheSameType();
+        collapse();
         personCorrectionView.hideLoader();
+    },
+    
+    removeUnusedRows = function(){
+        console.log("Removing unused rows");
+        var higherRows = $('.higher-row');
+        
+        for(var i = 0; i < higherRows.length; i++){
+            var childRows = $(higherRows[i]).find('.row');
+            
+            if(childRows.length == 0){
+                $(higherRows[i]).hide();
+            }
+        }
+    },
+    
+    alignRowsOfTheSameType = function(){
+        console.log("Aligning rows of the same type");
+        var listOfRowTypes = ["base-person-container", "birth-container", 
+            "baptism-container", "death-container", "educations-container", 
+            "honours-container","properties-container", "rank-container", 
+            "religion-container", "residence-container", "road-of-life-container", 
+            "status-container", "works-container", "wedding-container", "source-container"];
+        
+        for(var i = 0; i < listOfRowTypes.length; i++){
+            var rowType = listOfRowTypes[i];
+            
+            var elements = $("."+rowType);
+            
+            console.log("Found ", elements.length, " for rowtype: ",rowType);
+            
+            var largest = 0;
+            //find largest
+            for(var j = 0; j < elements.length; j++){
+                var height = $(elements[j]).height();
+                console.log("Height: ", height);
+                if(height > largest){
+                    console.log("Bigger than largest: ", largest);
+                    largest = height;
+                }
+            }
+            
+            //set all to the same height
+            for(var j = 0; j < elements.length; j++){
+                $(elements[j]).height(largest);
+            }
+        }
+    },
+    
+    collapse = function(){
+        console.log("Collapsing some rows");
+        var listOfRowTypes = ["birth-container", 
+            "baptism-container", "death-container", "educations-container", 
+            "honours-container","properties-container", "rank-container", 
+            "religion-container", "residence-container", "road-of-life-container", 
+            "status-container", "works-container", "wedding-container", "source-container"];
+        
+        for(var i = 0; i < listOfRowTypes.length; i++){
+            var rowType = listOfRowTypes[i];
+            
+            var elements = $("."+rowType);
+           
+            //collapse them
+            for(var j = 0; j < elements.length; j++){
+                var height =  $(elements[j]).height();
+                $(elements[j]).attr('origin-height', height);
+                $(elements[j]).addClass('collapsed');
+                $(elements[j]).attr('style', "");
+            }
+        }
     },
     
     onWeddingsLoaded = function(event, oldWeddings,newWeddings, finalWeddings){

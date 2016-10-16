@@ -1,50 +1,57 @@
 {% extends "AmburgerBundle:DataCorrection:base.html.twig" %}
 {% block body %}
     <div class="row">
-        <div class="large-6 columns large-centered center">
-            <p>Diese Oberfläche wird für die Korrektur der einzelnen Datensätze der Erik-Amburger-Datenbank verwendet.</p>
+        <div class="large-8 columns large-centered center">
+            <h3>Diese Oberfläche wird für die Korrektur der einzelnen Datensätze der Erik-Amburger-Datenbank verwendet.</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="large-6 columns large-centered center">
-            <button id="next-person-button" class="round button">Neuen zufälligen Datensatz korrigieren</button>
-        </div>
-    </div>
-    <div class="row">
+    <div class="row downloads-and-settings">
         <div class="large-3 columns">
         </div>
-        <div class="large-6 columns large-centered center">
-            <p>Bestimmten Datensatz für die Korrektur auswählen.</p>
-            Bitte geben Sie die ID oder OID des gewünschten Datensatzes ein:
+        <div class="large-2 columns">
+            <a target="_blank" href="{{asset('bundles/amburger/downloads/quellenverzeichnis.pdf')}}"><button>Quellenverzeichnis</button></a>
         </div>
-        <div class="large-3 columns">
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-5 columns">
+        <div class="large-2 columns">
+            <a target="_blank" href="{{asset('bundles/amburger/downloads/abkuerzungen_und_erklaerungen.pdf')}}"><button>Abkürzungen und Erklärungen</button></a>
         </div>
         <div class="large-1 columns">
-            <input name="selected-id" type="text" id="selected-id" class="form-contro" placeholder="z.B. 1234">
         </div>
-        <div class="large-2 columns" id="id-type-container">
-            <input type="radio" name="idType" value="id" id="radioID" checked><label for="radioID">ID</label>
-            <input type="radio" name="idType" value="oid" id="radioOID"><label for="radioOID">OID</label>
+         <div class="large-2 columns">
+            <i id="user-settings" class="fa fa-cog fa-5x" aria-hidden="true"></i> 
         </div>
-        <div class="large-4 columns">
+        <div class="large-3 columns">
         </div>
     </div>
     <div class="row">
-        <div class="large-3 columns">
+         <div class="large-4 columns">
         </div>
-        <div class="large-6 columns large-centered center">
-            <button id="selected-person-button" class="round button">Korrektur starten</button>
+        <div class="large-4 columns center correction-start-container">
+                <div class="row">
+                    <button id="next-person-button" class="round button">Neuen zufälligen Datensatz korrigieren</button>
+                </div>
+                <div class="row">
+                    <p>Bestimmten Datensatz für die Korrektur auswählen.</p>
+                    Bitte geben Sie die ID oder OID des gewünschten Datensatzes ein:
+                </div>
+                <div class="row">
+                    <div class="large-2 columns">
+                    </div>
+                    <div class="large-4 columns">
+                        <input name="selected-id" type="text" id="selected-id" class="form-control" placeholder="z.B. 1234">
+                    </div>
+                     <div id="id-type-container" class="large-4 columns">
+                        <input type="radio" name="idType" value="id" id="radioID" checked><label for="radioID">ID</label>
+                        <input type="radio" name="idType" value="oid" id="radioOID"><label for="radioOID">OID</label>
+                    </div>
+                    <div class="large-2 columns">
+                    </div>
+                </div>
+            <div class="row">
+                <button id="selected-person-button" class="round button">Korrektur starten</button>
+            </div>
         </div>
-        <div class="large-3 columns">
-        </div>
-    </div>
-     <div class="row">
-        <div class="large-6 columns large-centered center">
-            
+        
+        <div class="large-4 columns">
         </div>
     </div>
 {% endblock %}

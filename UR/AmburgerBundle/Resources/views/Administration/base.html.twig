@@ -11,19 +11,20 @@
                 <h1>Korrekturoberfläche der Erik-Amburger-Datenbank</h1>
             {% endblock %}
         </div>
-        {% if logged_in %}
-            <div class="row" id="user-controls">
-                 <div class="large-1 columns center">
-                    <i id="back" class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
-                </div>
-                 <div class="large-10 columns center">
+        {% block secondNavigation %}
+            {% if logged_in %}
+                <div class="row" id="user-controls">
+                     <div class="large-1 columns center">
+                    </div>
+                     <div class="large-10 columns center">
 
+                    </div>
+                     <div class="large-1 columns center">
+                        <i id="logout" class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                    </div>
                 </div>
-                 <div class="large-1 columns center">
-                    <i id="user-settings" class="fa fa-cog fa-2x" aria-hidden="true"></i> <i id="logout" class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
-                </div>
-            </div>
-        {% endif %}
+            {% endif %}
+        {% endblock %}
         {% block navigation %}
 
         {% endblock %}

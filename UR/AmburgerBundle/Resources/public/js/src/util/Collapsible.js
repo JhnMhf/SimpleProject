@@ -22,8 +22,16 @@ Collapsible = (function () {
 
                 if(elements.hasClass('collapsed')){
                     elements.removeClass('collapsed');
+                    var originHeight = elements.attr('origin-height');
+                    
+                    if(originHeight !== undefined && originHeight){
+                        elements.height(originHeight);
+                    }
                 } else{
+                    var height = elements.height();
                     elements.addClass('collapsed');
+                    elements.attr('origin-height', height);
+                    elements.attr('style', "");
                 }
             }
         }

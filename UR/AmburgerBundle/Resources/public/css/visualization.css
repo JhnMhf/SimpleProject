@@ -115,8 +115,12 @@ input.daterange{
 }
 
 .family-tree-item {
-    font-size: 10px;
+    font-size: 14px;
     text-align: center;
+}
+
+div.custom-item {
+    background-color: #D8D8D8;
 }
 
 .bold {

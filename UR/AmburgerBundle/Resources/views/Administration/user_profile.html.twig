@@ -1,4 +1,20 @@
 {% extends "AmburgerBundle:Administration:base.html.twig" %}
+ {% block secondNavigation %}
+            {% if logged_in %}
+                <div class="row" id="user-controls">
+                     <div class="large-1 columns center">
+                          <i id="back" class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+                    </div>
+                     <div class="large-10 columns center">
+
+                    </div>
+                     <div class="large-1 columns center">
+                        <i id="logout" class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+
 {% block body %}
     <div class="row ">
             <div class="large-2 columns large-offset-2">
@@ -16,7 +32,7 @@
     <div class="row">
         <form method="POST" class="form-signin">
               <input type="hidden" name="_target_path" value="user" />
-              <h2 class="form-signin-heading">Passwort ändern</h2>
+              <h2 class="form-signin-heading center">Passwort ändern</h2>
                 <div class="row ">
                     <div class="large-2 columns large-offset-2">
                           <label for="inputPassword">Neues Passwort:</label>
@@ -39,9 +55,15 @@
                           
                     </div>
                 </div>
-                <div class="row ">
-                      <div class="large-6 columns large-centered">
+                <div class="row">
+                    <div class="large-5 columns">
+                          
+                    </div>
+                      <div class="large-2 columns">
                           <button id="login-button" class="round button" type="submit">Ändern</button>
+                    </div>
+                    <div class="large-5 columns">
+                          
                     </div>
                 </div>
             </form>

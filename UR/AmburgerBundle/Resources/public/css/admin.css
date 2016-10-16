@@ -136,7 +136,8 @@ input.form-control {
 .nav-item {
     width: 90%;
     height: 50px;
-    background-color: #00BFFF;
+    background-color: #58ACFA;
+    color:white;
     border: 1px solid #999;
     position: relative;
     text-align: center;
@@ -145,7 +146,7 @@ input.form-control {
 }
 
 .nav-item.active {
-    background-color: #1E90FF;
+    background-color: #008CBA;
 }
 
 .nav-item.disabled {
@@ -182,8 +183,13 @@ input.form-control {
   height: 0;
   margin-right: -25%;
   border: 20px solid transparent;
-  border-left: 12px solid #00BFFF;
+  border-left: 12px solid #58ACFA;
 }
+
+.nav-item.active:before {
+    border-left: 12px solid #008CBA;
+}
+
 
 .nav-item.arrow.disabled:before {
     border-left: 12px solid grey;
@@ -195,8 +201,40 @@ input.form-control {
     margin-right: 10px;
 }
 
+.margin-top-middle{
+    margin-top: 30px;
+}
 
-/* person data */
+.control-box {
+    margin-top: 30px;
+}
+
+#user-settings{
+    cursor: pointer;
+}
+
+.correction-start-container {
+    border: 1px solid black;
+    margin-top: 40px;
+    padding: 15px;
+}
+
+.downloads-and-settings {
+    margin-top: 40px;
+}
+
+.download-buttons button {
+    width: 100%;
+    margin-left: 20%;
+    margin-top: 15%;
+}
+
+/* dupliate */
+
+.duplicate {
+    margin-bottom: 50px;
+}
+
 .duplicate .job-class-container,
 .duplicate .job-container,
 .duplicate .country-container,
@@ -230,4 +268,56 @@ input.form-control {
 .duplicate .higher-row .row label span {
     font-size: 15px;
     font-weight: normal;
+}
+
+.duplicate-header p {
+    font-size: 15px;
+}
+
+.duplicate-box {
+    border: 1px solid black;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.ignore-duplicate {
+    margin-right: 10px;
+}
+
+.merge-duplicate {
+    margin-right: 10px;
+}
+
+.row.relative-data {
+    margin-left: 5px;
+}
+
+.relatives-of-relative > .row {
+    margin-left: 5px;
+}
+
+.duplicate-relative-header {
+    font-size: 20px;
+}
+
+/* relatives */
+
+#existing-relations {
+   margin-bottom: 40px; 
+}
+
+.end {
+    margin-top: 60px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.person-top-row{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.person-save-button-container {
+    margin-top: 40px;
 }
