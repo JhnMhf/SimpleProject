@@ -11,7 +11,19 @@ Start.StartView = (function(){
         
         $('#selected-person-button').on("click", selectedPerson);
         
+        $(window).on('keypress', onKeyPress);
+        
         return that;
+    },
+    
+    onKeyPress = function(e){
+        var code = (e.keyCode ? e.keyCode : e.which);
+        
+        console.log("KeyPressed", code);
+        //13 is enter
+        if(code == 13) { 
+           selectedPerson();
+        }
     },
     
     nextPerson = function(){

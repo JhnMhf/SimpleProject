@@ -9,8 +9,20 @@ Index.SearchView = (function () {
     init = function () {
 
         $('#search-btn').on("click", searchButtonClicked);
+        
+        $(window).on('keypress', onKeyPress);
 
         return that;
+    },
+    
+    onKeyPress = function(e){
+        var code = (e.keyCode ? e.keyCode : e.which);
+        
+        console.log("KeyPressed", code);
+        //13 is enter
+        if(code == 13) { 
+           $(that).trigger('search', extractSearchData());
+        }
     },
     
     searchButtonClicked = function () {
