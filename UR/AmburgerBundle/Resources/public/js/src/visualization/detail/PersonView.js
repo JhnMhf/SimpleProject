@@ -15,8 +15,22 @@ Detail.PersonView = (function(){
     displayPerson = function(personData){
         setHeader(personData);
         personViewGenerator.displayPerson("#person-data", personData);
-        Collapsible.register();
+        
+        removeUnusedRows();
+        
         Loader.hideLoader();
+    },
+    
+    removeUnusedRows = function(){
+        var higherRows = $('.higher-row');
+        
+        for(var i = 0; i < higherRows.length; i++){
+            var childRows = $(higherRows[i]).find('.row');
+            
+            if(childRows.length == 0){
+                $(higherRows[i]).hide();
+            }
+        }
     },
     
     setHeader = function(personData){

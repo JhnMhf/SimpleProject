@@ -30,80 +30,56 @@
     </div>
     
     <div class="row details">
-        <div class="large-12 columns large-centered center">
-            <h2>Vollständige Personendaten</h2>
+        <div class="large-3 columns">
+        </div>
+        <div class="large-6 columns">
+            <h2 class="center">Vollständige Personendaten</h2>
             <div id="person-data">
-                <div class="base-person-container collapsible">
-                    <h3 class="header">
-                        Personendaten
-                    </h3>
+                <div class="base-person-container higher-row">
+                    
                 </div>
-                <div class="birth-container collapsible collapsed">
-                    <h3 class="header">
-                        Geburtsdaten
-                    </h3>
+                <div class="birth-container higher-row">
+                    <p>Geburtsdaten</p>
                 </div>
-                <div class="baptism-container collapsible collapsed">
-                    <h3 class="header">
-                        Taufdaten
-                    </h3>
+                <div class="baptism-container higher-row">
+                    <p>Taufdaten</p>
                 </div>
-                <div class="death-container collapsible collapsed">
-                    <h3 class="header">
-                        Todesdaten
-                    </h3>
+                <div class="death-container higher-row">
+                    <p>Todesdaten</p>
                 </div>
-                <div class="educations-container collapsible collapsed">
-                    <h3 class="header">
-                        Ausbildungsdaten
-                    </h3>
+                <div class="educations-container higher-row">
+                   <p>Ausbildungsdaten</p>
                 </div>
-                <div class="honours-container collapsible collapsed">
-                    <h3 class="header">
-                        Ehren
-                    </h3>
+                <div class="honours-container higher-row">
+                    <p>Ehren</p>
                 </div>
-                <div class="properties-container collapsible collapsed">
-                    <h3 class="header">
-                        Besitz
-                    </h3>
+                <div class="properties-container higher-row">
+                    <p>Besitz</p>
                 </div>
-                <div class="rank-container collapsible collapsed">
-                    <h3 class="header">
-                        Rang
-                    </h3>
+                <div class="rank-container higher-row">
+                    <p>Rang</p>
                 </div>
-                <div class="religion-container collapsible collapsed">
-                    <h3 class="header">
-                        Religion
-                    </h3>
+                <div class="religion-container higher-row">
+                    <p>Religion</p>
                 </div>
-                <div class="residence-container collapsible collapsed">
-                    <h3 class="header">
-                        Wohnraum
-                    </h3>
+                <div class="residence-container higher-row">
+                    <p>Wohnraum</p>
                 </div>                
-                <div class="road-of-life-container collapsible collapsed">
-                    <h3 class="header">
-                        Lebensweg
-                    </h3>
+                <div class="road-of-life-container higher-row">
+                    <p>Lebensweg</p>
                 </div>                
-                <div class="status-container collapsible collapsed">
-                    <h3 class="header">
-                        Status
-                    </h3>
+                <div class="status-container higher-row">
+                    <p>Status</p>
                 </div>        
-                <div class="works-container collapsible collapsed">
-                    <h3 class="header">
-                        Werke
-                    </h3>
+                <div class="works-container higher-row">
+                    <p>Werke</p>
                 </div>
-                <div class="source-container collapsible collapsed">
-                    <h3 class="header">
-                        Quellen
-                    </h3>
+                <div class="source-container higher-row">
+                    <p>Quellen</p>
                 </div>
             </div>
+        </div>
+        <div class="large-3 columns">
         </div>
     </div>
     
@@ -150,37 +126,40 @@
         <div class="row">
                 <input type="hidden" name="id" value="<%= id %>"> 
                 <% if(typeof(first_name) !== 'undefined'){ %>
-                    <label>Vorname <span name="firstName"><%= first_name %></span></label>
+                    <label>Vorname: <span name="firstName"><%= first_name %></span></label>
                 <% } %>
                 <% if(typeof(patronym) !== 'undefined'){ %>
-                    <label>Vatersname <span name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" ></span></label>
+                    <label>Vatersname: <span name="patronym"> <%= patronym %></span></label>
                 <% } %>
                 <% if(typeof(last_name) !== 'undefined'){ %>
-                    <label>Nachname<input type="text" name="lastName" value="<%= typeof(last_name) !== 'undefined' ?  last_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Nachname: <span name="lastName"> <%= last_name %></span><label>
                 <% } %>
                 <% if(typeof(fore_name) !== 'undefined'){ %>
-                    <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Rufname: <span name="foreName"><%= fore_name %></span></label>
                 <% } %>
                 <% if(typeof(birth_name) !== 'undefined'){ %>    
-                    <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Geburtsname: <span name="birthName"><%= birth_name %></span></label>
                 <% } %>
-                <label>Geschlecht
-                    <select name="gender" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>>
-                        <option value="0" <%= gender == '0' ?  'selected' : '' %>>Unbekannt</option>
-                        <option value="1" <%= gender == '1' ?  'selected' : '' %>>Männlich</option> 
-                        <option value="2" <%= gender == '2' ?  'selected' : '' %>>Weiblich</option>
-                    </select>
+                <label>Geschlecht: <span name=gender>
+                    <% if(gender == 0){ %>    
+                        Unbekannt 
+                    <% } else if(gender == 1){ %>    
+                        Männlich 
+                    <% } else if(gender == 2){ %>    
+                        Weiblich 
+                    <% } %>
+                </span>
                 </label>
                 <% if(typeof(gender_comment) !== 'undefined'){ %>
-                    <label>Geschlechtskommentar
-                        <input type="text" name="genderComment" value="<%= typeof(gender_comment) !== 'undefined' ?  gender_comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                    <label>Geschlechtskommentar: 
+                        <span name="genderComment"><%= gender_comment %></span>
                     </label>
                 <% } %>
                 <% if(typeof(born_in_marriage) !== 'undefined'){ %>
-                    <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(gender_comment) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>ehelig: <span name="bornInMarriage"><%= born_in_marriage %></span></label>
                 <% } %>
                 <% if(typeof(job) !== 'undefined') { %>
-                    <label>Job
+                    <label>Job: 
                         <%  
                                 var jobTemplate = _.template($("script#jobTemplate").html());
 
@@ -198,7 +177,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(job_class) !== 'undefined') { %>
-                    <label>Jobklasse
+                    <label>Jobklasse: 
                         <%
                             var jobClassTemplate = _.template($("script#jobClassTemplate").html());
                             
@@ -218,7 +197,7 @@
                         </label>
                 <%  } %>
                 <% if(typeof(nation) !== 'undefined') {  %>
-                    <label>Nation
+                    <label>Nation: 
                         <%
                                 var nationTemplate = _.template($("script#nationTemplate").html());
 
@@ -236,7 +215,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(comment) !== 'undefined'){ %>
-                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Kommentar: <span name="comment"><%= comment %></span></label>
                 <% } %>
         </div>
     </script>
@@ -245,7 +224,7 @@
         <div class="row">
                 <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <% if(typeof(baptism_location) !== 'undefined') { %>
-                    <label>Taufort
+                    <label>Taufort: 
                         <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -263,7 +242,7 @@
                     </label>
                 <%  } %>
                 <%  if(typeof(baptism_date) !== 'undefined' && baptism_date.length > 0) { 
-                    <label>Taufdatum
+                    <label>Taufdatum: 
                         <%  
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -286,7 +265,7 @@
         <div class="row">
                <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <% if(typeof(origin_country) !== 'undefined') { %>
-                    <label class="origin-country">Herkunftsland
+                    <label class="origin-country">Herkunftsland: 
                     <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -306,7 +285,7 @@
                     </label>
                  <%  } %>
                 <% if(typeof(origin_territory) !== 'undefined') { %>
-                    <label class="origin-territory">Herkunftsterritory
+                    <label class="origin-territory">Herkunftsterritory: 
                         <%
                             var territoryTemplate = _.template($("script#territoryTemplate").html());
                             
@@ -324,7 +303,7 @@
                         </label>
                 <%  } %>
                 <%  if(typeof(origin_location) !== 'undefined') { %>
-                    <label class="origin-location">Herkunftsort
+                    <label class="origin-location">Herkunftsort: 
                         <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -344,7 +323,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(birth_country) !== 'undefined') { %>
-                    <label class="country">Geburtsland
+                    <label class="country">Geburtsland: 
                         <%
                                 var countryTemplate = _.template($("script#countryTemplate").html());
 
@@ -365,7 +344,7 @@
                 <%  } %>
         
                 <% if(typeof(birth_territory) !== 'undefined') { %>
-                <label class="territory">Geburtsterritorium
+                <label class="territory">Geburtsterritorium: 
                         <%
                                 var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -385,7 +364,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(birth_location) !== 'undefined') { %>
-                    <label class="location">Geburtsort
+                    <label class="location">Geburtsort: 
                         <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -403,7 +382,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(birth_date) !== 'undefined'  && birth_date.length > 0) { %>
-                    <label class="birth-date">Geburtsdatum
+                    <label class="birth-date">Geburtsdatum: 
                         <%
                             var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -421,7 +400,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(proven_date) !== 'undefined' && proven_date.length > 0) { %>
-                    <label class="proven-date">Belegt
+                    <label class="proven-date">Belegt: 
                         <%
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
                             
@@ -438,7 +417,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(comment) !== 'undefined'){ %>
-                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Kommentar: <span name="comment"><%= comment %></span></label>
                 <% } %>        
         </div>
     </script>
@@ -447,7 +426,7 @@
         <div class="row">
                 <input type="hidden" name="id" value="<%= typeof(id) !== 'undefined' ?  id : '' %>"> 
                 <%  if(typeof(death_country) !== 'undefined') { %>
-                    <label class="country">Todesland
+                    <label class="country">Todesland: 
                     <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -465,7 +444,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(death_territory) !== 'undefined') { %>
-                    <label class="territory">Todesterritorium
+                    <label class="territory">Todesterritorium: 
                         <%
                                 var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -485,7 +464,7 @@
                     </label>
                 <%  } %>
                 <% if(typeof(death_location) !== 'undefined') { %>
-                    <label class="location">Todesort
+                    <label class="location">Todesort: 
                         <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -505,10 +484,10 @@
                 </label>
                 <%  } %>
             <% if(typeof(cause_of_death) !== 'undefined') { %>
-                <label>Todesgrund<input type="text" name="causeOfDeath" value="<%= typeof(cause_of_death) !== 'undefined' ?  cause_of_death : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Todesgrund: <span name="causeOfDeath"><%= cause_of_death %></span></label>
                <%  } %> 
             <% if(typeof(death_date) !== 'undefined'  && death_date.length > 0) { %>
-                <label class="death-date">Todesdatum
+                <label class="death-date">Todesdatum: 
 <%
                                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -527,10 +506,10 @@
                     </label>
             <%  } %>
         <% if(typeof(graveyard) !== 'undefined') { %>
-                <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Friedhof: <span name="graveyard"><%= graveyard %></span></label>
                  <%  } %>
              <% if(typeof(funeral_location) !== 'undefined') { %>
-                <label class="funeral-location">Begräbnisort
+                <label class="funeral-location">Begräbnisort: 
                     <%
                             var locationTemplate = _.template($("script#locationTemplate").html());
                             
@@ -550,7 +529,7 @@
                 </label>
         <%  } %>
     <% if(typeof(funeral_date) !== 'undefined' && funeral_date.length > 0) { %>
-                <label class="funeral-date">Begräbnisdatum
+                <label class="funeral-date">Begräbnisdatum: 
                         <%
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -569,7 +548,7 @@
                 </label>
         <%  } %>
      <% if(typeof(comment) !== 'undefined') { %>
-                <label>Kommentar<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar: <span name="comment"><%= comment %></span></label>
                 <%  } %>
                 </div>
     </script>
@@ -583,10 +562,10 @@
                         <input type="hidden" name="id" value="<%= typeof(educationObj['id']) !== 'undefined' ?  educationObj['id'] : '' %>"> 
                         <input type="hidden" name="order" value="<%= typeof(educationObj['education_order']) !== 'undefined' ?  educationObj['education_order'] : '' %>">
                         <% if(typeof(educationObj['label']) !== 'undefined') { %>
-                            <label>Name<input type="text" name="label" value="<%= typeof(educationObj['label']) !== 'undefined' ?  educationObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label>Name: <span name="label"><%= educationObj['label'] %></span></label>
                             <% } %>
                     <%  if(typeof(educationObj['country']) !== 'undefined') { %>
-                            <label class="country">Land
+                            <label class="country">Land:
                          <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -604,7 +583,7 @@
                         </label>
                 <%  } %>
              <% if(typeof(educationObj['territory']) !== 'undefined') {  %>
-                        <label class="territory">Territorium
+                        <label class="territory">Territorium: 
                        <%
                             var territoryTemplate = _.template($("script#territoryTemplate").html());
                             
@@ -622,7 +601,7 @@
                 </label>
          <%  } %>
      <% if(typeof(educationObj['location']) !== 'undefined') { %>
-                        <label class="location">Ort
+                        <label class="location">Ort: 
                              <%
                                     var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -642,7 +621,7 @@
                         </label>
                 <%  } %>
                 <% if(typeof(educationObj['from_date']) !== 'undefined' && educationObj['from_date'].length > 0) { %>
-                        <label class="from-date">von
+                        <label class="from-date">von: 
                         <%
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -661,7 +640,7 @@
                         </label>
                 <%  } %>
                 <% if(typeof(educationObj['to_date']) !== 'undefined' && educationObj['to_date'].length > 0) { %>
-                        <label class="to-date">bis
+                        <label class="to-date">bis: 
                         <%
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
  
@@ -679,7 +658,7 @@
                         </label>
                 <%  } %>
             <% if(typeof(educationObj['proven_date']) !== 'undefined' && educationObj['proven_date'].length > 0) { %>
-                        <label class="proven-date">belegt                       
+                        <label class="proven-date">belegt:                        
                             <%
                                 var dateReferenceTemplate = _.template($("script#dateReference").html());
  
@@ -697,10 +676,10 @@
                         </label>
                 <%  } %>
                     <% if(typeof(educationObj['graduation_label']) !== 'undefined') { %>
-                        <label>Abschluss<input type="text" name="graduationLabel" value="<%= typeof(educationObj['graduation_label']) !== 'undefined' ? educationObj['graduation_label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Abschluss: <span name="graduationLabel"><%= educationObj['graduation_label'] %></span></label>
                     <% } %>    
                     <% if(typeof(educationObj['graduation_date']) !== 'undefined' && educationObj['graduation_date'].length > 0) { %>
-                        <label class="graduation-date">Abschlussdatum
+                        <label class="graduation-date">Abschlussdatum: 
                             <%
                                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -720,7 +699,7 @@
                             </label>
                     <%  } %>
                 <% if(typeof(educationObj['graduation_location']) !== 'undefined') { %>
-                        <label class="graduation-location">Abschlussort 
+                        <label class="graduation-location">Abschlussort:  
                             <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -738,7 +717,7 @@
                         </label>
                 <%  } %>
              <% if(typeof(educationObj['comment']) !== 'undefined') { %>
-                        <label>Kommentar<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Kommentar: <span name="comment"><%= educationObj['comment'] %></span></label>
                 <% } %>
                     </div>
         <% }); %>
@@ -753,10 +732,10 @@
                 <input type="hidden" name="id" value="<%= typeof(honourObj['id']) !== 'undefined' ?  honourObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(honourObj['honour_order']) !== 'undefined' ?  honourObj['honour_order'] : '' %>">
                 <% if(typeof(honourObj['label']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="label" value="<%= typeof(honourObj['label']) !== 'undefined' ?  honourObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Name: <span name="label"><%= honourObj['label'] %></span></label>
                 <%  } %>
                     <%  if(typeof(honourObj['country']) !== 'undefined') { %>
-                        <label class="country">Land
+                        <label class="country">Land: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -776,7 +755,7 @@
                 </label>
             <%  } %>
             <% if(typeof(honourObj['territory']) !== 'undefined') { %>
-                    <label class="territory">Territorium
+                    <label class="territory">Territorium: 
                             <%
                             var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -794,7 +773,7 @@
                 </label>
          <%  } %>
         <% if(typeof(honourObj['location']) !== 'undefined') { %>
-                <label class="location">Ort
+                <label class="location">Ort: 
                 <%
                         var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -812,7 +791,7 @@
             </label>
             <%  } %>
             <% if(typeof(honourObj['from_date']) !== 'undefined'  && honourObj['from_date'].length > 0) { %>
-                <label class="from-date">von
+                <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -829,7 +808,7 @@
             </label>
             <%  } %>
             <%  if(typeof(honourObj['to_date']) !== 'undefined' && honourObj['to_date'].length > 0) { %>
-                <label class="to-date">bis
+                <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -847,7 +826,7 @@
             </label>
             <%  } %>
             <% if(typeof(honourObj['proven_date']) !== 'undefined' && honourObj['proven_date'].length > 0) { %>
-            <label class="proven-date">belegt                       
+            <label class="proven-date">belegt:          
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -865,7 +844,7 @@
             </label>
             <%  } %>
             <% if(typeof(honourObj['comment']) !== 'undefined') { %>
-                <label>Kommentar<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar: <span name="comment"><%= honourObj['comment'] %></span></label>
             <%  } %>
         </div>
         <% }); %>
@@ -880,10 +859,10 @@
                <input type="hidden" name="id" value="<%= typeof(propertyObj['id']) !== 'undefined' ?  propertyObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(propertyObj['property_order']) !== 'undefined' ?  propertyObj['property_order'] : '' %>">
                 <% if(typeof(propertyObj['label']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="label" value="<%= typeof(propertyObj['label']) !== 'undefined' ?  propertyObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Name: <span name="label"><%= propertyObj['label'] %></span></label>
                 <%  } %>
                 <%  if(typeof(propertyObj['country']) !== 'undefined') { %>
-                    <label class="country">Land
+                    <label class="country">Land: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -901,7 +880,7 @@
                         </label>
                   <%  } %>
                   <% if(typeof(propertyObj['territory']) !== 'undefined') {  %>
-                <label class="territory">Territorium
+                <label class="territory">Territorium: 
                             <%
                                 var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -921,7 +900,7 @@
                     </label>
             <%  } %>
             <% if(typeof(propertyObj['location']) !== 'undefined') { %>
-            <label class="location">Ort
+            <label class="location">Ort: 
                     <%
                         var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -941,7 +920,7 @@
             </label>
             <%  } %>
             <% if(typeof(propertyObj['from_date']) !== 'undefined'  && propertyObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -958,7 +937,7 @@
             </label>
             <%  } %>
             <% if(typeof(propertyObj['to_date']) !== 'undefined'  && propertyObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -976,7 +955,7 @@
             </label>
             <%  } %>
             <% if(typeof(propertyObj['proven_date']) !== 'undefined' && propertyObj['proven_date'].length > 0) { %>
-                <label class="proven-date">belegt                       
+                <label class="proven-date">belegt:                      
                     <%
                         var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -994,7 +973,7 @@
                 </label>
             <%  } %>
             <% if(typeof(propertyObj['comment']) !== 'undefined') { %>
-                <label>Kommentar<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar: <span name="comment"><%= propertyObj['comment'] %></span></label>
             <%  } %>
         </div>
     <% }); %>
@@ -1009,13 +988,13 @@
                <input type="hidden" name="id" value="<%= typeof(rankObj['id']) !== 'undefined' ?  rankObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(rankObj['rank_order']) !== 'undefined' ?  rankObj['rank_order'] : '' %>">
                 <% if(typeof(rankObj['label']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="label" value="<%= typeof(rankObj['label']) !== 'undefined' ?  rankObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Name: <span name="label"><%= rankObj['label'] %></span></label>
                 <%  } %>
                 <% if(typeof(rankObj['class']) !== 'undefined') { %>
-                    <label>Klasse<input type="text" name="class" value="<%= typeof(rankObj['class']) !== 'undefined' ?  rankObj['class'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Klasse: <span name="class"><%= rankObj['class'] %></span></label>
                 <%  } %>
                 <%  if(typeof(rankObj['country']) !== 'undefined') { %>
-                    <label class="country">Land
+                    <label class="country">Land: 
                         <%  
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1033,7 +1012,7 @@
                 </label>
             <%  } %>
             <% if(typeof(rankObj['territory']) !== 'undefined') { %>
-                <label class="territory">Territorium
+                <label class="territory">Territorium: 
                     <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1053,7 +1032,7 @@
             </label>
             <%  } %>
             <% if(typeof(rankObj['location']) !== 'undefined') { %>
-                <label class="location">Ort
+                <label class="location">Ort: 
                     <%
                             var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -1073,7 +1052,7 @@
                 </label>
         <%  } %>
         <% if(typeof(rankObj['from_date']) !== 'undefined' && rankObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1090,7 +1069,7 @@
             </label>
         <%  } %>
         <% if(typeof(rankObj['to_date']) !== 'undefined' && rankObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1108,7 +1087,7 @@
             </label>
      <%  } %>
  <% if(typeof(rankObj['proven_date']) !== 'undefined' && rankObj['proven_date'].length > 0) { %>
-            <label class="proven-date">belegt                       
+            <label class="proven-date">belegt:                  
             <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1126,7 +1105,7 @@
             </label>
     <%  } %>
         <% if(typeof(rankObj['comment']) !== 'undefined') { %>
-            <label>Kommentar<input type="text" name="comment" value="<%= typeof(rankObj['comment']) !== 'undefined' ? rankObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar: <span name="comment"><%= rankObj['comment'] %></span></label>
             <% } %>
         </div>
     <% }); %>
@@ -1141,13 +1120,13 @@
                <input type="hidden" name="id" value="<%= typeof(religionObj['id']) !== 'undefined' ?  religionObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(religionObj['religion_order']) !== 'undefined' ?  religionObj['religion_order'] : '' %>">
                 <% if(typeof(religionObj['name']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="name" value="<%= typeof(religionObj['name']) !== 'undefined' ?  religionObj['name'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Name: <span name="name"><%= religionObj['name'] %></span></label>
                 <% } %>
                 <% if(typeof(religionObj['change_of_religion']) !== 'undefined') { %>    
-                    <label>Religionswechsel<input type="text" name="changeOfReligion" value="<%= typeof(religionObj['change_of_religion']) !== 'undefined' ?  religionObj['change_of_religion'] : '' %>"' <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Religionswechsel: <span name="change_of_religion"><%= religionObj['change_of_religion'] %></span></label>
                 <% } %>
             <% if(typeof(religionObj['from_date']) !== 'undefined' && religionObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1165,7 +1144,7 @@
             </label>
             <%  } %>
         <% if(typeof(religionObj['to_date']) !== 'undefined'  && religionObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1183,7 +1162,7 @@
             </label>
             <%  } %>
             <% if(typeof(religionObj['comment']) !== 'undefined') { %>
-                <label>Kommentar<input type="text" name="comment" value="<%= typeof(religionObj['comment']) !== 'undefined' ? religionObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar: <span name="comment"><%= religionObj['comment'] %></span></label>
             <%  } %>
         </div>
     <% }); %>
@@ -1197,7 +1176,7 @@
         <div class="row">
                 <input type="hidden" name="id" value="<%= typeof(residenceObj['id']) !== 'undefined' ? residenceObj['id'] : '' %>"> 
                 <%  if(typeof(residenceObj['residence_country']) !== 'undefined') { %>
-                 <label class='country'>Wohnland
+                 <label class='country'>Wohnland: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1217,7 +1196,7 @@
                 </label>
         <%  } %>
      <% if(typeof(residenceObj['residence_territory']) !== 'undefined') { %>
-                <label class='territory'>Wohnterritorium
+                <label class='territory'>Wohnterritorium: 
                    <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1237,7 +1216,7 @@
             </label>
     <%  } %>
 <% if(typeof(residenceObj['residence_location']) !== 'undefined') { %>
-            <label class='location'>Wohnort
+            <label class='location'>Wohnort: 
                  <%
                         var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -1271,7 +1250,7 @@
                 <input type="hidden" name="id" value="<%= typeof(roadOfLifeObj['id']) !== 'undefined' ?  roadOfLifeObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(roadOfLifeObj['road_of_life_order']) !== 'undefined' ?  roadOfLifeObj['road_of_life_order'] : '' %>">
                  <%  if(typeof(roadOfLifeObj['origin_country']) !== 'undefined') {  %>
-                <label class="origion-country">Herkunftsland
+                <label class="origion-country">Herkunftsland: 
                     <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1291,7 +1270,7 @@
                 </label>
         <%  } %>
     <% if(typeof(roadOfLifeObj['origin_territory']) !== 'undefined') { %>
-                <label class="origin-territory">Herkunftsterritorium
+                <label class="origin-territory">Herkunftsterritorium: 
                 <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1311,7 +1290,7 @@
                 </label>
         <%  } %>
         <%  if(typeof(roadOfLifeObj['job']) !== 'undefined') { %>
-                <label class='job'>Job
+                <label class='job'>Job: 
                     <%
                             var jobTemplate = _.template($("script#jobTemplate").html());
                             
@@ -1331,7 +1310,7 @@
                 </label>
             <%  } %>
             <%  if(typeof(roadOfLifeObj['country']) !== 'undefined') { %>
-                 <label class="country">Land
+                 <label class="country">Land: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1350,7 +1329,7 @@
                 </label>
                 <%  } %>
             <% if(typeof(roadOfLifeObj['territory']) !== 'undefined') { %>
-                <label class="territory">Territorium
+                <label class="territory">Territorium: 
                     <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1368,7 +1347,7 @@
             </label>
         <%  } %>
         <% if(typeof(roadOfLifeObj['location']) !== 'undefined') { %>
-            <label class="location">Ort
+            <label class="location">Ort: 
                  <%
                         var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -1386,7 +1365,7 @@
             </label>
             <%  } %>
         <% if(typeof(roadOfLifeObj['from_date']) !== 'undefined' && roadOfLifeObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1403,7 +1382,7 @@
             </label>
     <%  } %>
     <% if(typeof(roadOfLifeObj['to_date']) !== 'undefined' && roadOfLifeObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1421,7 +1400,7 @@
             </label>
         <%  } %>
     <% if(typeof(roadOfLifeObj['proven_date']) !== 'undefined' && roadOfLifeObj['proven_date'].length > 0) { %>
-            <label class="proven-date">belegt                       
+            <label class="proven-date">belegt:                       
             <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1441,7 +1420,7 @@
             </label>
     <%  } %>
             <% if(typeof(roadOfLifeObj['comment']) !== 'undefined') { %>
-                <label>Kommentar<input type="text" name="comment" value="<%= typeof(roadOfLifeObj['comment']) !== 'undefined' ? roadOfLifeObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar: <span name="comment"><%= roadOfLifeObj['comment'] %></span></label>
             <%  } %>
          </div>
     <% }); %>
@@ -1456,16 +1435,16 @@
                 <input type="hidden" name="id" value="<%= typeof(sourceObj['id']) !== 'undefined' ?  sourceObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(sourceObj['source_order']) !== 'undefined' ?  sourceObj['source_order'] : '' %>">
                 <% if(typeof(sourceObj['label']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="label" value="<%= typeof(sourceObj['label']) !== 'undefined' ?  sourceObj['label'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Name: <span name="label"><%= sourceObj['label'] %></span></label>
                 <%  } %>
                 <% if(typeof(sourceObj['place_of_discovery']) !== 'undefined') { %>
-                    <label>Fundort<input type="text" name="placeOfDiscovery" value="<%= typeof(sourceObj['place_of_discovery']) !== 'undefined' ?  sourceObj['place_of_discovery'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Fundort: <span name="place_of_discovery"><%= sourceObj['place_of_discovery'] %></span></label>
                  <%  } %>
                 <% if(typeof(sourceObj['remark']) !== 'undefined') { %>
-                    <label>Bemerkung<input type="text" name="remark" value="<%= typeof(sourceObj['remark']) !== 'undefined' ?  sourceObj['remark'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Bemerkung: <span name="remark"><%= sourceObj['remark'] %></span></label>
                  <%  } %>
                 <% if(typeof(sourceObj['comment']) !== 'undefined') { %>
-                    <label>Kommentar<input type="text" name="comment" value="<%= typeof(sourceObj['comment']) !== 'undefined' ?  sourceObj['comment'] : '' %>"  <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %> /></label>
+                    <label>Kommentar: <span name="comment"><%= sourceObj['comment'] %></span></label>
                  <%  } %>
         </div>
     <% }); %>
@@ -1480,10 +1459,10 @@
                 <input type="hidden" name="id" value="<%= typeof(statusObj['id']) !== 'undefined' ?  statusObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(statusObj['status_order']) !== 'undefined' ?  statusObj['status_order'] : '' %>">
                 <% if(typeof(statusObj['label']) !== 'undefined') { %>
-                    <label>Name<input type="text" name="label" value="<%= typeof(statusObj['label']) !== 'undefined' ?  statusObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                    <label>Name: <span name="label"><%= statusObj['label'] %></span></label>
                 <%  } %>
                 <%  if(typeof(statusObj['country']) !== 'undefined') { %>
-                    <label class="country">Land
+                    <label class="country">Land: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1501,7 +1480,7 @@
                 </label>
                 <%  } %>
             <% if(typeof(statusObj['territory']) !== 'undefined') { %>
-                <label class="territory">Territorium
+                <label class="territory">Territorium: 
                     <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1519,7 +1498,7 @@
             </label>
     <%  } %>
         <% if(typeof(statusObj['location']) !== 'undefined') { %>
-                    <label class="location">Ort
+                    <label class="location">Ort: 
                          <%
                                 var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -1539,7 +1518,7 @@
                     </label>
             <%  } %>
             <% if(typeof(statusObj['from_date']) !== 'undefined' && statusObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1556,7 +1535,7 @@
             </label>
         <%  } %>
         <% if(typeof(statusObj['to_date']) !== 'undefined' && statusObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1574,7 +1553,7 @@
             </label>
         <%  } %>
         <% if(typeof(statusObj['proven_date']) !== 'undefined'  && statusObj['proven_date'].length > 0) { %>
-            <label class="proven-date">belegt                       
+            <label class="proven-date">belegt:                       
                 <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1594,7 +1573,7 @@
             </label>
         <%  } %>
         <% if(typeof(statusObj['comment']) !== 'undefined') { %>
-            <label>Kommentar<input type="text" name="comment" value="<%= typeof(statusObj['comment']) !== 'undefined' ? statusObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar: <span name="comment"><%= statusObj['comment'] %></span></label>
         <% } %>
         </div>
     <% }); %>
@@ -1609,10 +1588,10 @@
                 <input type="hidden" name="id" value="<%= typeof(worksObj['id']) !== 'undefined' ?  worksObj['id'] : '' %>"> 
                 <input type="hidden" name="order" value="<%= typeof(worksObj['works_order']) !== 'undefined' ?  worksObj['works_order'] : '' %>">
                         <% if(typeof(worksObj['label']) !== 'undefined') { %>
-                            <label>Name<input type="text" name="label" value="<%= typeof(worksObj['label']) !== 'undefined' ?  worksObj['label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                            <label>Name: <span name="label"><%= worksObj['label'] %></span></label>
                         <% } %>
                     <%  if(typeof(worksObj['country']) !== 'undefined') { %>
-                    <label class="country">Land
+                    <label class="country">Land: 
                         <%
                             var countryTemplate = _.template($("script#countryTemplate").html());
                             
@@ -1632,7 +1611,7 @@
                 </label>
         <%  } %>
     <% if(typeof(worksObj['territory']) !== 'undefined') { %>
-                <label class="territory">Territorium
+                <label class="territory">Territorium: 
                     <%
                         var territoryTemplate = _.template($("script#territoryTemplate").html());
 
@@ -1652,7 +1631,7 @@
             </label>
     <%  } %>
 <% if(typeof(worksObj['location']) !== 'undefined') { %>
-            <label class="location">Ort
+            <label class="location">Ort: 
                  <%
                         var locationTemplate = _.template($("script#locationTemplate").html());
 
@@ -1672,7 +1651,7 @@
             </label>
     <%  } %>
         <% if(typeof(worksObj['from_date']) !== 'undefined'   && worksObj['from_date'].length > 0) { %>
-            <label class="from-date">von
+            <label class="from-date">von: 
             <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1691,7 +1670,7 @@
             </label>
      <%  } %>
  <% if(typeof(worksObj['to_date']) !== 'undefined'  && worksObj['to_date'].length > 0) { %>
-            <label class="to-date">bis
+            <label class="to-date">bis: 
             <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1711,7 +1690,7 @@
             </label>
     <%  } %>
 <% if(typeof(worksObj['proven_date']) !== 'undefined'  && worksObj['proven_date'].length > 0) { %>
-            <label class="proven-date">belegt                       
+            <label class="proven-date">belegt:                        
             <%
                     var dateReferenceTemplate = _.template($("script#dateReference").html());
 
@@ -1729,7 +1708,7 @@
             </label>
     <%  } %>
         <% if(typeof(worksObj['comment']) !== 'undefined') { %>
-            <label>Kommentar<input type="text" name="comment" value="<%= typeof(worksObj['comment']) !== 'undefined' ? worksObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar: <span name="label"><%= worksObj['comment'] %></span></label>
         <% } %>
         </div>
         <% }); %>
@@ -1770,19 +1749,25 @@
     <script type="text/template" id="date">
         <div class="input-group date-container">
             <input type="hidden" name="id" value="<%= typeof(id)!== 'undefined' ?  id : '' %>"> 
-            <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <% if(typeof(before_date) !== 'undefined' && before_date) { %>
+                vor 
+            <% } %>
+            <% if(typeof(after_date) !== 'undefined' && after_date) { %>
+                nach 
+            <% } %>
             <% if(typeof(day) !== 'undefined') { %>
-                <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                <span name="day"><%= day %></span>
             <% } %>
+            /
              <% if(typeof(month) !== 'undefined') { %>
-            <input type="text" name="month" value="<%= typeof(month)!== 'undefined' ?  month : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                 <span name="month"><%= month %></span>
             <% } %>
+            /
             <% if(typeof(year) !== 'undefined') { %>
-            <input type="text" name="year" value="<%= typeof(year)!== 'undefined' ?  year : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                <span name="year"><%= year %></span>
             <% } %>
-             <% if(typeof(comment) !== 'undefined') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <% if(typeof(comment) !== 'undefined') { %>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
         </div>
     </script>
@@ -1791,10 +1776,10 @@
         <div class="input-group nation-container">
             <input type="hidden" name="nationId"> 
             <% if(typeof(name) !== 'undefined') { %>
-                <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                <span name="name"><%= name %></span>
             <% } %>
             <% if(typeof(comment) !== 'comment') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
              </div>
     </script>
@@ -1803,11 +1788,11 @@
         <div class="input-group location-container">
             <input type="hidden" name="locationId"> 
             <% if(typeof(name) !== 'undefined') { %>
-                <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            <% } %>
+                <span name="name"><%= name %></span>
+                <% } %>
             <% if(typeof(comment) !== 'undefined') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            <% } %>
+                Kommentar: <span name="comment"><%= comment %></span>
+                <% } %>
         </div>
     </script>
     
@@ -1815,10 +1800,10 @@
         <div class="input-group territory-container">
             <input type="hidden" name="territoryId"> 
             <% if(typeof(name) !== 'undefined') { %>
-                <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                <span name="name"><%= name %></span>
             <% } %>
             <% if(typeof(comment) !== 'undefined') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
         </div>
     </script>
@@ -1827,10 +1812,10 @@
         <div class="input-group country-container">
             <input type="hidden" name="countryId"> 
             <% if(typeof(name) !== 'undefined') { %>
-                <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            <% } %>
+                <span name="name"><%= name %></span>
+                <% } %>
                 <% if(typeof(comment) !== 'undefined') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
         </div>
     </script>
@@ -1839,10 +1824,10 @@
         <div class="input-group job-container">
             <input type="hidden" name="jobId"> 
             <% if(typeof(label) !== 'undefined') { %>
-                <input type="text" name="label" value="<%= typeof(label)!== 'undefined' ?  label : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            <% } %>
+                <span name="label"><%= label %></span>
+                <% } %>
             <% if(typeof(comment) !== 'undefined') { %>
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
         </div>
     </script>
@@ -1851,10 +1836,10 @@
         <div class="input-group job-class-container">
             <input type="hidden" name="jobClassId"> 
             <% if(typeof(label) !== 'undefined') { %>
-                <input type="text" name="label" value="<%= typeof(label)!== 'undefined' ?  label : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-             <% } %>
+                <span name="label"><%= label %></span>
+            <% } %>
             <% if(typeof(comment) !== 'undefined') { %>    
-                <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+                Kommentar: <span name="comment"><%= comment %></span>
             <% } %>
         </div>
     </script>
