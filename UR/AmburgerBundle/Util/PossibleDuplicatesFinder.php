@@ -268,6 +268,12 @@ class PossibleDuplicatesFinder {
     private function searchForPossibleDuplicatesFromSiblings($em, $ID) {
         $possibleSiblings = array();
         $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+        
+        $siblingRelativeIds = array();
+        
+        for($i = 0; $i < count($siblingEntries); $i++){
+            $siblingRelativeIds[] = $this->getRelativeId($ID, $siblingEntries[$i]);
+        }
 
         $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
@@ -279,7 +285,7 @@ class PossibleDuplicatesFinder {
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $siblingEntries)
+                        && !in_array($secondRelativeId, $siblingRelativeIds)
                         && !in_array($secondRelativeId, $possibleSiblings)){
                     $possibleSiblings[] = $secondRelativeId;
                 }
@@ -293,6 +299,12 @@ class PossibleDuplicatesFinder {
         $possibleParents = array();
         $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
+        $parentRelativeIds = array();
+        
+        for($i = 0; $i < count($parentEntries); $i++){
+            $parentRelativeIds[] = $this->getRelativeId($ID, $parentEntries[$i]);
+        }
+        
         $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
         for($i = 0; $i < count($siblingEntries); $i++){
@@ -302,7 +314,7 @@ class PossibleDuplicatesFinder {
             for($j = 0; $j < count($parentOfSiblingEntries); $i++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $parentEntries)
+                        && !in_array($secondRelativeId, $parentRelativeIds)
                         && !in_array($secondRelativeId, $possibleParents)){
                     $possibleParents[] = $secondRelativeId;
                 }
@@ -315,6 +327,12 @@ class PossibleDuplicatesFinder {
    private function searchForPossibleDuplicatesFromChildren($em, $ID) {
         $possibleChildren = array();
         $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+        
+        $childRelativeIds = array();
+        
+        for($i = 0; $i < count($childrenEntries); $i++){
+            $childRelativeIds[] = $this->getRelativeId($ID, $childrenEntries[$i]);
+        }
 
         $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
         
@@ -326,7 +344,7 @@ class PossibleDuplicatesFinder {
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $childrenEntries)
+                        && !in_array($secondRelativeId, $childRelativeIds)
                         && !in_array($secondRelativeId, $possibleChildren)){
                     $possibleChildren[] = $secondRelativeId;
                 }
@@ -340,6 +358,12 @@ class PossibleDuplicatesFinder {
         $possiblePartners = array();
         $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
         
+        $partnerRelativeIds = array();
+        
+        for($i = 0; $i < count($partnerEntries); $i++){
+            $partnerRelativeIds[] = $this->getRelativeId($ID, $partnerEntries[$i]);
+        }
+        
         $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
 
         for($i = 0; $i < count($childrenEntries); $i++){
@@ -349,7 +373,7 @@ class PossibleDuplicatesFinder {
             for($j = 0; $j < count($parentOfSiblingEntries); $i++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $partnerEntries)
+                        && !in_array($secondRelativeId, $partnerRelativeIds)
                         && !in_array($secondRelativeId, $possiblePartners)){
                     $possiblePartners[] = $secondRelativeId;
                 }
