@@ -26,14 +26,32 @@ input.daterange{
 }
 
 .extended-search {
-    border: 1px solid black;
-    padding: 5px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
 
+.search-container {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+#search-btn {
+    margin-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
 .column, .columns{
   min-height: 1px;
+}
+
+.container-only-main-persons input[type=checkbox] {
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
 }
 
 /* PersonList */
@@ -46,13 +64,18 @@ input.daterange{
     color: green;
 }
 
+.page-size-container select,
+.page-size-container span {
+    display: inline-block;
+}
+
 #map-display {
     height: 500px;
 }
 
 .map {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 55px;
+    margin-bottom: 55px;
 }
 
 /* Family Tree */
@@ -66,4 +89,8 @@ input.daterange{
 .family-tree-item {
     font-size: 10px;
     text-align: center;
+}
+
+.bold {
+    font-weight: bold;
 }

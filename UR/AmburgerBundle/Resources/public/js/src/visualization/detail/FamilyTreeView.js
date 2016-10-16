@@ -59,8 +59,8 @@ Detail.FamilyTreeView = (function(){
 
             if (data.templateName == "personTemplate") {
                 console.log('rendering person Template');
-                var fields = ["first_name", "patronym", "last_name", "gender", 
-                    ,"job", "job_class", "nation", "educations"];
+                var fields = ["first_name", "patronym", "last_name", "gender"];
+                    //,"job", "job_class", "nation", "educations"
                 for (var index = 0; index < fields.length; index++) {
                     var field = fields[index];
                     
@@ -110,14 +110,14 @@ Detail.FamilyTreeView = (function(){
         var result = new primitives.orgdiagram.TemplateConfig();
         result.name = "personTemplate";
 
-        result.itemSize = new primitives.common.Size(200, 150);
+        result.itemSize = new primitives.common.Size(150, 100);
         result.minimizedItemSize = new primitives.common.Size(4, 4);
         result.highlightPadding = new primitives.common.Thickness(2, 2, 2, 2);
 
         var itemTemplate = jQuery(
           '<div class="bp-item bp-corner-all bt-item-frame">'
             + '<div class="family-tree-item">'
-                + '<div name="last_name"><span></span></br></div>'
+                + '<div name="last_name"><span class="bold"></span></br></div>'
                 + '<div name="first_name"><span></span></br></div>'
                 + '<div name="patronym"><span></span></br></div>'
                 + '<div name="gender">Geschlecht: <span></span></br></div>'
@@ -125,10 +125,6 @@ Detail.FamilyTreeView = (function(){
                 + '<div name="baptism_date">Getauft: <span></span></br></div>'
                 + '<div name="death_date">Gestorben: <span></span></br></div>'
                 + '<div name="funeral_date">Beerdigt: <span></span></br></div>'
-                + '<div name="job">Job: <span></span></br></div>'
-                + '<div name="job_class">Jobklasse: <span></span></br></div>'
-                + '<div name="nation">Nation: <span></span></br></div>'
-                + '<div name="educations">Ausbildung(en): <span></span></br></div>'
             + '</div>'
         + '</div>'
         ).css({
@@ -137,6 +133,13 @@ Detail.FamilyTreeView = (function(){
             margin: '5px'
         }).addClass("bp-item bp-corner-all bt-item-frame");
         result.itemTemplate = itemTemplate.wrap('<div>').parent().html();
+
+/*
+ *                 + '<div name="job">Job: <span></span></br></div>'
+                + '<div name="job_class">Jobklasse: <span></span></br></div>'
+                + '<div name="nation">Nation: <span></span></br></div>'
+                + '<div name="educations">Ausbildung(en): <span></span></br></div>'
+ */
 
         return result;
     },

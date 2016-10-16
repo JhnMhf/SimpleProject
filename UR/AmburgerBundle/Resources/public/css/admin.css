@@ -138,6 +138,7 @@ input.form-control {
     position: relative;
     text-align: center;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 .nav-item.active {
@@ -146,6 +147,7 @@ input.form-control {
 
 .nav-item.disabled {
     background-color: grey;
+    cursor: not-allowed;
 }
 
 .nav-item.one-line span {
@@ -182,4 +184,10 @@ input.form-control {
 
 .nav-item.arrow.disabled:before {
     border-left: 12px solid grey;
+}
+
+/* user-controls */
+#user-controls i {
+    cursor: pointer;
+    margin-right: 10px;
 }

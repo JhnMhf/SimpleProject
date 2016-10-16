@@ -2,31 +2,49 @@
 {% block body %}
     <div class="row">
         <div class="large-6 columns large-centered center">
-            <p>Kurze Erklärung wofür das Tool gut ist. (Für Nicht-ITler)</p>
+            <p>Diese Oberfläche wird für die Korrektur der einzelnen Datensätze der Erik-Amburger-Datenbank verwendet.</p>
         </div>
     </div>
     <div class="row">
         <div class="large-6 columns large-centered center">
-            <button id="next-person-button" class="round button">Neuen Datensatz bearbeiten</button>
+            <button id="next-person-button" class="round button">Neuen zufälligen Datensatz korrigieren</button>
         </div>
     </div>
     <div class="row">
+        <div class="large-3 columns">
+        </div>
         <div class="large-6 columns large-centered center">
-            <p>Bestimmten Datensatz bearbeiten</p>
+            <p>Bestimmten Datensatz für die Korrektur auswählen.</p>
             Bitte geben Sie die ID oder OID des gewünschten Datensatzes ein:
-            
+        </div>
+        <div class="large-3 columns">
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-5 columns">
+        </div>
+        <div class="large-1 columns">
             <input name="selected-id" type="text" id="selected-id" class="form-contro" placeholder="z.B. 1234">
-             <div class="large-4 medium-4 columns" id="id-type-container">
-                    <input type="radio" name="idType" value="id" id="radioID" checked><label for="radioID">ID</label>
-                    <input type="radio" name="idType" value="oid" id="radioOID"><label for="radioOID">OID</label>
-                </div>
-            <button id="selected-person-button" class="round button">Pfeil...</button>
+        </div>
+        <div class="large-2 columns">
+            <input type="radio" name="idType" value="id" id="radioID" checked><label for="radioID">ID</label>
+            <input type="radio" name="idType" value="oid" id="radioOID"><label for="radioOID">OID</label>
+        </div>
+        <div class="large-4 columns">
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-3 columns">
+        </div>
+        <div class="large-6 columns large-centered center">
+            <button id="selected-person-button" class="round button">Korrektur starten</button>
+        </div>
+        <div class="large-3 columns">
         </div>
     </div>
      <div class="row">
         <div class="large-6 columns large-centered center">
-            Bereits bearbeitete Datensätze
-            <p>Prozentuale Anzeige </p>
+            
         </div>
     </div>
 {% endblock %}

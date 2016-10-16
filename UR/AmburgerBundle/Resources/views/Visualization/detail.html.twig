@@ -149,11 +149,8 @@
     <script type="text/template" id="basePerson">
         <div class="row">
                 <input type="hidden" name="id" value="<%= id %>"> 
-                <% if(typeof(oid) !== 'undefined') {%>
-                    <label>OID<input type="text" name="oid" value="<%=oid %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <% } %>
-                <label>Vorname<input type="text" name="firstName" value="<%= typeof(first_name) !== 'undefined' ?  first_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Vatersname<input type="text" name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Vorname <span name="firstName"><%= first_name %></span></label>
+                <label>Vatersname <span name="patronym" value="<%= typeof(patronym) !== 'undefined' ?  patronym : '' %>" ></span></label>
                 <label>Nachname<input type="text" name="lastName" value="<%= typeof(last_name) !== 'undefined' ?  last_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>

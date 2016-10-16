@@ -3,128 +3,136 @@
 {% block body %}
     <div class="search">
         <div class="row">
-            <div class="large-12 columns large-centered center">
-                <h2>Suche</h2>
-            </div>
-        </div>
-        <div class="row simple-search">
-            <div class="large-9 columns">
-                <label>Freie Suche</label><input name="searchQuery"/>
-            </div>
-            <div class="large-3 columns">
-                <label>
-                    Nur Hauptpersonen durchsuchen<br/>
-                    <input class="center" type="checkbox" name="only-main-persons"/>
-                </label>
-            </div>
-        </div>
-        <div class="row extended-search box">
             <div class="large-12 columns">
-                <div class="large-4 columns">
-                    <label>
-                        Nachname
-                        <input name="lastname"/>
-                    </label>
-                </div>
-                <div class="large-4 columns">
-                    <label>
-                        Russischer Vorname
-                        <input name="patronym"/>
-                    </label>
-                </div>
-                <div class="large-4 columns">
-                    <label>
-                        Vorname
-                        <input name="firstname"/>
-                    </label>
-                </div>
-                <div class="large-4 columns">
-                    <label>
-                        Ort
-                        <input name="location"/>
-                    </label>
-                </div>
-                <div class="large-4 columns">
-                    <label>
-                        Region
-                        <input name="territory"/>
-                    </label>
-                </div>
-                <div class="large-4 columns">
-                    <label>
-                        Land
-                        <input name="country"/>
-                    </label>
-                </div>
+                <div class="search-container">
+                    <div class="row">
+                        <div class="large-12 columns large-centered center">
+                            <h2>Suche</h2>
+                        </div>
+                    </div>
+                    <div class="row simple-search">
+                        <div class="large-9 columns">
+                            <label>Freie Suche</label><input name="searchQuery"/>
+                        </div>
+                        <div class="large-3 columns container-only-main-persons">
+                            <label>
+                                Nur Hauptpersonen
+                                <br/>
+                                <input class="center" type="checkbox" name="only-main-persons"/>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row extended-search box">
+                        <div class="large-12 columns">
+                            <div class="large-4 columns">
+                                <label>
+                                    Nachname
+                                    <input name="lastname"/>
+                                </label>
+                            </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    Russischer Vorname
+                                    <input name="patronym"/>
+                                </label>
+                            </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    Vorname
+                                    <input name="firstname"/>
+                                </label>
+                            </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    Ort
+                                    <input name="location"/>
+                                </label>
+                            </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    Region
+                                    <input name="territory"/>
+                                </label>
+                            </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    Land
+                                    <input name="country"/>
+                                </label>
+                            </div>
 
-                <!--TODO: Enforce date with specific format -->
-                <div class="large-4 columns">
-                    <label>
-                        Datum
-                        <br/>
-                        <select name="date-day" class="single-date">
-                            <option value="">Tag</item>
-                            {% for i in 1..31 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-                        <select name="date-month"  class="single-date">>
-                            <option value="">Monat</item>
-                            {% for i in 1..12 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-                        <input class="single-date" name="date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
-                    </label>
-                </div>
-                <div class="large-8 columns">
-                    <label>
-                        Zeitraum
-                        <br/>
-                        <select name="from-date-day" class="daterange">
-                            <option value="">Tag</item>
-                            {% for i in 1..31 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-                        <select name="from-date-month" placeholder="Jahr" class="daterange">
-                            <option value="">Monat</item>
-                            {% for i in 1..12 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-                        <input class="daterange" name="from-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
-                        <br/>
-                        bis
-                        <br/>
-                        <select name="to-date-day" class="daterange">
-                            <option value="">Tag</item>
-                            {% for i in 1..31 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-                        <select name="to-date-month" class="daterange">
-                            <option value="">Monat</item>
-                            {% for i in 1..12 %}
-                                <option value="{{ i }}">{{ i }}</item>
-                            {% endfor %}
-                        </select>
-
-                        <input class="daterange" name="to-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
-                    </label>
+                            <!--TODO: Enforce date with specific format -->
+                            <div class="large-4 columns">
+                                <label>
+                                    Datum
+                                    <br/>
+                                    <select name="date-day" class="single-date">
+                                        <option value="">Tag</item>
+                                        {% for i in 1..31 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="date-month"  class="single-date">>
+                                        <option value="">Monat</item>
+                                        {% for i in 1..12 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <input class="single-date" name="date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                                </label>
+                            </div>
+                             <div class="large-4 columns">
+                                <label>
+                                    Zeitraum
+                                    <br/>
+                                    <select name="from-date-day" class="daterange">
+                                        <option value="">Tag</item>
+                                        {% for i in 1..31 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="from-date-month" placeholder="Jahr" class="daterange">
+                                        <option value="">Monat</item>
+                                        {% for i in 1..12 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <input class="daterange" name="from-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                                </label>
+                             </div>
+                            <div class="large-4 columns">
+                                <label>
+                                    bis
+                                    <br/>
+                                    <select name="to-date-day" class="daterange">
+                                        <option value="">Tag</item>
+                                        {% for i in 1..31 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="to-date-month" class="daterange">
+                                        <option value="">Monat</item>
+                                        {% for i in 1..12 %}
+                                            <option value="{{ i }}">{{ i }}</item>
+                                        {% endfor %}
+                                    </select>
+                                    <input class="daterange" name="to-date-year" placeholder="Jahr" pattern="[0-9]{4}"/>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-4 columns">
+                        </div>
+                        <div class="large-4 columns centered">
+                            <button id="search-btn" class="button radius expand">Suchen</button>
+                        </div>
+                        <div class="large-4 columns">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="large-4 columns">
-            </div>
-            <div class="large-4 columns centered">
-                <button id="search-btn" class="button radius expand">Suchen</button>
-            </div>
-            <div class="large-4 columns">
-            </div>
-        </div>
-
     </div>
 
     <div class="row map">
@@ -140,15 +148,20 @@
                 <div class="large-6 columns">
                     <div class="pagination-container"></div>
                 </div>
-                <div class="large-4 columns">
+                <div class="large-3 columns">
                 </div>
-                <div class="large-2 columns">
+                <div class="large-3 columns page-size-container">
+                    <!--
+                    <span>
+                        Erebnisse pro Seite: 
+                    </span>
+                    -->
                     <select class="page-size">
-                        <option value="5">5</item>
-                        <option value="10">10</item>
-                        <option value="25">25</item>
-                        <option value="50">50</item>
-                        <option value="100">100</item>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
                     </select>
                 </div>
             </div>
@@ -189,15 +202,20 @@
                 <div class="large-6 columns">
                     <div class="pagination-container"></div>
                 </div>
-                <div class="large-4 columns">
+                <div class="large-3 columns">
                 </div>
-                <div class="large-2 columns">
+                <div class="large-3 columns page-size-container">
+                    <!--
+                    <span>
+                        Erebnisse pro Seite: 
+                    </span>
+                    -->
                     <select class="page-size">
-                        <option value="5">5</item>
-                        <option value="10">10</item>
-                        <option value="25">25</item>
-                        <option value="50">50</item>
-                        <option value="100">100</item>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
                     </select>
                 </div>
             </div>
@@ -255,16 +273,16 @@
             </td>
             <td>
                 <% if(birth_date) { %>
-                    Geburtssymbol + <%= birth_date %>
+                    Geboren: <%= birth_date %>
                  <% } else if(baptism_date) { %>
-                    Taufsymbol + <%= baptism_date %>
+                    Getauft: <%= baptism_date %>
                  <% } %>
             </td>
             <td>
                 <% if(death_date) { %>
-                    Todessymbol + <%= death_date %>
+                    Gestorben: <%= death_date %>
                  <% } else if(funeral_date) { %>
-                    Begräbnissymbol + <%= funeral_date %>
+                    Beerdigt: <%= funeral_date %>
                  <% } %>
             </td>
             <td class="center">
@@ -275,7 +293,7 @@
                  <% } %>
             </td>
             <td>
-                <a href="/visualization/<%= id %>/" target="_blank"><button class='small'>Details</button></a>
+                <a href="/visualization/<%= id %>/" target="_blank"><button>Details</button></a>
             </td>
         </tr>
     </script>
