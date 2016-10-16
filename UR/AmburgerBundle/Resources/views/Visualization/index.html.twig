@@ -9,7 +9,7 @@
         </div>
         <div class="row simple-search">
             <div class="large-9 columns">
-                <label>Freie Suche (Boolesche Logik und Klammerung wird unterstützt)</label><input name="searchQuery"/>
+                <label>Freie Suche</label><input name="searchQuery"/>
             </div>
             <div class="large-3 columns">
                 <label>
@@ -28,14 +28,14 @@
                 </div>
                 <div class="large-4 columns">
                     <label>
-                        Vorname
-                        <input name="firstname"/>
+                        Russischer Vorname
+                        <input name="patronym"/>
                     </label>
                 </div>
                 <div class="large-4 columns">
                     <label>
-                        Russischer Vorname
-                        <input name="patronym"/>
+                        Vorname
+                        <input name="firstname"/>
                     </label>
                 </div>
                 <div class="large-4 columns">
@@ -129,62 +129,77 @@
 
     <div class="row map">
         <div class="large-12 columns large-centered center">
-            <h2>Karte</h2>
             <div id="map-display"></div>
         </div>
     </div>
 
     <div class="row list">
         <div class="large-12 columns large-centered center">
-            <h2>Personen</h2>
-            <div class="table-header">
-                <div class="pagination-container"></div>
-                <select class="page-size">
-                    <option value="5">5</item>
-                    <option value="10">10</item>
-                    <option value="25">25</item>
-                    <option value="50">50</item>
-                    <option value="100">100</item>
-                </select>
+            <h2>Ergebnisliste</h2>
+            <div class="table-header row">
+                <div class="large-6 columns">
+                    <div class="pagination-container"></div>
+                </div>
+                <div class="large-4 columns">
+                </div>
+                <div class="large-2 columns">
+                    <select class="page-size">
+                        <option value="5">5</item>
+                        <option value="10">10</item>
+                        <option value="25">25</item>
+                        <option value="50">50</item>
+                        <option value="100">100</item>
+                    </select>
+                </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <td>
-                            Vorname
-                        </td>
-                        <td>
-                            Russischer Vorname
-                        </td>
-                        <td>
-                            Nachname
-                        </td>
-                        <td>
-                            Geburtsdatum/ Taufdatum
-                        </td>
-                        <td>
-                            Sterbedatum/ Beerdigungsdatum
-                        </td>
-                        <td>
-                            Hauptperson
-                        </td>
-                        <td>
-                            Vollständige Personendaten einsehen
-                        </td>
-                    </tr>
-                </thead>
-                <tbody id="personDataList">
-                </tbody>
-            </table>
-            <div class="table-footer">
-                <div class="pagination-container"></div>
-                <select class="page-size">
-                    <option value="5">5</item>
-                    <option value="10">10</item>
-                    <option value="25">25</item>
-                    <option value="50">50</item>
-                    <option value="100">100</item>
-                </select>
+            <div class="row">
+                <div class="large-12 columns">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>
+                                    Vorname
+                                </td>
+                                <td>
+                                    Russischer Vorname
+                                </td>
+                                <td>
+                                    Nachname
+                                </td>
+                                <td>
+                                    Geburtsdatum/ Taufdatum
+                                </td>
+                                <td>
+                                    Sterbedatum/ Beerdigungsdatum
+                                </td>
+                                <td>
+                                    Hauptperson
+                                </td>
+                                <td>
+                                    Vollständige Personendaten einsehen
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id="personDataList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="table-footer row">
+                <div class="large-6 columns">
+                    <div class="pagination-container"></div>
+                </div>
+                <div class="large-4 columns">
+                </div>
+                <div class="large-2 columns">
+                    <select class="page-size">
+                        <option value="5">5</item>
+                        <option value="10">10</item>
+                        <option value="25">25</item>
+                        <option value="50">50</item>
+                        <option value="100">100</item>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -260,7 +275,7 @@
                  <% } %>
             </td>
             <td>
-                <a href="/visualization/<%= id %>/" target="_blank"><button class='secondary small'>Details</button></a>
+                <a href="/visualization/<%= id %>/" target="_blank"><button class='small'>Details</button></a>
             </td>
         </tr>
     </script>

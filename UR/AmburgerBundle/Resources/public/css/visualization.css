@@ -50,6 +50,11 @@ input.daterange{
     height: 500px;
 }
 
+.map {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 /* Family Tree */
 #family-tree {
     width: 95%;
