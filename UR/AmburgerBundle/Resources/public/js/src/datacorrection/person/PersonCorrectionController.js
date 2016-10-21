@@ -166,7 +166,6 @@ PersonCorrection.PersonCorrectionController = (function(){
     
     onSaveFinished = function(){
         personCorrectionView.hideLoader();
-        alert('Success');
         var currentUrl = window.location.href;
         var newUrl = currentUrl.replace("person", "relatives");
         window.location.href = newUrl;

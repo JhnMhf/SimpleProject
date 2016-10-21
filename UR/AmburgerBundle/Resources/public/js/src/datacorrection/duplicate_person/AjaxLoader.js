@@ -35,7 +35,7 @@ DuplicatePerson.AjaxLoader = (function(){
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
 
-            $(that).trigger("duplicatePersonsLoaded", [data]);
+            $(that).trigger("duplicatePersonsLoaded", {status: jqXHR.status, data: data});
         });
     },
     
