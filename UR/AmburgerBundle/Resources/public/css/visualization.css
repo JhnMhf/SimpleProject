@@ -68,12 +68,20 @@ input.daterange{
 }
 
 .container-only-main-persons input[type=checkbox] {
-    margin-left: auto;
+    /*margin-left: auto;
     margin-right: auto;
     vertical-align: middle;
-    display: inline-block;
+    display: inline-block;*/
+    display: table-cell; 
+    vertical-align: middle;
     width: 25px;
     height: 25px;
+    text-align: center;
+}
+
+.container-only-main-persons .checkbox-container {
+    vertical-align: middle;
+    text-align: center;
 }
 
 /* PersonList */
