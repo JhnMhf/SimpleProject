@@ -71,7 +71,7 @@ Start.StartController = (function(){
             // somebody is already working on it
             startView.showErrorMessage("Die Person wird im Moment bereits bearbeitet.");
         } else {
-            startView.showErrorMessage("Es ist ein Fehler bei der Anfrage an den Server aufgetreten");
+            startView.showServerCommunicationFailed();
         }
         
     },
@@ -90,6 +90,8 @@ Start.StartController = (function(){
         } else if (responseCode == "409"){ 
             // somebody is already working on it
             startView.showErrorMessage("Die Person wird im Moment bereits bearbeitet.");
+        } else{
+            startView.showServerCommunicationFailed();
         }
         
     },
@@ -128,7 +130,7 @@ Start.StartController = (function(){
             window.location.href = newUrl;
         } else { 
             //problem during work started
-            startView.showErrorMessage("Es gab ein Problem während die Bearbeitung der Person gestartet werden sollte.");
+            startView.showServerCommunicationFailed();
         }
     };
 

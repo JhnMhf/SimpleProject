@@ -20,8 +20,14 @@ PersonCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
+                    
+                    if(jqXHR.status == 200){
+                        $(that).trigger("personLoaded", [data['old'], data['new'], data['final']]);
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
 
-                    $(that).trigger("personLoaded", [data['old'], data['new'], data['final']]);
+                    
                 });
             },
                      
@@ -32,8 +38,14 @@ PersonCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
+                    
+                    if(jqXHR.status == 200){
+                        $(that).trigger("weddingsLoaded", [data['old'], data['new'], data['final']]);
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
 
-                    $(that).trigger("weddingsLoaded", [data['old'], data['new'], data['final']]);
+                    
                 });
             },
             
@@ -78,7 +90,14 @@ PersonCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log('always', data);
-                    $(that).trigger("gndRequestFinished", {results: data });
+                    
+                    if(jqXHR.status == 200){
+                        $(that).trigger("gndRequestFinished", {results: data });
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
+                    
+                    
                 });
             };
 

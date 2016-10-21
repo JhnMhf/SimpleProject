@@ -19,8 +19,13 @@ Detail.AjaxLoader = (function(){
             dataType: 'json'
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+            
+            if(jqXHR.status == 200){
+                $(that).trigger("personLoaded", data);
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("personLoaded", data);
         });
     },
     
@@ -32,7 +37,12 @@ Detail.AjaxLoader = (function(){
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
 
-            $(that).trigger("locationsLoaded", {'data':data});
+            if(jqXHR.status == 200){
+                $(that).trigger("locationsLoaded", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
+
         });
     },
     
@@ -43,8 +53,14 @@ Detail.AjaxLoader = (function(){
             dataType: 'json'
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+            
+            if(jqXHR.status == 200){
+                $(that).trigger("relationsLoaded", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("relationsLoaded", {'data':data});
+           
         });
     };
 

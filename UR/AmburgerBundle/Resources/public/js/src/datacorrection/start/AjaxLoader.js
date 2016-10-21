@@ -24,6 +24,10 @@ Start.AjaxLoader = (function () {
 
                                 $(that).trigger("nextPerson", [id]);
 
+                            } else if (jqXHR.status == "404") {
+                                $(that).trigger("noNextPerson");
+                            } else {
+                                MessageHelper.showServerCommunicationFailed();
                             }
                         }).fail(function (jqXHR) {
                     if (jqXHR.status == "404") {

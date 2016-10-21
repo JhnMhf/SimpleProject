@@ -20,8 +20,12 @@ RelativesCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
-
-                    $(that).trigger("personLoaded", data);
+                    if(jqXHR.status == 200){
+                        $(that).trigger("personLoaded", data);
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
+                    
                 });
             },
     
@@ -32,8 +36,12 @@ RelativesCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
-
-                    $(that).trigger("possibleRelativesLoaded", {data: data});
+                    if(jqXHR.status == 200){
+                         $(that).trigger("possibleRelativesLoaded", {data: data});
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
+                   
                 });
             },
             
@@ -44,8 +52,12 @@ RelativesCorrection.AjaxLoader = (function () {
                     dataType: 'json'
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
-
-                    $(that).trigger("directRelativesLoaded", {data: data});
+                    if(jqXHR.status == 200){
+                        $(that).trigger("directRelativesLoaded", {data: data});
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
+                    
                 });
             },
             
@@ -57,7 +69,11 @@ RelativesCorrection.AjaxLoader = (function () {
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
 
-                    
+                    if(jqXHR.status == 202){
+                        
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
                     
                 });
             },
@@ -70,6 +86,11 @@ RelativesCorrection.AjaxLoader = (function () {
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
 
+                    if(jqXHR.status == 202){
+                        
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
                     
                     
                 });
@@ -83,6 +104,11 @@ RelativesCorrection.AjaxLoader = (function () {
                 }).always(function (data, textStatus, jqXHR) {
                     console.log(data,textStatus, jqXHR);
 
+                    if(jqXHR.status == 202){
+                        
+                    } else {
+                        MessageHelper.showServerCommunicationFailed();
+                    }
                     
                     
                 });

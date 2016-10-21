@@ -47,6 +47,23 @@ MessageHelper = (function () {
           });
     },
     
+    showServerCommunicationFailed = function(){
+        $('#dialog-error .message').text("Es ist ein Fehler bei der Kommunikation mit dem Server aufgetreten.");
+        $('#dialog-error').attr('title', "Fehler");
+        
+        $( "#dialog-error" ).dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+              "Ok": function() {
+                $( this ).dialog( "close" );
+              }
+            }
+          });
+    },
+    
     showYesNoMessage = function(message,title, callbackObj, yesTrigger, noTrigger){
         $('#dialog-yes-no .message').text(message);
         
@@ -79,6 +96,7 @@ MessageHelper = (function () {
     that.showErrorMessage = showErrorMessage;
     that.showInfoMessage = showInfoMessage;
     that.showYesNoMessage = showYesNoMessage;
+    that.showServerCommunicationFailed = showServerCommunicationFailed;
     
     return that;
 })();

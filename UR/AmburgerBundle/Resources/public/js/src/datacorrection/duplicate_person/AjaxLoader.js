@@ -22,8 +22,13 @@ DuplicatePerson.AjaxLoader = (function(){
             dataType: 'json'
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+            if(jqXHR.status == 200){
+                 $(that).trigger("personDataLoaded", [data]);
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("personDataLoaded", [data]);
+           
         });
     },
     
@@ -34,8 +39,14 @@ DuplicatePerson.AjaxLoader = (function(){
             dataType: 'json'
         }).always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+            
+            if(jqXHR.status == 200 || jqXHR.status == 204){
+                 $(that).trigger("duplicatePersonsLoaded", {status: jqXHR.status, data: data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("duplicatePersonsLoaded", {status: jqXHR.status, data: data});
+           
         });
     },
     
@@ -45,7 +56,11 @@ DuplicatePerson.AjaxLoader = (function(){
             url: 'merge/'+duplicateId,
             dataType: 'json'
         }).always(function (data, textStatus, jqXHR) {
-            $(that).trigger("mergeFinished", [jqXHR.status]);
+            if(jqXHR.status == 200 || jqXHR.status == 406){
+                 $(that).trigger("mergeFinished", [jqXHR.status]);
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
         });
     };
 

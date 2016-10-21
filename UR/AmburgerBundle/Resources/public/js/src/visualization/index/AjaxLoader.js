@@ -24,8 +24,13 @@ Index.AjaxLoader = (function(){
         })
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+    
+            if(jqXHR.status == 200){
+                $(that).trigger("idListLoaded", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("idListLoaded", {'data':data});
         });
     },
     
@@ -38,8 +43,12 @@ Index.AjaxLoader = (function(){
         })
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
-
-           $(that).trigger("loadedPersonData", {'persons': data});
+    
+            if(jqXHR.status == 200){
+                $(that).trigger("loadedPersonData", {'persons': data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
         });
     },
     
@@ -51,8 +60,14 @@ Index.AjaxLoader = (function(){
         })
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+    
+            if(jqXHR.status == 200){
+                $(that).trigger("idListLoadedAll", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("idListLoadedAll", {'data':data});
+            
         });
     },
     
@@ -90,7 +105,12 @@ Index.AjaxLoader = (function(){
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
 
-            $(that).trigger("locationsLoaded", {'data':data});
+            if(jqXHR.status == 200){
+                $(that).trigger("locationsLoaded", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
+            
         });
     },
     
@@ -103,8 +123,13 @@ Index.AjaxLoader = (function(){
         })
         .always(function (data, textStatus, jqXHR) {
             console.log(data,textStatus, jqXHR);
+    
+            if(jqXHR.status == 200){
+                $(that).trigger("locationsLoaded", {'data':data});
+            } else {
+                MessageHelper.showServerCommunicationFailed();
+            }
 
-            $(that).trigger("locationsLoaded", {'data':data});
         });
     };
 
