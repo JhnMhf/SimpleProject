@@ -586,7 +586,7 @@ abstract class BaseDataSearcher {
             $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative birth_id IN (?)', $birthIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
@@ -648,7 +648,7 @@ abstract class BaseDataSearcher {
             $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative death_id IN (?)', $deathIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
