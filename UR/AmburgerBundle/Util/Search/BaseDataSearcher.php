@@ -919,7 +919,7 @@ abstract class BaseDataSearcher {
                 array('wedding_locationid'), $locationReferenceId, 
                 array('wedding_territoryid'), $territoryReferenceId, 
                 array('countryid'), $countryReferenceId, 
-                array('wedding_dateid', 'banns_dateid', 'breakup_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('wedding_dateID', 'banns_dateID', 'breakup_dateID', 'proven_dateID'), $possibleDateReferenceIds,
                 array('husband_ID', 'wife_ID'), $personReferenceIds);
         
         
@@ -956,9 +956,13 @@ abstract class BaseDataSearcher {
         $foundOne = false;
         $executeArray = array();
         $typeArray = array();
-          
+
         $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds). " and number of personIdentifiers: ".count($personIdentifier));
-        
+        $this->LOGGER->debug("Number of LocationReferenceId: ".count($locationReferenceId). " and number of locationIdentifiers: ".count($locationIdentifier));
+        $this->LOGGER->debug("Number of TerritoryReferenceId: ".count($territoryReferenceId). " and number of territoryIdentifiers: ".count($territoryIdentifier));
+        $this->LOGGER->debug("Number of CountryReferenceId: ".count($countryReferenceId). " and number of countryIdentifiers: ".count($countryIdentifier));
+        $this->LOGGER->debug("Number of possibleDateReferenceIds: ".count($possibleDateReferenceIds). " and number of dateIdentifiers: ".count($dateIdentifier));
+
         if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
             $this->LOGGER->debug("Adding selection on persons to the query");
             $sql .= $this->buildQueryForIdentifier($personIdentifier);
