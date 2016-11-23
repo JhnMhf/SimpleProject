@@ -498,14 +498,14 @@ abstract class BaseDataSearcher {
                 return array();
             }
             
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
@@ -522,14 +522,14 @@ abstract class BaseDataSearcher {
                 return array();
             }
 
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE baptism_id IN (?)', $baptismIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
@@ -557,20 +557,20 @@ abstract class BaseDataSearcher {
                 return array();
             }
             
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
             
         } else {
-            $baseQuery = "SELECT DISTINCT id FROM birth WHERE ";
+            $baseQuery = "SELECT id FROM birth WHERE ";
             $birthIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
                     array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
                     array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
@@ -583,14 +583,14 @@ abstract class BaseDataSearcher {
             }
 
 
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE birth_id IN (?)', $birthIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
@@ -619,20 +619,20 @@ abstract class BaseDataSearcher {
                 return array();
             }
             
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
             
         } else {
-            $baseQuery = "SELECT DISTINCT id FROM death WHERE ";
+            $baseQuery = "SELECT id FROM death WHERE ";
             $deathIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
                     array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
                     array('territory_of_deathid'), $territoryReferenceId, 
@@ -645,14 +645,14 @@ abstract class BaseDataSearcher {
             }
 
 
-            $personIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+            $personIds = $this->searchPersonBasedOn('SELECT id FROM person WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
             if(!$onlyMainPerson) {
-                $relativeIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+                $relativeIds = $this->searchPersonBasedOn('SELECT id FROM relative WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $relativeIds);
 
-                $partnerIds = $this->searchPersonBasedOn('SELECT DISTINCT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
+                $partnerIds = $this->searchPersonBasedOn('SELECT id FROM partner WHERE death_id IN (?)', $deathIds, $personReferenceIds);
 
                 $personIds = array_merge($personIds, $partnerIds);
             }
@@ -667,7 +667,7 @@ abstract class BaseDataSearcher {
         
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT id FROM person WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+        $sql = "SELECT id FROM person WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('job', $job);
@@ -676,7 +676,7 @@ abstract class BaseDataSearcher {
 
         $personIds = $this->extractIdArray($stmt->fetchAll());
         if(!$onlyMainPerson) {
-            $sql = "SELECT DISTINCT id FROM relative WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+            $sql = "SELECT id FROM relative WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('job', $job);
@@ -687,7 +687,7 @@ abstract class BaseDataSearcher {
         
             $personIds = array_merge($personIds, $relativeIds);
 
-            $sql = "SELECT DISTINCT id FROM partner WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+            $sql = "SELECT id FROM partner WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('job', $job);
@@ -707,7 +707,7 @@ abstract class BaseDataSearcher {
     protected function searchForJobInRoadOfLife($onlyMainPerson,$job){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT person_id FROM road_of_life WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
+        $sql = "SELECT person_id FROM road_of_life WHERE jobid IN (SELECT id FROM job WHERE label LIKE :job)";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('job', $job);
@@ -724,7 +724,7 @@ abstract class BaseDataSearcher {
     protected function searchForJobClassInPerson($onlyMainPerson,$jobClass){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT id FROM person WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+        $sql = "SELECT id FROM person WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('jobClass', $jobClass);
@@ -734,7 +734,7 @@ abstract class BaseDataSearcher {
         $personIds = $this->extractIdArray($stmt->fetchAll());
         
         if(!$onlyMainPerson) {
-            $sql = "SELECT DISTINCT id FROM relative WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+            $sql = "SELECT id FROM relative WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('jobClass', $jobClass);
@@ -745,7 +745,7 @@ abstract class BaseDataSearcher {
         
             $personIds = array_merge($personIds, $relativeIds);
 
-            $sql = "SELECT DISTINCT id FROM partner WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
+            $sql = "SELECT id FROM partner WHERE job_classid IN (SELECT id FROM job_class WHERE label LIKE :jobClass)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('jobClass', $jobClass);
@@ -766,7 +766,7 @@ abstract class BaseDataSearcher {
     protected function searchForNationInPerson($onlyMainPerson,$nation){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT id FROM person WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
+        $sql = "SELECT id FROM person WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
         $stmt = $finalDBManager->getConnection()->prepare($sql);
         
         $stmt->bindValue('nation', $nation);
@@ -776,7 +776,7 @@ abstract class BaseDataSearcher {
         $personIds = $this->extractIdArray($stmt->fetchAll());
         
         if(!$onlyMainPerson) {
-            $sql = "SELECT DISTINCT id FROM relative WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
+            $sql = "SELECT id FROM relative WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('nation', $nation);
@@ -787,7 +787,7 @@ abstract class BaseDataSearcher {
         
             $personIds = array_merge($personIds, $relativeIds);
 
-            $sql = "SELECT DISTINCT id FROM partner WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
+            $sql = "SELECT id FROM partner WHERE nationid IN (SELECT id FROM nation WHERE nation_name LIKE :nation)";
             $stmt = $finalDBManager->getConnection()->prepare($sql);
 
             $stmt->bindValue('nation', $nation);
@@ -805,7 +805,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInEducations($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM education WHERE ";
+        $sql = "SELECT person_id FROM education WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid', 'graduation_locationid'), $locationReferenceId, 
@@ -816,7 +816,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInHonours($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM honour WHERE ";
+        $sql = "SELECT person_id FROM honour WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
@@ -827,7 +827,7 @@ abstract class BaseDataSearcher {
     }
 
     protected function searchInProperties($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM property WHERE ";
+        $sql = "SELECT person_id FROM property WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
@@ -838,7 +838,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInRanks($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM rank WHERE ";
+        $sql = "SELECT person_id FROM rank WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id',$isAndCondition, 
                 array('locationid'), $locationReferenceId, 
@@ -853,7 +853,7 @@ abstract class BaseDataSearcher {
             return array();
         }
         
-        $sql = "SELECT DISTINCT person_id FROM religion WHERE ";
+        $sql = "SELECT person_id FROM religion WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array(), $locationReferenceId, 
@@ -869,7 +869,7 @@ abstract class BaseDataSearcher {
             return array();
         }
         
-        $sql = "SELECT DISTINCT person_id FROM residence WHERE ";
+        $sql = "SELECT person_id FROM residence WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('residence_locationid'), $locationReferenceId, 
@@ -880,7 +880,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInRoadOfLife($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM road_of_life WHERE ";
+        $sql = "SELECT person_id FROM road_of_life WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
@@ -891,7 +891,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInStatus($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM status_information WHERE ";
+        $sql = "SELECT person_id FROM status_information WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
@@ -902,7 +902,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInWorks($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT person_id FROM works WHERE ";
+        $sql = "SELECT person_id FROM works WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
                 array('locationid'), $locationReferenceId, 
@@ -913,7 +913,7 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInWedding($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        $sql = "SELECT DISTINCT id FROM wedding WHERE ";
+        $sql = "SELECT id FROM wedding WHERE ";
         
         $weddingIds =  $this->baseSearchForPerson($sql, 'id', $isAndCondition,
                 array('wedding_locationid'), $locationReferenceId, 
@@ -1038,7 +1038,7 @@ abstract class BaseDataSearcher {
     private function baseSearchInPersonWithInnerQuery($tableName, $fieldName, $baseInnerQuery,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $personIdentifier, $personReferenceIds){
         $finalDBManager = $this->finalDBManager;
 
-        $sql = "SELECT DISTINCT id FROM ".$tableName." WHERE ".$fieldName." IN (".$baseInnerQuery;
+        $sql = "SELECT id FROM ".$tableName." WHERE ".$fieldName." IN (".$baseInnerQuery;
 
         $foundOne = false;
         $executeArray = array();
@@ -1309,7 +1309,7 @@ abstract class BaseDataSearcher {
         $executeArray[] = $referencePersonIds;
         $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
         
-        $sql = "SELECT DISTINCT "+$field+" FROM person WHERE id IN (?)";
+        $sql = "SELECT "+$field+" FROM person WHERE id IN (?)";
 
         $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
@@ -1317,12 +1317,12 @@ abstract class BaseDataSearcher {
         
     
         if(!$onlyMainPersons){
-            $sql = "SELECT DISTINCT "+$field+" FROM relative WHERE id IN (?)";
+            $sql = "SELECT "+$field+" FROM relative WHERE id IN (?)";
 
             $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
             $relativeIds = $this->extractIdArray($stmt->fetchAll(), $field);
 
-            $sql = "SELECT DISTINCT "+$field+" FROM partner WHERE id IN (?)";
+            $sql = "SELECT "+$field+" FROM partner WHERE id IN (?)";
 
             $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
