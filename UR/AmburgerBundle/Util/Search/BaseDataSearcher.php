@@ -1035,92 +1035,6 @@ abstract class BaseDataSearcher {
         return $result;
     }
     
-    private function baseSearchInPersonWithInnerQuery($tableName, $fieldName, $baseInnerQuery,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $personIdentifier, $personReferenceIds){
-        $finalDBManager = $this->finalDBManager;
-
-        $sql = "SELECT id FROM ".$tableName." WHERE ".$fieldName." IN (".$baseInnerQuery;
-
-        $foundOne = false;
-        $executeArray = array();
-        $typeArray = array();
-
-        $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds). " and number of personIdentifiers: ".count($personIdentifier));
-        
-        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
-            $this->LOGGER->debug("Adding selection on persons to the query");
-            $sql .= $this->buildQueryForIdentifier($personIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($personIdentifier); $i++){
-                $executeArray[] = $personReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-             $sql .= " AND ";
-        }
-
-        if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
-            $sql .= $this->buildQueryForIdentifier($locationIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($locationIdentifier); $i++){
-                $executeArray[] = $locationReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-
-        if (count($territoryReferenceId) > 0 && count($territoriyIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= $isAndCondition ? " AND " : " OR ";
-            }
-            $sql .= $this->buildQueryForIdentifier($territoriyIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($territoriyIdentifier); $i++){
-                $executeArray[] = $territoryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-
-        if (count($countryReferenceId) > 0  && count($countryIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= $isAndCondition ? " AND " : " OR ";
-            }
-            $sql .= $this->buildQueryForIdentifier($countryIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($countryIdentifier); $i++){
-                $executeArray[] = $countryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-
-        if (count($possibleDateReferenceIds) > 0 && count($dateIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= $isAndCondition ? " AND " : " OR ";
-            }
-            $sql .= $this->buildQueryForIdentifier($dateIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($dateIdentifier); $i++){
-                $executeArray[] = $possibleDateReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-        
-        //close inner query at this point
-        $sql .=")";
-
-        $this->LOGGER->debug("Using query: " . $sql);
-        
-        $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
-
-        $result = $this->extractIdArray($stmt->fetchAll());
-        
-        $this->finalDBManager->clear();
-        
-        return $result;
-    }
-    
     private function searchPersonBasedOn($baseQuery, $referenceIds, $personReferenceIds = array()){
         $finalDBManager = $this->finalDBManager;
 
@@ -1153,8 +1067,6 @@ abstract class BaseDataSearcher {
         return $result;
     }
 
-
-    
     private function baseSearchWithoutPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $possibleIds = array()){
         $finalDBManager = $this->finalDBManager;
 
@@ -1218,52 +1130,6 @@ abstract class BaseDataSearcher {
             
             for($i = 0; $i < count($dateIdentifier); $i++){
                 $executeArray[] = $possibleDateReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-
-        $this->LOGGER->debug("Using query: " . $sql);
-        
-        $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
-
-        $result = $this->extractIdArray($stmt->fetchAll(), $extractFieldName);
-        
-        $this->finalDBManager->clear();
-        
-        return $result;
-    }
-    
-    
-    private function baseSearchWithInnerQuery($baseOuterQuery, $baseInnerQuery,$extractFieldName, $identifiers, $values, $personIdentifier, $personReferenceIds){
-        $finalDBManager = $this->finalDBManager;
-
-        $sql = $baseOuterQuery ."(".$baseInnerQuery;
-
-        $foundOne = false;
-        $executeArray = array();
-        $typeArray = array();
-
-        if (count($values) > 0 && count($identifiers) > 0) {
-            $sql .= $this->buildQueryForIdentifier($identifiers);
-            
-            for($i = 0; $i < count($identifiers); $i++){
-                $executeArray[] = $values[$i];
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
-        }
-
-        //close inner query at this point
-        $sql .=")";
-        
-        if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= " AND ";
-            }
-            $sql .= $this->buildQueryForIdentifier($personIdentifier);
-            $foundOne = true;
-            
-            for($i = 0; $i < count($personIdentifier); $i++){
-                $executeArray[] = $personReferenceIds;
                 $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
             }
         }
