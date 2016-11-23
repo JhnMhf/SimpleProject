@@ -1298,7 +1298,7 @@ abstract class BaseDataSearcher {
     }
     
     private function getFieldForPersonIds($onlyMainPersons, $field,$referencePersonIds){
-        if(count($personIds) < 0 || $field == ""){
+        if(count($referencePersonIds) < 0 || $field == ""){
             return array();
         }
 
