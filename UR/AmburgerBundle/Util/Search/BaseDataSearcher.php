@@ -913,12 +913,16 @@ abstract class BaseDataSearcher {
     }
     
     protected function searchInWedding($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
+         if(empty($location) && empty($territory) && empty($date) && empty($fromDate) && empty($toDate)){
+            return array();
+        }
+        
         $sql = "SELECT id FROM wedding WHERE ";
         
         $weddingIds =  $this->baseSearchForPerson($sql, 'id', $isAndCondition,
                 array('wedding_locationid'), $location, 
                 array('wedding_territoryid'), $territory, 
-                array('countryid'), $country, 
+                array(), $country, 
                 array('wedding_dateID', 'banns_dateID', 'breakup_dateID', 'proven_dateID'), $date,$fromDate,$toDate,
                 array('husband_ID', 'wife_ID'), $personReferenceIds);
         
