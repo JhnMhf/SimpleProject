@@ -478,8 +478,8 @@ abstract class BaseDataSearcher {
         return $persons;
     }
 
-    protected function searchInBaptism($onlyMainPerson, $isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        if(count($locationReferenceId) == 0 && count($possibleDateReferenceIds) == 0){
+    protected function searchInBaptism($onlyMainPerson, $isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
+        if(empty($location) && empty($date) && empty($fromDate) && empty($toDate)){
             return array();
         }
         
@@ -488,10 +488,10 @@ abstract class BaseDataSearcher {
             
             $baseQuery = "SELECT id FROM baptism WHERE ";
             $baptismIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('baptism_locationid'), $locationReferenceId, 
-                    array(), $territoryReferenceId, 
-                    array(), $countryReferenceId, 
-                    array('baptism_dateid'), $possibleDateReferenceIds,
+                    array('baptism_locationid'), $location, 
+                    array(), $territory, 
+                    array(), $country, 
+                    array('baptism_dateid'),  $date,$fromDate,$toDate,
                     $possibleBaptismIds);
 
             if(count($baptismIds) == 0){
@@ -513,10 +513,10 @@ abstract class BaseDataSearcher {
         } else {
             $baseQuery = "SELECT id FROM baptism WHERE ";
             $baptismIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('baptism_locationid'), $locationReferenceId, 
-                    array(), $territoryReferenceId, 
-                    array(), $countryReferenceId, 
-                    array('baptism_dateid'), $possibleDateReferenceIds);
+                    array('baptism_locationid'), $location, 
+                    array(), $territory, 
+                    array(), $country, 
+                    array('baptism_dateid'), $date,$fromDate,$toDate);
 
             if(count($baptismIds) == 0){
                 return array();
@@ -540,17 +540,17 @@ abstract class BaseDataSearcher {
         return $personIds;
     }
     
-    protected function searchInBirth($onlyMainPerson,$isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInBirth($onlyMainPerson,$isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
 
         if(count($personReferenceIds) > 0){
             $possibleBirthIds = $this->getFieldForPersonIds($onlyMainPerson, 'birth_id', $personReferenceIds);
             
             $baseQuery = "SELECT id FROM birth WHERE ";
             $birthIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                    array('birth_locationid', 'origin_locationid'), $location, 
+                    array('birth_territoryid','origin_territoryid'), $territory, 
+                    array('birth_countryid','origin_countryid'), $country, 
+                    array('birth_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                     $possibleBirthIds);
 
             if(count($birthIds) == 0){
@@ -572,10 +572,10 @@ abstract class BaseDataSearcher {
         } else {
             $baseQuery = "SELECT id FROM birth WHERE ";
             $birthIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds);
+                    array('birth_locationid', 'origin_locationid'), $location, 
+                    array('birth_territoryid','origin_territoryid'), $territory, 
+                    array('birth_countryid','origin_countryid'), $country, 
+                    array('birth_dateid', 'proven_dateid'), $date,$fromDate,$toDate);
 
 
             if(count($birthIds) == 0){
@@ -602,17 +602,17 @@ abstract class BaseDataSearcher {
 
     }
     
-    protected function searchInDeath($onlyMainPerson,$isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInDeath($onlyMainPerson,$isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
               
         if(count($personReferenceIds) > 0){
             $possibleDeathIds = $this->getFieldForPersonIds($onlyMainPerson, 'death_id', $personReferenceIds);
             
-            $baseQuery = "SELECT id FROM birth WHERE ";
+            $baseQuery = "SELECT id FROM death WHERE ";
             $deathIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('birth_locationid', 'origin_locationid'), $locationReferenceId, 
-                    array('birth_territoryid','origin_territoryid'), $territoryReferenceId, 
-                    array('birth_countryid','origin_countryid'), $countryReferenceId, 
-                    array('birth_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                    array('funeral_locationid', 'death_locationid'), $location, 
+                    array('territory_of_deathid'), $territory, 
+                    array('death_countryid'), $country, 
+                    array('funeral_dateid', 'death_dateid'), $date,$fromDate,$toDate,
                     $possibleDeathIds);
 
             if(count($deathIds) == 0){
@@ -634,10 +634,10 @@ abstract class BaseDataSearcher {
         } else {
             $baseQuery = "SELECT id FROM death WHERE ";
             $deathIds = $this->baseSearchWithoutPerson($baseQuery, 'id', $isAndCondition,
-                    array('funeral_locationid', 'death_locationid'), $locationReferenceId, 
-                    array('territory_of_deathid'), $territoryReferenceId, 
-                    array('death_countryid'), $countryReferenceId, 
-                    array('funeral_dateid', 'death_dateid'), $possibleDateReferenceIds);
+                    array('funeral_locationid', 'death_locationid'), $location, 
+                    array('territory_of_deathid'), $territory, 
+                    array('death_countryid'), $country, 
+                    array('funeral_dateid', 'death_dateid'), $date,$fromDate,$toDate);
 
 
             if(count($deathIds) == 0){
@@ -804,122 +804,122 @@ abstract class BaseDataSearcher {
         return $personIds;
     }
     
-    protected function searchInEducations($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInEducations($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM education WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid', 'graduation_locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid', 'graduation_dateid'), $possibleDateReferenceIds,
+                array('locationid', 'graduation_locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid', 'graduation_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInHonours($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInHonours($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM honour WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
 
-    protected function searchInProperties($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInProperties($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM property WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInRanks($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInRanks($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM rank WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id',$isAndCondition, 
-                array('locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'),  $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInReligions($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        if(count($possibleDateReferenceIds) == 0){
+    protected function searchInReligions($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
+        if(empty($date) && empty($fromDate) && empty($toDate)){
             return array();
         }
         
         $sql = "SELECT person_id FROM religion WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array(), $locationReferenceId, 
-                array(), $territoryReferenceId, 
-                array(), $countryReferenceId, 
-                array('from_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array(), $location, 
+                array(), $territory, 
+                array(), $country, 
+                array('from_dateid', 'proven_dateid'),  $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
     
-    protected function searchInResidence($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
-        if(count($locationReferenceId) == 0 && count($territoryReferenceId) == 0 && count($countryReferenceId) == 0){
+    protected function searchInResidence($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
+        if(empty($location) && empty($territory) && empty($country)){
             return array();
         }
         
         $sql = "SELECT person_id FROM residence WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('residence_locationid'), $locationReferenceId, 
-                array('residence_territoryid'), $territoryReferenceId, 
-                array('residence_countryid'), $countryReferenceId, 
-                array(), $possibleDateReferenceIds,
+                array('residence_locationid'), $location, 
+                array('residence_territoryid'), $territory, 
+                array('residence_countryid'), $country, 
+                array(),  $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInRoadOfLife($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInRoadOfLife($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM road_of_life WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid'), $locationReferenceId, 
-                array('origin_territoryid', 'territoryid'), $territoryReferenceId, 
-                array('origin_countryid','countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('origin_territoryid', 'territoryid'), $territory, 
+                array('origin_countryid','countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInStatus($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInStatus($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM status_information WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInWorks($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInWorks($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT person_id FROM works WHERE ";
         
         return $this->baseSearchForPerson($sql, 'person_id', $isAndCondition,
-                array('locationid'), $locationReferenceId, 
-                array('territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('from_dateid', 'to_dateid', 'proven_dateid'), $possibleDateReferenceIds,
+                array('locationid'), $location, 
+                array('territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('from_dateid', 'to_dateid', 'proven_dateid'), $date,$fromDate,$toDate,
                 array('person_id'), $personReferenceIds);
     }
     
-    protected function searchInWedding($isAndCondition,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds, $personReferenceIds = array()) {
+    protected function searchInWedding($isAndCondition,$location, $territory, $country, $date,$fromDate,$toDate, $personReferenceIds = array()) {
         $sql = "SELECT id FROM wedding WHERE ";
         
         $weddingIds =  $this->baseSearchForPerson($sql, 'id', $isAndCondition,
-                array('wedding_locationid'), $locationReferenceId, 
-                array('wedding_territoryid'), $territoryReferenceId, 
-                array('countryid'), $countryReferenceId, 
-                array('wedding_dateID', 'banns_dateID', 'breakup_dateID', 'proven_dateID'), $possibleDateReferenceIds,
+                array('wedding_locationid'), $location, 
+                array('wedding_territoryid'), $territory, 
+                array('countryid'), $country, 
+                array('wedding_dateID', 'banns_dateID', 'breakup_dateID', 'proven_dateID'), $date,$fromDate,$toDate,
                 array('husband_ID', 'wife_ID'), $personReferenceIds);
         
         
@@ -927,19 +927,22 @@ abstract class BaseDataSearcher {
             return array();
         }
         
-        $query = $this->finalDBManager->createQuery('SELECT w.husbandId, w.wifeId FROM NewBundle:Wedding w');
+        $this->LOGGER->debug("Found " . count($weddingIds). " matching wedding Ids.");
+        
+        $stmt = $this->finalDBManager->getConnection()->executeQuery('SELECT husband_ID, wife_ID FROM wedding WHERE id IN (?)', 
+                array($weddingIds), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
 
-        $weddings = $query->getResult();
+        $weddings = $stmt->fetchAll();
         
         $personIds = array();
         
         for($i = 0; $i < count($weddings); $i++){
-            if(!is_null($weddings[$i]['husbandId'])){
-               $personIds[] = $weddings[$i]['husbandId']; 
+            if(!is_null($weddings[$i]['husband_ID'])){
+               $personIds[] = $weddings[$i]['husband_ID']; 
             }
             
-            if(!is_null($weddings[$i]['wifeId'])){
-                $personIds[] = $weddings[$i]['wifeId'];
+            if(!is_null($weddings[$i]['wife_ID'])){
+                $personIds[] = $weddings[$i]['wife_ID'];
             }
         }
         
@@ -948,7 +951,7 @@ abstract class BaseDataSearcher {
         return $personIds;
     }
     
-    private function baseSearchForPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $personIdentifier, $personReferenceIds){
+    private function baseSearchForPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $location, $territoryIdentifier, $territory, $countryIdentifier, $country,$dateIdentifier, $date,$fromDate,$toDate, $personIdentifier, $personReferenceIds){
         $finalDBManager = $this->finalDBManager;
 
         $sql = $baseQuery;
@@ -958,10 +961,10 @@ abstract class BaseDataSearcher {
         $typeArray = array();
 
         $this->LOGGER->debug("Number of PersonReferenceIds: ".count($personReferenceIds). " and number of personIdentifiers: ".count($personIdentifier));
-        $this->LOGGER->debug("Number of LocationReferenceId: ".count($locationReferenceId). " and number of locationIdentifiers: ".count($locationIdentifier));
-        $this->LOGGER->debug("Number of TerritoryReferenceId: ".count($territoryReferenceId). " and number of territoryIdentifiers: ".count($territoryIdentifier));
-        $this->LOGGER->debug("Number of CountryReferenceId: ".count($countryReferenceId). " and number of countryIdentifiers: ".count($countryIdentifier));
-        $this->LOGGER->debug("Number of possibleDateReferenceIds: ".count($possibleDateReferenceIds). " and number of dateIdentifiers: ".count($dateIdentifier));
+        $this->LOGGER->debug("Location: ".$location. " and number of locationIdentifiers: ".count($locationIdentifier));
+        $this->LOGGER->debug("Territory: ".$territory. " and number of territoryIdentifiers: ".count($territoryIdentifier));
+        $this->LOGGER->debug("Country: ".$country. " and number of countryIdentifiers: ".count($countryIdentifier));
+        $this->LOGGER->debug("Date: ".$date."/".$fromDate."-".$toDate. " and number of dateIdentifiers: ".count($dateIdentifier));
 
         if (count($personReferenceIds) > 0 && count($personIdentifier) > 0) {
             $this->LOGGER->debug("Adding selection on persons to the query");
@@ -975,53 +978,48 @@ abstract class BaseDataSearcher {
             $sql .= " AND ";
         }
 
-        if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
-            $sql .= $this->buildQueryForIdentifier($locationIdentifier);
+        if (!empty($location) && count($locationIdentifier) > 0) {
+            $sql .= $this->buildLocationQueryForIdentifier($locationIdentifier);
             $foundOne = true;
             
             for($i = 0; $i < count($locationIdentifier); $i++){
-                $executeArray[] = $locationReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+                $executeArray[] = $location;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($territoryReferenceId) > 0 && count($territoriyIdentifier) > 0) {
+        if (!empty($territory) && count($territoryIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($territoriyIdentifier);
+            $sql .= $this->buildTerritoryQueryForIdentifier($territoryIdentifier);
             $foundOne = true;
             
-            for($i = 0; $i < count($territoriyIdentifier); $i++){
-                $executeArray[] = $territoryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            for($i = 0; $i < count($territoryIdentifier); $i++){
+                $executeArray[] = $territory;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($countryReferenceId) > 0  && count($countryIdentifier) > 0) {
+        if (!empty($country)  && count($countryIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($countryIdentifier);
+            $sql .= $this->buildCountryQueryForIdentifier($countryIdentifier);
             $foundOne = true;
             
             for($i = 0; $i < count($countryIdentifier); $i++){
-                $executeArray[] = $countryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+                $executeArray[] = $country;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($possibleDateReferenceIds) > 0 && count($dateIdentifier) > 0) {
+        if ((!empty($date) || !empty($fromDate) || !empty($toDate)) && count($dateIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($dateIdentifier);
+            $sql .= $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
             $foundOne = true;
-            
-            for($i = 0; $i < count($dateIdentifier); $i++){
-                $executeArray[] = $possibleDateReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
         }
 
         $this->LOGGER->debug("Using query: " . $sql);
@@ -1067,7 +1065,7 @@ abstract class BaseDataSearcher {
         return $result;
     }
 
-    private function baseSearchWithoutPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $locationReferenceId, $territoriyIdentifier, $territoryReferenceId, $countryIdentifier, $countryReferenceId,$dateIdentifier, $possibleDateReferenceIds, $possibleIds = array()){
+    private function baseSearchWithoutPerson($baseQuery,$extractFieldName,$isAndCondition, $locationIdentifier, $location, $territoryIdentifier, $territory, $countryIdentifier, $country,$dateIdentifier, $date,$fromDate,$toDate, $possibleIds = array()){
         $finalDBManager = $this->finalDBManager;
 
         $sql = $baseQuery;
@@ -1085,53 +1083,48 @@ abstract class BaseDataSearcher {
             $sql .= " AND ";
         }
 
-        if (count($locationReferenceId) > 0 && count($locationIdentifier) > 0) {
-            $sql .= $this->buildQueryForIdentifier($locationIdentifier);
+        if (!empty($location) && count($locationIdentifier) > 0) {
+            $sql .= $this->buildLocationQueryForIdentifier($locationIdentifier);
             $foundOne = true;
             
             for($i = 0; $i < count($locationIdentifier); $i++){
-                $executeArray[] = $locationReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+                $executeArray[] = $location;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($territoryReferenceId) > 0 && count($territoriyIdentifier) > 0) {
+        if (!empty($territory) && count($territoryIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($territoriyIdentifier);
+            $sql .= $this->buildTerritoryQueryForIdentifier($territoryIdentifier);
             $foundOne = true;
             
-            for($i = 0; $i < count($territoriyIdentifier); $i++){
-                $executeArray[] = $territoryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+            for($i = 0; $i < count($territoryIdentifier); $i++){
+                $executeArray[] = $territory;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($countryReferenceId) > 0  && count($countryIdentifier) > 0) {
+        if (!empty($country)  && count($countryIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($countryIdentifier);
+            $sql .= $this->buildCountryQueryForIdentifier($countryIdentifier);
             $foundOne = true;
             
             for($i = 0; $i < count($countryIdentifier); $i++){
-                $executeArray[] = $countryReferenceId;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+                $executeArray[] = $country;
+                $typeArray[] = \PDO::PARAM_STR;
             }
         }
 
-        if (count($possibleDateReferenceIds) > 0 && count($dateIdentifier) > 0) {
+        if ((!empty($date) || !empty($fromDate) || !empty($toDate)) && count($dateIdentifier) > 0) {
             if ($foundOne) {
                 $sql .= $isAndCondition ? " AND " : " OR ";
             }
-            $sql .= $this->buildQueryForIdentifier($dateIdentifier);
+            $sql .= $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
             $foundOne = true;
-            
-            for($i = 0; $i < count($dateIdentifier); $i++){
-                $executeArray[] = $possibleDateReferenceIds;
-                $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
-            }
         }
 
         $this->LOGGER->debug("Using query: " . $sql);
@@ -1167,30 +1160,271 @@ abstract class BaseDataSearcher {
         return $sql;
     }
     
+    private function buildLocationQueryForIdentifier($identifierArray){
+        $sql = null;
+        if(count($identifierArray) == 1){
+            $sql = $identifierArray[0]." IN (SELECT id FROM location WHERE location_name LIKE ?)";
+        } else {
+            $sql = "(";
+            
+            for($i = 0; $i < count($identifierArray); $i++){
+                if($i > 0){
+                    $sql .= " OR ";
+                }
+                $sql .= $identifierArray[$i]." IN (SELECT id FROM location WHERE location_name LIKE ?)";
+            }
+            
+            $sql .= ")";
+        }
+        
+        $this->LOGGER->debug("Using identifierSQL: '".$sql."'");
+        
+        return $sql;
+    }
+    
+    private function buildTerritoryQueryForIdentifier($identifierArray){
+        $sql = null;
+        if(count($identifierArray) == 1){
+            $sql = $identifierArray[0]." IN (SELECT id FROM territory WHERE territory_name LIKE ?)";
+        } else {
+            $sql = "(";
+            
+            for($i = 0; $i < count($identifierArray); $i++){
+                if($i > 0){
+                    $sql .= " OR ";
+                }
+                $sql .= $identifierArray[$i]." IN (SELECT id FROM territory WHERE territory_name LIKE ?)";
+            }
+            
+            $sql .= ")";
+        }
+        
+        $this->LOGGER->debug("Using identifierSQL: '".$sql."'");
+        
+        return $sql;
+    }
+    
+    private function buildCountryQueryForIdentifier($identifierArray){
+        $sql = null;
+        if(count($identifierArray) == 1){
+            $sql = $identifierArray[0]." IN (SELECT id FROM country WHERE country_name LIKE ?)";
+        } else {
+            $sql = "(";
+            
+            for($i = 0; $i < count($identifierArray); $i++){
+                if($i > 0){
+                    $sql .= " OR ";
+                }
+                $sql .= $identifierArray[$i]." IN (SELECT id FROM country WHERE country_name LIKE ?)";
+            }
+            
+            $sql .= ")";
+        }
+        
+        $this->LOGGER->debug("Using identifierSQL: '".$sql."'");
+        
+        return $sql;
+    }
+    
+    private function buildDateQueryForIdentifier($identifierArray, $date, $fromDate, $toDate){
+        
+        $dateQuery = $this->buildInternalQueryForDate($date, $fromDate, $toDate);
+        
+        $this->LOGGER->debug("Using internalDateQuery: '".$dateQuery."'");
+        
+        $sql = null;
+        if(count($identifierArray) == 1){
+            $sql = $identifierArray[0]." IN (".$dateQuery.")";
+        } else {
+            $sql = "(";
+            
+            for($i = 0; $i < count($identifierArray); $i++){
+                if($i > 0){
+                    $sql .= " OR ";
+                }
+                $sql .= $identifierArray[$i]." IN (".$dateQuery.")";
+            }
+            
+            $sql .= ")";
+        }
+        
+        $this->LOGGER->debug("Using identifierSQL: '".$sql."'");
+        
+        return $sql;
+    }
+    
+    private function buildInternalQueryForDate($date, $fromDate, $toDate){
+        if (!empty($date)) {
+            return $this->buildInternalQueryBasedOnDate($date);
+        } else if (!empty($fromDate) && !empty($toDate)) {
+            return $this->buildInternalQueryOnDateRange($fromDate, $toDate);
+        }
+        
+        return "";
+    }
+    
+    protected function buildInternalQueryBasedOnDate($date){
+        $parts = explode(".", $date);
+        
+        if(count($parts) != 3){
+            return "";
+        }
+        
+        $day = !empty($parts[0]) ? $parts[0] : null;
+        $month = !empty($parts[1]) ? $parts[1] : null;
+        $year = !empty($parts[2]) ? $parts[2] : null;
+        
+        if(!is_null($year)){
+            if(!is_null($month)){
+                if(!is_null($day)){
+                    return "SELECT id FROM date_information WHERE year_value = ".$year." AND month_value = ".$month." AND day_value = ".$day;
+                } else {
+                    return "SELECT id FROM date_information WHERE year_value = ".$year." AND month_value = ".$month."";
+                }
+            } else {
+                if(!is_null($day)){
+                    return "SELECT id FROM date_information WHERE year_value = ".$year." AND day_value = ".$day;
+                } else {
+                    return "SELECT id FROM date_information WHERE year_value = ".$year;
+                }
+            }
+        } else {
+            if(!is_null($month)){
+                if(!is_null($day)){
+                    return "SELECT id FROM date_information WHERE month_value = ".$month." AND day_value = ".$day;
+                } else {
+                    return "SELECT id FROM date_information WHERE month_value = ".$month;
+
+                }
+            } else {
+                if(!is_null($day)){
+                    return "SELECT id FROM date_information WHERE day_value = ".$day;
+                } else {
+                   //should never happen
+                }
+            }
+        }
+        
+        return "";
+    }
+    
+    protected function buildInternalQueryOnDateRange($fromDate, $toDate){
+        $fromParts = explode(".", $fromDate);
+        $fromDay = !empty($fromParts[0]) ? $fromParts[0] : null;
+        $fromMonth = !empty($fromParts[1]) ? $fromParts[1] : null;
+        $fromYear = !empty($fromParts[2]) ? $fromParts[2] : null;
+        
+        $toParts = explode(".", $toDate);
+        $toDay = !empty($toParts[0]) ? $toParts[0] : null;
+        $toMonth = !empty($toParts[1]) ? $toParts[1] : null;
+        $toYear = !empty($toParts[2]) ? $toParts[2] : null;
+        
+        if(count($fromParts) != 3 || count($toParts) != 3){
+            return "";
+        }
+        
+        $fromQueryPart = $this->buildInternalFromDateQuery($fromYear, $fromMonth, $fromDay);
+        $toQueryPart = $this->buildInternalToDateQuery($toYear, $toMonth, $toDay);
+
+        if(!empty($fromQueryPart) && !empty($toQueryPart)){
+            return "SELECT id FROM date_information WHERE ".$fromQueryPart. " AND ". $toQueryPart;
+        } else if(!empty($fromQueryPart)){
+            return "SELECT id FROM date_information WHERE ".$fromQueryPart;
+        } else if(!empty($toQueryPart)){
+            return "SELECT id FROM date_information WHERE ".$toQueryPart;
+        }
+        
+        return "";
+    }
+    
+    private function buildInternalFromDateQuery($fromYear, $fromMonth, $fromDay){
+        if(!is_null($fromYear)){
+            if(!is_null($fromMonth)){
+                if(!is_null($fromDay)){
+                    return "(year_value > ".$fromYear." OR (year_value = ".$fromYear." AND (month_value > ".$fromMonth." OR (month_value = ".$fromMonth." AND day_value >= ".$fromDay."))))";
+                } else {
+                    return "(year_value > ".$fromYear." OR (year_value = ".$fromYear." AND month_value >= ".$fromMonth."))";
+                }
+            } else {
+                if(!is_null($fromDay)){
+                    return "(year_value > ".$fromYear." OR (year_value = ".$fromYear." AND day_value >= ".$fromDay."))";
+                } else {
+                    return "(year_value >= ".$fromYear.")";
+                }
+            }
+        } else {
+            if(!is_null($fromMonth)){
+                if(!is_null($fromDay)){
+                    return "(month_value > ".$fromMonth." OR (month_value = ".$fromMonth." AND day_value >= ".$fromDay."))";
+                } else {
+                    return "(month_value >= ".$fromMonth.")";
+                }
+            } else {
+                if(!is_null($fromDay)){
+                   return "(day_value >= ".$fromDay.")";
+                } else {
+                   return "";
+                }
+            }
+        }
+    }
+    
+    private function buildInternalToDateQuery($toYear, $toMonth, $toDay){
+        if(!is_null($toYear)){
+            if(!is_null($toMonth)){
+                if(!is_null($toDay)){
+                    return "(year_value < ".$toYear." OR (year_value = ".$toYear." AND (month_value < ".$toMonth." OR (month_value = ".$toMonth." AND day_value <= ".$toDay."))))";
+                } else {
+                    return "(year_value < ".$toYear." OR (year_value = ".$toYear." AND month_value <= ".$toMonth."))";
+                }
+            } else {
+                if(!is_null($toDay)){
+                    return "(year_value < ".$toYear." OR (year_value = ".$toYear." AND day_value <= ".$toDay."))";
+                } else {
+                    return "(year_value <= ".$toYear.")";
+                }
+            }
+        } else {
+            if(!is_null($toMonth)){
+                if(!is_null($toDay)){
+                    return "(month_value < ".$toMonth." OR (month_value = ".$toMonth." AND day_value <= ".$toDay."))";
+                } else {
+                    return "(month_value <= ".$toMonth.")";
+                }
+            } else {
+                if(!is_null($toDay)){
+                   return "(day_value <= ".$toDay.")";
+                } else {
+                   return "";
+                }
+            }
+        }
+    }
+    
     private function getFieldForPersonIds($onlyMainPersons, $field,$referencePersonIds){
         if(count($referencePersonIds) < 0 || $field == ""){
             return array();
         }
 
-        $executeArray[] = $referencePersonIds;
-        $typeArray[] = \Doctrine\DBAL\Connection::PARAM_INT_ARRAY;
+        $executeArray = array($referencePersonIds);
+        $typeArray = array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
         
-        $sql = "SELECT "+$field+" FROM person WHERE id IN (?)";
+        $sql = "SELECT ".$field." FROM person WHERE id IN (?)";
 
-        $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+        $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray,$typeArray);
 
         $personIds = $this->extractIdArray($stmt->fetchAll(), $field);
         
     
         if(!$onlyMainPersons){
-            $sql = "SELECT "+$field+" FROM relative WHERE id IN (?)";
+            $sql = "SELECT ".$field." FROM relative WHERE id IN (?)";
 
-            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray,$typeArray);
             $relativeIds = $this->extractIdArray($stmt->fetchAll(), $field);
 
-            $sql = "SELECT "+$field+" FROM partner WHERE id IN (?)";
+            $sql = "SELECT ".$field." FROM partner WHERE id IN (?)";
 
-            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
+            $stmt = $this->finalDBManager->getConnection()->executeQuery($sql, $executeArray,$typeArray);
 
             $partnerIds = $this->extractIdArray($stmt->fetchAll(), $field);
             

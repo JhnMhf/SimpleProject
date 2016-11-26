@@ -65,27 +65,27 @@ class NoQueryStringSearcher extends BaseDataSearcher {
             return array();
         }
 
-        $personIds = $this->searchInEducations(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds);
-        $personIds = array_merge($personIds,$this->searchInHonours(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInProperties(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInRanks(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInReligions(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInResidence(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInRoadOfLife(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInStatus(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInWorks(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
-        $personIds = array_merge($personIds,$this->searchInWedding(true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        $personIds = $this->searchInEducations(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds);
+        $personIds = array_merge($personIds,$this->searchInHonours(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInProperties(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInRanks(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInReligions(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInResidence(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInRoadOfLife(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInStatus(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInWorks(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInWedding(true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
         
         //baptism, birth, death
-        $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInBaptism($onlyMainPersons,true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
         
         $this->LOGGER->debug("After searching baptism found " . count($personIds) . " persons.");
         
-        $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInBirth($onlyMainPersons,true,$location, $territory, $country, $date,$fromDate,$toDate,$matchingPersonIds));
         
         $this->LOGGER->debug("After searching birth found " . count($personIds) . " persons.");
         
-        $personIds = array_merge($personIds,$this->searchInDeath($onlyMainPersons,true,$locationReferenceId, $territoryReferenceId, $countryReferenceId, $possibleDateReferenceIds,$matchingPersonIds));
+        $personIds = array_merge($personIds,$this->searchInDeath($onlyMainPersons,true,$location, $territoryReferenceId, $country, $date,$fromDate,$toDate,$matchingPersonIds));
         
         $this->LOGGER->debug("Found possible duplicate " . count($personIds) . " persons.");
         
