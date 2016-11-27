@@ -47,7 +47,7 @@ class MixedSearcher extends BaseDataSearcher {
         }
 
         $intersectedPersonIds = array_intersect($personIdsOne, $personIdsTwo);
-        
+     
         sort($intersectedPersonIds);
         
         return $intersectedPersonIds;

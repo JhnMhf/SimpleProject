@@ -940,13 +940,25 @@ abstract class BaseDataSearcher {
         
         $personIds = array();
         
-        for($i = 0; $i < count($weddings); $i++){
-            if(!is_null($weddings[$i]['husband_ID'])){
-               $personIds[] = $weddings[$i]['husband_ID']; 
+        if(count($personReferenceIds) > 0){
+            for($i = 0; $i < count($weddings); $i++){
+                if(!is_null($weddings[$i]['husband_ID']) && in_array($weddings[$i]['husband_ID'], $personReferenceIds)){
+                   $personIds[] = $weddings[$i]['husband_ID']; 
+                }
+
+                if(!is_null($weddings[$i]['wife_ID']) && in_array($weddings[$i]['wife_ID'], $personReferenceIds)){
+                    $personIds[] = $weddings[$i]['wife_ID'];
+                }
             }
-            
-            if(!is_null($weddings[$i]['wife_ID'])){
-                $personIds[] = $weddings[$i]['wife_ID'];
+        } else {
+            for($i = 0; $i < count($weddings); $i++){
+                if(!is_null($weddings[$i]['husband_ID'])){
+                   $personIds[] = $weddings[$i]['husband_ID']; 
+                }
+
+                if(!is_null($weddings[$i]['wife_ID'])){
+                    $personIds[] = $weddings[$i]['wife_ID'];
+                }
             }
         }
         

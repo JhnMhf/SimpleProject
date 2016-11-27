@@ -89,6 +89,13 @@ class SearchUtil {
     
     public function search($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate){
         
+        $this->getLogger()->info(sprintf("Searching with the parameters: "
+                . "onlyMainPersons=%s, lastName=%s, firstName=%s, patronym=%s, "
+                . "location=%s, territory=%s, country=%s, date=%s, fromDate=%s, "
+                . "toDate=%s", $onlyMainPersons, $lastName, $firstName, 
+                $patronym, $location, $territory, $country, $date, $fromDate, 
+                $toDate));
+        
         for($i = 0; $i < count($this->searcherStrategies); $i++){
             $searcher = $this->searcherStrategies[$i];
             if($searcher->isApplicable($queryString, $onlyMainPersons, $lastName, $firstName, $patronym, $location, $territory, $country, $date, $fromDate, $toDate)){
