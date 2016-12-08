@@ -1735,7 +1735,7 @@ class OldPersonLoader {
         
         $father = $dbData[0];
         
-        $sql = "SELECT vornamen,  name"
+        $sql = "SELECT vornamen,  name "
                 . "FROM `mutter` WHERE ID=:personID AND `order`= :order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1815,7 +1815,7 @@ class OldPersonLoader {
         
         $marriagePartner = $dbData[0];
         
-        $sql = "SELECT vornamen, name
+        $sql = "SELECT vornamen, name 
             FROM `geschwister` WHERE ID=:personID AND `order`= :order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1839,7 +1839,7 @@ class OldPersonLoader {
     
     private function loadWeddingDataForPartner($oldPersonID, $order){
         $sql = "SELECT aufgebot, verheiratet,  hochzeitstag, hochzeitsort, hochzeitsterritorium, 
-                    auflösung, gelöst, `vorher-nachher`
+                    auflösung, gelöst, `vorher-nachher` 
                 FROM `ehepartner`  WHERE ID=:personID AND `order`= :order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1855,7 +1855,7 @@ class OldPersonLoader {
         
         $marriagePartner = $dbData[0];
         
-        $sql = "SELECT vornamen, name
+        $sql = "SELECT vornamen, name 
             FROM `person` WHERE ID=:personID";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1874,7 +1874,7 @@ class OldPersonLoader {
         $weddingsData[] = $this->createWeddingObj($person['vornamen'], $person['name'], $marriagePartner['aufgebot'], $marriagePartner['verheiratet'], $marriagePartner['hochzeitstag'], $marriagePartner['hochzeitsort'],$marriagePartner['hochzeitsterritorium'],$marriagePartner['auflösung'], $marriagePartner['gelöst'],$marriagePartner['vorher-nachher']);
         
         $sql = "SELECT vornamen, name,`vorher-nachher`, aufgebot, 
-        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, 
+        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst 
         FROM `anderer_partner` WHERE ID=:personID AND `order`=:order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1937,7 +1937,7 @@ class OldPersonLoader {
         
         $marriagePartner = $dbData[0];
         
-        $sql = "SELECT vornamen, name
+        $sql = "SELECT vornamen, name 
             FROM `kind` WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -1957,7 +1957,7 @@ class OldPersonLoader {
         $weddingsData = array();
         $weddingsData[] = $this->createWeddingObj($child['vornamen'], $child['name'], $partner['aufgebot'], $partner['verheiratet'], $partner['hochzeitstag'], $partner['hochzeitsort'],null,$partner['auflösung'], $partner['gelöst']);
         
-        $sql = "SELECT vornamen, name, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
+        $sql = "SELECT vornamen, name, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung 
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -2020,7 +2020,7 @@ class OldPersonLoader {
     
     private function loadWeddingDataForOtherPartnerOfChild($oldMainPersonID, $order, $order2, $order3, $order4){
 
-        $sql = "SELECT `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
+        $sql = "SELECT `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung 
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3 AND `order4` = :order4";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -2066,7 +2066,7 @@ class OldPersonLoader {
     
     private function loadWeddingDataForOtherPartner($oldMainPersonID, $order, $order2){
         $sql = "SELECT `vorher-nachher`, aufgebot, 
-        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, 
+        verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst 
         FROM `anderer_partner` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
@@ -2126,7 +2126,7 @@ class OldPersonLoader {
         
         $otherPartner = $dbData[0];
         
-        $sql = "SELECT vornamen,  name"
+        $sql = "SELECT vornamen,  name "
                 . "FROM `mutter` WHERE ID=:personID AND `order`= :order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
