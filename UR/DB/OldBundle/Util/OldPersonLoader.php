@@ -1779,7 +1779,7 @@ class OldPersonLoader {
                 hochzeitstag, hochzeitsort, auflösung, `vorher-nachher`
             FROM `ehepartner_des_geschwisters` WHERE ID=:personID AND `order`= :order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
@@ -1801,7 +1801,7 @@ class OldPersonLoader {
                 hochzeitstag, hochzeitsort, auflösung, `vorher-nachher`
             FROM `ehepartner_des_geschwisters` WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1818,7 +1818,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name
             FROM `geschwister` WHERE ID=:personID AND `order`= :order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
@@ -1842,7 +1842,7 @@ class OldPersonLoader {
                     auflösung, gelöst, `vorher-nachher`
                 FROM `ehepartner`  WHERE ID=:personID AND `order`= :order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
@@ -1858,7 +1858,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name
             FROM `person` WHERE ID=:personID";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->execute();
 
@@ -1877,7 +1877,7 @@ class OldPersonLoader {
         verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, 
         FROM `anderer_partner` WHERE ID=:personID AND `order`=:order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
@@ -1898,7 +1898,7 @@ class OldPersonLoader {
         FROM `ehepartner_des_kindes` 
         WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1922,7 +1922,7 @@ class OldPersonLoader {
         FROM `ehepartner_des_kindes` 
         WHERE ID=:personID AND `order`= :order AND `order2` = :order2 AND `order3` = :order3";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1940,7 +1940,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name
             FROM `kind` WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1960,7 +1960,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1981,7 +1981,7 @@ class OldPersonLoader {
         $sql = "SELECT hochzeitsort 
             FROM `schwiegervater` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -1998,7 +1998,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name 
             FROM `schwiegermutter` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -2023,7 +2023,7 @@ class OldPersonLoader {
         $sql = "SELECT `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung, 
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3 AND `order4` = :order4";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -2042,7 +2042,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name 
             FROM `ehepartner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -2069,7 +2069,7 @@ class OldPersonLoader {
         verheiratet, hochzeitstag, hochzeitsort, auflösung, gelöst, 
         FROM `anderer_partner` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
@@ -2086,7 +2086,7 @@ class OldPersonLoader {
         $sql = "SELECT vornamen, name 
             FROM `ehepartner` WHERE ID=:personID AND `order`=:order";
 
-        $stmt = $oldDBManager->getConnection()->prepare($sql);
+        $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
         $stmt->bindValue('personID', $oldPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
