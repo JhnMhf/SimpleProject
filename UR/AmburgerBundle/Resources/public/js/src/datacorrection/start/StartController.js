@@ -37,7 +37,7 @@ Start.StartController = (function(){
     
     nextPersonClicked = function(event){
         console.log("nextPersonClicked");
-        ajaxLoader.nextPerson();
+        ajaxLoader.loadNextPerson();
     },
     
     selectedPersonByIDClicked = function(event, id){

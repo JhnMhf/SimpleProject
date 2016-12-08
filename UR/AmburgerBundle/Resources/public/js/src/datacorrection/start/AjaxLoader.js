@@ -12,7 +12,8 @@ Start.AjaxLoader = (function () {
 
                 return that;
             },
-            nextPerson = function () {
+            loadNextPerson = function () {
+                console.log("loadNextPerson");
                 $.ajax({
                     type: "GET",
                     url: 'next',
@@ -86,7 +87,7 @@ Start.AjaxLoader = (function () {
     that.init = init;
     that.checkPersonByID = checkPersonByID;
     that.checkPersonByOID = checkPersonByOID;
-    that.nextPerson = nextPerson;
+    that.loadNextPerson = loadNextPerson;
     that.startWork = startWork;
     return that;
 })();
