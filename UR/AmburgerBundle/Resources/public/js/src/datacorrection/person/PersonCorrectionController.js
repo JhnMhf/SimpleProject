@@ -11,6 +11,9 @@ PersonCorrection.PersonCorrectionController = (function(){
     /* Controllers */
     ajaxLoader = null,
     
+    personDataLoaded = false,
+    weddingLoaded = false,
+    
     /* 
         Initialises the object and sets default values.
     */
@@ -55,11 +58,8 @@ PersonCorrection.PersonCorrectionController = (function(){
         console.log("FinalPerson", finalPerson);
         finalPersonView.displayPerson(finalPerson);
         
-        
-        //removeUnusedRows();
-        alignRowsOfTheSameType();
-        collapse();
-        personCorrectionView.hideLoader();
+        personDataLoaded = true;
+        checkIfLoadingFinished();
     },
     
     removeUnusedRows = function(){
@@ -138,6 +138,21 @@ PersonCorrection.PersonCorrectionController = (function(){
         newPersonView.displayWeddings(newWeddings);
         console.log("FinalPerson", finalWeddings);
         finalPersonView.displayWeddings(finalWeddings);
+        
+        weddingLoaded = true;
+        checkIfLoadingFinished();
+    },
+    
+    checkIfLoadingFinished = function(){
+        console.log("PersonData loaded: ",personDataLoaded," Weddingdata loaded: ",weddingLoaded);
+        if(weddingLoaded && personDataLoaded){
+            console.log("Loading finished");
+            //removeUnusedRows();
+            alignRowsOfTheSameType();
+            collapse();
+            personCorrectionView.hideLoader();
+        }
+        
     },
     
     onSave = function(){
