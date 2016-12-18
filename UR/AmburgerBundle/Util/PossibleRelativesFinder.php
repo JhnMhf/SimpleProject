@@ -459,7 +459,7 @@ class PossibleRelativesFinder {
             $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
             $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
             
-            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+            for($j = 0; $j < count($childrenOfParentEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
@@ -483,7 +483,7 @@ class PossibleRelativesFinder {
             $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
             $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($siblingEntries[$i]);
             
-            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+            for($j = 0; $j < count($parentOfSiblingEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
                         && !in_array($secondRelativeId, $parentEntries)
@@ -506,7 +506,7 @@ class PossibleRelativesFinder {
             $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
             $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
             
-            for($j = 0; $j < count($childrenOfParentEntries); $i++){
+            for($j = 0; $j < count($childrenOfParentEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
@@ -528,9 +528,9 @@ class PossibleRelativesFinder {
 
         for($i = 0; $i < count($childrenEntries); $i++){
             $relativeId = $this->getRelativeId($ID, $childrenEntries[$i]);
-            $parentOfSiblingEntries = $em->getRepository('NewBundle:Wedding')->loadParents($childrenEntries[$i]);
+            $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($childrenEntries[$i]);
             
-            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
+            for($j = 0; $j < count($parentOfSiblingEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
                         && !in_array($secondRelativeId, $partnerEntries)
