@@ -249,6 +249,10 @@ input.form-control {
     display:inline-block;
 }
 
+.higher-row {
+    cursor: pointer;
+}
+
 .duplicate .higher-row {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -322,4 +326,20 @@ input.form-control {
 
 .person-save-button-container {
     margin-top: 40px;
+}
+
+#save-button, #next-button,.end-correction{
+    background-color: #228B22;
+}
+
+.description-text {
+    font-size: 20px;
+}
+
+.unchangeable {
+    color: red;
+}
+
+.changeable {
+    color: #228B22;
 }

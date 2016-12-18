@@ -193,11 +193,22 @@ PersonCorrection.PersonCorrectionController = (function(){
     },
     
     onSentGNDRequest = function(event, searchTerm){
-        ajaxLoader.sendGNDRequest(searchTerm);
+        if(searchTerm != ""){
+            ajaxLoader.sendGNDRequest(searchTerm);
+        } else {
+            MessageHelper.showInfoMessage("Das Textfeld muss für eine GND-Abfrage befüllt sein.");
+        }
+        
     },
     
     onGNDRequestFinished = function(event, result){
-        finalPersonView.displayGNDResult(result['results']);
+        if(result.length > 0){
+            finalPersonView.displayGNDResult(result['results']);
+        } else {
+            MessageHelper.showInfoMessage("Es wurden keine GND-Ergebnisse gefunden.");
+        }
+        
+        
     };
 
 

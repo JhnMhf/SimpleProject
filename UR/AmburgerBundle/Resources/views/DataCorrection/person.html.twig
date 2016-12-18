@@ -3,14 +3,14 @@
     <div class="row person-top-row">
         <div class="large-12 columns center">
             <h2>Korrektur der Personendaten</h2>
-            <p>Korrigieren Sie die angegebenen Personendaten und Speichern Sie!</p>
+            <p class="description-text">Korrigieren Sie die angegebenen Personendaten und Speichern Sie!</p>
         </div>
     </div>
     
      <div class="row">
         <div class="large-3 columns" id="old">
             <h3>Alter Datensatz</h3>
-            <p>-unveränderbar-</p>
+            <p class="unchangeable">-unveränderbar-</p>
                 <div class="base-person-container collapsible higher-row">
                     <h4 class="header">
                         Personendaten
@@ -91,7 +91,7 @@
          </div>
         <div class="large-3 columns" id="new">
             <h3>Normalisierter Datensatz</h3>
-            <p>-unveränderbar-</p>
+            <p class="unchangeable">-unveränderbar-</p>
                 <div class="base-person-container collapsible higher-row">
                     <h4 class="header">
                         Personendaten
@@ -172,7 +172,7 @@
          </div>
         <div class="large-3 columns" id="final">
             <h3>Neuer Datenbank-Eintrag</h3>
-            <p>-veränderbar-</p>
+            <p class="changeable">-veränderbar-</p>
                 <div class="base-person-container collapsible higher-row">
                     <h4 class="header">
                         Personendaten
@@ -255,7 +255,7 @@
         <div class="large-5 columns">
         </div>
         <div class="large-2 columns">
-            <button id="save-button" class="round button" type="submit">Speichern</button>
+            <button id="save-button" class="round button large" type="submit">Speichern</button>
         </div>
         <div class="large-5 columns">
         </div>
@@ -319,7 +319,7 @@
                         <option value="2" <%= gender == '2' ?  'selected' : '' %>>Weiblich</option>
                     </select>
                 </label>
-                <label>Geschlechtskommentar
+                <label>Kommentar Geschlecht:
                     <input type="text" name="genderComment" value="<%= typeof(gender_comment) !== 'undefined' ?  gender_comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
                 </label>
                 <label>ehelich<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
@@ -371,7 +371,7 @@
                         
                         <%= nationTemplate(array) %>
                 </label>
-                <label>Kommentar:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Persondaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
 
         </div>
     </script>
@@ -388,11 +388,11 @@
                 <label>Rufname<input type="text" name="foreName"  value="<%= typeof(fore_name) !== 'undefined' ?  fore_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsname<input type="text" name="birthName" value="<%= typeof(birth_name) !== 'undefined' ?  birth_name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geschlecht<input type="text" name="oid" value="<%= typeof(gender) !== 'undefined' ?  gender : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>ehelig<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>ehelich<input type="text" name="bornInMarriage" value="<%= typeof(born_in_marriage) !== 'undefined' ?  born_in_marriage : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Job<input type="text" name="job" value="<%= typeof(job) !== 'undefined' ?  job : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Jobklasse<input type="text" name="jobclass" value="<%= typeof(jobclass) !== 'undefined' ?  jobclass : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Nation<input type="text" name="nation" value="<%= typeof(nation) !== 'undefined' ?  nation : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Kommentar Person:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Persondaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
     <script type="text/template" id="baptism">
@@ -586,7 +586,7 @@
                         
                         <%= dateReferenceTemplate(array) %>
                 </label>
-                <label>Kommentar Geburt:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Geburtsdaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
     
@@ -601,7 +601,7 @@
                 <label>Geburtsort<input type="text" name="birthLocation" value="<%= typeof(birth_location) !== 'undefined' ?  birth_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsdatum<input type="text" name="birthDate" value="<%= typeof(birth_date) !== 'undefined' ?  birth_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Belegt<input type="text" name="provenDate" value="<%= typeof(proven_date) !== 'undefined' ?  proven_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Kommentar Geburt:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Geburtsdaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
     
@@ -720,7 +720,7 @@
                     <%  } %>
                 </label>
         
-                <label>Kommentar Tod:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Todesdaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
 
@@ -736,7 +736,7 @@
                 <label>Friedhof<input type="text" name="graveyard" value="<%= typeof(graveyard) !== 'undefined' ?  graveyard : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Begräbnisort<input type="text" name="funeralLocation" value="<%= typeof(funeral_location) !== 'undefined' ?  funeral_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Begräbnisdatum<input type="text" name="funeralDate" value="<%= typeof(funeral_date) !== 'undefined' ?  funeral_date : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Kommentar Tod:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Todesdaten:<input type="text" name="comment" value="<%= typeof(comment) !== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     </script>
     
@@ -892,7 +892,7 @@
                             <%= locationTemplate(array) %>
   
                         </label>
-                        <label>Kommentar Ausbildung:<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Kommentar Ausbildungsdaten:<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 </div>
         <% }); %>
     </script>
@@ -915,7 +915,7 @@
                         <label>Abschluss<input type="text" name="graduationLabel" value="<%= typeof(educationObj['graduation_label']) !== 'undefined' ? educationObj['graduation_label'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label>Abschlussdatum<input type="text" name="graduationDate" value="<%= typeof(educationObj['graduation_date']) !== 'undefined' ?  educationObj['graduation_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                         <label>Abschlussort<input type="text" name="graduationLocation" value="<%= typeof(educationObj['graduation_location']) !== 'undefined' ?  educationObj['graduation_location'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                        <label>Kommentar Ausbildung:<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                        <label>Kommentar Ausbildungsdaten:<input type="text" name="comment" value="<%= typeof(educationObj['comment']) !== 'undefined' ? educationObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 </div>
         <% }); %>
     </script>
@@ -1036,7 +1036,7 @@
 
                 <%  } %>
             </label>
-            <label>Kommentar Ehre:<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar Ehren:<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
     </script>
@@ -1056,7 +1056,7 @@
                 <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(honourObj['from_date']) !== 'undefined' ?  honourObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(honourObj['to_date']) !== 'undefined' ?  honourObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(honourObj['proven_date']) !== 'undefined' ?  honourObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
-                <label>Kommentar Ehre:<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Ehren:<input type="text" name="comment" value="<%= typeof(honourObj['comment']) !== 'undefined' ? honourObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
     </script>
@@ -1177,7 +1177,7 @@
 
                 <%  } %>
             </label>
-            <label>Kommentar Eigentum:<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar Besitz:<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
     </script>
@@ -1197,7 +1197,7 @@
                 <label class="from-date">von<input type="text" name="fromDate" value="<%= typeof(propertyObj['from_date']) !== 'undefined' ?  propertyObj['from_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="to-date">bis<input type="text" name="toDate" value="<%= typeof(propertyObj['to_date']) !== 'undefined' ?  propertyObj['to_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(propertyObj['proven_date']) !== 'undefined' ?  propertyObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
-                <label>Kommentar Eigentum:<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Kommentar Besitz:<input type="text" name="comment" value="<%= typeof(propertyObj['comment']) !== 'undefined' ? propertyObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
     <% }); %>
     </script>
@@ -2109,7 +2109,7 @@
             </label>
             <label>Hochzeitskommentar<input type="text" name="weddingComment" value="<%= typeof(weddingObj['wedding_comment']) !== 'undefined' ? weddingObj['wedding_comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             <label>Davor/Danach<input type="text" name="beforeAfter" value="<%= typeof(weddingObj['before_after']) !== 'undefined' ? weddingObj['before_after'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-            <label>Kommentar Hochzeit:<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar Hochzeiten:<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         
         </div>
         <% }); %>
@@ -2138,7 +2138,7 @@
             <label class="proven-date">belegt<input type="text" name="provenDate" value="<%= typeof(weddingObj['proven_date']) !== 'undefined' ?  weddingObj['proven_date'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>     
             <label>Hochzeitskommentar<input type="text" name="weddingComment" value="<%= typeof(weddingObj['wedding_comment']) !== 'undefined' ? weddingObj['wedding_comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
             <label>Davor/Danach<input type="text" name="beforeAfter" value="<%= typeof(weddingObj['before_after']) !== 'undefined' ? weddingObj['before_after'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-            <label>Kommentar Hochzeit:<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+            <label>Kommentar Hochzeiten:<input type="text" name="comment" value="<%= typeof(weddingObj['comment']) !== 'undefined' ? weddingObj['comment'] : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
         </div>
         <% }); %>
     </script>
@@ -2178,8 +2178,10 @@
     <script type="text/template" id="date">
         <div class="input-group date-container">
             <input type="hidden" name="id" value="<%= typeof(id)!== 'undefined' ?  id : '' %>"> 
-            Vorher: <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            Nachher: <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            Vor diesem Datum: <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </br>
+            Nach diesem Datum: <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            </br>
             Tag <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             Monat <input type="text" name="month" value="<%= typeof(month)!== 'undefined' ?  month : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             Jahr <input type="text" name="year" value="<%= typeof(year)!== 'undefined' ?  year : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
@@ -2200,8 +2202,8 @@
             <input type="hidden" name="locationId"> 
             <input type="text" name="name" value="<%= typeof(name)!== 'undefined' ?  name : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             Kommentar Ort: <input type="text" name="comment" value="<%= typeof(comment)!== 'undefined' ?  comment : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
-            Breitengrad <input type="text" name="latitude" value="<%= typeof(latitude)!== 'undefined' ?  latitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             Längengrad <input type="text" name="longitude" value="<%= typeof(longitude)!== 'undefined' ?  longitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            Breitengrad <input type="text" name="latitude" value="<%= typeof(latitude)!== 'undefined' ?  latitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             
             <% if(typeof(name) != 'undefined' && typeof(enabled)!== 'undefined'){ %>
                 <button class="gnd-request">GND Abfrage starten</button>

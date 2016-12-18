@@ -49,7 +49,7 @@ DuplicatePerson.DuplicatePersonController = (function(){
             checkDisplay();
         } else if (loadedDuplicatePersons['status'] == 204) {
             Loader.hideLoader();
-            MessageHelper.showInfoMessage("Es wurden keine Duplicate gefunden.",false, that, "next");
+            MessageHelper.showInfoMessage("Es wurden keine Duplikate gefunden.",false, that, "next");
         }
         
     },
