@@ -1031,14 +1031,23 @@ abstract class BaseDataSearcher {
         }
 
         if ((!empty($date) || !empty($fromDate) || !empty($toDate)) && count($dateIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= $isAndCondition ? " AND " : " OR ";
+            $dateSql = $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
+            
+            if($dateSql != ""){
+                if ($foundOne) {
+                    $sql .= $isAndCondition ? " AND " : " OR ";
+                }
+                $sql .= $dateSql;
             }
-            $sql .= $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
-            $foundOne = true;
+           
         }
 
         $this->LOGGER->debug("Using query: " . $sql);
+        
+        if($baseQuery == $sql){
+            $this->LOGGER->info("Skipping this query");
+            return array();
+        }
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
@@ -1136,14 +1145,23 @@ abstract class BaseDataSearcher {
         }
 
         if ((!empty($date) || !empty($fromDate) || !empty($toDate)) && count($dateIdentifier) > 0) {
-            if ($foundOne) {
-                $sql .= $isAndCondition ? " AND " : " OR ";
+            $dateSql = $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
+            
+            if($dateSql != ""){
+                if ($foundOne) {
+                    $sql .= $isAndCondition ? " AND " : " OR ";
+                }
+                $sql .= $dateSql;
             }
-            $sql .= $this->buildDateQueryForIdentifier($dateIdentifier, $date, $fromDate, $toDate);
-            $foundOne = true;
+           
         }
 
         $this->LOGGER->debug("Using query: " . $sql);
+        
+        if($baseQuery == $sql){
+            $this->LOGGER->info("Skipping this query");
+            return array();
+        }
         
         $stmt = $finalDBManager->getConnection()->executeQuery($sql, $executeArray, $typeArray);
 
@@ -1247,6 +1265,10 @@ abstract class BaseDataSearcher {
         $dateQuery = $this->buildInternalQueryForDate($date, $fromDate, $toDate);
         
         $this->LOGGER->debug("Using internalDateQuery: '".$dateQuery."'");
+        
+        if($dateQuery == ""){
+            return "";
+        }
         
         $sql = null;
         if(count($identifierArray) == 1){
