@@ -241,7 +241,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großmutter_muetterlicherseits");
+            $this->getLogger()->error("Could not load data from old DB for großmutter_muetterlicherseits");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -277,7 +278,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großvater_muetterlicherseits");
+            $this->getLogger()->error("Could not load data from old DB for großvater_muetterlicherseits");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -313,7 +315,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großmutter_vaeterlicherseits");
+            $this->getLogger()->error("Could not load data from old DB for großmutter_vaeterlicherseits");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -350,7 +353,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for großvater_vaeterlicherseits");
+            $this->getLogger()->error("Could not load data from old DB for großvater_vaeterlicherseits");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -388,7 +392,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for mutter");
+            $this->getLogger()->error("Could not load data from old DB for mutter");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -426,7 +431,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for vater");
+            $this->getLogger()->error("Could not load data from old DB for vater");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -461,7 +467,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for geschwister");
+            $this->getLogger()->error("Could not load data from old DB for geschwister");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -683,7 +690,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -718,7 +726,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1009,7 +1018,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegervater");
+            $this->getLogger()->error("Could not load data from old DB for schwiegervater");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1045,7 +1055,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegermutter");
+            $this->getLogger()->error("Could not load data from old DB for schwiegermutter");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1083,7 +1094,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for anderer_partner");
+            $this->getLogger()->error("Could not load data from old DB for anderer_partner");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1119,7 +1131,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for partnerin_des_vaters");
+            $this->getLogger()->error("Could not load data from old DB for partnerin_des_vaters");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1154,7 +1167,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for partner_der_mutter");
+            $this->getLogger()->error("Could not load data from old DB for partner_der_mutter");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1191,7 +1205,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner_des_geschwisters");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner_des_geschwisters");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1228,7 +1243,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for geschwisterkind");
+            $this->getLogger()->error("Could not load data from old DB for geschwisterkind");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1267,7 +1283,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner_des_kindes");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1306,7 +1323,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for anderer_partner_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for anderer_partner_des_kindes");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1344,7 +1362,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegervater_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for schwiegervater_des_kindes");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1382,7 +1401,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegermutter_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for schwiegermutter_des_kindes");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1418,7 +1438,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for mutter_des_geschwisters");
+            $this->getLogger()->error("Could not load data from old DB for mutter_des_geschwisters");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1458,7 +1479,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for enkelkind");
+            $this->getLogger()->error("Could not load data from old DB for enkelkind");
+            return array();
         }
         
         $entry = $dbData[0];
@@ -1730,7 +1752,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for vater");
+            $this->getLogger()->error("Could not load data from old DB for vater");
+            return array();
         }
         
         $father = $dbData[0];
@@ -1746,7 +1769,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for mutter");
+            $this->getLogger()->error("Could not load data from old DB for mutter");
+            return array();
         }
         
         $mother = $dbData[0];
@@ -1810,7 +1834,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner_des_geschwisters");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner_des_geschwisters");
+            return array();
         }
         
         $marriagePartner = $dbData[0];
@@ -1826,7 +1851,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for geschwister");
+            $this->getLogger()->error("Could not load data from old DB for geschwister");
+            return array();
         }
         
         $sibling = $dbData[0];
@@ -1850,7 +1876,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner");
+            return array();
         }
         
         $marriagePartner = $dbData[0];
@@ -1865,7 +1892,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for person");
+            $this->getLogger()->error("Could not load data from old DB for person");
+            return array();
         }
         
         $person = $dbData[0];
@@ -1932,7 +1960,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner_des_kindes");
+            return array();
         }
         
         $marriagePartner = $dbData[0];
@@ -1949,7 +1978,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for kind");
+            $this->getLogger()->error("Could not load data from old DB for kind");
+            return array();
         }
         
         $child = $dbData[0];
@@ -1990,7 +2020,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegervater");
+            $this->getLogger()->error("Could not load data from old DB for schwiegervater");
+            return array();
         }
         
         $fatherInLaw = $dbData[0];
@@ -2007,7 +2038,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for schwiegermutter");
+            $this->getLogger()->error("Could not load data from old DB for schwiegermutter");
+            return array();
         }
         
         $motherInLaw = $dbData[0];
@@ -2034,7 +2066,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for anderer_partner_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for anderer_partner_des_kindes");
+            return array();
         }
         
         $partner = $dbData[0];
@@ -2052,7 +2085,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner_des_kindes");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner_des_kindes");
+            return array();
         }
         
         $marriagePartner = $dbData[0];
@@ -2078,7 +2112,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for anderer_partner");
+            $this->getLogger()->error("Could not load data from old DB for anderer_partner");
+            return array();
         }
         
         $partner = $dbData[0];
@@ -2094,7 +2129,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for ehepartner");
+            $this->getLogger()->error("Could not load data from old DB for ehepartner");
+            return array();
         }
         
         $marriagePartner = $dbData[0];
@@ -2121,7 +2157,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for partner_der_mutter");
+            $this->getLogger()->error("Could not load data from old DB for partner_der_mutter");
+            return array();
         }
         
         $otherPartner = $dbData[0];
@@ -2137,7 +2174,8 @@ class OldPersonLoader {
         $dbData = $stmt->fetchAll();
         
         if(count($dbData) == 0){
-            throw new \Exception("Could not load data from old DB for mutter");
+            $this->getLogger()->error("Could not load data from old DB for mutter");
+            return array();
         }
         
         $mother = $dbData[0];
