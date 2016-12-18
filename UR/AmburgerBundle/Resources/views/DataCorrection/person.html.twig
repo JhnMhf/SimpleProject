@@ -465,7 +465,7 @@
                         
                    
                 </label>
-                <label class="origin-territory">Herkunftsterritory
+                <label class="origin-territory">Herkunftsregion
                     <% 
                             var territoryTemplate = _.template($("script#territory").html());
                             
@@ -594,7 +594,7 @@
         <div class="row">
                 <input type="hidden" name="id"> 
                 <label>Herkunftsland<input type="text" name="originCountry" value="<%= typeof(origin_country) !== 'undefined' ?  origin_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
-                <label>Herkunftsterritory<input type="text" name="originTerritory" value="<%= typeof(origin_territory) !== 'undefined' ?  origin_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
+                <label>Herkunftsregion<input type="text" name="originTerritory" value="<%= typeof(origin_territory) !== 'undefined' ?  origin_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Herkunftsort<input type="text" name="originLocation" value="<%= typeof(origin_location) !== 'undefined' ?  origin_location : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
                 <label>Geburtsland<input type="text" name="birthCountry" value="<%= typeof(birth_country) !== 'undefined' ?  birth_country : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>    
                 <label>Geburtsregion<input type="text" name="birthTerritory" value="<%= typeof(birth_territory) !== 'undefined' ?  birth_territory : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/></label>
