@@ -65,6 +65,7 @@ PersonCorrection.FinalPersonView = (function () {
                     height: "auto",
                     width: 400,
                     modal: true,
+                    dialogClass: 'dialog-gnd-window',
                     buttons: {
                       "Abbrechen": function() {
                         $( this ).dialog( "close" );

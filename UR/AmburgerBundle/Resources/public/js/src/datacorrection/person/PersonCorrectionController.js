@@ -202,7 +202,8 @@ PersonCorrection.PersonCorrectionController = (function(){
     },
     
     onGNDRequestFinished = function(event, result){
-        if(result.length > 0){
+        console.log("GND Result: ", result);
+        if(result['results'].length > 0){
             finalPersonView.displayGNDResult(result['results']);
         } else {
             MessageHelper.showInfoMessage("Es wurden keine GND-Ergebnisse gefunden.");

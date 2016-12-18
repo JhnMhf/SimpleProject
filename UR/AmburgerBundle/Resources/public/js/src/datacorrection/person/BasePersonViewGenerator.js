@@ -56,10 +56,7 @@ PersonCorrection.BasePersonViewGenerator = (function(){
         console.log("Building person for:",insertId, personData, enabled);
         displayBasePerson(insertId,personData, enabled);
         
-        if(personData['baptism'] !== undefined){
-            displayBaptism(insertId, personData['baptism'], enabled);
-        }
-        
+        displayBaptism(insertId, personData['baptism'], enabled);
         
         if(personData['birth'] !== undefined){
             displayBirth(insertId, personData['birth'], enabled);

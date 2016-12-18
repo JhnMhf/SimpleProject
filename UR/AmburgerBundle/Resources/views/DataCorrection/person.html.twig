@@ -2178,9 +2178,9 @@
     <script type="text/template" id="date">
         <div class="input-group date-container">
             <input type="hidden" name="id" value="<%= typeof(id)!== 'undefined' ?  id : '' %>"> 
-            Vor diesem Datum: <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="checkbox" name="beforeDate" <%= before_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/> Vor diesem Datum
             </br>
-            Nach diesem Datum: <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
+            <input type="checkbox" name="afterDate" <%= after_date ?  'checked' : '' %> <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/> Nach diesem Datum
             </br>
             Tag <input type="text" name="day" value="<%= typeof(day)!== 'undefined' ?  day : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             Monat <input type="text" name="month" value="<%= typeof(month)!== 'undefined' ?  month : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
@@ -2206,7 +2206,7 @@
             Breitengrad <input type="text" name="latitude" value="<%= typeof(latitude)!== 'undefined' ?  latitude : '' %>" <%= typeof(enabled)!== 'undefined' ?  '' : 'disabled' %>/>
             
             <% if(typeof(name) != 'undefined' && typeof(enabled)!== 'undefined'){ %>
-                <button class="gnd-request">GND Abfrage starten</button>
+                <button class="gnd-request">GND Abfrage</button>
             <% } %>
         </div>
     </script>
