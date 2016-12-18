@@ -117,8 +117,13 @@ class DateReferenceSubscriber implements EventSubscriber {
                 $this->LOGGER->debug("Found works entity");
                 $this->loadFromToProvenDates($em, $entity);        
                 break;
+            default:
+                $this->LOGGER->debug("Nothing to do here");
+                break;
         }
         
+        
+        $this->LOGGER->debug("Finished loading Dates from db.");
     }
     
     private function loadFromToProvenDates($em, $entity){
@@ -197,6 +202,9 @@ class DateReferenceSubscriber implements EventSubscriber {
                 $this->LOGGER->debug("Found works entity");
                 $this->saveFromToProvenDates($em, $entity);        
                 break;
+            default:
+                $this->LOGGER->debug("Nothing to do here");
+                break;
         }
         
         
@@ -222,9 +230,7 @@ class DateReferenceSubscriber implements EventSubscriber {
             
             if(!is_array($dateReference[$i]) && get_class($dateReference[$i]) == "UR\DB\NewBundle\Utils\DateRange"){
                 $this->saveDate($em, $dateReference[$i]->getFrom());
-               $this->saveDate($em, $dateReference[$i]->getTo());
-                
-               $dateReference[$i];
+                $this->saveDate($em, $dateReference[$i]->getTo());
             } else {
                 $this->saveDate($em, $dateReference[$i]);
   

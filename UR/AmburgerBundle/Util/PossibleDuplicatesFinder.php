@@ -266,6 +266,7 @@ class PossibleDuplicatesFinder {
     }
     
     private function searchForPossibleDuplicatesFromSiblings($em, $ID) {
+        $this->getLogger()->info("Searching for duplicates from siblings");
         $possibleSiblings = array();
         $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
         
@@ -274,28 +275,44 @@ class PossibleDuplicatesFinder {
         for($i = 0; $i < count($siblingEntries); $i++){
             $siblingRelativeIds[] = $this->getRelativeId($ID, $siblingEntries[$i]);
         }
-
-        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
-        for($i = 0; $i < count($parentEntries); $i++){
-            $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
-            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+        $this->getLogger()->debug("Found ".count($siblingEntries)." siblings.");
+        
+        if(count($siblingEntries) > 0){
+            $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
             
-            for($j = 0; $j < count($childrenOfParentEntries); $i++){
-                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
-                
-                if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $siblingRelativeIds)
-                        && !in_array($secondRelativeId, $possibleSiblings)){
-                    $possibleSiblings[] = $secondRelativeId;
+            $this->getLogger()->debug("Found ".count($parentEntries)." parents.");
+            
+            if(count($parentEntries) > 0){
+        
+                for($i = 0; $i < count($parentEntries); $i++){
+                    $relativeId = $this->getRelativeId($ID, $parentEntries[$i]);
+                    $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+                    
+                    $this->getLogger()->debug("Found ".count($childrenOfParentEntries)." children of parents.");
+
+                    if(count($childrenOfParentEntries) > 0){
+                        for($j = 0; $j < count($childrenOfParentEntries); $j++){
+                            $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
+
+                            if($secondRelativeId != $ID 
+                                    && !in_array($secondRelativeId, $siblingRelativeIds)
+                                    && !in_array($secondRelativeId, $possibleSiblings)){
+                                $possibleSiblings[] = $secondRelativeId;
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        
         
         return $possibleSiblings;
     }
     
     private function searchForPossibleDuplicatesFromParents($em, $ID) {
+        $this->getLogger()->info("Searching for duplicates from parents");
         $possibleParents = array();
         $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
@@ -305,18 +322,32 @@ class PossibleDuplicatesFinder {
             $parentRelativeIds[] = $this->getRelativeId($ID, $parentEntries[$i]);
         }
         
-        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
-
-        for($i = 0; $i < count($siblingEntries); $i++){
-            $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
-            $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($siblingEntries[$i]);
+        $this->getLogger()->debug("Found ".count($parentEntries)." parents.");
+        
+        if(count($parentEntries) > 0){
+            $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
             
-            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
-                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
-                if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $parentRelativeIds)
-                        && !in_array($secondRelativeId, $possibleParents)){
-                    $possibleParents[] = $secondRelativeId;
+            $this->getLogger()->debug("Found ".count($siblingEntries)." siblings.");
+             
+            if(count($siblingEntries) > 0){
+
+                for($i = 0; $i < count($siblingEntries); $i++){
+                    $relativeId = $this->getRelativeId($ID, $siblingEntries[$i]);
+                    $parentOfSiblingEntries = $em->getRepository('NewBundle:IsParent')->loadParents($siblingEntries[$i]);
+
+                    $this->getLogger()->debug("Found ".count($parentOfSiblingEntries)." parents of siblings.");
+                    
+                    if(count($siblingEntries) > 0){
+                        for($j = 0; $j < count($parentOfSiblingEntries); $j++){
+                            $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
+                            if($secondRelativeId != $ID 
+                                    && !in_array($secondRelativeId, $parentRelativeIds)
+                                    && !in_array($secondRelativeId, $possibleParents)){
+                                $possibleParents[] = $secondRelativeId;
+                            }
+                        }
+                    }
+
                 }
             }
         }
@@ -325,6 +356,7 @@ class PossibleDuplicatesFinder {
     }
     
    private function searchForPossibleDuplicatesFromChildren($em, $ID) {
+        $this->getLogger()->info("Searching for duplicates from children");
         $possibleChildren = array();
         $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
         
@@ -333,28 +365,45 @@ class PossibleDuplicatesFinder {
         for($i = 0; $i < count($childrenEntries); $i++){
             $childRelativeIds[] = $this->getRelativeId($ID, $childrenEntries[$i]);
         }
-
-        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
         
-        for($i = 0; $i < count($partnerEntries); $i++){
-            $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
-            $childrenOfParentEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+        $this->getLogger()->debug("Found ".count($childrenEntries)." children.");
+        
+        if(count($childrenEntries) > 0){
+            $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
             
-            for($j = 0; $j < count($childrenOfParentEntries); $i++){
-                $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
-                
-                if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $childRelativeIds)
-                        && !in_array($secondRelativeId, $possibleChildren)){
-                    $possibleChildren[] = $secondRelativeId;
+            $this->getLogger()->debug("Found ".count($partnerEntries)." partners.");
+            
+            if(count($partnerEntries) > 0){
+                for($i = 0; $i < count($partnerEntries); $i++){
+                    $relativeId = $this->getRelativeId($ID, $partnerEntries[$i]);
+                    $childrenOfPartnerEntry = $em->getRepository('NewBundle:IsParent')->loadChildren($relativeId);
+                    
+                    $this->getLogger()->debug("Found ".count($childrenOfPartnerEntry)." children of partners.");
+
+                    if(count($childrenOfPartnerEntry) > 0){
+                    
+                        for($j = 0; $j < count($childrenOfPartnerEntry); $j++){
+                            $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfPartnerEntry[$j]);
+
+                            if($secondRelativeId != $ID 
+                                    && !in_array($secondRelativeId, $childRelativeIds)
+                                    && !in_array($secondRelativeId, $possibleChildren)){
+                                $possibleChildren[] = $secondRelativeId;
+                            }
+                        }
+                    
+                    }
                 }
             }
-        }
         
+            
+        }
+
         return $possibleChildren;
     }
     
     private function searchForPossibleDuplicatesFromPartners($em, $ID) {
+        $this->getLogger()->info("Searching for duplicates from partners");
         $possiblePartners = array();
         $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
         
@@ -364,18 +413,33 @@ class PossibleDuplicatesFinder {
             $partnerRelativeIds[] = $this->getRelativeId($ID, $partnerEntries[$i]);
         }
         
-        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
-
-        for($i = 0; $i < count($childrenEntries); $i++){
-            $relativeId = $this->getRelativeId($ID, $childrenEntries[$i]);
-            $parentOfSiblingEntries = $em->getRepository('NewBundle:Wedding')->loadParents($childrenEntries[$i]);
+        $this->getLogger()->debug("Found ".count($partnerEntries)." partners.");
+        
+        if(count($partnerEntries) > 0){
+            $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
             
-            for($j = 0; $j < count($parentOfSiblingEntries); $i++){
-                $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
-                if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $partnerRelativeIds)
-                        && !in_array($secondRelativeId, $possiblePartners)){
-                    $possiblePartners[] = $secondRelativeId;
+            $this->getLogger()->debug("Found ".count($childrenEntries)." children.");
+
+            if(count($childrenEntries) > 0){
+
+                for($i = 0; $i < count($childrenEntries); $i++){
+                    $relativeId = $this->getRelativeId($ID, $childrenEntries[$i]);
+                    $parentOfChildrenEntries = $em->getRepository('NewBundle:IsParent')->loadParents($childrenEntries[$i]);
+                    
+                    $this->getLogger()->debug("Found ".count($parentOfChildrenEntries)." parents of children.");
+
+                    if(count($parentOfChildrenEntries) > 0){
+                    
+                        for($j = 0; $j < count($parentOfChildrenEntries); $j++){
+                            $secondRelativeId = $this->getRelativeId($relativeId, $parentOfChildrenEntries[$j]);
+                            if($secondRelativeId != $ID 
+                                    && !in_array($secondRelativeId, $partnerRelativeIds)
+                                    && !in_array($secondRelativeId, $possiblePartners)){
+                                $possiblePartners[] = $secondRelativeId;
+                            }
+                        }
+                        
+                    }
                 }
             }
         }
