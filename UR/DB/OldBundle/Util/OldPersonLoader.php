@@ -771,8 +771,8 @@ class OldPersonLoader {
                 for ($i = 0; $i < count($childOrigin); $i++) {
                     $origin = $childOrigin[$i];
 
-                    $geburtsOrt = $oldChild["geburtsort"];
-                    $geboren = $oldChild["geboren"];
+                    $geburtsOrt = $entry["geburtsort"];
+                    $geboren = $entry["geboren"];
 
                     if (!is_null($origin['geburtsort']) && $origin['geburtsort'] != $geburtsOrt) {
                         if (!is_null($geburtsOrt)) {
@@ -792,7 +792,7 @@ class OldPersonLoader {
                         }
                     }
                     
-                    $data['herkunft'] = $this->createHerkunftArray(null,null,null,$entry['geburtsort'],$entry['geburtsterritorium'],$entry['geburtsland'],$entry['geboren'],$origin['taufort'],$origin['getauft'],$origin['belegt'],$origin['kommentar']);
+                    $data['herkunft'] = $this->createHerkunftArray(null,null,null,$geburtsOrt,null,null,$geboren,$origin['taufort'],$origin['getauft'],$origin['belegt'],$origin['kommentar']);
                 }
             }
         }
@@ -1899,7 +1899,7 @@ class OldPersonLoader {
         WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->execute();
@@ -1923,7 +1923,7 @@ class OldPersonLoader {
         WHERE ID=:personID AND `order`= :order AND `order2` = :order2 AND `order3` = :order3";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->bindValue('order3', $order3);
@@ -1941,7 +1941,7 @@ class OldPersonLoader {
             FROM `kind` WHERE ID=:personID AND `order`= :order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->execute();
@@ -1955,13 +1955,13 @@ class OldPersonLoader {
         $child = $dbData[0];
         
         $weddingsData = array();
-        $weddingsData[] = $this->createWeddingObj($child['vornamen'], $child['name'], $partner['aufgebot'], $partner['verheiratet'], $partner['hochzeitstag'], $partner['hochzeitsort'],null,$partner['auflösung'], $partner['gelöst']);
+        $weddingsData[] = $this->createWeddingObj($child['vornamen'], $child['name'], $marriagePartner['aufgebot'], $marriagePartner['verheiratet'], $marriagePartner['hochzeitstag'], $marriagePartner['hochzeitsort'],null,$marriagePartner['auflösung'], $marriagePartner['gelöst']);
         
         $sql = "SELECT vornamen, name, `vorher-nachher`, hochzeitstag, hochzeitsort, verheiratet, auflösung 
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->bindValue('order3', $order3);
@@ -1982,7 +1982,7 @@ class OldPersonLoader {
             FROM `schwiegervater` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->execute();
@@ -1999,7 +1999,7 @@ class OldPersonLoader {
             FROM `schwiegermutter` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->execute();
@@ -2024,7 +2024,7 @@ class OldPersonLoader {
         FROM `anderer_partner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3 AND `order4` = :order4";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->bindValue('order3', $order3);
@@ -2043,7 +2043,7 @@ class OldPersonLoader {
             FROM `ehepartner_des_kindes` WHERE ID=:personID AND `order`=:order AND `order2` = :order2 AND `order3` = :order3";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->bindValue('order3', $order3);
@@ -2070,7 +2070,7 @@ class OldPersonLoader {
         FROM `anderer_partner` WHERE ID=:personID AND `order`=:order AND `order2` = :order2";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->bindValue('order2', $order2);
         $stmt->execute();
@@ -2087,7 +2087,7 @@ class OldPersonLoader {
             FROM `ehepartner` WHERE ID=:personID AND `order`=:order";
 
         $stmt = $this->getOldDBManager()->getConnection()->prepare($sql);
-        $stmt->bindValue('personID', $oldPersonID);
+        $stmt->bindValue('personID', $oldMainPersonID);
         $stmt->bindValue('order', $order);
         $stmt->execute();
         
