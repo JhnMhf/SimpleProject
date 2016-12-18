@@ -15,19 +15,20 @@
                         <td>Nutzername</td>
                         <td></td>
                         <td></td>
+                        <td></td>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                         <tr userid="{{ user.id|e }}">
                             <td>{{ user.name|e }}</td>
-                            <td><button class="change-password">Password ändern</button></td>
+                            <td><button class="change-password">Passwort ändern</button></td>
                             {% if user.admin == 1 %}
                                 <td><button class="revoke">Adminrolle entfernen</button></td> 
                             {% else %}
                                  <td><button class="nominate">Adminrolle vergeben</button></td> 
                             {% endif %}
-                            <td><button class="delete">User löschen</button></td>
+                            <td><button class="delete">Nutzer löschen</button></td>
                         </tr>
 
                     {% endfor %}

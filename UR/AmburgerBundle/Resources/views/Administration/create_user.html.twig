@@ -1,10 +1,26 @@
 {% extends "AmburgerBundle:Administration:base.html.twig" %}
+{% block secondNavigation %}
+        {% if logged_in %}
+            <div class="row" id="user-controls">
+                 <div class="large-1 columns center">
+                      <i id="back" class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+                </div>
+                 <div class="large-10 columns center">
+
+                </div>
+                 <div class="large-1 columns center">
+                    <i id="logout" class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                </div>
+            </div>
+        {% endif %}
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="large-6 columns large-centered center login-container">
             <form method="POST" class="form-signin">
               <input type="hidden" name="_target_path" value="user" />
-              <h2 class="form-signin-heading">Neuen Nutzer anlegen</h2>
+              <h2 class="form-signin-heading centered">Neuen Nutzer anlegen</h2>
                 <div class="row">
                     <div class="large-2 columns large-offset-2">
                           <label for="inputUserName">Neuer Nutzername:</label>
@@ -30,9 +46,15 @@
                     </div>
                 </div>
                 <div class="row ">
-                      <div class="large-6 columns large-centered">
-                          <button id="login-button" class="round button" type="submit">Anlegen</button>
-                    </div>
+                        <div class="large-3 columns large-centered">
+                            
+                        </div>
+                        <div class="large-6 columns large-centered">
+                            <button id="login-button" class="round button" type="submit">Anlegen</button>
+                        </div>
+                        <div class="large-3 columns large-centered">
+                            
+                        </div>
                 </div>
             </form>
         </div>
