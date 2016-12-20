@@ -1,3 +1,8 @@
+function DateException(message) {
+   this.message = message;
+   this.name = "DateException";
+}
+
 
 PersonCorrection.FinalPersonView = (function () {
             var that = {},
@@ -609,19 +614,39 @@ PersonCorrection.FinalPersonView = (function () {
                 console.log("Date: ", element, $(element));
 
                 var $element = $(element);
+                
+                
+                var day = $element.find('input[name="day"]').val();
+                
+                if(day && day != parseInt(day)){
+                    throw new DateException("Ungültiger Wert für den Tag");
+                }
+                
+                var month = $element.find('input[name="month"]').val();
+                
+                if(month && month != parseInt(month)){
+                    throw new DateException("Ungültiger Wert für den Monat");
+                }
+                
+                var year = $element.find('input[name="year"]').val();
+                
+                if(year && year != parseInt(year)){
+                    throw new DateException("Ungültiger Wert für das Jahr");
+                }
 
                 var dateObj = {};
 
                 dateObj['id'] = parseInt($element.find('input[name="id"]').val());
-                dateObj['day'] = $element.find('input[name="day"]').val();
-                dateObj['month'] = $element.find('input[name="month"]').val();
-                dateObj['year'] = $element.find('input[name="year"]').val();
+                dateObj['day'] = day;
+                dateObj['month'] = month;
+                dateObj['year'] = year;
                 dateObj['before_date'] = $element.find('input[name="beforeDate"]').is(':checked');
                 dateObj['after_date'] = $element.find('input[name="afterDate"]').is(':checked');
                 dateObj['comment'] = $element.find('input[name="comment"]').val();
 
                 return dateObj;
             },
+            
             extractCountryObj = function (identifier) {
                 if ($.type(identifier) === "string") {
                     //if it is an identifier

@@ -158,14 +158,21 @@ PersonCorrection.PersonCorrectionController = (function(){
     onSave = function(){
         personCorrectionView.showLoader();
 
-        var changedWeddings = finalPersonView.extractWeddingData();
+        try{
+            var changedWeddings = finalPersonView.extractWeddingData();
+            
+            if(changedWeddings.length > 0){
+                console.log(changedWeddings);
+
+                ajaxLoader.saveWeddings(changedWeddings);
+            } else {
+                savePerson();
+            }
         
-        if(changedWeddings.length > 0){
-            console.log(changedWeddings);
-        
-            ajaxLoader.saveWeddings(changedWeddings);
-        } else {
-            savePerson();
+         } catch(e){
+            console.error(e.name, e.message);
+            MessageHelper.showErrorMessage("Es ist folgender Fehler aufgetreten: " + e.message, "Fehler im Datum");
+            personCorrectionView.hideLoader();
         }
     },
     
@@ -174,9 +181,15 @@ PersonCorrection.PersonCorrectionController = (function(){
     },
     
     savePerson = function(){
-        var changedFinalPerson = finalPersonView.extractPersonData();
-        console.log(changedFinalPerson);
-        ajaxLoader.saveFinalPerson(changedFinalPerson);
+        try {
+            var changedFinalPerson = finalPersonView.extractPersonData();
+            console.log(changedFinalPerson);
+            ajaxLoader.saveFinalPerson(changedFinalPerson);
+        } catch(e){
+            console.error(e.name, e.message);
+            MessageHelper.showErrorMessage("Es ist folgender Fehler aufgetreten: " + e.message, "Fehler im Datum");
+            personCorrectionView.hideLoader();
+        }
     }
     
     onSaveFinished = function(){

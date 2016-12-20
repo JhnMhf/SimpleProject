@@ -93,8 +93,12 @@ PersonCorrection.BasePersonViewGenerator = (function(){
     displayBaptism = function(insertId, baptismData, enabled){
         var template = _.template($("script#baptism").html());
 
-        var data = baptismData;
-        
+        var data = [];
+
+        if(baptismData !== undefined){
+            data = baptismData;
+        }
+
         if(enabled){
             data['enabled'] = true;
         }
