@@ -359,3 +359,11 @@ input.form-control {
     font-weight: bold;
     color: #1c94c4;
 }
+
+/* error message red */
+
+.ui-dialog.error-dialog-window .ui-widget-header {
+    border: 1px solid #ddd;
+    background: #f63f3f url(img/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x;
+    color: #333;
+}

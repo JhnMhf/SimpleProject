@@ -36,6 +36,7 @@ MessageHelper = (function () {
             height: "auto",
             width: 400,
             modal: true,
+            dialogClass: 'error-dialog-window',
             buttons: {
               "Ok": function() {
                 $( this ).dialog( "close" );
