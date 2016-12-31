@@ -86,11 +86,23 @@ class PersonComparer {
 
         $this->LOGGER->debug("Strings the same");
 
-        if (!$this->compareNations($this->getNation($personOne), $this->getNation($personTwo))) {
+        if (!$this->compareNations($this->getNation($personOne), $this->getNation($personTwo), $allowLessInformation)) {
             return false;
         }
 
         $this->LOGGER->debug("Nation the same");
+        
+        if (!$this->compareJobs($personOne->getJob(), $personTwo->getJob(), $allowLessInformation)) {
+            return false;
+        }
+
+        $this->LOGGER->debug("Jobs are the same");
+        
+        if (!$this->compareJobClasses($personOne->getJobClass(), $personTwo->getJobClass(), $allowLessInformation)) {
+            return false;
+        }
+
+        $this->LOGGER->debug("JobClasses are the same");
 
         if (!$this->matchingBirth($personOne->getBirth(), $personTwo->getBirth(), $allowLessInformation)) {
             return false;

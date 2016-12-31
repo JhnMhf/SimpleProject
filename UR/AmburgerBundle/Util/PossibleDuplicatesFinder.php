@@ -240,6 +240,8 @@ class PossibleDuplicatesFinder {
     private function checkPossibleDuplicates($person, $listOfPossibleDuplicates){
         $remainingPossibleDuplicates = array();
         
+        array_unique($listOfPossibleDuplicates);
+        
         for($i = 0; $i < count($listOfPossibleDuplicates); $i++){
             if($this->personComparer->comparePersons($person, $listOfPossibleDuplicates[$i], true)){
                 $remainingPossibleDuplicates[] = $listOfPossibleDuplicates[$i];

@@ -451,7 +451,7 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleSiblings($em, $ID) {
         $possibleSiblings = array();
-        $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
+        $siblingIds = $this->extractIdArray($ID,$em->getRepository('NewBundle:IsSibling')->loadSiblings($ID));
 
         $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
         
@@ -463,8 +463,8 @@ class PossibleRelativesFinder {
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $siblingEntries)
-                        && !in_array($secondRelativeId, $possibleSiblings)){
+                        && !in_array($secondRelativeId, $possibleSiblings)
+                        && !in_array($secondRelativeId, $siblingIds)){
                     $possibleSiblings[] = $secondRelativeId;
                 }
             }
@@ -475,7 +475,7 @@ class PossibleRelativesFinder {
     
     private function searchForPossibleParents($em, $ID) {
         $possibleParents = array();
-        $parentEntries = $em->getRepository('NewBundle:IsParent')->loadParents($ID);
+        $parentIds = $this->extractIdArray($ID,$em->getRepository('NewBundle:IsParent')->loadParents($ID));
         
         $siblingEntries = $em->getRepository('NewBundle:IsSibling')->loadSiblings($ID);
 
@@ -486,7 +486,7 @@ class PossibleRelativesFinder {
             for($j = 0; $j < count($parentOfSiblingEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $parentEntries)
+                        && !in_array($secondRelativeId, $parentIds)
                         && !in_array($secondRelativeId, $possibleParents)){
                     $possibleParents[] = $secondRelativeId;
                 }
@@ -498,7 +498,7 @@ class PossibleRelativesFinder {
     
    private function searchForPossibleChildren($em, $ID) {
         $possibleChildren = array();
-        $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
+        $childrenIds = $this->extractIdArray($ID,$em->getRepository('NewBundle:IsParent')->loadChildren($ID));
 
         $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
         
@@ -510,7 +510,7 @@ class PossibleRelativesFinder {
                 $secondRelativeId = $this->getRelativeId($relativeId, $childrenOfParentEntries[$j]);
                 
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $childrenEntries)
+                        && !in_array($secondRelativeId, $childrenIds)
                         && !in_array($secondRelativeId, $possibleChildren)){
                     $possibleChildren[] = $secondRelativeId;
                 }
@@ -522,7 +522,7 @@ class PossibleRelativesFinder {
     
     private function searchForPossiblePartners($em, $ID) {
         $possiblePartners = array();
-        $partnerEntries = $em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID);
+        $partnerIds = $this->extractIdArray($ID,$em->getRepository('NewBundle:Wedding')->loadMarriagePartners($ID));
         
         $childrenEntries = $em->getRepository('NewBundle:IsParent')->loadChildren($ID);
 
@@ -533,7 +533,7 @@ class PossibleRelativesFinder {
             for($j = 0; $j < count($parentOfSiblingEntries); $j++){
                 $secondRelativeId = $this->getRelativeId($relativeId, $parentOfSiblingEntries[$j]);
                 if($secondRelativeId != $ID 
-                        && !in_array($secondRelativeId, $partnerEntries)
+                        && !in_array($secondRelativeId, $partnerIds)
                         && !in_array($secondRelativeId, $possiblePartners)){
                     $possiblePartners[] = $secondRelativeId;
                 }
@@ -541,6 +541,16 @@ class PossibleRelativesFinder {
         }
         
         return $possiblePartners;
+    }
+    
+    private function extractIdArray($ID, $relationsShipArray){
+        $idArray = array();
+        
+        for($i = 0; $i < count($relationsShipArray); $i++){
+            $idArray[] = $this->getRelativeId($ID, $relationsShipArray[$i]);
+        }
+        
+        return $idArray;
     }
     
     private function getRelativeId($id, $relationShipObj) {
