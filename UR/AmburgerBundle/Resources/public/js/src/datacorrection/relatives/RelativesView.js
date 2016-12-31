@@ -312,7 +312,7 @@ RelativesCorrection.RelativesView = (function () {
             if(diff < 20){
                 return "sibling";
             } else if(diff < 50){
-                return "parent";
+                return "child";
             } else {
                 return "";
             }
@@ -322,7 +322,7 @@ RelativesCorrection.RelativesView = (function () {
             if(diff < 20){
                 return "sibling";
             } else if(diff < 50){
-                return "child";
+                return "parent";
             } else {
                 return "";
             }
