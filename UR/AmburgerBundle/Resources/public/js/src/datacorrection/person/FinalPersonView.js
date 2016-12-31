@@ -22,15 +22,50 @@ PersonCorrection.FinalPersonView = (function () {
             displayPerson = function (personData) {
                 personViewGenerator.displayPerson("#final", personData, true);
                 registerOnGNDButtons();
+                registerDateCheckboxListener();
             },
             displayWeddings = function (weddingData) {
                 personViewGenerator.displayWeddings("#final", weddingData, true);
                 registerOnGNDButtons();
+                registerDateCheckboxListener();
             },
             
             registerOnGNDButtons = function(){
                 $('button.gnd-request').off('click');
                 $('button.gnd-request').on('click', onGNDButtonClicked);
+            },
+            
+            registerDateCheckboxListener = function(){
+                $('.date-container input[name="beforeDate"]').off('change');
+                $('.date-container input[name="afterDate"]').off('change');
+                $('.date-container input[name="beforeDate"]').on('change', onBeforeDateCheckboxChanged);
+                $('.date-container input[name="afterDate"]').on('change', onAfterDateCheckboxChanged);
+            },
+            
+            onAfterDateCheckboxChanged = function(){
+                console.log("AfterDate changed: ", $(this));
+                if($(this).is(':checked')){
+                    console.log("Checkbox is checked, so we need to find the matching BeforeDate");
+                    var beforeDate = $(this).parent().find('input[name="beforeDate"]');
+                    console.log("BeforeDate: ", beforeDate);
+                    if($(beforeDate).is(':checked')){
+                        console.log("Removing checked from beforeDate");
+                        $(beforeDate).removeAttr("checked");
+                    }
+                }
+            },
+            
+            onBeforeDateCheckboxChanged = function(){
+                console.log("BeforeDate changed: ", $(this));
+                if($(this).is(':checked')){
+                    console.log("Checkbox is checked, so we need to find the matching AfterDate");
+                    var afterDate = $(this).parent().find('input[name="afterDate"]');
+                    console.log("BeforeDate: ", afterDate);
+                    if($(afterDate).is(':checked')){
+                        console.log("Removing checked from afterDate");
+                        $(afterDate).removeAttr("checked");
+                    }
+                }
             },
             
             onGNDButtonClicked = function(){
